@@ -34,7 +34,7 @@ docker build -t benchmarks-ps-reflector .
 ```
 and for running it locally:
 ```bash
-docker run -u 0 -it --rm -p 8888:8888 benchmarks-ps-reflector jupyter-lab --ip=0.0.0.0 --port=8888 --allow-root
+docker run -it --rm -p 8888:8888 benchmarks-ps-reflector jupyter-lab --ip=0.0.0.0 --port=8888 --allow-root
 ```
 
 Alternatively, user-friendly Jupyter Notebooks could be used to run different benchmarks on the cloud. For instance, the benchmark is available at:

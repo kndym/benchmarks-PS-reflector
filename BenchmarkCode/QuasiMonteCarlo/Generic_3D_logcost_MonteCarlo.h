@@ -30,9 +30,9 @@ double logq[NK];
 
 
 //I'm putting here 128 instead of sqrt(NK) as this is greatest number and I want all of them to have uniform setting
-const int MeshGridResolution=512+1;
-const int DestinationResolution=129;
-const int FinalGridResolution=8*128+1;
+const int MeshGridResolution=128+1;
+const int DestinationResolution=65;
+const int FinalGridResolution=2*128+1;
 const int FinalGrid=FinalGridResolution*FinalGridResolution;
 double x_regular[FinalGrid][dim];
 double f_regular[FinalGrid];
