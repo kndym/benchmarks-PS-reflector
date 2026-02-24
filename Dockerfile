@@ -1,7 +1,8 @@
-# Indicate the Intel OneApi reference image
-FROM intel/oneapi-hpckit:2022.1.2-devel-ubuntu18.04
+# Multi-arch base image — works natively on AMD64 (Intel Mac / Linux)
+# and ARM64 (Apple Silicon M1/M2/M3) without --platform flags or emulation.
+FROM ubuntu:22.04
 
-ENV LAST_UPDATED=2022-03-01
+ENV LAST_UPDATED=2026-02-24
 
 ARG NB_USER="jovyan"
 ARG NB_UID="1000"
@@ -10,24 +11,25 @@ ARG NB_GID="100"
 # Fix DL4006
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-# Install JupyterLab
-
 USER root
 
-RUN chmod 777 /tmp        && \
-    apt-get update --yes  && \
-    DEBIAN_FRONTEND="noninteractive" && \
-    # Install required python packages
-    #   - sympy, see https://savannah.gnu.org/bugs/?58491
-    pip3 install --upgrade --no-cache-dir \
-      jupyterlab                    \
-      jupytext                      \
-      jupyter-book                  \
-      ghp-import                    \
-      numpy                         \
-      networkx                   && \
-    apt-get --yes clean          && \
-    apt-get --yes autoremove     && \
+RUN chmod 777 /tmp                                  && \
+    apt-get update --yes                            && \
+    DEBIAN_FRONTEND="noninteractive"                   \
+    apt-get install -y --no-install-recommends         \
+      g++ make                                         \
+      python3 python3-pip                              \
+      locales                                       && \
+    locale-gen en_US.UTF-8                          && \
+    pip3 install --upgrade --no-cache-dir              \
+      jupyterlab                                       \
+      jupytext                                         \
+      jupyter-book                                     \
+      ghp-import                                       \
+      numpy                                            \
+      networkx                                      && \
+    apt-get --yes clean                             && \
+    apt-get --yes autoremove                        && \
     rm -Rf /var/lib/apt/lists/*
 
 # Configure environment

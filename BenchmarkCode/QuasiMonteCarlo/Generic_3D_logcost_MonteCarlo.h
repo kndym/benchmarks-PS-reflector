@@ -8,8 +8,6 @@
 #include <math.h>
 #include <vector>
 
-#include <mkl.h>
-
 #include "../QuasiMonteCarlo/MonteCarlo_Pointcloud_3D_128.h"
 
 const double PI = 3.14159265358979323846;
