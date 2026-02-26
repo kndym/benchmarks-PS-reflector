@@ -61,14 +61,16 @@ int getk(int Nk)
 }
 
 
+const double COST_K = 0.7;  // scale factor: c(x,y) = -log(1 - k*(x·y))
+
 double Cost_Func(double x[], double y[])
 {
 	double temp=1;
 	for(int d=0; d<dim; d++)
 	{
-		temp-=x[d]*y[d];
+		temp-=COST_K*x[d]*y[d];
 	}
-	return -log(temp); //cost from WANG paper
+	return -log(temp);
 }
 
 

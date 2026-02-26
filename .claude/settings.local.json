@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xargs grep -l \"mkl\\\\|vdMul\\\\|cblas_dscal\")",
+      "Bash(python3 -c \":*)"
+    ]
+  }
+}

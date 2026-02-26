@@ -6,22 +6,19 @@ at any desired size.
 
 Method
 ------
-The original code uses **inverse stereographic projection** from a square
-[-0.6, 0.6]^2 -> upper hemisphere (source x) / lower hemisphere (target y).
+Source and target patches are defined by spherical-coordinate ranges
+(theta = polar angle from +z, phi = azimuthal angle, both in degrees).
+Points are sampled quasi-randomly inside each patch using the **Halton
+sequence** (base 2 and 3).  Sampling is uniform in solid angle by drawing
+cos(theta) uniformly and phi uniformly, then converting to Cartesian:
 
-  Given (X, Y) in R^2:
-      N2 = X^2 + Y^2
-      sphere = ( 2X/(1+N2),  2Y/(1+N2),  ±(1-N2)/(1+N2) )
-
-We sample (X, Y) quasi-randomly inside the disk that maps to the sphere cap
-using the **Halton sequence** (base 2 and 3), which is low-discrepancy and
-gives much better coverage than pure Monte Carlo.
+  x = sin(theta)*cos(phi),  y = sin(theta)*sin(phi),  z = cos(theta)
 
 Output files
 ------------
   QuasiMonteCarlo/MonteCarlo_Pointcloud_3D_128.h   -> NK   points  (x + y arrays + embedded small arrays)
   SmallGrid/3D_MonteCarlo_Pointcloud_small.h        -> NK_small points
-  PushForward/PushForward_Cloud_128.h               -> Push_Cloud_Size points  (same as NK, positive z only)
+  PushForward/PushForward_Cloud_128.h               -> Push_Cloud_Size points  (source patch only)
 
 Usage
 -----
@@ -36,11 +33,29 @@ import sys
 import math
 import os
 
-# ── Configuration ──────────────────────────────────────────────────────────────
+# ── Point-cloud sizes ──────────────────────────────────────────────────────────
 
 NK        = int(sys.argv[1]) if len(sys.argv) > 1 else 1600
 NK_small  = int(sys.argv[2]) if len(sys.argv) > 2 else 200
-SQUARE_HALF = 0.6          # domain is [-0.6, 0.6]^2 (matches the C++ code)
+
+# ── Patch configuration (spherical coordinates, degrees) ──────────────────────
+#
+#   theta : polar angle measured from the +z axis  (0 = north pole, 180 = south)
+#   phi   : azimuthal angle in the x-y plane       (0 = +x axis, 360 = full circle)
+#
+# Source patch  -- by default a 60° cap centred on the north pole (+z)
+SRC_THETA_MIN =   0.0   # [deg]  min polar angle
+SRC_THETA_MAX =  60.0   # [deg]  max polar angle
+SRC_PHI_MIN   =   0.0   # [deg]  min azimuthal angle
+SRC_PHI_MAX   = 360.0   # [deg]  max azimuthal angle
+
+# Target patch  -- by default a 60° cap centred on the south pole (-z)
+TGT_THETA_MIN = 120.0   # [deg]
+TGT_THETA_MAX = 180.0   # [deg]
+TGT_PHI_MIN   =   0.0   # [deg]
+TGT_PHI_MAX   = 360.0   # [deg]
+
+# ── Output paths ───────────────────────────────────────────────────────────────
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -64,33 +79,50 @@ def halton(index: int, base: int) -> float:
     return result
 
 
-def sphere_point(X: float, Y: float, upper: bool) -> tuple:
-    """Inverse stereographic projection of (X,Y) -> unit sphere point."""
-    N2 = X * X + Y * Y
-    denom = 1.0 + N2
-    z_sign = 1.0 if upper else -1.0
-    return (
-        2.0 * X / denom,
-        2.0 * Y / denom,
-        z_sign * (1.0 - N2) / denom,
-    )
+# ── Sphere sampling ────────────────────────────────────────────────────────────
+
+def sphere_point(theta: float, phi: float) -> tuple:
+    """
+    Convert spherical coordinates to a unit-sphere Cartesian point.
+
+    theta : polar angle from +z axis  [radians]
+    phi   : azimuthal angle           [radians]
+    """
+    st = math.sin(theta)
+    return (st * math.cos(phi), st * math.sin(phi), math.cos(theta))
 
 
-def generate_points(n: int, upper: bool, skip: int = 0) -> list:
+def generate_points(n: int,
+                    theta_min_deg: float, theta_max_deg: float,
+                    phi_min_deg: float,   phi_max_deg: float,
+                    skip: int = 0) -> list:
     """
-    Generate n quasi-random sphere points using the Halton sequence.
-    Points are drawn from a square [-SQUARE_HALF, SQUARE_HALF]^2
-    (some will map near the equator; all are unit-sphere points).
+    Generate n quasi-random sphere points uniform in solid angle within
+    the patch [theta_min, theta_max] x [phi_min, phi_max] (degrees).
+
+    Uniform-in-area sampling:
+      - cos(theta) sampled uniformly in [cos(theta_max), cos(theta_min)]
+      - phi        sampled uniformly in [phi_min, phi_max]
+    Uses the Halton sequence (base-2 for phi, base-3 for cos(theta)).
     """
+    theta_min = math.radians(theta_min_deg)
+    theta_max = math.radians(theta_max_deg)
+    phi_min   = math.radians(phi_min_deg)
+    phi_max   = math.radians(phi_max_deg)
+
+    # cos(theta) decreases as theta increases
+    cos_lo = math.cos(theta_max)   # smaller value (theta_max > theta_min)
+    cos_hi = math.cos(theta_min)   # larger  value
+
     points = []
-    idx = skip  # starting index in the Halton sequence
+    idx = skip
     while len(points) < n:
-        # Map [0,1)^2 -> [-SQUARE_HALF, SQUARE_HALF]^2
         u = halton(idx, 2)
         v = halton(idx, 3)
-        X = (u - 0.5) * 2.0 * SQUARE_HALF
-        Y = (v - 0.5) * 2.0 * SQUARE_HALF
-        points.append(sphere_point(X, Y, upper))
+        cos_theta = cos_lo + v * (cos_hi - cos_lo)
+        theta = math.acos(cos_theta)
+        phi   = phi_min + u * (phi_max - phi_min)
+        points.append(sphere_point(theta, phi))
         idx += 1
     return points
 
@@ -104,10 +136,10 @@ def fmt_row(pt: tuple) -> str:
 
 def write_large(path: str, nk: int, nk_small: int):
     """Write MonteCarlo_Pointcloud_3D_128.h"""
-    x_pts = generate_points(nk,       upper=True,  skip=0)
-    y_pts = generate_points(nk,       upper=False, skip=0)       # antipodal
-    xs_pts = generate_points(nk_small, upper=True,  skip=nk)     # offset to avoid overlap
-    ys_pts = generate_points(nk_small, upper=False, skip=nk)
+    x_pts  = generate_points(nk,       SRC_THETA_MIN, SRC_THETA_MAX, SRC_PHI_MIN, SRC_PHI_MAX, skip=0)
+    y_pts  = generate_points(nk,       TGT_THETA_MIN, TGT_THETA_MAX, TGT_PHI_MIN, TGT_PHI_MAX, skip=0)
+    xs_pts = generate_points(nk_small, SRC_THETA_MIN, SRC_THETA_MAX, SRC_PHI_MIN, SRC_PHI_MAX, skip=nk)
+    ys_pts = generate_points(nk_small, TGT_THETA_MIN, TGT_THETA_MAX, TGT_PHI_MIN, TGT_PHI_MAX, skip=nk)
 
     with open(path, "w", newline="") as f:
         f.write(f"#ifndef MonteCarlo_Pointcloud_3D_{nk}\r\n")
@@ -150,8 +182,8 @@ def write_large(path: str, nk: int, nk_small: int):
 def write_small(path: str, nk_small: int):
     """Write 3D_MonteCarlo_Pointcloud_small.h"""
     # Use same skip offset as write_large so points are different from large cloud
-    xs_pts = generate_points(nk_small, upper=True,  skip=NK)
-    ys_pts = generate_points(nk_small, upper=False, skip=NK)
+    xs_pts = generate_points(nk_small, SRC_THETA_MIN, SRC_THETA_MAX, SRC_PHI_MIN, SRC_PHI_MAX, skip=NK)
+    ys_pts = generate_points(nk_small, TGT_THETA_MIN, TGT_THETA_MAX, TGT_PHI_MIN, TGT_PHI_MAX, skip=NK)
 
     with open(path, "w", newline="") as f:
         f.write(f"const int NK_small={nk_small};\r\n")
@@ -174,8 +206,8 @@ def write_small(path: str, nk_small: int):
 
 
 def write_push(path: str, nk: int):
-    """Write PushForward_Cloud_128.h  (positive-z source hemisphere only)"""
-    pts = generate_points(nk, upper=True, skip=0)
+    """Write PushForward_Cloud_128.h  (source patch only)"""
+    pts = generate_points(nk, SRC_THETA_MIN, SRC_THETA_MAX, SRC_PHI_MIN, SRC_PHI_MAX, skip=0)
 
     with open(path, "w", newline="") as f:
         f.write("#ifndef PushForward_Cloud_128\r\n")
@@ -197,7 +229,8 @@ def write_push(path: str, nk: int):
 
 if __name__ == "__main__":
     print(f"Generating point clouds: NK={NK}, NK_small={NK_small}")
-    print(f"  (Halton quasi-random sequence, inverse stereographic projection)")
+    print(f"  Source patch: theta=[{SRC_THETA_MIN}, {SRC_THETA_MAX}] deg,  phi=[{SRC_PHI_MIN}, {SRC_PHI_MAX}] deg")
+    print(f"  Target patch: theta=[{TGT_THETA_MIN}, {TGT_THETA_MAX}] deg,  phi=[{TGT_PHI_MIN}, {TGT_PHI_MAX}] deg")
     print()
 
     write_large(OUT_LARGE, NK, NK_small)

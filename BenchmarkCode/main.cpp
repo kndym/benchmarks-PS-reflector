@@ -17,6 +17,28 @@
 #include "PushForward/Pushforward_of_RefRegular.h"
 
 
+// --- MKL replacement functions (standard C math, no MKL dependency) ---
+inline void vdMul(int n, const double* a, const double* b, double* r) {
+	for(int i = 0; i < n; i++) r[i] = a[i] * b[i];
+}
+inline void vdLn(int n, const double* a, double* r) {
+	for(int i = 0; i < n; i++) r[i] = log(a[i]);
+}
+inline void vdExp(int n, const double* a, double* r) {
+	for(int i = 0; i < n; i++) r[i] = exp(a[i]);
+}
+inline void vdAdd(int n, const double* a, const double* b, double* r) {
+	for(int i = 0; i < n; i++) r[i] = a[i] + b[i];
+}
+inline int cblas_idamax(int n, const double* x, int /*inc*/) {
+	int idx = 0;
+	for(int i = 1; i < n; i++) if(fabs(x[i]) > fabs(x[idx])) idx = i;
+	return idx;
+}
+inline void cblas_dscal(int n, double alpha, double* x, int /*inc*/) {
+	for(int i = 0; i < n; i++) x[i] *= alpha;
+}
+
 
 string name, outputname;
 string command;
@@ -160,8 +182,24 @@ int cap_iteration=16;
 //			Reg_param = multiplier* Spatial resolution
 int multiplier=8;
 
-int main()
+int main(int argc, char* argv[])
 {
+	if(argc != 9) {
+		fprintf(stderr,
+			"Usage: main src_th_min src_th_max src_ph_min src_ph_max"
+			" tgt_th_min tgt_th_max tgt_ph_min tgt_ph_max\n"
+			"(values as multiples of pi)\n");
+		return 1;
+	}
+	src_theta_min = atof(argv[1])*PI;
+	src_theta_max = atof(argv[2])*PI;
+	src_phi_min   = atof(argv[3])*PI;
+	src_phi_max   = atof(argv[4])*PI;
+	tgt_theta_min = atof(argv[5])*PI;
+	tgt_theta_max = atof(argv[6])*PI;
+	tgt_phi_min   = atof(argv[7])*PI;
+	tgt_phi_max   = atof(argv[8])*PI;
+
 	clock_t Totaltime = clock();
 
 	char name1[100];
@@ -173,6 +211,7 @@ int main()
 
 	name="Output"+string(name1)+"_"+to_string(dim)+"D_NK"+to_string(NK)+"_";
 	outputname="Output"+string(name1);
+
 	command="mkdir "+outputname;
 	system(command.c_str());
 

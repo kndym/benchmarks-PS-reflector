@@ -9,35 +9,33 @@
 
 string testname="3D_SquareToCircle_logcost_MonteCarlo";
 
-
+// Spherical box bounds (in radians, set at runtime via main())
+double src_theta_min, src_theta_max, src_phi_min, src_phi_max;
+double tgt_theta_min, tgt_theta_max, tgt_phi_min, tgt_phi_max;
 
 
 double P(double x[])
 {
-	double proj1=x[0]/(1+x[2]);
-	double proj2=x[1]/(1+x[2]);
+	double theta = acos(x[2]);           // polar angle [0, π]
+	double phi   = atan2(x[1], x[0]);   // azimuthal [-π, π]
+	if(phi < 0) phi += 2*PI;            // normalize to [0, 2π]
 
-
-	if(-0.5<proj1 && proj1<0.5 && -0.5<proj2 && proj2<0.5)
-	{
-		return 1;	
-	}
-
+	if(theta >= src_theta_min && theta <= src_theta_max &&
+	   phi   >= src_phi_min   && phi   <= src_phi_max)
+		return 1;
 	return 0;
 }
 
 
 double Q(double y[])
 {
-	double proj1=y[0]/(1-y[2]);
-	double proj2=y[1]/(1-y[2]);
+	double theta = acos(y[2]);
+	double phi   = atan2(y[1], y[0]);
+	if(phi < 0) phi += 2*PI;
 
-
-	if(proj1*proj1+proj2*proj2<=0.25)
-	{
+	if(theta >= tgt_theta_min && theta <= tgt_theta_max &&
+	   phi   >= tgt_phi_min   && phi   <= tgt_phi_max)
 		return 1;
-	}
-
 	return 0;
 }
 
