@@ -1,5 +1,6 @@
 #ifndef Generic_3D_refractioncost_MonteCarlo
 #define Generic_3D_refractioncost_MonteCarlo
+#define GENERIC_3D_MONTECARLO_INCLUDED
 
 #include <iostream>
 #include <fstream>
