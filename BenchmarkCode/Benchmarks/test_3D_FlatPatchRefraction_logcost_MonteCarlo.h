@@ -15,20 +15,15 @@ string testname = "3D_FlatPatchRefraction_logcost_MonteCarlo";
 // Both patches are on the upper hemisphere (theta < pi/2).
 // Densities are flat (indicator = 1 inside patch, 0 outside).
 //
-// IMPORTANT: regenerate the y point cloud with upper=True in the notebook
-// (change gen_pts(NK, upper=False) -> gen_pts(NK, upper=True) for y_pts).
+// Notebook Step 1 defaults (values are multiples of pi):
+//   SRC_THETA_MIN=1/12  SRC_THETA_MAX=1/3   SRC_PHI_MIN=1/12  SRC_PHI_MAX=1/4
+//   TGT_THETA_MIN=1/10  TGT_THETA_MAX=1/5   TGT_PHI_MIN=1/10  TGT_PHI_MAX=1/5
+//
+// IMPORTANT: in the notebook Step 3, change y_pts to upper=True.
 
-// Source patch bounds
-static const double SRC_THETA_MIN = PI / 12.0;   // pi/12
-static const double SRC_THETA_MAX = PI / 3.0;    // pi/3
-static const double SRC_PHI_MIN   = PI / 12.0;   // pi/12
-static const double SRC_PHI_MAX   = PI / 4.0;    // pi/4
-
-// Target patch bounds
-static const double TGT_THETA_MIN = PI / 10.0;   // pi/10
-static const double TGT_THETA_MAX = PI / 5.0;    // pi/5
-static const double TGT_PHI_MIN   = PI / 10.0;   // pi/10
-static const double TGT_PHI_MAX   = PI / 5.0;    // pi/5
+// Runtime patch bounds — set by main() from argv (same as other benchmarks)
+double src_theta_min, src_theta_max, src_phi_min, src_phi_max;
+double tgt_theta_min, tgt_theta_max, tgt_phi_min, tgt_phi_max;
 
 
 double P(double x[])
@@ -37,8 +32,8 @@ double P(double x[])
 	double phi   = atan2(x[1], x[0]);
 	if (phi < 0) phi += 2 * PI;
 
-	if (theta >= SRC_THETA_MIN && theta <= SRC_THETA_MAX &&
-	    phi   >= SRC_PHI_MIN   && phi   <= SRC_PHI_MAX)
+	if (theta >= src_theta_min && theta <= src_theta_max &&
+	    phi   >= src_phi_min   && phi   <= src_phi_max)
 		return 1.0;
 
 	return 0.0;
@@ -51,8 +46,8 @@ double Q(double y[])
 	double phi   = atan2(y[1], y[0]);
 	if (phi < 0) phi += 2 * PI;
 
-	if (theta >= TGT_THETA_MIN && theta <= TGT_THETA_MAX &&
-	    phi   >= TGT_PHI_MIN   && phi   <= TGT_PHI_MAX)
+	if (theta >= tgt_theta_min && theta <= tgt_theta_max &&
+	    phi   >= tgt_phi_min   && phi   <= tgt_phi_max)
 		return 1.0;
 
 	return 0.0;
