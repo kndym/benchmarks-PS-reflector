@@ -182,56 +182,29 @@ double L2_norm(double x[])
 }
 
 
-// Target is on the upper hemisphere (positive z) for the refraction problem.
+// Equirectangular grid resolution for density output
+const int EQUIRECT_NTHETA = 180;
+const int EQUIRECT_NPHI   = 360;
+
+// Writes Q(vec) on a full equirectangular grid: rows = theta in [0,pi],
+// cols = phi in [0,2pi].  visualize.py reads this as a 180x360 imshow image.
 void MeshGridDestinationDensity(string outputname)
 {
 	string command=outputname+"/Y_MeshGrid.txt";
 	freopen(command.c_str(),"w",stdout);
 
-
-	for (int i=0; i<MeshGridResolution; i++)
+	for (int i=0; i<EQUIRECT_NTHETA; i++)
 	{
-
-		for(int j=0; j<MeshGridResolution; j++)
+		double theta = PI * i / (EQUIRECT_NTHETA - 1);
+		for (int j=0; j<EQUIRECT_NPHI; j++)
 		{
-			double X=(-0.6+1.2*i/(MeshGridResolution-1));
-			double Y=(-0.6+1.2*j/(MeshGridResolution-1));
-			double N2=X*X+Y*Y;
-
-			double vec[3];
-			vec[0]=2*X/(1+N2);
-			vec[1]=2*Y/(1+N2);
-			vec[2]=(1-N2)/(1+N2);   // upper hemisphere
-			
-			printf("%.*e ",	DECIMAL_DIG, Q(vec)*4/((1+X*X+Y*Y)*(1+X*X+Y*Y)));
-
-		}	
-		printf("\n");	
-	}
-
-	command=outputname+"/log.txt";
-	freopen(command.c_str(),"a",stdout);
-
-	command=outputname+"/Y_DiscreteMesh.txt";
-	freopen(command.c_str(),"w",stdout);
-
-
-	for (int i=0; i<MeshGridResolution; i++)
-	{
-
-		for(int j=0; j<MeshGridResolution; j++)
-		{
-			double X=(-0.6+1.2*i/(MeshGridResolution-1));
-			double Y=(-0.6+1.2*j/(MeshGridResolution-1));
-			double N2=X*X+Y*Y;
-
-			double vec[3];
-			vec[0]=2*X/(1+N2);
-			vec[1]=2*Y/(1+N2);
-			vec[2]=(1-N2)/(1+N2);   // upper hemisphere
-			if(Q(vec)==0) continue;
-			printf("%.*e %.*e %.*e \n",	DECIMAL_DIG, X, DECIMAL_DIG, Y, DECIMAL_DIG, Q(vec)*4/((1+X*X+Y*Y)*(1+X*X+Y*Y)));
-		}	
+			double phi = 2.0*PI * j / (EQUIRECT_NPHI - 1);
+			double vec[3] = { sin(theta)*cos(phi),
+			                  sin(theta)*sin(phi),
+			                  cos(theta) };
+			printf("%.*e ", DECIMAL_DIG, Q(vec));
+		}
+		printf("\n");
 	}
 
 	command=outputname+"/log.txt";
@@ -239,57 +212,25 @@ void MeshGridDestinationDensity(string outputname)
 }
 
 
+// Writes P(vec) on a full equirectangular grid: rows = theta in [0,pi],
+// cols = phi in [0,2pi].  visualize.py reads this as a 180x360 imshow image.
 void MeshGridSourceDensity(string outputname)
 {
 	string command=outputname+"/X_MeshGrid.txt";
 	freopen(command.c_str(),"w",stdout);
 
-
-	for (int i=0; i<MeshGridResolution; i++)
+	for (int i=0; i<EQUIRECT_NTHETA; i++)
 	{
-
-		for(int j=0; j<MeshGridResolution; j++)
+		double theta = PI * i / (EQUIRECT_NTHETA - 1);
+		for (int j=0; j<EQUIRECT_NPHI; j++)
 		{
-			double X=(-0.6+1.2*i/(MeshGridResolution-1));
-			double Y=(-0.6+1.2*j/(MeshGridResolution-1));
-			double N2=X*X+Y*Y;
-
-			double vec[3];
-			vec[0]=2*X/(1+N2);
-			vec[1]=2*Y/(1+N2);
-			vec[2]=1*(1-N2)/(1+N2);
-			
-			printf("%.*e ",	DECIMAL_DIG, P(vec)*4/((1+X*X+Y*Y)*(1+X*X+Y*Y)));
-
-		}	
-		printf("\n");	
-	}
-
-	command=outputname+"/log.txt";
-	freopen(command.c_str(),"a",stdout);
-
-	command=outputname+"/X_DiscreteMesh.txt";
-	freopen(command.c_str(),"w",stdout);
-
-
-	for (int i=0; i<MeshGridResolution; i++)
-	{
-
-		for(int j=0; j<MeshGridResolution; j++)
-		{
-			double X=(-0.6+1.2*i/(MeshGridResolution-1));
-			double Y=(-0.6+1.2*j/(MeshGridResolution-1));
-			double N2=X*X+Y*Y;
-
-			double vec[3];
-			vec[0]=2*X/(1+N2);
-			vec[1]=2*Y/(1+N2);
-			vec[2]=1*(1-N2)/(1+N2);
-			
-			if(P(vec)==0) continue;
-			printf("%.*e %.*e %.*e \n",	DECIMAL_DIG, X, DECIMAL_DIG, Y, DECIMAL_DIG, P(vec)*4/((1+X*X+Y*Y)*(1+X*X+Y*Y)));
-		}	
-		printf("\n");	
+			double phi = 2.0*PI * j / (EQUIRECT_NPHI - 1);
+			double vec[3] = { sin(theta)*cos(phi),
+			                  sin(theta)*sin(phi),
+			                  cos(theta) };
+			printf("%.*e ", DECIMAL_DIG, P(vec));
+		}
+		printf("\n");
 	}
 
 	command=outputname+"/log.txt";

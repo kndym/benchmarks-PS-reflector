@@ -158,9 +158,12 @@ def main():
         fontsize=13, fontweight="bold",
     )
 
-    # Panel 1 — source density (full sphere, equirectangular)
+    # Panel 1 — source density (prefer C++ equirectangular grid; Gaussian fallback)
     ax = plt.subplot(2, 3, 1)
-    src_dens = sphere_density_grid(src_bounds)
+    if X_mesh is not None and X_mesh.ndim == 2 and X_mesh.shape[0] > 1:
+        src_dens = X_mesh
+    else:
+        src_dens = sphere_density_grid(src_bounds)
     im = ax.imshow(src_dens, extent=[0, 360, 180, 0],
                    origin="upper", aspect="auto", cmap="viridis")
     plt.colorbar(im, ax=ax, label="Density")
@@ -169,9 +172,12 @@ def main():
     ax.set_xticks([0, 90, 180, 270, 360])
     ax.set_yticks([0, 45, 90, 135, 180])
 
-    # Panel 2 — destination density (full sphere, equirectangular)
+    # Panel 2 — destination density (prefer C++ equirectangular grid; Gaussian fallback)
     ax = plt.subplot(2, 3, 2)
-    tgt_dens = sphere_density_grid(tgt_bounds)
+    if Y_mesh is not None and Y_mesh.ndim == 2 and Y_mesh.shape[0] > 1:
+        tgt_dens = Y_mesh
+    else:
+        tgt_dens = sphere_density_grid(tgt_bounds)
     im = ax.imshow(tgt_dens, extent=[0, 360, 180, 0],
                    origin="upper", aspect="auto", cmap="plasma")
     plt.colorbar(im, ax=ax, label="Density")
@@ -295,7 +301,7 @@ def main():
     im1 = axes[0].imshow(src_dens, extent=[0, 360, 180, 0],
                          origin="upper", aspect="auto", cmap="viridis")
     plt.colorbar(im1, ax=axes[0], label="Density")
-    axes[0].set_title("Source  P(x)")
+    axes[0].set_title("Source  P(x)" + ("" if X_mesh is not None else "  [approx]"))
     axes[0].set_xlabel("φ (°)"); axes[0].set_ylabel("θ (°)")
     axes[0].set_xticks([0, 90, 180, 270, 360])
     axes[0].set_yticks([0, 45, 90, 135, 180])
@@ -303,7 +309,7 @@ def main():
     im2 = axes[1].imshow(tgt_dens, extent=[0, 360, 180, 0],
                          origin="upper", aspect="auto", cmap="plasma")
     plt.colorbar(im2, ax=axes[1], label="Density")
-    axes[1].set_title("Destination  Q(y)")
+    axes[1].set_title("Destination  Q(y)" + ("" if Y_mesh is not None else "  [approx]"))
     axes[1].set_xlabel("φ (°)"); axes[1].set_ylabel("θ (°)")
     axes[1].set_xticks([0, 90, 180, 270, 360])
     axes[1].set_yticks([0, 45, 90, 135, 180])
