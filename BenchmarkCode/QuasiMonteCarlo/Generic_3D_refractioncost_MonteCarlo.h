@@ -53,6 +53,7 @@ vector < vector <double> > xproj (NK, vector<double> (dim-1,0));
 
 double P(double x[]);
 double Q(double x[]);
+void generate_patch_points();  // defined in benchmark; fills x[] and y[] within patch bounds
 
 
 
@@ -91,6 +92,8 @@ double dist(double x[], double y[])
 
 void discretization()
 {
+	generate_patch_points();
+
 	fill_n(Original_p,NK,0);
 	fill_n(Original_q,NK,0);
 	SpatialResolution=getk(NK);

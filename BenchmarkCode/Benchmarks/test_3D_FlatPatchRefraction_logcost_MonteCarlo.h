@@ -2,6 +2,8 @@
 #define test_3D_FlatPatchRefraction_logcost_MonteCarlo
 
 #include <string>
+#include <random>
+#include <cmath>
 
 #include "../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h"
 #include "../SmallGrid/SmallSinkhorn_3D_MC.h"
@@ -24,6 +26,38 @@ string testname = "3D_FlatPatchRefraction_logcost_MonteCarlo";
 // Runtime patch bounds — set by main() from argv (same as other benchmarks)
 double src_theta_min, src_theta_max, src_phi_min, src_phi_max;
 double tgt_theta_min, tgt_theta_max, tgt_phi_min, tgt_phi_max;
+
+
+// Fills x[NK] with source-patch points and y[NK] with target-patch points,
+// both uniformly distributed on the sphere surface within their respective patches.
+// Sampling: phi ~ Uniform[phi_min, phi_max], cos(theta) ~ Uniform[cos(theta_max), cos(theta_min)]
+void generate_patch_points()
+{
+	std::mt19937 rng(42);
+	std::uniform_real_distribution<double> U(0.0, 1.0);
+
+	double cos_src_lo = cos(src_theta_max);
+	double cos_src_hi = cos(src_theta_min);
+	for (int i = 0; i < NK; i++) {
+		double u   = cos_src_lo + (cos_src_hi - cos_src_lo) * U(rng);
+		double phi = src_phi_min + (src_phi_max - src_phi_min) * U(rng);
+		double s   = sqrt(1.0 - u * u);
+		x[i][0] = s * cos(phi);
+		x[i][1] = s * sin(phi);
+		x[i][2] = u;
+	}
+
+	double cos_tgt_lo = cos(tgt_theta_max);
+	double cos_tgt_hi = cos(tgt_theta_min);
+	for (int i = 0; i < NK; i++) {
+		double u   = cos_tgt_lo + (cos_tgt_hi - cos_tgt_lo) * U(rng);
+		double phi = tgt_phi_min + (tgt_phi_max - tgt_phi_min) * U(rng);
+		double s   = sqrt(1.0 - u * u);
+		y[i][0] = s * cos(phi);
+		y[i][1] = s * sin(phi);
+		y[i][2] = u;
+	}
+}
 
 
 double P(double x[])
