@@ -1,4 +1,4 @@
-#ifndef Generic_3D_logcost_MonteCarlo
+#if !defined(GENERIC_3D_MONTECARLO_INCLUDED) && !defined(Generic_3D_logcost_MonteCarlo)
 #define Generic_3D_logcost_MonteCarlo
 #define GENERIC_3D_MONTECARLO_INCLUDED
 
