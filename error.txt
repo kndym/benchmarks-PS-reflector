@@ -1,0 +1,566 @@
+Patched main.cpp â†’ test_3D_FlatPatchRefraction_logcost_MonteCarlo.h
+
+Compiling...
+make: Entering directory '/home/jovyan/BenchmarkCode'
+g++ -O2 \
+  main.cpp \
+  Benchmarks/test_3D_SquareToCircle_logcost_MonteCarlo.h \
+  Benchmarks/test_3D_SquareToTwoGaussSide_logcost_MonteCarlo.h \
+  PushForward/PushForward_Cloud_128.h \
+  PushForward/Pushforward_of_RefRegular.h \
+  QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h \
+  QuasiMonteCarlo/MonteCarlo_Pointcloud_3D_128.h \
+  SmallGrid/3D_MonteCarlo_Pointcloud_small.h \
+  SmallGrid/SmallSinkhorn_3D_MC.h \
+  -o main -lm -lpthread
+make: Leaving directory '/home/jovyan/BenchmarkCode'
+
+STDERR: In file included from Benchmarks/../SmallGrid/SmallSinkhorn_3D_MC.h:4,
+                 from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:7,
+                 from main.cpp:1:
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h:13:14: error: redefinition of ‘const double PI’
+   13 | const double PI = 3.14159265358979323846;
+      |              ^~
+In file included from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:6,
+                 from main.cpp:1:
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h:13:14: note: ‘const double PI’ previously defined here
+   13 | const double PI = 3.14159265358979323846;
+      |              ^~
+In file included from Benchmarks/../SmallGrid/SmallSinkhorn_3D_MC.h:4,
+                 from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:7,
+                 from main.cpp:1:
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h:19:5: error: redefinition of ‘int SpatialResolution’
+   19 | int SpatialResolution;
+      |     ^~~~~~~~~~~~~~~~~
+In file included from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:6,
+                 from main.cpp:1:
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h:19:5: note: ‘int SpatialResolution’ previously declared here
+   19 | int SpatialResolution;
+      |     ^~~~~~~~~~~~~~~~~
+In file included from Benchmarks/../SmallGrid/SmallSinkhorn_3D_MC.h:4,
+                 from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:7,
+                 from main.cpp:1:
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h:22:8: error: redefinition of ‘double p [1600]’
+   22 | double p[NK];
+      |        ^
+In file included from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:6,
+                 from main.cpp:1:
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h:22:8: note: ‘double p [1600]’ previously declared here
+   22 | double p[NK];
+      |        ^
+In file included from Benchmarks/../SmallGrid/SmallSinkhorn_3D_MC.h:4,
+                 from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:7,
+                 from main.cpp:1:
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h:23:8: error: redefinition of ‘double q [1600]’
+   23 | double q[NK];
+      |        ^
+In file included from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:6,
+                 from main.cpp:1:
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h:23:8: note: ‘double q [1600]’ previously declared here
+   23 | double q[NK];
+      |        ^
+In file included from Benchmarks/../SmallGrid/SmallSinkhorn_3D_MC.h:4,
+                 from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:7,
+                 from main.cpp:1:
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h:24:8: error: redefinition of ‘double Original_p [1600]’
+   24 | double Original_p[NK];
+      |        ^~~~~~~~~~
+In file included from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:6,
+                 from main.cpp:1:
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h:24:8: note: ‘double Original_p [1600]’ previously declared here
+   24 | double Original_p[NK];
+      |        ^~~~~~~~~~
+In file included from Benchmarks/../SmallGrid/SmallSinkhorn_3D_MC.h:4,
+                 from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:7,
+                 from main.cpp:1:
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h:25:8: error: redefinition of ‘double Original_q [1600]’
+   25 | double Original_q[NK];
+      |        ^~~~~~~~~~
+In file included from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:6,
+                 from main.cpp:1:
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h:25:8: note: ‘double Original_q [1600]’ previously declared here
+   25 | double Original_q[NK];
+      |        ^~~~~~~~~~
+In file included from Benchmarks/../SmallGrid/SmallSinkhorn_3D_MC.h:4,
+                 from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:7,
+                 from main.cpp:1:
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h:26:8: error: redefinition of ‘double logp [1600]’
+   26 | double logp[NK];
+      |        ^~~~
+In file included from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:6,
+                 from main.cpp:1:
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h:26:8: note: ‘double logp [1600]’ previously declared here
+   26 | double logp[NK];
+      |        ^~~~
+In file included from Benchmarks/../SmallGrid/SmallSinkhorn_3D_MC.h:4,
+                 from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:7,
+                 from main.cpp:1:
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h:27:8: error: redefinition of ‘double logq [1600]’
+   27 | double logq[NK];
+      |        ^~~~
+In file included from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:6,
+                 from main.cpp:1:
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h:27:8: note: ‘double logq [1600]’ previously declared here
+   27 | double logq[NK];
+      |        ^~~~
+In file included from Benchmarks/../SmallGrid/SmallSinkhorn_3D_MC.h:4,
+                 from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:7,
+                 from main.cpp:1:
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h:31:11: error: redefinition of ‘const int MeshGridResolution’
+   31 | const int MeshGridResolution=128+1;
+      |           ^~~~~~~~~~~~~~~~~~
+In file included from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:6,
+                 from main.cpp:1:
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h:31:11: note: ‘const int MeshGridResolution’ previously defined here
+   31 | const int MeshGridResolution=128+1;
+      |           ^~~~~~~~~~~~~~~~~~
+In file included from Benchmarks/../SmallGrid/SmallSinkhorn_3D_MC.h:4,
+                 from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:7,
+                 from main.cpp:1:
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h:32:11: error: redefinition of ‘const int DestinationResolution’
+   32 | const int DestinationResolution=65;
+      |           ^~~~~~~~~~~~~~~~~~~~~
+In file included from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:6,
+                 from main.cpp:1:
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h:32:11: note: ‘const int DestinationResolution’ previously defined here
+   32 | const int DestinationResolution=65;
+      |           ^~~~~~~~~~~~~~~~~~~~~
+In file included from Benchmarks/../SmallGrid/SmallSinkhorn_3D_MC.h:4,
+                 from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:7,
+                 from main.cpp:1:
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h:33:11: error: redefinition of ‘const int FinalGridResolution’
+   33 | const int FinalGridResolution=2*128+1;
+      |           ^~~~~~~~~~~~~~~~~~~
+In file included from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:6,
+                 from main.cpp:1:
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h:33:11: note: ‘const int FinalGridResolution’ previously defined here
+   33 | const int FinalGridResolution=2*128+1;
+      |           ^~~~~~~~~~~~~~~~~~~
+In file included from Benchmarks/../SmallGrid/SmallSinkhorn_3D_MC.h:4,
+                 from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:7,
+                 from main.cpp:1:
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h:34:11: error: redefinition of ‘const int FinalGrid’
+   34 | const int FinalGrid=FinalGridResolution*FinalGridResolution;
+      |           ^~~~~~~~~
+In file included from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:6,
+                 from main.cpp:1:
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h:34:11: note: ‘const int FinalGrid’ previously defined here
+   34 | const int FinalGrid=FinalGridResolution*FinalGridResolution;
+      |           ^~~~~~~~~
+In file included from Benchmarks/../SmallGrid/SmallSinkhorn_3D_MC.h:4,
+                 from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:7,
+                 from main.cpp:1:
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h:35:8: error: redefinition of ‘double x_regular [66049][3]’
+   35 | double x_regular[FinalGrid][dim];
+      |        ^~~~~~~~~
+In file included from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:6,
+                 from main.cpp:1:
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h:35:8: note: ‘double x_regular [66049][3]’ previously declared here
+   35 | double x_regular[FinalGrid][dim];
+      |        ^~~~~~~~~
+In file included from Benchmarks/../SmallGrid/SmallSinkhorn_3D_MC.h:4,
+                 from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:7,
+                 from main.cpp:1:
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h:36:8: error: redefinition of ‘double f_regular [66049]’
+   36 | double f_regular[FinalGrid];
+      |        ^~~~~~~~~
+In file included from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:6,
+                 from main.cpp:1:
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h:36:8: note: ‘double f_regular [66049]’ previously declared here
+   36 | double f_regular[FinalGrid];
+      |        ^~~~~~~~~
+In file included from Benchmarks/../SmallGrid/SmallSinkhorn_3D_MC.h:4,
+                 from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:7,
+                 from main.cpp:1:
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h:37:8: error: redefinition of ‘double Ref_regular [66049][3]’
+   37 | double Ref_regular[FinalGrid][dim];
+      |        ^~~~~~~~~~~
+In file included from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:6,
+                 from main.cpp:1:
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h:37:8: note: ‘double Ref_regular [66049][3]’ previously declared here
+   37 | double Ref_regular[FinalGrid][dim];
+      |        ^~~~~~~~~~~
+In file included from Benchmarks/../SmallGrid/SmallSinkhorn_3D_MC.h:4,
+                 from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:7,
+                 from main.cpp:1:
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h:39:8: error: redefinition of ‘double Regular_side [257]’
+   39 | double Regular_side[FinalGridResolution];
+      |        ^~~~~~~~~~~~
+In file included from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:6,
+                 from main.cpp:1:
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h:39:8: note: ‘double Regular_side [257]’ previously declared here
+   39 | double Regular_side[FinalGridResolution];
+      |        ^~~~~~~~~~~~
+In file included from Benchmarks/../SmallGrid/SmallSinkhorn_3D_MC.h:4,
+                 from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:7,
+                 from main.cpp:1:
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h:40:8: error: redefinition of ‘double Y_pushed_projected [1600][3]’
+   40 | double Y_pushed_projected[NK][dim];
+      |        ^~~~~~~~~~~~~~~~~~
+In file included from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:6,
+                 from main.cpp:1:
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h:40:8: note: ‘double Y_pushed_projected [1600][3]’ previously declared here
+   40 | double Y_pushed_projected[NK][dim];
+      |        ^~~~~~~~~~~~~~~~~~
+In file included from Benchmarks/../SmallGrid/SmallSinkhorn_3D_MC.h:4,
+                 from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:7,
+                 from main.cpp:1:
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h:41:8: error: redefinition of ‘double Y_Traced [65][65]’
+   41 | double Y_Traced[DestinationResolution][DestinationResolution];
+      |        ^~~~~~~~
+In file included from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:6,
+                 from main.cpp:1:
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h:41:8: note: ‘double Y_Traced [65][65]’ previously declared here
+   41 | double Y_Traced[DestinationResolution][DestinationResolution];
+      |        ^~~~~~~~
+In file included from Benchmarks/../SmallGrid/SmallSinkhorn_3D_MC.h:4,
+                 from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:7,
+                 from main.cpp:1:
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h:45:8: error: redefinition of ‘double norm1’
+   45 | double norm1=0,norm2=0;
+      |        ^~~~~
+In file included from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:6,
+                 from main.cpp:1:
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h:45:8: note: ‘double norm1’ previously defined here
+   45 | double norm1=0,norm2=0;
+      |        ^~~~~
+In file included from Benchmarks/../SmallGrid/SmallSinkhorn_3D_MC.h:4,
+                 from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:7,
+                 from main.cpp:1:
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h:45:16: error: redefinition of ‘double norm2’
+   45 | double norm1=0,norm2=0;
+      |                ^~~~~
+In file included from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:6,
+                 from main.cpp:1:
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h:45:16: note: ‘double norm2’ previously defined here
+   45 | double norm1=0,norm2=0;
+      |                ^~~~~
+In file included from Benchmarks/../SmallGrid/SmallSinkhorn_3D_MC.h:4,
+                 from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:7,
+                 from main.cpp:1:
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h:46:5: error: redefinition of ‘int ind1’
+   46 | int ind1=0,ind2=0;
+      |     ^~~~
+In file included from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:6,
+                 from main.cpp:1:
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h:46:5: note: ‘int ind1’ previously defined here
+   46 | int ind1=0,ind2=0;
+      |     ^~~~
+In file included from Benchmarks/../SmallGrid/SmallSinkhorn_3D_MC.h:4,
+                 from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:7,
+                 from main.cpp:1:
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h:46:12: error: redefinition of ‘int ind2’
+   46 | int ind1=0,ind2=0;
+      |            ^~~~
+In file included from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:6,
+                 from main.cpp:1:
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h:46:12: note: ‘int ind2’ previously defined here
+   46 | int ind1=0,ind2=0;
+      |            ^~~~
+In file included from Benchmarks/../SmallGrid/SmallSinkhorn_3D_MC.h:4,
+                 from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:7,
+                 from main.cpp:1:
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h:50:28: error: redefinition of ‘std::vector<std::vector<double> > u’
+   50 | vector < vector <double> > u(NK, vector<double> (NK,0));
+      |                            ^
+In file included from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:6,
+                 from main.cpp:1:
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h:50:28: note: ‘std::vector<std::vector<double> > u’ previously declared here
+   50 | vector < vector <double> > u(NK, vector<double> (NK,0));
+      |                            ^
+In file included from Benchmarks/../SmallGrid/SmallSinkhorn_3D_MC.h:4,
+                 from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:7,
+                 from main.cpp:1:
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h:51:28: error: redefinition of ‘std::vector<std::vector<double> > xproj’
+   51 | vector < vector <double> > xproj (NK, vector<double> (dim-1,0));
+      |                            ^~~~~
+In file included from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:6,
+                 from main.cpp:1:
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h:51:28: note: ‘std::vector<std::vector<double> > xproj’ previously declared here
+   51 | vector < vector <double> > xproj (NK, vector<double> (dim-1,0));
+      |                            ^~~~~
+In file included from Benchmarks/../SmallGrid/SmallSinkhorn_3D_MC.h:4,
+                 from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:7,
+                 from main.cpp:1:
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h:58:5: error: redefinition of ‘int getk(int)’
+   58 | int getk(int Nk)
+      |     ^~~~
+In file included from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:6,
+                 from main.cpp:1:
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h:58:5: note: ‘int getk(int)’ previously defined here
+   58 | int getk(int Nk)
+      |     ^~~~
+In file included from Benchmarks/../SmallGrid/SmallSinkhorn_3D_MC.h:4,
+                 from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:7,
+                 from main.cpp:1:
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h:64:14: error: redefinition of ‘const double COST_K’
+   64 | const double COST_K = 0.7;  // scale factor: c(x,y) = -log(1 - k*(x·y))
+      |              ^~~~~~
+In file included from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:6,
+                 from main.cpp:1:
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h:67:14: note: ‘const double COST_K’ previously defined here
+   67 | const double COST_K = 0.6;
+      |              ^~~~~~
+In file included from Benchmarks/../SmallGrid/SmallSinkhorn_3D_MC.h:4,
+                 from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:7,
+                 from main.cpp:1:
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h:66:8: error: redefinition of ‘double Cost_Func(double*, double*)’
+   66 | double Cost_Func(double x[], double y[])
+      |        ^~~~~~~~~
+In file included from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:6,
+                 from main.cpp:1:
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h:69:8: note: ‘double Cost_Func(double*, double*)’ previously defined here
+   69 | double Cost_Func(double x[], double y[])
+      |        ^~~~~~~~~
+In file included from Benchmarks/../SmallGrid/SmallSinkhorn_3D_MC.h:4,
+                 from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:7,
+                 from main.cpp:1:
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h:77:8: error: redefinition of ‘double dist(double*, double*)’
+   77 | double dist(double x[], double y[])
+      |        ^~~~
+In file included from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:6,
+                 from main.cpp:1:
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h:80:8: note: ‘double dist(double*, double*)’ previously defined here
+   80 | double dist(double x[], double y[])
+      |        ^~~~
+In file included from Benchmarks/../SmallGrid/SmallSinkhorn_3D_MC.h:4,
+                 from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:7,
+                 from main.cpp:1:
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h:88:6: error: redefinition of ‘void discretization()’
+   88 | void discretization()
+      |      ^~~~~~~~~~~~~~
+In file included from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:6,
+                 from main.cpp:1:
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h:91:6: note: ‘void discretization()’ previously defined here
+   91 | void discretization()
+      |      ^~~~~~~~~~~~~~
+In file included from Benchmarks/../SmallGrid/SmallSinkhorn_3D_MC.h:4,
+                 from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:7,
+                 from main.cpp:1:
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h:115:6: error: redefinition of ‘void fill_p()’
+  115 | void fill_p()
+      |      ^~~~~~
+In file included from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:6,
+                 from main.cpp:1:
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h:118:6: note: ‘void fill_p()’ previously defined here
+  118 | void fill_p()
+      |      ^~~~~~
+In file included from Benchmarks/../SmallGrid/SmallSinkhorn_3D_MC.h:4,
+                 from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:7,
+                 from main.cpp:1:
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h:141:6: error: redefinition of ‘void fill_q()’
+  141 | void fill_q()
+      |      ^~~~~~
+In file included from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:6,
+                 from main.cpp:1:
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h:144:6: note: ‘void fill_q()’ previously defined here
+  144 | void fill_q()
+      |      ^~~~~~
+In file included from Benchmarks/../SmallGrid/SmallSinkhorn_3D_MC.h:4,
+                 from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:7,
+                 from main.cpp:1:
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h:171:8: error: redefinition of ‘double L2_norm(double*)’
+  171 | double L2_norm(double x[])
+      |        ^~~~~~~
+In file included from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:6,
+                 from main.cpp:1:
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h:170:8: note: ‘double L2_norm(double*)’ previously defined here
+  170 | double L2_norm(double x[])
+      |        ^~~~~~~
+In file included from Benchmarks/../SmallGrid/SmallSinkhorn_3D_MC.h:4,
+                 from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:7,
+                 from main.cpp:1:
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h:182:6: error: redefinition of ‘void MeshGridDestinationDensity(std::string)’
+  182 | void MeshGridDestinationDensity(string outputname)
+      |      ^~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:6,
+                 from main.cpp:1:
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h:182:6: note: ‘void MeshGridDestinationDensity(std::string)’ previously defined here
+  182 | void MeshGridDestinationDensity(string outputname)
+      |      ^~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from Benchmarks/../SmallGrid/SmallSinkhorn_3D_MC.h:4,
+                 from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:7,
+                 from main.cpp:1:
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h:238:6: error: redefinition of ‘void MeshGridSourceDensity(std::string)’
+  238 | void MeshGridSourceDensity(string outputname)
+      |      ^~~~~~~~~~~~~~~~~~~~~
+In file included from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:6,
+                 from main.cpp:1:
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h:238:6: note: ‘void MeshGridSourceDensity(std::string)’ previously defined here
+  238 | void MeshGridSourceDensity(string outputname)
+      |      ^~~~~~~~~~~~~~~~~~~~~
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h: In function ‘void MeshGridDestinationDensity(std::string)’:
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h:185:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  185 |         freopen(command.c_str(),"w",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h:209:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  209 |         freopen(command.c_str(),"a",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h:212:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  212 |         freopen(command.c_str(),"w",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h:234:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  234 |         freopen(command.c_str(),"a",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h: In function ‘void MeshGridSourceDensity(std::string)’:
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h:241:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  241 |         freopen(command.c_str(),"w",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h:265:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  265 |         freopen(command.c_str(),"a",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h:268:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  268 |         freopen(command.c_str(),"w",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Benchmarks/../QuasiMonteCarlo/Generic_3D_refractioncost_MonteCarlo.h:292:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  292 |         freopen(command.c_str(),"a",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from Benchmarks/../SmallGrid/SmallSinkhorn_3D_MC.h:4,
+                 from Benchmarks/test_3D_FlatPatchRefraction_logcost_MonteCarlo.h:7,
+                 from main.cpp:1:
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h: In function ‘void MeshGridDestinationDensity(std::string)’:
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h:185:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  185 |         freopen(command.c_str(),"w",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h:209:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  209 |         freopen(command.c_str(),"a",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h:212:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  212 |         freopen(command.c_str(),"w",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h:234:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  234 |         freopen(command.c_str(),"a",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h: In function ‘void MeshGridSourceDensity(std::string)’:
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h:241:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  241 |         freopen(command.c_str(),"w",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h:265:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  265 |         freopen(command.c_str(),"a",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h:268:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  268 |         freopen(command.c_str(),"w",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Benchmarks/../SmallGrid/../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h:292:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  292 |         freopen(command.c_str(),"a",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from main.cpp:17:
+PushForward/Pushforward_of_RefRegular.h: In function ‘void Pushforward_Ref_regular(std::string)’:
+PushForward/Pushforward_of_RefRegular.h:30:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   30 |         freopen(command.c_str(),"w",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+PushForward/Pushforward_of_RefRegular.h:42:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   42 |         freopen(command.c_str(),"a",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+PushForward/Pushforward_of_RefRegular.h:55:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   55 |         freopen(command.c_str(),"w",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+PushForward/Pushforward_of_RefRegular.h:68:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   68 |         freopen(command.c_str(),"w",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+PushForward/Pushforward_of_RefRegular.h:83:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   83 |         freopen(command.c_str(),"a",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+main.cpp: In function ‘int main(int, char**)’:
+main.cpp:216:15: warning: ignoring return value of ‘int system(const char*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  216 |         system(command.c_str());
+      |         ~~~~~~^~~~~~~~~~~~~~~~~
+main.cpp:220:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  220 |         freopen(command.c_str(),"w",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+main.cpp:260:15: warning: ignoring return value of ‘int system(const char*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  260 |         system(("mkdir "+command).c_str());
+      |         ~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+main.cpp:262:15: warning: ignoring return value of ‘int system(const char*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  262 |         system(command.c_str());
+      |         ~~~~~~^~~~~~~~~~~~~~~~~
+main.cpp:264:15: warning: ignoring return value of ‘int system(const char*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  264 |         system("spd-say done ");
+      |         ~~~~~~^~~~~~~~~~~~~~~~~
+main.cpp: In function ‘void sink_to_Reflector_subtracted_axb(int)’:
+main.cpp:740:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  740 |         freopen(command.c_str(),"w",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+main.cpp:745:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  745 |         freopen(command.c_str(),"w",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+main.cpp:750:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  750 |         freopen(command.c_str(),"w",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+main.cpp:755:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  755 |         freopen(command.c_str(),"w",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+main.cpp:771:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  771 |         freopen(command.c_str(),"a",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+main.cpp: In function ‘void GetCtransforms()’:
+main.cpp:841:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  841 |         freopen(command.c_str(),"w",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+main.cpp:846:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  846 |         freopen(command.c_str(),"w",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+main.cpp:851:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  851 |         freopen(command.c_str(),"w",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+main.cpp:856:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  856 |         freopen(command.c_str(),"w",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+main.cpp:861:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  861 |         freopen(command.c_str(),"w",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+main.cpp:866:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  866 |         freopen(command.c_str(),"a",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+main.cpp: In function ‘void Printall_MY()’:
+main.cpp:909:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  909 |         freopen(command.c_str(),"w",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+main.cpp:915:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  915 |         freopen(command.c_str(),"w",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+main.cpp:920:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  920 |         freopen(command.c_str(),"w",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+main.cpp:925:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  925 |         freopen(command.c_str(),"w",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+main.cpp:930:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  930 |         freopen(command.c_str(),"w",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+main.cpp:935:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  935 |         freopen(command.c_str(),"w",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+main.cpp:940:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  940 |         freopen(command.c_str(),"w",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+main.cpp:945:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  945 |         freopen(command.c_str(),"w",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+main.cpp:950:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  950 |         freopen(command.c_str(),"w",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+main.cpp:955:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  955 |         freopen(command.c_str(),"w",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+main.cpp:960:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  960 |         freopen(command.c_str(),"a",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+main.cpp: In function ‘void Get_Original_Y(std::string)’:
+main.cpp:1036:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+ 1036 |         freopen(command.c_str(),"w",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+main.cpp:1052:16: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+ 1052 |         freopen(command.c_str(),"a",stdout);
+      |         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+make: *** [Makefile:4: OBJ] Error 1
+
+---------------------------------------------------------------------------
+RuntimeError                              Traceback (most recent call last)
+Cell In[4], line 22
+     20 if result.returncode != 0:
+     21     print('STDERR:', result.stderr)
+---> 22     raise RuntimeError(f'Compilation failed (exit {result.returncode})')
+     23 print('âœ“ Compiled successfully')
+
+RuntimeError: Compilation failed (exit 2)
