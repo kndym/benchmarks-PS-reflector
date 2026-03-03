@@ -10,6 +10,7 @@ Called automatically by Benchmark.ipynb (Step 6) but can be re-run standalone
 at any time to regenerate the figures without re-running the full benchmark.
 """
 
+import math
 import os
 import sys
 import argparse
@@ -31,6 +32,15 @@ def parse_args():
                    help="Benchmark header filename (for plot title)")
     p.add_argument("--nk", type=int, default=0,
                    help="Point-cloud size NK (for plot title)")
+    # Patch bounds (multiples of pi) — defaults match the notebook defaults
+    p.add_argument("--src-theta-min", type=float, default=0.0)
+    p.add_argument("--src-theta-max", type=float, default=0.5)
+    p.add_argument("--src-phi-min",   type=float, default=0.0)
+    p.add_argument("--src-phi-max",   type=float, default=2.0)
+    p.add_argument("--tgt-theta-min", type=float, default=0.5)
+    p.add_argument("--tgt-theta-max", type=float, default=1.0)
+    p.add_argument("--tgt-phi-min",   type=float, default=0.0)
+    p.add_argument("--tgt-phi-max",   type=float, default=2.0)
     return p.parse_args()
 
 
@@ -84,6 +94,38 @@ def no_data(ax, msg):
             transform=ax.transAxes, color="grey", fontsize=10)
 
 
+# ── Sphere density helper ─────────────────────────────────────────────────────
+
+def sphere_density_grid(bounds, n_theta=360, n_phi=720):
+    """Gaussian density on the full sphere in equirectangular coordinates.
+
+    bounds = (theta_min, theta_max, phi_min, phi_max) in radians.
+    The Gaussian is centred at the midpoint of the patch with sigma = half-width.
+    Returns (density_2d,) where density_2d has shape (n_theta, n_phi),
+    row axis = theta 0..pi, column axis = phi 0..2pi.
+    """
+    th_min, th_max, ph_min, ph_max = bounds
+    theta_c = 0.5 * (th_min + th_max)
+    phi_c   = 0.5 * (ph_min + ph_max)
+    sigma_t = 0.5 * (th_max - th_min)
+    sigma_p = 0.5 * (ph_max - ph_min)
+
+    theta = np.linspace(0, math.pi,       n_theta)
+    phi   = np.linspace(0, 2 * math.pi,   n_phi)
+    THETA, PHI = np.meshgrid(theta, phi, indexing="ij")  # (n_theta, n_phi)
+
+    dtheta = THETA - theta_c
+    dphi   = PHI   - phi_c
+    dphi   = (dphi + math.pi) % (2 * math.pi) - math.pi  # wrap to [-pi, pi]
+
+    if sigma_t > 0 and sigma_p > 0:
+        density = np.exp(-0.5 * (dtheta**2 / sigma_t**2 + dphi**2 / sigma_p**2))
+    else:
+        density = np.zeros((n_theta, n_phi))
+
+    return density
+
+
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def main():
@@ -91,6 +133,12 @@ def main():
     out_dir   = args.output_dir
     BENCHMARK = args.benchmark
     NK        = args.nk
+
+    # Patch bounds in radians
+    src_bounds = (args.src_theta_min * math.pi, args.src_theta_max * math.pi,
+                  args.src_phi_min   * math.pi, args.src_phi_max   * math.pi)
+    tgt_bounds = (args.tgt_theta_min * math.pi, args.tgt_theta_max * math.pi,
+                  args.tgt_phi_min   * math.pi, args.tgt_phi_max   * math.pi)
 
     j = lambda name: os.path.join(out_dir, name)
 
@@ -110,27 +158,27 @@ def main():
         fontsize=13, fontweight="bold",
     )
 
-    # Panel 1 — source density
+    # Panel 1 — source density (full sphere, equirectangular)
     ax = plt.subplot(2, 3, 1)
-    if X_mesh is not None:
-        im = ax.imshow(X_mesh, extent=[-0.6, 0.6, -0.6, 0.6],
-                       origin="lower", cmap="viridis")
-        plt.colorbar(im, ax=ax, label="Density")
-        ax.set_title("Source Density", fontweight="bold")
-    else:
-        no_data(ax, "X_MeshGrid.txt not found")
-    ax.set_xlabel("X"); ax.set_ylabel("Y")
+    src_dens = sphere_density_grid(src_bounds)
+    im = ax.imshow(src_dens, extent=[0, 360, 180, 0],
+                   origin="upper", aspect="auto", cmap="viridis")
+    plt.colorbar(im, ax=ax, label="Density")
+    ax.set_title("Source Density  P(x)", fontweight="bold")
+    ax.set_xlabel("φ (°)"); ax.set_ylabel("θ (°)")
+    ax.set_xticks([0, 90, 180, 270, 360])
+    ax.set_yticks([0, 45, 90, 135, 180])
 
-    # Panel 2 — destination density
+    # Panel 2 — destination density (full sphere, equirectangular)
     ax = plt.subplot(2, 3, 2)
-    if Y_mesh is not None:
-        im = ax.imshow(Y_mesh, extent=[-0.6, 0.6, -0.6, 0.6],
-                       origin="lower", cmap="plasma")
-        plt.colorbar(im, ax=ax, label="Density")
-        ax.set_title("Destination Density", fontweight="bold")
-    else:
-        no_data(ax, "Y_MeshGrid.txt not found")
-    ax.set_xlabel("X"); ax.set_ylabel("Y")
+    tgt_dens = sphere_density_grid(tgt_bounds)
+    im = ax.imshow(tgt_dens, extent=[0, 360, 180, 0],
+                   origin="upper", aspect="auto", cmap="plasma")
+    plt.colorbar(im, ax=ax, label="Density")
+    ax.set_title("Destination Density  Q(y)", fontweight="bold")
+    ax.set_xlabel("φ (°)"); ax.set_ylabel("θ (°)")
+    ax.set_xticks([0, 90, 180, 270, 360])
+    ax.set_yticks([0, 45, 90, 135, 180])
 
     # Panel 3 — target distribution (original)
     ax = plt.subplot(2, 3, 3)
@@ -240,24 +288,29 @@ def main():
         plt.savefig(j("reflector_analysis.png"), dpi=150, bbox_inches="tight")
         print("SAVED:", j("reflector_analysis.png"))
 
-    # ── Density comparison ────────────────────────────────────────────────────
-    if X_mesh is not None and Y_mesh is not None:
-        fig, axes = plt.subplots(1, 2, figsize=(16, 6))
-        fig.suptitle("Source vs Destination Density", fontweight="bold")
+    # ── Density comparison (full sphere, equirectangular) ─────────────────────
+    fig, axes = plt.subplots(1, 2, figsize=(16, 6))
+    fig.suptitle("Source vs Destination Density — full sphere", fontweight="bold")
 
-        im1 = axes[0].imshow(X_mesh, extent=[-0.6, 0.6, -0.6, 0.6],
-                             origin="lower", cmap="viridis")
-        plt.colorbar(im1, ax=axes[0], label="Density")
-        axes[0].set_title("Source"); axes[0].set_xlabel("X"); axes[0].set_ylabel("Y")
+    im1 = axes[0].imshow(src_dens, extent=[0, 360, 180, 0],
+                         origin="upper", aspect="auto", cmap="viridis")
+    plt.colorbar(im1, ax=axes[0], label="Density")
+    axes[0].set_title("Source  P(x)")
+    axes[0].set_xlabel("φ (°)"); axes[0].set_ylabel("θ (°)")
+    axes[0].set_xticks([0, 90, 180, 270, 360])
+    axes[0].set_yticks([0, 45, 90, 135, 180])
 
-        im2 = axes[1].imshow(Y_mesh, extent=[-0.6, 0.6, -0.6, 0.6],
-                             origin="lower", cmap="plasma")
-        plt.colorbar(im2, ax=axes[1], label="Density")
-        axes[1].set_title("Destination"); axes[1].set_xlabel("X"); axes[1].set_ylabel("Y")
+    im2 = axes[1].imshow(tgt_dens, extent=[0, 360, 180, 0],
+                         origin="upper", aspect="auto", cmap="plasma")
+    plt.colorbar(im2, ax=axes[1], label="Density")
+    axes[1].set_title("Destination  Q(y)")
+    axes[1].set_xlabel("φ (°)"); axes[1].set_ylabel("θ (°)")
+    axes[1].set_xticks([0, 90, 180, 270, 360])
+    axes[1].set_yticks([0, 45, 90, 135, 180])
 
-        plt.tight_layout()
-        plt.savefig(j("density_comparison.png"), dpi=150, bbox_inches="tight")
-        print("SAVED:", j("density_comparison.png"))
+    plt.tight_layout()
+    plt.savefig(j("density_comparison.png"), dpi=150, bbox_inches="tight")
+    print("SAVED:", j("density_comparison.png"))
 
 
 if __name__ == "__main__":
