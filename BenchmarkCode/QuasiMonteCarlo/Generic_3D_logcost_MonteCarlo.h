@@ -1,6 +1,5 @@
-#if !defined(GENERIC_3D_MONTECARLO_INCLUDED) && !defined(Generic_3D_logcost_MonteCarlo)
+#ifndef Generic_3D_logcost_MonteCarlo
 #define Generic_3D_logcost_MonteCarlo
-#define GENERIC_3D_MONTECARLO_INCLUDED
 
 #include <iostream>
 #include <fstream>
@@ -8,6 +7,8 @@
 #include <cfloat>
 #include <math.h>
 #include <vector>
+
+#include <mkl.h>
 
 #include "../QuasiMonteCarlo/MonteCarlo_Pointcloud_3D_128.h"
 
@@ -29,9 +30,9 @@ double logq[NK];
 
 
 //I'm putting here 128 instead of sqrt(NK) as this is greatest number and I want all of them to have uniform setting
-const int MeshGridResolution=128+1;
-const int DestinationResolution=65;
-const int FinalGridResolution=2*128+1;
+const int MeshGridResolution=512+1;
+const int DestinationResolution=129;
+const int FinalGridResolution=8*128+1;
 const int FinalGrid=FinalGridResolution*FinalGridResolution;
 double x_regular[FinalGrid][dim];
 double f_regular[FinalGrid];
@@ -62,16 +63,14 @@ int getk(int Nk)
 }
 
 
-const double COST_K = 0.7;  // scale factor: c(x,y) = -log(1 - k*(x·y))
-
 double Cost_Func(double x[], double y[])
 {
 	double temp=1;
 	for(int d=0; d<dim; d++)
 	{
-		temp-=COST_K*x[d]*y[d];
+		temp-=x[d]*y[d];
 	}
-	return -log(temp);
+	return -log(temp); //cost from WANG paper
 }
 
 
@@ -180,29 +179,55 @@ double L2_norm(double x[])
 }
 
 
-// Equirectangular grid resolution for density output
-const int EQUIRECT_NTHETA = 180;
-const int EQUIRECT_NPHI   = 360;
-
-// Writes Q(vec) on a full equirectangular grid: rows = theta in [0,pi],
-// cols = phi in [0,2pi].  visualize.py reads this as a 180x360 imshow image.
 void MeshGridDestinationDensity(string outputname)
 {
 	string command=outputname+"/Y_MeshGrid.txt";
 	freopen(command.c_str(),"w",stdout);
 
-	for (int i=0; i<EQUIRECT_NTHETA; i++)
+
+	for (int i=0; i<MeshGridResolution; i++)
 	{
-		double theta = PI * i / (EQUIRECT_NTHETA - 1);
-		for (int j=0; j<EQUIRECT_NPHI; j++)
+
+		for(int j=0; j<MeshGridResolution; j++)
 		{
-			double phi = 2.0*PI * j / (EQUIRECT_NPHI - 1);
-			double vec[3] = { sin(theta)*cos(phi),
-			                  sin(theta)*sin(phi),
-			                  cos(theta) };
-			printf("%.*e ", DECIMAL_DIG, Q(vec));
-		}
-		printf("\n");
+			double X=(-0.6+1.2*i/(MeshGridResolution-1));
+			double Y=(-0.6+1.2*j/(MeshGridResolution-1));
+			double N2=X*X+Y*Y;
+
+			double vec[3];
+			vec[0]=2*X/(1+N2);
+			vec[1]=2*Y/(1+N2);
+			vec[2]=-1*(1-N2)/(1+N2);
+			
+			printf("%.*e ",	DECIMAL_DIG, Q(vec)*4/((1+X*X+Y*Y)*(1+X*X+Y*Y)));
+
+		}	
+		printf("\n");	
+	}
+
+	command=outputname+"/log.txt";
+	freopen(command.c_str(),"a",stdout);
+
+	command=outputname+"/Y_DiscreteMesh.txt";
+	freopen(command.c_str(),"w",stdout);
+
+
+	for (int i=0; i<MeshGridResolution; i++)
+	{
+
+		for(int j=0; j<MeshGridResolution; j++)
+		{
+			double X=(-0.6+1.2*i/(MeshGridResolution-1));
+			double Y=(-0.6+1.2*j/(MeshGridResolution-1));
+			double N2=X*X+Y*Y;
+
+			double vec[3];
+			vec[0]=2*X/(1+N2);
+			vec[1]=2*Y/(1+N2);
+			vec[2]=-1*(1-N2)/(1+N2);
+			if(Q(vec)==0) continue;
+			printf("%.*e %.*e %.*e \n",	DECIMAL_DIG, X, DECIMAL_DIG, Y, DECIMAL_DIG, Q(vec)*4/((1+X*X+Y*Y)*(1+X*X+Y*Y)));
+		}	
 	}
 
 	command=outputname+"/log.txt";
@@ -210,25 +235,57 @@ void MeshGridDestinationDensity(string outputname)
 }
 
 
-// Writes P(vec) on a full equirectangular grid: rows = theta in [0,pi],
-// cols = phi in [0,2pi].  visualize.py reads this as a 180x360 imshow image.
 void MeshGridSourceDensity(string outputname)
 {
 	string command=outputname+"/X_MeshGrid.txt";
 	freopen(command.c_str(),"w",stdout);
 
-	for (int i=0; i<EQUIRECT_NTHETA; i++)
+
+	for (int i=0; i<MeshGridResolution; i++)
 	{
-		double theta = PI * i / (EQUIRECT_NTHETA - 1);
-		for (int j=0; j<EQUIRECT_NPHI; j++)
+
+		for(int j=0; j<MeshGridResolution; j++)
 		{
-			double phi = 2.0*PI * j / (EQUIRECT_NPHI - 1);
-			double vec[3] = { sin(theta)*cos(phi),
-			                  sin(theta)*sin(phi),
-			                  cos(theta) };
-			printf("%.*e ", DECIMAL_DIG, P(vec));
-		}
-		printf("\n");
+			double X=(-0.6+1.2*i/(MeshGridResolution-1));
+			double Y=(-0.6+1.2*j/(MeshGridResolution-1));
+			double N2=X*X+Y*Y;
+
+			double vec[3];
+			vec[0]=2*X/(1+N2);
+			vec[1]=2*Y/(1+N2);
+			vec[2]=1*(1-N2)/(1+N2);
+			
+			printf("%.*e ",	DECIMAL_DIG, P(vec)*4/((1+X*X+Y*Y)*(1+X*X+Y*Y)));
+
+		}	
+		printf("\n");	
+	}
+
+	command=outputname+"/log.txt";
+	freopen(command.c_str(),"a",stdout);
+
+	command=outputname+"/X_DiscreteMesh.txt";
+	freopen(command.c_str(),"w",stdout);
+
+
+	for (int i=0; i<MeshGridResolution; i++)
+	{
+
+		for(int j=0; j<MeshGridResolution; j++)
+		{
+			double X=(-0.6+1.2*i/(MeshGridResolution-1));
+			double Y=(-0.6+1.2*j/(MeshGridResolution-1));
+			double N2=X*X+Y*Y;
+
+			double vec[3];
+			vec[0]=2*X/(1+N2);
+			vec[1]=2*Y/(1+N2);
+			vec[2]=1*(1-N2)/(1+N2);
+			
+			if(P(vec)==0) continue;
+			printf("%.*e %.*e %.*e \n",	DECIMAL_DIG, X, DECIMAL_DIG, Y, DECIMAL_DIG, P(vec)*4/((1+X*X+Y*Y)*(1+X*X+Y*Y)));
+		}	
+		printf("\n");	
 	}
 
 	command=outputname+"/log.txt";

@@ -1,52 +1,44 @@
 """
-generate_results.py — SquareToCircle Sinkhorn benchmark, NK=1600
+generate_results_refraction.py — Refraction Sinkhorn benchmark, NK=1600
 
-Generates a 1600-point Halton quasi-Monte Carlo cloud, runs the full
-Sinkhorn-divergence pipeline (cold start, f=g=0, cap_iter=16 — matches
-run_compare.py / main_compare.cpp exactly), then saves a comprehensive
-results bundle to results_NK1600.npz.
+Generates a 1600-point Halton quasi-Monte Carlo cloud on spherical patches,
+runs the full Sinkhorn-divergence pipeline (cold start, f=g=0, cap_iter=16),
+and saves a comprehensive results bundle to results/results_refraction_NK1600.npz.
 
-Run:  python generate_results.py
+Key differences from generate_results.py (SquareToCircle reflector):
+  * κ = 0.6  (refraction cost:  c(x,y) = -log(1 - 0.6·(x·y)))
+  * Both source and target are on the upper hemisphere (spherical patches)
+  * Source  Ω  : θ ∈ [π/12, π/3],  φ ∈ [π/12, π/4]
+  * Target  Ω* : θ ∈ [π/10, π/5],  φ ∈ [π/10, π/5]
+  * North-pole stereographic projection is used for both source and target
 
-Saved arrays in results_NK1600.npz
------------------------------------
-  x, y               (1600, 3)  source / target point clouds
-  x_s, y_s           (200, 3)   warm-start clouds
-  p, q               (1600,)    normalised densities
-  f_raw, g_raw       (1600,)    Sinkhorn potentials (after max-shift, before
-                                identity subtraction — used for potential plots)
-  f_id, g_id         (1600,)    identity bias potentials
-  f, g               (1600,)    corrected = f_raw - f_id  (Sinkhorn divergence)
-  R                  (1600,)    reflector radii  exp(f)
-  Ref                (1600, 3)  reflector surface  2·x·R
-  gc                 (1600,)    c-transform of g  min_j C(x_i,y_j) - g_j
-  fc                 (1600,)    c-transform of f  min_i C(x_i,y_j) - f_i
-  Refc               (1600, 3)  reflector from gc
-  X_MeshGrid         (256, 256) source density P on regular 2D grid
-  Y_MeshGrid         (256, 256) target density Q on regular 2D grid
-  grid_side          (256,)     grid axis  linspace(-0.6, 0.6, 256)
-  Y_projected        (K, 3)     target support: (u, v, q)  south-pole 2D
-  Y_Pushed_projected (M, 3)     push-forward:   (u, v, q)  south-pole 2D
-  y_push_3d          (M, 3)     push-forward points on lower hemisphere (3D)
+Run:  python scripts/generate_results_refraction.py [NK]
+      (default NK=1600)
 """
 
 import os, sys, math, time
 import numpy as np
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+# Ensure we can import the reflector package from the repo root
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT  = os.path.dirname(SCRIPT_DIR)
+sys.path.insert(0, REPO_ROOT)
 
-from reflector.distributions import P_square, Q_circle
+# Set kappa BEFORE importing anything that caches cost computations
+from reflector.cost import set_kappa, cost_matrix_chunk
+set_kappa(0.6)
+
+from reflector.distributions import P_refraction_patch, Q_refraction_patch
 from reflector.sinkhorn import (
     sinkhorn_step,
     sinkhorn_identity_f_step,
     sinkhorn_identity_g_step,
 )
 from reflector.build import c_transform_gc, c_transform_fc
-from reflector.cost import cost_matrix_chunk
+from reflector.distributions import stereo_north
 
 # ---------------------------------------------------------------------------
-# Halton quasi-random sequence (base-2 and base-3)
-# Matches the generator in Benchmark_old.ipynb Step 3.
+# Halton quasi-random sequence
 # ---------------------------------------------------------------------------
 
 def _halton(index, base):
@@ -57,22 +49,39 @@ def _halton(index, base):
         i //= base
     return result
 
-def _sphere_pt(X, Y, upper=True):
-    """Inverse stereographic projection → unit sphere."""
-    N2 = X * X + Y * Y
-    d  = 1.0 + N2
-    z  = (1.0 - N2) / d
-    return [2*X/d, 2*Y/d, z if upper else -z]
 
-def gen_cloud(n, upper, skip=0, half=0.6):
-    """Generate n sphere points via Halton(base=2, base=3), starting at skip."""
-    pts, idx = [], skip
+def gen_spherical_patch(n, theta_min, theta_max, phi_min, phi_max,
+                        base2=2, base3=3, skip=0):
+    """Sample n points uniformly on a spherical patch using Halton QMC.
+
+    Uses the equal solid-angle transform:
+        cos(θ) = cos(θ_max) + u1 · (cos(θ_min) - cos(θ_max))
+        φ      = φ_min + u2 · (φ_max - φ_min)
+
+    Parameters
+    ----------
+    theta_min, theta_max : polar angle range in radians
+    phi_min, phi_max     : azimuthal angle range in radians
+    base2, base3 : Halton bases for u1, u2
+    skip : number of Halton indices to skip at the start
+    """
+    cos_max = np.cos(theta_min)   # larger cos (smaller θ)
+    cos_min = np.cos(theta_max)   # smaller cos (larger θ)
+
+    pts = []
+    idx = skip
     while len(pts) < n:
-        X = (_halton(idx, 2) - 0.5) * 2.0 * half
-        Y = (_halton(idx, 3) - 0.5) * 2.0 * half
-        pts.append(_sphere_pt(X, Y, upper))
+        u1 = _halton(idx, base2)
+        u2 = _halton(idx, base3)
+        cos_theta = cos_min + u1 * (cos_max - cos_min)
+        sin_theta = np.sqrt(max(0.0, 1.0 - cos_theta ** 2))
+        phi = phi_min + u2 * (phi_max - phi_min)
+        pts.append([sin_theta * np.cos(phi),
+                    sin_theta * np.sin(phi),
+                    cos_theta])
         idx += 1
     return np.array(pts, dtype=np.float64)
+
 
 # ---------------------------------------------------------------------------
 # Problem setup
@@ -81,38 +90,45 @@ def gen_cloud(n, upper, skip=0, half=0.6):
 NK    = int(sys.argv[1]) if len(sys.argv) > 1 else 1600
 chunk = 512
 
-print(f"Generating Halton clouds (NK={NK})...")
+print(f"=== Refraction benchmark (κ=0.6, NK={NK}) ===")
 t_start = time.time()
 
-x   = gen_cloud(NK, upper=True,  skip=0)    # source: upper hemisphere
-y   = gen_cloud(NK, upper=False, skip=0)    # target: lower hemisphere
-# Keep x_s/y_s as empty arrays so the npz keys still exist (backward compat)
-x_s = np.zeros((0, 3), dtype=np.float64)
-y_s = np.zeros((0, 3), dtype=np.float64)
+# Patch bounds (matching C++ test header)
+SRC_THETA = (np.pi / 12, np.pi / 3)
+SRC_PHI   = (np.pi / 12, np.pi / 4)
+TGT_THETA = (np.pi / 10, np.pi / 5)
+TGT_PHI   = (np.pi / 10, np.pi / 5)
 
-# Densities (normalised)
-p_raw = P_square(x);  p = p_raw / p_raw.sum()
-q_raw = Q_circle(y);  q = q_raw / q_raw.sum()
-logp  = np.where(p > 0, np.log(p), -np.inf)
-logq  = np.where(q > 0, np.log(q), -np.inf)
+print("Generating Halton QMC clouds on spherical patches...")
+x = gen_spherical_patch(NK, *SRC_THETA, *SRC_PHI, skip=0)
+y = gen_spherical_patch(NK, *TGT_THETA, *TGT_PHI, skip=0)
 
+print(f"  Source: {len(x)} pts, z ∈ [{x[:,2].min():.4f}, {x[:,2].max():.4f}]")
+print(f"  Target: {len(y)} pts, z ∈ [{y[:,2].min():.4f}, {y[:,2].max():.4f}]")
+
+# Densities — all points are inside the patch by construction → uniform
+p_raw = P_refraction_patch(x)
+q_raw = Q_refraction_patch(y)
 print(f"  Source support: {int(p_raw.sum()+0.5)} / {NK}")
 print(f"  Target support: {int(q_raw.sum()+0.5)} / {NK}")
 
-# Regularisation schedule (same as run_compare.py / main_compare.cpp)
+p = p_raw / p_raw.sum()
+q = q_raw / q_raw.sum()
+logp = np.where(p > 0, np.log(p), -np.inf)
+logq = np.where(q > 0, np.log(q), -np.inf)
+
+# Regularisation schedule
 multiplier  = 8
-k_final     = multiplier * int(np.floor(np.sqrt(NK)))   # 8·40 = 320
-id_step     = int(np.floor(np.sqrt(k_final)))            # 17
-cap_iter    = 16    # match C++ cap_iteration=16
-cap_iter_id = 16    # identity loops
+k_final     = multiplier * int(np.floor(np.sqrt(NK)))
+id_step     = int(np.floor(np.sqrt(k_final)))
+cap_iter    = 16
+cap_iter_id = 16
 cap_thr     = 1e-5
 
 print(f"  k_final={k_final}, id_step={id_step}")
 
 # ---------------------------------------------------------------------------
 # Step 1 — Cold-start Sinkhorn at k_final  (f=g=0, cap_iter=16)
-#   Matches run_compare.py / main_compare.cpp exactly — no warmstart,
-#   no multi-scale ramp.  cap_iter=16 gives R ∈ [0.958, 1.404].
 # ---------------------------------------------------------------------------
 f = np.zeros(NK, dtype=np.float64)
 g = np.zeros(NK, dtype=np.float64)
@@ -128,10 +144,9 @@ while maxdif > cap_thr:
     if i >= cap_iter:
         break
 print(f"  Final: {i} iters, last maxdif={maxdif:.4e}")
-print(f"  (main Sinkhorn converged: {maxdif <= cap_thr})")
 
 # ---------------------------------------------------------------------------
-# Step 2 — Identity F loop  (source marginal, with unsupported-point masking)
+# Step 2 — Identity F loop  (source marginal)
 # ---------------------------------------------------------------------------
 print(f"\nStep 2 — Identity Sinkhorn for source (f_id), id_step={id_step}:")
 f_id   = np.zeros(NK, dtype=np.float64)
@@ -177,15 +192,13 @@ print(f"  Identity G: {i} final iters, last maxdif={maxdif:.4e}  ({time.time()-t
 # ---------------------------------------------------------------------------
 # Step 4 — Normalise and subtract identity terms
 # ---------------------------------------------------------------------------
-# C++ never updates f/g for unsupported points (p[i]==0 / q[j]==0); zero them out here.
 f = np.where(p > 0, f, 0.0)
 g = np.where(q > 0, g, 0.0)
-# Shift f_id so max = 0, compensate in g_id
+
 mx_fid = float(np.max(f_id));  f_id -= mx_fid;  g_id += mx_fid
-# Shift f so max = 0, compensate in g
 mx_f   = float(np.max(f));     f    -= mx_f;     g    += mx_f
 
-f_raw = f.copy()   # save raw Sinkhorn potentials before identity subtraction
+f_raw = f.copy()
 g_raw = g.copy()
 
 f -= f_id;  g -= g_id
@@ -194,7 +207,7 @@ total_cost = float(np.sum(p[p>0]*f[p>0]) + np.sum(q[q>0]*g[q>0]))
 print(f"\nTotal cost: {total_cost:.6e}")
 
 # ---------------------------------------------------------------------------
-# Step 5 — Reflector surface
+# Step 5 — Refractor surface
 # ---------------------------------------------------------------------------
 R   = np.exp(f)
 Ref = 2.0 * x * R[:, np.newaxis]
@@ -207,9 +220,6 @@ print(f"R (supported): min={R[mask_p].min():.4f}, max={R[mask_p].max():.4f}, mea
 # ---------------------------------------------------------------------------
 print("\nStep 6 — C-transforms...")
 t0 = time.time()
-# Use g_raw / f_raw (raw OT potentials) but mask unsupported points to -1e300
-# so the min over j only considers supported target / source points.
-# gc[i] = min_{j: q[j]>0}(C(xi,yj) - g_raw[j]) should ≈ f_raw[i] at convergence.
 g_raw_masked = np.where(mask_q, g_raw, -1e300)
 f_raw_masked = np.where(mask_p, f_raw, -1e300)
 gc   = c_transform_gc(x, y, g_raw_masked, chunk)
@@ -219,70 +229,73 @@ print(f"  done ({time.time()-t0:.2f}s)")
 print(f"  max|f_raw-gc(g_raw)| (supported) = {np.abs(f_raw[mask_p]-gc[mask_p]).max():.4e}")
 
 # ---------------------------------------------------------------------------
-# Step 7 — Density meshgrids (256×256 over stereographic [-0.6, 0.6]^2)
+# Step 7 — Density meshgrids (256×256 over stereographic [-0.6, 0.6]²)
+#           Both source and target use NORTH-pole projection (upper hemisphere)
 # ---------------------------------------------------------------------------
 print("\nStep 7 — Density meshgrids...")
 grid_res = 256
 gside = np.linspace(-0.6, 0.6, grid_res)
-UU, VV = np.meshgrid(gside, gside, indexing='ij')   # both (grid_res, grid_res)
+UU, VV = np.meshgrid(gside, gside, indexing='ij')
 N2 = UU**2 + VV**2;  denom = 1.0 + N2
 
 # Source: upper hemisphere via inverse north-pole stereo
-x_grid = np.stack([2*UU/denom, 2*VV/denom,  (1-N2)/denom], axis=-1).reshape(-1, 3)
-X_MeshGrid = P_square(x_grid).reshape(grid_res, grid_res)
+x_grid = np.stack([2*UU/denom, 2*VV/denom, (1-N2)/denom], axis=-1).reshape(-1, 3)
+X_MeshGrid = P_refraction_patch(x_grid).reshape(grid_res, grid_res)
 
-# Target: lower hemisphere via inverse south-pole stereo
-y_grid = np.stack([2*UU/denom, 2*VV/denom, -(1-N2)/denom], axis=-1).reshape(-1, 3)
-Y_MeshGrid = Q_circle(y_grid).reshape(grid_res, grid_res)
+# Target: ALSO upper hemisphere via inverse north-pole stereo (both on upper hem.)
+y_grid = np.stack([2*UU/denom, 2*VV/denom, (1-N2)/denom], axis=-1).reshape(-1, 3)
+Y_MeshGrid = Q_refraction_patch(y_grid).reshape(grid_res, grid_res)
 
 # ---------------------------------------------------------------------------
-# Step 8 — Y_projected: target support in south-pole 2D projection
+# Step 8 — Y_projected: target support in north-pole 2D projection
 # ---------------------------------------------------------------------------
-denom_y       = 1.0 - y[mask_q, 2]
-u_y, v_y      = y[mask_q, 0] / denom_y, y[mask_q, 1] / denom_y
-Y_projected   = np.column_stack([u_y, v_y, q[mask_q]])
+u_y, v_y    = stereo_north(y[mask_q])
+Y_projected = np.column_stack([u_y, v_y, q[mask_q]])
 
 # ---------------------------------------------------------------------------
 # Step 9 — Push-forward: optimal transport map  x_i → y_{j*(i)}
-#   j*(i) = argmin_{j: q[j]>0}  C(x_i, y_j) - g_j   (supported target only)
 # ---------------------------------------------------------------------------
 print("\nStep 9 — Push-forward (argmin OT map)...")
 t0 = time.time()
 src_idx  = np.where(mask_p)[0]
 tgt_idx  = np.where(mask_q)[0]
-y_tgt    = y[tgt_idx]          # only supported target points
+y_tgt    = y[tgt_idx]
 g_tgt    = g[tgt_idx]
 pushed_y = []
 for i0 in range(0, len(src_idx), chunk):
     i1    = min(i0 + chunk, len(src_idx))
     rows  = src_idx[i0:i1]
-    C_blk = cost_matrix_chunk(x[rows], y_tgt)     # (blk, n_tgt)
+    C_blk = cost_matrix_chunk(x[rows], y_tgt)
     j_star = np.argmin(C_blk - g_tgt[np.newaxis, :], axis=1)
     pushed_y.append(y_tgt[j_star])
-pushed_y = np.vstack(pushed_y)                      # (n_src_support, 3)
+pushed_y = np.vstack(pushed_y)
 
-denom_push        = 1.0 - pushed_y[:, 2]
-u_push, v_push    = pushed_y[:, 0]/denom_push, pushed_y[:, 1]/denom_push
-q_push            = Q_circle(pushed_y)
+# Project push-forward via north-pole stereo (both hemispheres are upper)
+u_push, v_push     = stereo_north(pushed_y)
+q_push             = Q_refraction_patch(pushed_y)
 Y_Pushed_projected = np.column_stack([u_push, v_push, q_push])
-y_push_3d         = pushed_y                        # 3D for Plotly scene
+y_push_3d          = pushed_y
 print(f"  {len(y_push_3d)} pushed rays  ({time.time()-t0:.2f}s)")
 
 # ---------------------------------------------------------------------------
 # Save
 # ---------------------------------------------------------------------------
-out = f"results_NK{NK}.npz"
+results_dir = os.path.join(REPO_ROOT, "results")
+os.makedirs(results_dir, exist_ok=True)
+out = os.path.join(results_dir, f"results_refraction_NK{NK}.npz")
 np.savez(
     out,
     # Clouds
-    x=x, y=y, x_s=x_s, y_s=y_s,
+    x=x, y=y,
+    x_s=np.zeros((0, 3), dtype=np.float64),
+    y_s=np.zeros((0, 3), dtype=np.float64),
     # Densities
     p=p, q=q,
     # Potentials
     f_raw=f_raw, g_raw=g_raw,
     f_id=f_id, g_id=g_id,
     f=f, g=g,
-    # Reflector
+    # Refractor
     R=R, Ref=Ref,
     # C-transforms
     gc=gc, fc=fc, Refc=Refc,
@@ -292,15 +305,14 @@ np.savez(
     Y_projected=Y_projected,
     Y_Pushed_projected=Y_Pushed_projected,
     y_push_3d=y_push_3d,
+    # Metadata
+    kappa=np.float64(0.6),
 )
 sz = os.path.getsize(out) / 1024
 print(f"\nSaved {out}  ({sz:.0f} KB)   total time {time.time()-t_start:.1f}s")
 
 # ---------------------------------------------------------------------------
-# Figure — Reflector surface  (all NK points, coloured by R)
-# Matches the C++ comparison plots: plot ALL NK points so that the
-# unsupported ring (low R) and the supported dome (high R) both appear,
-# giving the characteristic non-smooth bumpy shape.
+# Figure — Refractor surface (coloured by R)
 # ---------------------------------------------------------------------------
 import matplotlib
 matplotlib.use("Agg")
@@ -312,10 +324,11 @@ ax  = fig.add_subplot(111, projection='3d')
 sc  = ax.scatter(Ref[:, 0], Ref[:, 1], Ref[:, 2],
                  c=R, cmap='viridis', s=15,
                  vmin=R.min(), vmax=R.max(), depthshade=True)
-plt.colorbar(sc, ax=ax, label='R (reflector radius)', shrink=0.65)
-ax.set_title(f'Reflector Surface — Python  (NK={NK}, k_final={k_final})')
+plt.colorbar(sc, ax=ax, label='R (refractor radius)', shrink=0.65)
+ax.set_title(f'Refractor Surface — Python  (κ=0.6, NK={NK}, k_final={k_final})')
 ax.set_xlabel('X');  ax.set_ylabel('Y');  ax.set_zlabel('Z')
 fig.tight_layout()
-fig_path = f"fig_reflector_3d_NK{NK}.png"
+fig_path = os.path.join(REPO_ROOT, "figures", f"fig_refractor_3d_NK{NK}.png")
+os.makedirs(os.path.dirname(fig_path), exist_ok=True)
 fig.savefig(fig_path, dpi=150, bbox_inches='tight')
 print(f"Saved {fig_path}")

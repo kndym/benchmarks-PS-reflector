@@ -21,9 +21,7 @@ matplotlib.use("TkAgg")          # use a GUI backend; fall back silently
 import matplotlib.pyplot as plt
 
 # Make sure we can import the reflector package from this directory
-REPO_ROOT   = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-RESULTS_DIR = os.path.join(REPO_ROOT, 'results')
-sys.path.insert(0, REPO_ROOT)
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from reflector.qmc import load_small_cloud
 from reflector.sinkhorn import (
@@ -209,15 +207,14 @@ Ref = 2.0 * x * R[:, np.newaxis]
 # Save results
 # ---------------------------------------------------------------------------
 
-out_dir = os.path.join(RESULTS_DIR, "output_python")
-os.makedirs(out_dir, exist_ok=True)
-np.save(os.path.join(out_dir, "f.npy"),    f)
-np.save(os.path.join(out_dir, "g.npy"),    g)
-np.save(os.path.join(out_dir, "f_id.npy"), f_id)
-np.save(os.path.join(out_dir, "g_id.npy"), g_id)
-np.save(os.path.join(out_dir, "R.npy"),    R)
-np.save(os.path.join(out_dir, "Ref.npy"),  Ref)
-print(f"\nSaved to {out_dir}/")
+os.makedirs("output_python", exist_ok=True)
+np.save("output_python/f.npy",    f)
+np.save("output_python/g.npy",    g)
+np.save("output_python/f_id.npy", f_id)
+np.save("output_python/g_id.npy", g_id)
+np.save("output_python/R.npy",    R)
+np.save("output_python/Ref.npy",  Ref)
+print("\nSaved to output_python/")
 print(f"R: min={R.min():.4f}, max={R.max():.4f}, mean={R.mean():.4f}")
 
 # ---------------------------------------------------------------------------

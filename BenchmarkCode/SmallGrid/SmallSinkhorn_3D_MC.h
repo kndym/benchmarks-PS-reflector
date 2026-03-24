@@ -1,9 +1,7 @@
 #ifndef SmallSinkhorn_3D_MC
 #define SmallSinkhorn_3D_MC
 
-#ifndef GENERIC_3D_MONTECARLO_INCLUDED
 #include "../QuasiMonteCarlo/Generic_3D_logcost_MonteCarlo.h"
-#endif
 
 
 double p_small[NK_small];

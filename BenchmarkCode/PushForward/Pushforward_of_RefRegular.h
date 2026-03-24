@@ -111,25 +111,9 @@ vector <double> Do_RegularPush(double x,double y,double z)
 
 	vector <double> vec (4);
 
-#ifdef Generic_3D_refractioncost_MonteCarlo
-	// Snell's law refraction: d_t = η·d_in + (η·cos_θi − cos_θt)·n̂
-	// n̂ = (tempvar1, tempvar2, -1)/norm_val  points toward source (medium 1)
-	// cos_θi = tempvar3·norm_val/2  (derived from surface-constraint dot product)
-	{
-		double norm_val = sqrt(tempvar1*tempvar1 + tempvar2*tempvar2 + 1.0);
-		double cos_i    = tempvar3 * norm_val / 2.0;
-		double cos_t    = sqrt(1.0 - COST_K*COST_K*(1.0 - cos_i*cos_i));
-		double sc       = (COST_K*cos_i - cos_t) / norm_val;
-		vec[0] = COST_K*x + sc*tempvar1;
-		vec[1] = COST_K*y + sc*tempvar2;
-		vec[2] = COST_K*z - sc;
-	}
-#else
-	// Reflection law: d_out = d_in − 2(d_in·n̂)n̂
 	vec[0]=x + tempvar1*tempvar3; // x1-n1*2<x,n>
 	vec[1]=y + tempvar2*tempvar3; // x2-n2*2<x,n>
 	vec[2]=z - tempvar3; //x3-n3*2<x,n> but n3=1
-#endif
 
 
 
@@ -142,7 +126,7 @@ vector <double> Do_RegularPush(double x,double y,double z)
 
 
 	return vec;
-	//Return values of outgoing direction vector (a,b,c) — reflected or refracted
+	//Return values of reflected direction vector (a,b,c)
 	//and value of density of incoming ray
 }
 

@@ -161,6 +161,79 @@ def Q_two_gaussians(y: np.ndarray) -> np.ndarray:
 
 
 # ---------------------------------------------------------------------------
+# Refraction patch densities (flat indicator on spherical patches)
+#
+# Both source and target live on the *upper* hemisphere.
+# Bounds are given in spherical coordinates (θ = polar, φ = azimuthal):
+#
+#   Source  Ω  : θ ∈ [π/12, π/3],  φ ∈ [π/12, π/4]
+#   Target  Ω* : θ ∈ [π/10, π/5],  φ ∈ [π/10, π/5]
+#
+# Matches the C++ header test_3D_FlatPatchRefraction_logcost_MonteCarlo.h.
+# ---------------------------------------------------------------------------
+
+# Default patch bounds (multiples of π)
+_SRC_THETA = (np.pi / 12, np.pi / 3)
+_SRC_PHI   = (np.pi / 12, np.pi / 4)
+_TGT_THETA = (np.pi / 10, np.pi / 5)
+_TGT_PHI   = (np.pi / 10, np.pi / 5)
+
+
+def P_refraction_patch(x: np.ndarray) -> np.ndarray:
+    """Flat indicator on the source refraction patch.
+
+    Returns 1 if (θ, φ) of x falls inside
+        θ ∈ [π/12, π/3],  φ ∈ [π/12, π/4]
+    and 0 otherwise.  φ is taken in [0, 2π).
+
+    Parameters
+    ----------
+    x : ndarray, shape (N, 3)
+
+    Returns
+    -------
+    density : ndarray, shape (N,), values in {0, 1}.
+    """
+    x = np.asarray(x, dtype=np.float64)
+    theta = np.arccos(np.clip(x[..., 2], -1.0, 1.0))
+    phi   = np.arctan2(x[..., 1], x[..., 0])
+    phi   = np.where(phi < 0, phi + 2 * np.pi, phi)
+
+    inside = (
+        (theta >= _SRC_THETA[0]) & (theta <= _SRC_THETA[1]) &
+        (phi   >= _SRC_PHI[0])   & (phi   <= _SRC_PHI[1])
+    )
+    return inside.astype(np.float64)
+
+
+def Q_refraction_patch(y: np.ndarray) -> np.ndarray:
+    """Flat indicator on the target refraction patch.
+
+    Returns 1 if (θ, φ) of y falls inside
+        θ ∈ [π/10, π/5],  φ ∈ [π/10, π/5]
+    and 0 otherwise.  φ is taken in [0, 2π).
+
+    Parameters
+    ----------
+    y : ndarray, shape (N, 3)
+
+    Returns
+    -------
+    density : ndarray, shape (N,), values in {0, 1}.
+    """
+    y = np.asarray(y, dtype=np.float64)
+    theta = np.arccos(np.clip(y[..., 2], -1.0, 1.0))
+    phi   = np.arctan2(y[..., 1], y[..., 0])
+    phi   = np.where(phi < 0, phi + 2 * np.pi, phi)
+
+    inside = (
+        (theta >= _TGT_THETA[0]) & (theta <= _TGT_THETA[1]) &
+        (phi   >= _TGT_PHI[0])   & (phi   <= _TGT_PHI[1])
+    )
+    return inside.astype(np.float64)
+
+
+# ---------------------------------------------------------------------------
 # Benchmark registry
 # ---------------------------------------------------------------------------
 
@@ -174,5 +247,11 @@ BENCHMARKS = {
         "testname": "3D_SquareToTwoGaussSide_logcost_MonteCarlo",
         "P": P_square,
         "Q": Q_two_gaussians,
+    },
+    "Refraction": {
+        "testname": "3D_FlatPatchRefraction_logcost_MonteCarlo",
+        "P": P_refraction_patch,
+        "Q": Q_refraction_patch,
+        "kappa": 0.6,
     },
 }
