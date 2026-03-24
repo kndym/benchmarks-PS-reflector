@@ -11,9 +11,13 @@ Usage:
 """
 
 import os
+import sys
 import time
 import numpy as np
 from scipy.special import logsumexp
+
+REPO_ROOT   = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+RESULTS_DIR = os.path.join(REPO_ROOT, 'results')
 
 # ---------------------------------------------------------------------------
 # Refraction cost
@@ -189,7 +193,7 @@ k_final    = multiplier * int(np.floor(np.sqrt(NK)))   # 8*20 = 160
 id_step    = int(np.floor(np.sqrt(k_final)))            # floor(sqrt(160)) = 12
 cap_iter   = 16
 cap_thr    = 1e-5
-out_dir    = "output_refraction"
+out_dir    = os.path.join(RESULTS_DIR, "output_refraction")
 
 os.makedirs(out_dir, exist_ok=True)
 print(f"NK={NK}, k_final={k_final}, id_step={id_step}")

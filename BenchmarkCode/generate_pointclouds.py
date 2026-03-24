@@ -22,38 +22,66 @@ Output files
 
 Usage
 -----
-  python generate_pointclouds.py [NK] [NK_small]
+  python generate_pointclouds.py [NK] [NK_small] [options]
 
   python generate_pointclouds.py          # defaults: NK=1600, NK_small=200
   python generate_pointclouds.py 1600 200 # same as defaults (fast, original sizes)
   python generate_pointclouds.py 16488 381 # large (slow, original data sizes)
+
+  # Refraction example (both patches upper hemisphere, Figure 4):
+  python generate_pointclouds.py 1600 200 \
+      --src-theta-min 15 --src-theta-max 60 --src-phi-min 15 --src-phi-max 45 \
+      --tgt-theta-min 18 --tgt-theta-max 36 --tgt-phi-min 18 --tgt-phi-max 36
 """
 
-import sys
+import argparse
 import math
 import os
 
+# ── Argument parsing ───────────────────────────────────────────────────────────
+
+_p = argparse.ArgumentParser(description='Generate QMC point-cloud header files.')
+_p.add_argument('NK',       type=int, nargs='?', default=1600,
+                help='Main point-cloud size (default: 1600)')
+_p.add_argument('NK_small', type=int, nargs='?', default=200,
+                help='Warm-start point-cloud size (default: 200)')
+_p.add_argument('--src-theta-min', type=float, default=0.0,   dest='src_theta_min',
+                metavar='DEG', help='Source patch min polar angle in degrees (default: 0)')
+_p.add_argument('--src-theta-max', type=float, default=60.0,  dest='src_theta_max',
+                metavar='DEG', help='Source patch max polar angle in degrees (default: 60)')
+_p.add_argument('--src-phi-min',   type=float, default=0.0,   dest='src_phi_min',
+                metavar='DEG', help='Source patch min azimuthal angle in degrees (default: 0)')
+_p.add_argument('--src-phi-max',   type=float, default=360.0, dest='src_phi_max',
+                metavar='DEG', help='Source patch max azimuthal angle in degrees (default: 360)')
+_p.add_argument('--tgt-theta-min', type=float, default=120.0, dest='tgt_theta_min',
+                metavar='DEG', help='Target patch min polar angle in degrees (default: 120)')
+_p.add_argument('--tgt-theta-max', type=float, default=180.0, dest='tgt_theta_max',
+                metavar='DEG', help='Target patch max polar angle in degrees (default: 180)')
+_p.add_argument('--tgt-phi-min',   type=float, default=0.0,   dest='tgt_phi_min',
+                metavar='DEG', help='Target patch min azimuthal angle in degrees (default: 0)')
+_p.add_argument('--tgt-phi-max',   type=float, default=360.0, dest='tgt_phi_max',
+                metavar='DEG', help='Target patch max azimuthal angle in degrees (default: 360)')
+_args = _p.parse_args()
+
 # ── Point-cloud sizes ──────────────────────────────────────────────────────────
 
-NK        = int(sys.argv[1]) if len(sys.argv) > 1 else 1600
-NK_small  = int(sys.argv[2]) if len(sys.argv) > 2 else 200
+NK       = _args.NK
+NK_small = _args.NK_small
 
 # ── Patch configuration (spherical coordinates, degrees) ──────────────────────
 #
 #   theta : polar angle measured from the +z axis  (0 = north pole, 180 = south)
 #   phi   : azimuthal angle in the x-y plane       (0 = +x axis, 360 = full circle)
 #
-# Source patch  -- by default a 60° cap centred on the north pole (+z)
-SRC_THETA_MIN =   0.0   # [deg]  min polar angle
-SRC_THETA_MAX =  60.0   # [deg]  max polar angle
-SRC_PHI_MIN   =   0.0   # [deg]  min azimuthal angle
-SRC_PHI_MAX   = 360.0   # [deg]  max azimuthal angle
+SRC_THETA_MIN = _args.src_theta_min
+SRC_THETA_MAX = _args.src_theta_max
+SRC_PHI_MIN   = _args.src_phi_min
+SRC_PHI_MAX   = _args.src_phi_max
 
-# Target patch  -- by default a 60° cap centred on the south pole (-z)
-TGT_THETA_MIN = 120.0   # [deg]
-TGT_THETA_MAX = 180.0   # [deg]
-TGT_PHI_MIN   =   0.0   # [deg]
-TGT_PHI_MAX   = 360.0   # [deg]
+TGT_THETA_MIN = _args.tgt_theta_min
+TGT_THETA_MAX = _args.tgt_theta_max
+TGT_PHI_MIN   = _args.tgt_phi_min
+TGT_PHI_MAX   = _args.tgt_phi_max
 
 # ── Output paths ───────────────────────────────────────────────────────────────
 

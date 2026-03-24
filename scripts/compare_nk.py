@@ -18,13 +18,16 @@ import matplotlib
 matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 
+REPO_ROOT   = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+RESULTS_DIR = os.path.join(REPO_ROOT, 'results')
+
 # ---------------------------------------------------------------------------
 # NK from command line
 # ---------------------------------------------------------------------------
 
 NK_arg = int(sys.argv[1]) if len(sys.argv) > 1 else 300
-cpp_dir = f"output_cpp_NK{NK_arg}"
-py_dir  = f"output_py_NK{NK_arg}"
+cpp_dir = os.path.join(RESULTS_DIR, f"output_cpp_NK{NK_arg}")
+py_dir  = os.path.join(RESULTS_DIR, f"output_py_NK{NK_arg}")
 
 for d in [cpp_dir, py_dir]:
     if not os.path.isdir(d):
@@ -133,8 +136,9 @@ try:
 
     fig.suptitle(f"Reflector surface comparison — NK={NK}", fontsize=13)
     plt.tight_layout()
-    plt.savefig(f"fig_compare_NK{NK}.png", dpi=150, bbox_inches="tight")
+    fig_path = os.path.join(RESULTS_DIR, f"fig_compare_NK{NK}.png")
+    plt.savefig(fig_path, dpi=150, bbox_inches="tight")
     plt.show()
-    print(f"\nSaved fig_compare_NK{NK}.png")
+    print(f"\nSaved {fig_path}")
 except Exception as e:
     print(f"[plot skipped: {e}]")

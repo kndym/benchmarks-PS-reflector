@@ -17,7 +17,9 @@ import os, sys, time
 import numpy as np
 from scipy.special import logsumexp
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+REPO_ROOT   = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+RESULTS_DIR = os.path.join(REPO_ROOT, 'results')
+sys.path.insert(0, REPO_ROOT)
 from reflector.distributions import P_square, Q_circle
 from reflector.sinkhorn import (
     sinkhorn_step,
@@ -59,7 +61,7 @@ k_final     = multiplier * int(np.floor(np.sqrt(NK)))
 id_step     = int(np.floor(np.sqrt(k_final)))
 cap_iter    = 16      # match C++ cap_iteration
 cap_thr     = 1e-5
-out_dir     = f"output_py_NK{NK}"
+out_dir     = os.path.join(RESULTS_DIR, f"output_py_NK{NK}")
 
 os.makedirs(out_dir, exist_ok=True)
 print(f"NK={NK}, k_final={k_final}, id_step={id_step}")

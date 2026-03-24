@@ -17,6 +17,8 @@ import matplotlib
 matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 
+REPO_ROOT   = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+RESULTS_DIR = os.path.join(REPO_ROOT, 'results')
 
 # ---------------------------------------------------------------------------
 # Loaders
@@ -51,8 +53,8 @@ def load_txt_mat(path: str, ncols: int = 3) -> np.ndarray:
 # Load C++ results
 # ---------------------------------------------------------------------------
 
-cpp_dir = "output_fast"
-py_dir  = "output_python"
+cpp_dir = os.path.join(RESULTS_DIR, "output_fast")
+py_dir  = os.path.join(RESULTS_DIR, "output_python")
 
 missing = []
 for d in [cpp_dir, py_dir]:
