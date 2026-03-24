@@ -1,0 +1,802 @@
+HAL Id: hal-02539799
+https://hal.archives-ouvertes.fr/hal-02539799
+Preprint submitted on 10 Apr 2020
+HAL is a multi-disciplinary open access
+archive for the deposit and dissemination of scientific research documents, whether they are published or not. The documents may come from
+teaching and research institutions in France or
+abroad, or from public or private research centers.
+L’archive ouverte pluridisciplinaire HAL, est
+destinée au dépôt et à la diffusion de documents
+scientifiques de niveau recherche, publiés ou non,
+émanant des établissements d’enseignement et de
+recherche français ou étrangers, des laboratoires
+publics ou privés.
+An Entropic Optimal Transport Numerical Approach to
+the Reflector Problem
+Jean-David Benamou, Wilbert Ijzerman, Giorgi Rukhaia
+To cite this version:
+Jean-David Benamou, Wilbert Ijzerman, Giorgi Rukhaia. An Entropic Optimal Transport Numerical
+Approach to the Reflector Problem. 2020. ￿hal-02539799￿AN ENTROPIC OPTIMAL TRANSPORT NUMERICAL APPROACH TO THE REFLECTOR
+PROBLEM
+JEAN-DAVID BENAMOU, WILBERT L. IJZERMAN, AND GIORGI RUKHAIA
+ABSTRACT. The point source far field reflector design problem is one of the main classic optimal
+transport problems with a non-euclidean displacement cost [Wang, 2004] [Glimm and Oliker, 2003].
+This work describes the use of Entropic Optimal Transport and the associated Sinkhorn algorithm
+[Cuturi, 2013] to solve it numerically. As the reflector modelling is based on the Kantorovich potentials, several questions arise. First, on the convergence of the discrete entropic approximation and
+here we follow the recent work of [Berman, 2017] and in particular the imposed discretization requirements therein. Secondly, the correction of the Entropic bias induced by the Entropic OT, as discussed in
+particular in [Ramdas et al., 2017] [Genevay et al., 2018] [Feydy et al., 2018], is another important tool
+to achieve reasonable results. The paper reviews the necessary mathematical and numerical tools
+needed to produce and discuss the obtained numerical results. We find that Sinkhorn algorithm may be
+adapted, at least in simple academic cases, to the resolution of the far field reflector problem. Sinkhorn
+canonical extension to continuous potentials is needed to generate continuous reflector approximations.
+The use of Sinkhorn divergences [Feydy et al., 2018] is useful to mitigate the entropic bias.
+CONTENTS
+1. Introduction 1
+1.1. The optical reflector design problem and its optimal transportation formulation 1
+1.2. Numerical resolution of (1) 3
+1.3. Our contribution 4
+2. Entropic OT 5
+2.1. Entropic OT and Sinkhorn algorithm 5
+2.2. Entropic bias and Sinkhorn Divergence 6
+3. Application of Entropic Regularization to the reflector problem 8
+3.1. Entropic Bias and de-biasing 8
+3.2. Choice of Discretization 9
+3.3. Ray tracing, Re-Simulation and Interpolation 10
+3.4. Summary of the numerical procedure 11
+3.5. Numerical illustration 11
+4. Error estimations and convergence 12
+4.1. Wasserstein metrics as error estimator 12
+4.2. Numerical convergence Study in N 13
+4.3. Numerical convergence Study in M 13
+5. Conclusion 14
+Acknowledgements 14
+FIGURES 15
+APPENDIX A 27
+References 28
+1. INTRODUCTION
+1.1. The optical reflector design problem and its optimal transportation formulation. A light
+source, also called “illuminance”, is sufficiently small compared to the reflecting surface so that
+12 JEAN-DAVID BENAMOU, WILBERT L. IJZERMAN, AND GIORGI RUKHAIA
+htdp
+FIGURE 1.1. Reflector problem from Point source O to Far Field.
+it can be regarded as a point in space. It can therefore be modelled as a probability distribution
+on the sphere, it will be denoted μ in this paper. The light hits a perfect mirror and we are also
+given a desired target light distribution, the “illumination” in the far field. From the far field the
+reflecting surface can be regarded as a point and the illumination again modelled as a probability
+distribution, denoted ν, on the sphere. Total light conservation is assumed. The design problem is
+to determine the shape of the mirror which produces the specular reflection from the source to the
+target distribution. This can be interpreted as the inverse problem of generating some illumination
+given an illuminance and a reflector (see figure 1.1).
+This problem has an elegant mathematical modelization and solution based on the optimal transportation (OT) theory due to [Glimm and Oliker, 2003] and [Wang, 2004]. We briefly recall the main
+result as presented in [Wang, 2004]. In its Kantorovich primal and dual form (see [Villani, 2008]) :
+Theorem 1 (Kantorovich duality). Given two compact manifold X and Y endowed with a continuous,
+bounded from below cost function c : X × X → R and two borel probability measures (μ, ν) ∈ P (X) ×
+P (Y). Then, Kantorovich problem in primal and dual forms (1.1) has solutions.
+(1.1) OT(μ, ν) := min
+γ∈Π(μ,ν)〈c, γ〉X×Y = max
+f ,g∈C〈 f , μ〉X + 〈g, ν〉Y
+with respectively primal :
+Π(μ, ν) := {γ ∈ P (X × Y), 〈1X , γ〉Y = ν 〈1Y, γ〉X = μ},
+and dual :
+C = {( f , g) ∈ C(X) × C(Y), f ⊕ g ≤ c},
+constraints sets
+The notation 〈 f , α〉Ω stands for the duality product ∫
+Ω f dα between bounded continuous functions f ∈ C(Ω) and probability measures α ∈ P (Ω), { f ⊕ g}(x, y) = f (x) + g(y) is the direct sum
+and μ ⊗ ν ∈ P (X × Y) the tensor product. Finally 1Ω is the characteristic function, i.e. a constant 1
+on Ω.
+Under suitable hypothesis c (as they are technical and satisfied for the costs in this paper, we skip
+this part), the OT problem is well posed and the the optimal transference plan γ is concentrated onAN ENTROPIC OPTIMAL TRANSPORT NUMERICAL APPROACH TO THE REFLECTOR PROBLEM 3
+a graph of the OT map y = T(x) implicitely defined by the saturation of the dual constraint :
+(1.2) f (x) + g(T(x)) = c(x, T(x)), μ a.e.
+The pair ( f , g) are called the Kantorovich potentials and is unique up to a constant .
+By construction T is a measure preserving map characterizing the transport. The measure preserving property is usually denoted ν = T#μ (T pushes forward μ to ν). The pushforward of μ is
+the measure defined as
+(1.3) ν(A) = T#μ(A) = μ(T−1(A)) for all ν measurable subset A
+Remark 1 (Lp Wasserstein metric). For complete separable metric space X and Lp costs c := 1/pdp(x, y),
+this OT problems defines a separable metric on the set of probability measures with finite second moments:
+the “Wasserstein” distance, which is given by W p
+p (μ, ν) := OT(μ, ν).
+This metric metrizes weak convergence of measures is a fundamential tool in image processing (see
+[Peyr ́e and Cuturi, 2018]).
+In [Wang, 2004], Wang showed that the point source reflector model can be translated to an OT
+problem. More precisely, he proved the following theorem :
+Theorem 2. Let S0 ∈ Sd−1 and S∞ ∈ Sd−1 be connected domains in northern and southern hemispheres
+respectively, μ and ν which represent the given illuminance and illumination probability distributions. Then
+theorem 1 applies to the cost function
+(1.4) c(x, y) = − log(1 − x · y).
+A transport map T satisfying (1.2) exists and the solution of the corresponding OT problem can be used to
+build the desired reflector.
+The construction of the reflector can be summarized as follows : Taking the exponential of the
+dual constraints and the saturation property (1.2) we get
+(1.5) e−g(T(x))
+1 − x · T(x) = e f (x) ≤ e−g(y)
+1 − x · y , μ ⊗ ν a.e.
+We now define in Rd a family of parabolic reflectors with axis y ∈ S∞ : x ∈ S0 → Py(x) := e−g(y)
+1 − x · y .
+And directly infer that the reflector shape parameterized over the directions in S0 and given as :
+(1.6) R = {x e f (x)| x ∈ S0}.
+Under this choice the map x → T(x) can be interpreted as the specular reflection of an optical ray at
+R(x) onto a parabola of axis T(x) while the illumination and illuminance constraints are enforced
+by (1.3).
+1.2. Numerical resolution of (1). A good overview of the available numerical methods applying
+to the general problem (1) are described in [Peyr ́e and Cuturi, 2018]. We summarize the general
+classes of methods which can be used, in particular, to tackle the reflector cost (1.4).
+Linear Programming. The first and obvious one, as already suggested in [Wang, 2004] is the linear
+programming approach. This assumes that the data in discrete form is given by
+(1.7) μN =
+N
+∑
+i=1
+pi δxi , νN =
+N
+∑
+j=1
+qjδyj , where
+N
+∑
+i=1
+pi =
+N
+∑
+j=1
+qj = 1.
+Of course the number of discrete points for μ and ν may differ, we keep N for both to simplify
+the presentation.4 JEAN-DAVID BENAMOU, WILBERT L. IJZERMAN, AND GIORGI RUKHAIA
+This discretisation provides a natural discretization of of the OT problem (1). Settting XN =
+{xi }i=1..N and YN = {yj}j=1..N we can again use the 〈., .〉. notation :
+(1.8) OTN (p, q) := min
+γN ∈Π(p,q)〈cN , γN 〉XN ⊗YN
+where
+(1.9) Π(p, q) :=
+{
+γN ∈ RN×N
++ |〈1XN , γN 〉YN = p, 〈1YN , γN 〉XN = q
+}
+Here cN = {c(xi, yj)}i,j=1..N , q = {qj}j=1..N and p = {pi }i=1..N .
+(1.8) is a discrete linear programming problem which can be solved numerically using standard
+linear programming solvers. The main drawback of this method is it’s high dimensionality. It
+is a linear problem with N × N unknowns and 2 N constraints. Numerical resolution with linear solvers which have cubic complexity in the number of unknowns is therefore out of reach for
+reasonable discretizations (typically N > 100). For more details see [Peyr ́e and Cuturi, 2018].
+A Partial Differential Approach. At least formally, taking the gradient of (1.2) gives the OT map as a
+function of f :
+(1.10) T(x) = {y 7 → ∇x c(x, y)}−1(∇ f (x))
+Assuming sufficient smoothness to interpret (1.3) in a pointwise sense and plugging this expression gives a Monge-Amp`ere PDE for L2 cost. This formulation has been studied in detail by
+Urbas [Urbas, 1997]. For the reflector cost (1.4) the PDE (see equation (1.5) in [Wang, 2004]) is even
+more non-linear and there is no available numerical approximation theory. A B-spline collocation method was nevertheless proposed and implemented in [Brix et al., 2014], [Brix et al., 2015]
+with convincing numerical results. An alternative solution method of the Monge-Ampere problem based on a least square approach is presented [Romijn et al., 2020] [Romijn et al., 2019]. Wu
+[Wu et al., 2013] derives the Monge-Ampere equation for a lens surface and solve the equations
+using standard finite differences and Newton iteration.
+Semi-discrete OT. Semi-discrete OT deals with the special case where μ has continuous density and
+the other νN is discrete as in (1.7). Then the dual formulation in 1) can be reduced to discrete
+optimisation problem through the elimination of the constraints replacing f by its c-transform :
+(1.11) f (x) = gc(x) = min
+y (c(x, y) − g(y)) = min
+j
+(c(x, yj) − g(yj))
+and optimizing over the vector {g(yj)}j=1..N .
+For the L2 cost, It is now well understood that a Newton method can be used [M ́erigot, 2011].
+The implementation relies on fast (linear time) computations of a tesselation of the target domain
+called Laguerre cells :
+Lagj = {x, s.t. c(x, yj) − g(yj) < c(x, yi ) − g(yi ), ∀i = 1..N} ∀j = 1..N
+. The method was applied to the reflector cost (1.4) in [Machado Manh ̃aes De Castro et al., 2016] but
+the Laguerre cells can be only computed in Rd and not on Sd−1 thus lifting by one the dimension
+of the problem. Solvers in dimension 2 and 3 are available [Leclerc, 2019] [L ́evy, 2015]. See also the
+pioneering work of [Kochengin and Oliker, 2003] using this methods on the reflector problem.
+1.3. Our contribution. Our contribution is based on a strict convexification of the OT problem
+called “entropic regularization”. In a nutshell :
+It has been introduced for OT computations in [Cuturi, 2013] (see [Peyr ́e and Cuturi, 2018] for a
+comprehensive review). This topic has been very active since for two reasons : first, the method
+comes with a simple computational method call Sinkhorn algorithm for which there are now countless variants and acceleration techniques. It can be applied to discretization on the order of N = 106.
+Secondly, it can be applied to a wide range of costs but does not seem to have been investigated yetAN ENTROPIC OPTIMAL TRANSPORT NUMERICAL APPROACH TO THE REFLECTOR PROBLEM 5
+for the reflector cost. The “entropic regularization” of the Kantorovich problem (1) is based on the
+following KullBack-Leibler divergence or “relative entropy” (KL) penalization :
+(1.12)
+OTε(μ, ν) := minγε ∈Π(μ,ν)〈c, γε〉X×Y + ε KL(γε | μ ⊗ ν) =
+max fε,gε 〈 f , μ〉X + 〈gε, ν〉Y − ε 〈exp( 1
+ε ( fε ⊕ gε − c)) − 1, μ ⊗ ν〉X×Y
+where ε > 0 is a small “temperature” parameter (see [L ́eonard, 2013] for a Statistical Physics
+interpretation of this problem due to Schroedinger) and
+KL(γ | μ ⊗ ν) :=
+∫
+X×Y
+log( dγ
+dμ ⊗ dν ) dγ if γ is absolutely continuous w.r.t to μ ⊗ ν and +∞ else.
+The primal-dual optimality condition is given by
+(1.13) γε = exp( 1
+ε ( fε ⊕ gε − c)) μ ⊗ ν.
+The optimal entropic plan is therefore the scaling by the Kantorovich potentials of a fixed Kernel
+exp(− 1
+ε c). It is diffuse, i.e. not concentrated on a map, ε can be interpreted as a bandwidth under
+which transport is blurred.
+Numerical solutions are produced under the discretization (1.7) of this problem, i.e. replacing
+(X, Y , c , μ, ν) by (XN , YN , cN , μN νN ) in the above formula. The resulting discrete non-linear system of optimality is solvable in particular with Sinkhorn algorithm.
+In section 2 we recall basic convergence properties of this approximation when ε → 0 and how
+N and ε are connected. We also discuss the resulting bias when ε > 0 and how the notion of
+Sinkhorn Divergence introduced in [Ramdas et al., 2017] [Genevay et al., 2018] [Feydy et al., 2018]
+can produce a correction.
+We then adapt this framework and Sinkhorn algorithm in section 3 to the reflector cost OT problem and discuss specifics that need to be addressed for this transition, such as de-biasing for reflector cost, choice of discretization and interpolation. We present several example of re-simulations
+using ray tracing.
+Wasserstein distances is a natural distance to measure discrepancies between measures. In section 4 we therefore propose to evaluate it between the illumination ν and a sampling of the computed approximation. The sampling is obtained via ray tracing reflections on a continuous interpolation of the reflector as a residual error. We use this setting to study the convergence with N
+and ε. We also show how the continuous approximation of the reflector behaves when the number
+of rays used for the resimulation increase.
+2. ENTROPIC OT
+2.1. Entropic OT and Sinkhorn algorithm. We will restrict from now on to the discrete case (see
+(1.7)) and the dual optimal transport problem :
+(2.1) OTε,N := max
+fε,gε
+〈 fε, μN 〉XN + 〈gε, νN 〉YN − ε 〈exp( 1
+ε ( fε ⊕ gε − cN )) − 1, μN ⊗ νN 〉XN ×YN .
+where we use the same notation ( fε, gε) for discrete vectors in RN .
+We solve (2.1) with Sinkhorn algorithm. It corresponds to a block coordinate ( fε and gε) ascent :
+Initialize with g0
+ε = 0Y and then iterate (in k) :
+(2.2)
+f k+1
+ε = −ε log(〈exp( 1
+ε (gk
+ε − cN )), νN 〉YN )
+gk+1
+ε = −ε log(〈exp( 1
+ε ( f k+1
+ε − cN )), μN 〉XN )
+Sinkhorn linear convergence for fixed ε has been largely studied (see [Peyr ́e and Cuturi, 2018])
+again). Its numerical stability depends on typical transport scale of the data τ = supx∈X c(x, T(x))6 JEAN-DAVID BENAMOU, WILBERT L. IJZERMAN, AND GIORGI RUKHAIA
+and ε. The computer hits overflows or underflows when the ratio τ/ε is too large. A good review of existing hacks and methods to mitigate this problem can be found in [Schmitzer, 2016].
+The convergence as ε → 0 of OTε(μ, ν) toward OT(μ, ν) is also well understood in the continuous
+[L ́eonard, 2013] and discrete setting [Cominetti and Martin, 1994].
+The potentials computed using the iterations (2.2) are defined on the discrete sets XN and YN
+but they admit a canonical extention by replacing cN (xi, yj) respectively by c(x, yj), x ∈ X and
+c(xi, y), y ∈ Y. Omitting the iteration index :
+(2.3) f [gε](x) = −ε log( ∑
+j=1..N
+exp( 1
+ε (gε(yj) − c(x, yj)))νN (yj)), ∀x ∈ X
+As our goal is to form the reflector (1.6) from the discrete numerical potential fε, we are interested
+in the convergence of fε as ε → 0 and N → ∞. To the best of our knowledge the joint convergence
+in N and ε has only be studied in [Berman, 2017], we reproduce partially his results :
+Theorem 3 (Berman joint convergence - corollary 1.3 [Berman, 2017] ). We assume μ and ν are in
+C2,α and positive, and that N and ε are dependent parameters : N = (1/ε)d where d is the dimension of
+the problem. A technical condition on the sequence of discretization (XN , YN , cN , μN νN ) called “density
+propery” (see remark 3 below) is also necessary. Then there exists a positive constant A0 such that for any
+A > A0 the folowing holds : setting mε = [−A log(ε)/ε] the continuous interpolation provided by f [gmε
+ε ],
+built using the cannonical extension (2.3) from the discrete Sinkhorn iterate at k = mε, satisfies the estimate
+(2.4) sup
+X
+| f [gmε
+ε ] − f | ≤ −Cε log(ε)
+for some constant C (depending on A) and f is an optimal potential for (1).
+The following remarks can also be extracted from [Berman, 2017] :
+Remark 2 (Domains and Cost ). Theorem 3 holds for compact manifold X and Y and in particular the
+Euclidean torus endowed with the periodic L2 Euclidean costs. But it also on the sphere for the reflector cost
+(see section 6.3.3 [Berman, 2017] ).
+Remark 3 ( Density property Lemma 3.1 [Berman, 2017] ). For any given open set U intersecting the
+support X of μ (same for Y and ν)
+lim inf
+ε→0 ε log(μN (U)) = 0
+For the flat space X ⊂ Rd, this condition is enough. For curved surfaces, a technical generalization is
+required. But in both cases, this density property ensures the discretization of X and μ (1.7) is such that, for
+U the sequence of approximations μN (U) never converges faster to 0 than ε (remember that N = (1/ε)d).
+For X = Rd, uniform grids are fine. See section 3.2 for the reflector case.
+Remark 4 (Domains and Cost ). Theorem 3 holds for compa particular for the torus and the L2 Euclidean
+costs but also on the sphere for the reflector cost (see section 6.3.3 [Berman, 2017] ).
+Remark 5 (Transportation plan convergence). The support of the entropic transportation plan γε (see
+(1.13)), built trough the interpolation procedure in theorem (3), converges exponentially fast to the graph of
+the non entropic OT map when ε → 0.
+Remark 6 (Gradient convergence). The convergence rate in (2.4) is sublinear in ε. As ε is the “edge”
+length of the discretization, discrete approximations of the derivative of f may be non convergent.
+2.2. Entropic bias and Sinkhorn Divergence. From now on, the potentials computed using Sinkhorn
+iterations (2.2) are denoted by fOTε and gOTε .
+Entropic OT is popular to approximate transport distances between probability measures. The
+Entropic cost OTε(μ, ν) is know to converge exponentially fast to OT(μ, ν) = OT0(μ, ν) with εAN ENTROPIC OPTIMAL TRANSPORT NUMERICAL APPROACH TO THE REFLECTOR PROBLEM 7
+[Cominetti and Martin, 1994]. Regarding the reflector problem, we are not interested in the transport cost but in fOTε itself, the approximation of f . As can be seen formally on the dual formulations of (1) and (1.12) the gradient of the transport and entropic transport costs as a function of measures μ and ν are given by the Kantorovich potentials : ∇μ,νOT(μ, ν) = ( f , g) and
+∇μ,νOTε(μ, ν) = ( fOTε , gOTε ) (see also Proposition 2 [Feydy et al., 2018]). The convergence rate in
+theorem 3 with an infinite slope at ε = 0 and the numerical stability limit imposed when decreasing
+ε is a difficulty. The pollution of the potential by the entropy induced bias is well known issue.
+It arises for instance when using the L2 Wasserstein distance as a loss over the space of probability measures. Using the easier to compute fε as a gradient proxy for f to minimize μ → OT(μ, ν)
+will therefore be biased by the entropy. This problem is discussed in depth in [Feydy et al., 2018]
+where it is proposed, in order to correct the bias, to add “diagonal terms” to correct the entropic
+cost :
+(2.5) Sε(μ, ν) = OTε(μ, ν) − 1
+2 (OTε(μ, μ) + OTε(ν, ν)).
+Quite remarkably, the authors show that this quantity, called Sinkhorn divergence, remains positive
+and is convex. It also obviously vanishes for μ = ν wich is not the case for OTε. Thanks to the
+symmetry, there is only one dual potentials for each of diagonal problems. We denote them f μ
+ε and
+f ν
+ε . They can be computed using independent Sinkhorn iterations :
+(2.6)
+f μ,k+1
+OTε = −ε log(〈exp( 1
+ε ( f μ,k
+OTε − cN )), μ〉X )
+f ν,k+1
+OTε = −ε log(〈exp( 1
+ε ( f ν,k
+OTε − cN )), ν〉Y )
+The μ gradient of Sε, denoted fSε may be formed by a simple substraction. An open question is
+whether this correction :
+(2.7) fSε = fOTε − f μ
+OTε
+is a better approximation to f than fOTε . Numerical simulations of gradient flows in [Feydy et al., 2018]
+do indicate this is the case.
+Remark 7 (Asymptotics of OTε). The entropic bias may be related formally to asymptotic results on the
+difference between OT and OTε, see [Conforti and Tamanini, 2019] [Pal, 2019] for recent publications on
+this subject. For the L2 cost (Theorem 1 [Pal, 2019] treats more costs in the form c := g(x − y), g convex
+which includes the 1D reflector cost), it gives the following assymptotic behavior for small ε :
+(2.8) 1
+ε {OTε(μ, ν) − OT(μ, ν)} ' 1
+2
+{∫
+Y
+log(ν) dν −
+∫
+X
+log(μ) dμ)
+}
+This result is for continuous and compactly supported densities μ and ν with respect to L(Rd), the
+Lebesgue measure. Formally taking the gradient in μ of (2.8) we get for small ε :
+(2.9) fOTε ' f − ε
+2 log(μ)
+In a smooth continuous setting and after convergence of Sinkhorn (2.6) we get
+(2.10) f μ
+OTε (x) = −ε log(
+∫
+X
+exp( 1
+ε ( f μ
+OTε (x′) − c(x, x′)))dμ(x′))
+Assuming that f μ
+OTε (x′) − c(x, x′) has maximum at x′ = x. This is expected to be asymptotically true as
+ε → 0 (remark that T(x) = x in (1.2) for μ = ν). Then, the Laplace method (also used in [Berman, 2017]
+and [Pal, 2019]) gives for ε → 0
+f μ
+OTε (x) ' −ε log{(C ε) 1
+2 exp( 1
+ε ( f μ
+OTε (x)μ(x)}8 JEAN-DAVID BENAMOU, WILBERT L. IJZERMAN, AND GIORGI RUKHAIA
+FIGURE 3.1. Polar plot of a 1D computation. In blue and red are μ and ν. Solid and
+dashed black curves are Rε and R. Also shown are rays traced. The bottom and
+middle rays are reflected if the exaxt opposite “identity” directon. The top rays,
+reflecting on the biased entropic reflector will send light strictly inside the support
+of ν.
+for some constant C depending on x and the hessian of f μ
+OTε . It gives :
+f μ
+OTε (x) ' − ε
+2 log(μ(x)) − ε
+4 log(C ε)
+which shows that the Sinkhorn divergence de-biasing (2.7) is consistent with (2.9).
+This correction can also be observed on the numerical simulation presented in section 3.1.
+Remark finally that the density property discussed in remark 3 is requiring for the first order bias terms
+to converge to 0 when discrete mesures μN converge to original measure μ.
+3. APPLICATION OF ENTROPIC REGULARIZATION TO THE REFLECTOR PROBLEM
+3.1. Entropic Bias and de-biasing. The Entropic bias may be observed on numerical solutions. In
+the simplest identity reflector case for example, where each ray is reflected in its opposite direction,
+i.e. when ν(x) = μ(x + π), x ∈ S, the exact potentials f and g are constant and the reflector
+R = {x e f (x)|x ∈ X} is a portion of circle. It is represented, for the plane problem (d = 2), in dashed
+line in figure 3.1. The solid line is the entropic reflector Rε = {x e fOTε (x)|x ∈ X} computed with
+Sinkhorn algorithm. The discretization is N = 128 and ε = 0.1 is chosen large enough to see the
+bias. Remember that the potentials are defined up to a constant, we therefore adjust the plot such
+that the reflectors superimpose at x = 0. The illuminance and illumination μ and ν are perfect
+centered Gaussians and represented respectively in blue and red. This example shows the effect
+of the entropic bias (2.9). We also trace rays : the bottom and middle rays are reflected if the exact
+opposite “identity” direction. The top rays, reflecting on the biased entropic reflector will send light
+strictly inside the support of ν. This shrinking effect of the re-simulation offers a former explanation
+of the third plot of figure (5.1) where the density is a characteristic function which decreases to 0 at
+the boundary.AN ENTROPIC OPTIMAL TRANSPORT NUMERICAL APPROACH TO THE REFLECTOR PROBLEM 9
+In order to deal with this bias, the notion of Sinkhorn divergences (2.5) is required. When the
+spaces X and Y are different and a for a general cost c(x, y), we suggest the following extension :
+(3.1) Sε(μ, ν) = OTε(μ, ν) − 1
+2 (OTε(μ, μ′) + OTε(ν′, ν)).
+where μ′ = argminOT(μ, ·) and ν′ = argminOT(·, ν). This is consistent with the distance costs
+c(x, y) = dp
+p(x, y) as μ′ = μ and ν′ = ν in this case. Simillarly, in the reflector cost case , μ′ and
+ν′ correspond to the reflections of respectively μ and ν on the circular reflector mentioned above.
+Indeed one has arg miny∈Y −log(1− < x, y >) = −x.
+The de-biased Kantorovich potentials for the Sinkhorn divergence follow the same formula as
+for L2-distance cost :
+(3.2)
+fSε = −ε log(〈exp( 1
+ε (gOTε − cN )), νN 〉YN ) + ε log(〈exp( 1
+ε ( f μ
+OTε − cN )), μ〉XN )
+gSε = −ε log(〈exp( 1
+ε ( fOTε − cN )), μN 〉XN ) + ε log(〈exp( 1
+ε ( f ν
+OTε − cN )), ν〉YN )
+3.2. Choice of Discretization. In theorem 3, the requirement that e is of order (1/N) 1
+d and that
+μN , νN satisfy the density condition (remark 3) are closely related. Intuitively this condition means
+that while choosing the discretizations μN , νN with N points, it is important to make sure that they
+approximate corresponding distributions μ, ν with integration error of order (1/N) 1
+d for functions
+which do not oscillate on finer scale then (1/N) 1
+d . This density property is satisfied in particular
+by Quasi Monte-Carlo point clouds ([Berman, 2017]), defined by bounding the worst case error of
+integration over a desired function space W :
+Definition 1. Given a Riemmanian manifold X of dimension d, a corresponding normalized volume form dV, and a discretization XN = xi{i≤N}, the worst case error of XN with respect to function
+space W is:
+(3.3) WCE(XN , W) = sup
+f ∈W
+{∫
+X
+f dV −
+N
+∑
+i=0
+f (xi )
+}
+Then, XN = xi{i≤N} is a Quasi Monte-Carlo discretization of X on lengthscale (1/N) 1
+d if for any
+p ∈ [1, ∞) and s > d
+p :
+(3.4) WCE(XN , Ws
+p) ≤ Cs,p
+(
+N 1
+d
+)s
+Where Ws
+p is a Sobolev space of functions f such that all derivatives of order s are in Lp(X) and Cs,p
+is a uniform constant depending only on s and p.
+[Berman, 2017] shows that for a density μ which is absolutely continuous with respect to the
+volume form dV with density ρμ, the discrete approximation μN which satisfies the density requirements of theorem 3 can be constructed using Quasi Monte-Carlo discretization XN of X as the
+empirical measure :
+(3.5) μN = 1
+∑xi ∈XN ρμ(xi ) ∑
+xi ∈XN
+ρμ(xi )δxi
+When the space X is linear, a standard uniform square grids with step-size h is a Quasi MonteCarlo systems on lengthscale h. But for curved spaces, such as a sphere in the case of the reflector
+problem, constructing a Quasi Monte-carlo systems is not straightforwad and usually they do not
+have such simple structure.
+One way of constructing such a discretization on the sphere, which was used for the simulations
+in this work, is given in [Womersley, 2017].10 JEAN-DAVID BENAMOU, WILBERT L. IJZERMAN, AND GIORGI RUKHAIA
+3.3. Ray tracing, Re-Simulation and Interpolation. The reflector problem is the inverse problem
+associated to the following forward problem : Given the source illumination μ as a distribution on
+the unit sphere Sd and the reflecting surface R as a radial graph over Sd, what is the distribution of
+illuminance after μ is reflected from R? The geometric optics answer to this problem is the simulation of the light propagation known as Ray-Tracing. It can be simply described as follows :
+The distribution μ over the sphere is sampled with an empirical measure μM := ∑i=1..M pi δxi .
+Then M rays are shot according to their direction {xi }s and reflected in the directions {yi =
+xi − 2 (xi · ni )ni }s according to Snells’s law (ni is the normal vector to R at R(xi )). The resulting directions provide a sample νM := ∑i=1..M pi δyi of the illumination distribution in the far field
+ν = T#μ. In the optics community, ray tracing is used to evaluate visually the quality of the computed reflector. This procedure is called Re-Simulation. The quality of course also depends on the
+sampling method and the number of samples M.
+Remark 8 (Ray tracing and Push-Forward). Since by construction, the exact continuous reflector reflects the ray x in the direction T(x) (the associated OT map), the above described procedure is the same as
+computing the empirical push-forward νM = T#μM and this is a sampling of ν = T#μ.
+In order to use this procedure with our numerical approximation of the reflector, we need a
+continuous extension of the reflector from its discrete version computed on the N discretization
+(3.5). For standard cartesian or structured grids this is not a problem, since there are various wellstudied interpolation techniques. Our solutions on the contrary are computed on an unstructured
+Quasi Monte-Carlo grid. We use the Optimal transport and entropic OT canonical continuous
+extension procedures based on duality and using the g potentials (respectively (1.11) and (2.3)).
+Definition 2 (c-concave interpolation). For a discrete pair of Kantorovich potentials ( fN , gN ), defined on the discrete grids XN and YN respectively, the c-convex interpolation of the first potential
+fN is
+(3.6) ˆf (x) := min
+yj ∈YN
+{c(x, yj) − gN (yj)}, ∀x ∈ X.
+As discussed in section 1.1 (see (1.5)), the continuous reflector R = {xe ˆf (x)|x ∈ X}. is the envelope of N paraboloids with focal directions {yj}. This means that this approach is able to generate
+a continuous reflector with discontinuous derivatives. This may be an advantage when the target
+distribution is discontinuous itself. The downside is that in order to achieve continuous effect for
+human eye, a very fine discretization (a large N) is needed.
+The second approach uses either the smoothed transform (2.3) for OTe or (2.10) for Se
+Definition 3 (Entropic interpolation). For a discrete pair of Kantorovich potentials ( fOTε,N , gOTε,N ),
+defined respectively on the discrete grids XN and YN and solutions of the Sinkhorn algorithm
+applied to the OTe problem, the extension of the first potential fOTε,N is
+(3.7)  ̃fOTε (x) := −ε log( ∑
+j=1..N
+exp( 1
+ε (gOTε (yj) − c(x, yj)))νN (yj)), ∀x ∈ X.
+Note that (3.7) is the “softmin” version of the mininization (3.6).
+Finally using the “‘identity” potentials ( f μ
+OTε,N , f ν
+OTε,N ) computed when applying Sinkhorn algorithm applied to Se, the smooth interpolation is :
+(3.8)  ̃fSε (x) :=  ̃fOTε + ε log( ∑
+j=1..N
+exp( 1
+ε ( f μ
+OTε (yj) − c(x, yj)))μ′
+N (yj))
+This approach would result in a smoother reflector than in the previous case but will also blur
+any sharp details in the target image.AN ENTROPIC OPTIMAL TRANSPORT NUMERICAL APPROACH TO THE REFLECTOR PROBLEM 11
+3.4. Summary of the numerical procedure. Our input are analytical descriptions of the illumination/illuminance μ and ν described in the test cases section below. All test cases presented in this
+paper will have the same source and target domains X and Y. The source domain X ⊂ S2 will
+be the inverse stereograpic projection in the northern hemisphere of the square domain centered
+at the origin {(x1, x2) ∈ R2| − 0.6 ≤ x1 ≤ 0.6, −0.6 ≤ x2 ≤ 0.6}. Similarly, Y ⊂ S2 will be the
+inverse stereographic projection in the southern hemisphere of same domain. The outputs are resimulations/RT computed according to the following procedure :
+(1) Computation of fN : The potentials, optimal maps and reflectors obtained from the minimization of the regularized functional (2.1) will be denoted using the subscript ·OTε , and
+those obtained from the minimization of the de-biased functional (3.1) by subscript ·Sε . The
+discrete Kantorovich potentials are computed for the discretizations (μN , νN ) induced by
+the Quasi Monte-Carlo grids XN and YN respectively according to the formula (3.5).
+(2) Interpolation/ray tracing: The choice of interpolation when building the continuous reflector for RT will be denoted with the upperscript ˆ· when using the c-concave interpolation
+(3.6), and  ̃· when using the Entropic interpolation (3.7,3.8). The ray tracing/re-simulation
+will be shot using a Quasi Monte-Carlo sampling of the source domain of size M.
+(3) Domain of computation: The distribution of reflected directions (obtained as distribution
+of directions in R3) is projected using the stereographic projection from the south pole to
+the equator plane:
+(x, y, z) ∈ R3 → ( x
+1 + z , y
+1 + z ) ∈ R2
+Definition 4 ( Parameters and notation for the forward map). In order to discuss the numerics
+we need to introduce a notation for the forward map induced by the above procedure. This is
+cumbersome as many parameters are involved : ε the entropic regularization, N the discretization
+of the distributions μ and ν used in the Sinkhorn algorithm. The choice of using or not the Sinkhorn
+divergence correction. The choice and notation of the interpolation for the reflector has discussed
+above and in section 3.3.
+We will use the notation ˆRN
+OTε ,  ̃RN
+OTε , ˆRN
+Sε ,  ̃RN
+Sε for the reflectors defined using (1.6) and respectively ˆf N
+OTε ,  ̃f N
+OTε , ˆf N
+Sε ,  ̃f N
+Sε .
+We will denote νM = ˆRN
+OTε [μM] the ray traced sampling with M rays (and a similar notation for
+the other versions of the reflector). Of course νM also depends on the choice of the method and
+other parameters. Finally the N and M discretizations of the domain are QMC discretizations as
+explained in section 3.2.
+3.5. Numerical illustration. We give here several re-simulations as an illustration of the different
+approximation of the reflectors described in section 3.3. See section 3.4 and 4 for a precise description of the numerical procedure.
+The test cases we used are described below and are set on bounded subsets of the sphere. We
+are not exactly in the setting of theorem 3 and remark (2).
+Test Case 1: Square To Circle. The source distribution μ will be the uniform distribution over
+the set with a square stereographic projection StP(supp(μ)) = {(x1, x2) ∈ R2| − 0.5 ≤ x1 ≤
+0.5, −0.5 ≤ x2 ≤ 0.5}. The target distribution ν in the first example will be an uniform distribution
+over the set with a disck (circle) stereographic projection StP(supp(μ)) = {(x1, x2) ∈ R2|x2
+1 + x2
+2 ≤
+0.52}. Even though the densities are constant, mapping from a non smooth support geometry of12 JEAN-DAVID BENAMOU, WILBERT L. IJZERMAN, AND GIORGI RUKHAIA
+the square to the smooth geometry of a circle is not a trivial task.
+We show in figure 5.1, from left to right and from top to bottom the re-simulations using the
+reflectors ˆROTε ,  ̃ROTε , ˆRSε ,  ̃RSε and finally also the QMC discretization used for νN , N = 64 ∗ 64
+points. The regularization parameter was taken to be ε = 1
+2∗64 .
+Figures 5.1 (a) and (c) correspond to the c-concave interpolations. This builds the minimal envelope of the family of parabolae with focal axis given by the ν discretization. All rays hitting one
+parabola end up at the same position. So up to numerical errors we indeed recover (e), that is νN
+even though M >> N. Also the Sε solution performs better at the boundary.
+Figures 5.1 (b) and (d) correspond to the entropic interpolations. This is a smoothing of the the
+c-concave interpolation. The M rays are therefore distributed more evenly over the support of the
+target. We observe, for (b), at the boundary of the support, an important shrinking effect. It can be
+explained by the OTε entropic bias as in section 3.1, which smoothing the density at the boundary
+of the support would produce, according to formula (2.9) and the effect observed in figure 3.1. As
+expected, the Sε (d) solution is effective to de-bias the solution. Except, at the corners of the square
+where the the map is singular, we see extra artefacts probably induced by the smooth interpolation.
+Test Case 2 : Square to Gaussian. The target distribution ν is a gaussian distribution with
+density on the projected domain ρ(x1, x2) = e− x2
+1 +x2
+2
+2 over whole target domain Y, and the source
+distribution will be the same as in Test Case 1.
+Test Case 3 : Square to Square. The source and target distribution is a uniform distribution
+over the set with stereographic projection (square) StP(supp(ν)) = {(x1, x2) ∈ R2| − 0.5 ≤ x1 ≤
+0.5, −0.5 ≤ x2 ≤ 0.5}.
+Test Case 4 : Circle To Steep Gaussian. The source distribution μ is uniform distribution over
+the set with stereographic projection (circle) StP(supp(μ)) = {(x1, x2) ∈ R2|x2
+1 + x2
+2 ≤ 0.52}. The
+target distribution ν is gaussian distribution with density on the projected domain ρ(x1, x2) =
+e−16∗(x2
+1 +x2
+2 ) over whole target domain Y.
+Test Case 5 : Circle To Two Steep Gaussians. The source distribution μ is the same as in the
+fourth. The target distribution ν is a gaussian distribution with density on the projected domain
+ρ(x1, x2) = e−16∗((x1−0.25)2+(x2−0.25)2) + e−16∗((x1−0.25)2+(x2+0.25)2) over whole target domain Y.
+Figures 5.2- 5.6 show the re-simulations for the 5 test cases.
+4. ERROR ESTIMATIONS AND CONVERGENCE
+4.1. Wasserstein metrics as error estimator. From the OT point of view, a straightforward evaluation of our numerical approach would be to build an approximate transport map Tapp obtained
+by plugging the different approximations of the potential ˆf N
+OTε ,  ̃f N
+OTε , ˆf N
+Sε ,  ̃f N
+Sε into formula (1.3) and
+compare it against the exact solution T. For the reflector problem, however, only trivial analytical
+solutions such as the circle (identity) or a parabola (dirac target) are known. On the other hand and
+from the optics application point of view, the main concern is not the shape of reflector itself (except
+for designing constraints ignored here), but rather the quality of the re-simulation. As mentioned
+in remark 8, mathematically this re-simulation is a sampling of the push-forward Tapp#μ. Therefore, in order to build an error estimator we will consider the difference between the push-forward
+Tapp#μ and the desired distribution ν. For this we will use the standard L2 Wasserstein distance
+W2(Tapp#μ, ν), or its entropic counterparts presented in section 2. They are known to provide a
+smooth estimators between on empirical distributions [Peyr ́e and Cuturi, 2018]. In order to build a
+numerically computable error estimate we will use the ray traced sample μM of the source measure
+μ.AN ENTROPIC OPTIMAL TRANSPORT NUMERICAL APPROACH TO THE REFLECTOR PROBLEM 13
+First, using the triangle inequality for the Wasserstein metrics one gets :
+(4.1) W2(Tapp#μ, ν) ≤ W2(Tapp#μ, Tapp#μM) + W2(Tapp#μM, ν)
+The first term on the right hand side (W2(Tapp#μ, Tapp#μM)) can be estimated using Lemma 4
+and inequality (5.3) in the appendix 5 giving :
+(4.2) W2(Tapp#μ, Tapp#μM) ≤ K W2(μ, μM)
+where K depends on the data of the problem. The convergence in W2 norm of such sampling has
+been studied in [Fournier and Guillin, 2015] and is known to behave asymptotically as M− 1
+2 in expectation.
+The second term on the right hand side of (4.1) can be approximated using νM = ˆRN
+OTε [μM] the
+sample obtained using the different combinations of ray tracing and interpolation (we only show
+one of these combinations there see definition 4 and remark 8) :
+(4.3) W2(Tapp#μM, ν) ' W2(νM, ν)
+The continuous densities μ and ν still appear in estimates (4.2-4.3). The W2 distance can be
+computed either using semi-discrete OT (section 1.2) which relies on a P1 discretization of the
+continuous densities or again using Sinkhorn divergence but this time for the L2 cost. This is the
+choice we made in this paper and μ and ν are discretized on a finer M∞ = 5122 grid.
+The error estimates are therefore computed using the Sinkhorn divergence approximation of the
+L2 Wasserstein distance on the projection plane with a smaller ε : W2(., .) ' Sε=1e−06(., .), but we
+will keep the W2 notation below.
+4.2. Numerical convergence Study in N. In this section M = 1282 the number of rays for the resimulation is fixed. The densities μ and ν are discretized with a finer M∞ = 5122 points orthogonal
+grid on the plane.
+In (4.2), for μ as in Test Cases 1,2 and 3 , we obtained with the above parameters :
+(4.4) W2(μM, μM∞ ) = 2.355e − 03
+For Test cases 4 and 5, we obtained
+(4.5) W2(μM, μM∞ ) = 2.310e − 03
+Regarding W2(νM, νM∞ ) in (4.2), we plot for different tests cases described below the convergence curves in N for the different reflector approximations methods explained in definition 4 and
+two values of ε : 1/2√N, 1/8√N. See figures 5.7- 5.11 for the 5 test cases. We observe :
+(1) Convergence to error levels comparable to (4.4-4.5) which makes sense as νM is at best a
+QMC sampling of ν.
+(2) Decreasing ε improves the OTε reflectors.
+(3) Sinkhorn divergence Sε de-besiasing is effective, both in the sense of obtaining lower errors,
+and being less dependent on the choice of ε.
+(4) As the target is smooth,the entropic interpolation of Se solutions are less dependent on the
+choice of the discretization, and moderate values of N are enough to achieve the same error
+as when using the highest value of N used here.
+4.3. Numerical convergence Study in M. In this section, we use the Entropic interpolation method
+and generate the potential with the Sinkhorn divergence method as they seemed to performed the
+best. We then fix N = 1282 and e = 128/8 and study the dependence of the error term W2(νM, ν)
+with M where νM =  ̃RN
+Sε [μM].14 JEAN-DAVID BENAMOU, WILBERT L. IJZERMAN, AND GIORGI RUKHAIA
+In figures 5.12-5.13 we plot the error curves for Test Cases 1 and 5 in original and log scales.
+The curves demonstrates that the computed continuous numerical approximation of the reflector
+preserves after ray tracing the quality of the illumination/source ray sampling. In particular :
+(1) The convergence curves closely are similar to the convergence curves in N obtained using the Sinkhorn divergence method with e = 1/(8√N) and the c-concave interpolation.
+Indeed, with this interpolation method and a good approximation of the potential, the reflector will send all the rays onto νN wich is also discretized using a QMC system (see also
+section 3.3). So increasing N there and increasing M here results in the same empirical
+measure νM =  ̃RN
+Sε [μM].
+(2) In logarithmic scales the curves agree with the M− 1
+2 rate predicted by the theory
+[Fournier and Guillin, 2015].
+5. CONCLUSION
+We have studied numerically the use of entropic regularization to solve the OT/Reflector problem. Based on theorem 3 [Berman, 2017] we checked the convergence on the method the entropic
+regularization and space discretization parameter. Error quantities on the reflector shape itself are
+not available. We therefore defined and used an error criterium based on re-simulations/ray tracing and the Wasserstein 2 distance, a standard tool to compare images and empirical distribution.
+We also tested a novel approach [Feydy et al., 2018] called Sinkhorn Divergence to correct the bias
+induced by the entropic regularization.
+Our experiments indicate first that the method converges. It also shows that the combination of
+a QMC discretization satisfying the density property (remark 3) the entropic interpolation (2.1) and
+correcting the Entropic bias with the Sinkhorn divergence technique produce the best results.
+ACKNOWLEDGEMENTS
+This work was supported by ROMSOC EID H2020 network under the Marie Curie Grant Agreement No. 765374. We also want to thank Robert Berman, Jean Feydy, Gabriel Peyr ́e and Franc ̧oisXavier Vialard for helpful discussions.AN ENTROPIC OPTIMAL TRANSPORT NUMERICAL APPROACH TO THE REFLECTOR PROBLEM 15
+FIGURES16 JEAN-DAVID BENAMOU, WILBERT L. IJZERMAN, AND GIORGI RUKHAIA
+(a) ˆROTε (b)  ̃ROTε
+(c) ˆRSε (d)  ̃RSε
+(e) νN
+FIGURE 5.1. Test Case 1 : From left to right and from top to bottom the resimulations of μM (M=128*128) using the reflectors ˆROTε ,  ̃ROTε , ˆRSε ,  ̃RSε (check
+definition 4 for explanation of the notations) and finally also the QMC discretization used for νN , N = 64 ∗ 64 points. The regularization parameter was taken to be
+ε = 1
+2∗64 for all four solutions.AN ENTROPIC OPTIMAL TRANSPORT NUMERICAL APPROACH TO THE REFLECTOR PROBLEM 17
+FIGURE 5.2. Test Case 1 : Re-simulation of  ̃RS1/8√N (point cloud) together with the
+exact desired distribution (color graph)
+FIGURE 5.3. Test Case 2 : Re-simulation of  ̃RS1/8√N (point cloud) together with the
+exact desired distribution (color graph)18 JEAN-DAVID BENAMOU, WILBERT L. IJZERMAN, AND GIORGI RUKHAIA
+FIGURE 5.4. Test Case 3 : Re-simulation of  ̃RS1/8√N (point cloud) together with the
+exact desired distribution (color graph)
+FIGURE 5.5. Test Case 4 : Re-simulation of  ̃RS1/8√N (point cloud) together with the
+exact desired distribution (color graph)AN ENTROPIC OPTIMAL TRANSPORT NUMERICAL APPROACH TO THE REFLECTOR PROBLEM 19
+FIGURE 5.6. Test Case 5 : Re-simulation of  ̃RS1/8√N (point cloud) together with the
+exact desired distribution (color graph)20 JEAN-DAVID BENAMOU, WILBERT L. IJZERMAN, AND GIORGI RUKHAIA
+FIGURE 5.7. Test Case 1 (h := √N) : W2 distance between Re-simulated PushForward with 1282 points and exact target.AN ENTROPIC OPTIMAL TRANSPORT NUMERICAL APPROACH TO THE REFLECTOR PROBLEM 21
+FIGURE 5.8. Test Case 2 (h = √N) : W2 distance between Re-simulated PushForward with 1282 points and exact target.22 JEAN-DAVID BENAMOU, WILBERT L. IJZERMAN, AND GIORGI RUKHAIA
+FIGURE 5.9. Test Case 3 (h = √N) : W2 distance between Re-simulated PushForward with 1282 points and exact target.AN ENTROPIC OPTIMAL TRANSPORT NUMERICAL APPROACH TO THE REFLECTOR PROBLEM 23
+FIGURE 5.10. Test Case 4 (h = √N) : W2 distance between Re-simulated PushForward with 1282 points and exact target.24 JEAN-DAVID BENAMOU, WILBERT L. IJZERMAN, AND GIORGI RUKHAIA
+FIGURE 5.11. Test Case 5 (h = √N) : W2 distance between Re-simulated PushForward with 1282 points and exact target.AN ENTROPIC OPTIMAL TRANSPORT NUMERICAL APPROACH TO THE REFLECTOR PROBLEM 25
+FIGURE 5.12. Test Case 1 : Convergence of error terms W2(μM, μ), W2(νM, ν), original (top) and logarithmic (bottom) scales.26 JEAN-DAVID BENAMOU, WILBERT L. IJZERMAN, AND GIORGI RUKHAIA
+FIGURE 5.13. Test Case 5 : Convergence of error terms W2(μM, μ), W2(νM, ν), original (top) and logarithmic (bottom) scales.AN ENTROPIC OPTIMAL TRANSPORT NUMERICAL APPROACH TO THE REFLECTOR PROBLEM 27
+APPENDIX A
+Lemma 4. Given two Polish spaces (X, dY ) and (Y, dY ), with Borel probability measures μ1, μ2 on X and
+Lipschitz continuous map T : X → Y with Lipschitz constant Lip(T), Then
+(5.1) Wp(T#μ1, T#μ2) ≤ Lip(T)Wp(μ1, μ2)
+Proof. Let ( f , g) be optimal pair of Kantorovich potentials for Wp(T#μ1, T#μ2). Then, for all x, x′ ∈ X
+(5.2) f (T(x)) + g(T(x′)) ≤ dp
+Y (T(x), T(x′)) ≤ Lip(T)pdp
+X (x, x′)
+Where first inequality holds due to fact that admissible pairs for maximization in Kantorovich
+duality approach cost function from below.
+Inequality (5.2) implies that functions f (T(·))
+Lip(T)p and g(T(·))
+Lip(T)p are admissible pair in the dual form of
+Wp(μ1, μ2). This leads to following:
+W p
+p (T#μ1, T#μ2) = min
+γ
+∫
+Y×Y
+dp
+Y ((T#μ1, T#μ2)dγ
+=
+∫
+Y
+f (y)dT#μ1(y) +
+∫
+Y
+g(y′)T#μ2(y′)
+=
+∫
+X
+f (T(x))dμ1(x) +
+∫
+X
+g(T(x′))μ2(x′)
+= Lip(T)p
+∫
+X
+f (T(x))
+Lip(T)p dμ1(x) +
+∫
+X
+g(T(x′))
+Lip(T)p dμ2(x′)
+≤ Lip(T)pW p
+2 (μ1, μ2)
+Taking p-th root on both sides leads to the desired inequality.
+
+When the target support Y is convex and the densities of μ and ν smooth enough (C1,α is
+enough) and bounded below and above by positive constants, a classic regularity result by Caffarelli [Caffarelli, 1992] gives sufficient regularity to get
+(5.3) Lip(T) ≤ K
+where the constant K only depends on the dimension d and the the data μ and ν. See [Philippis and Figalli, 2014]
+for further refinements and discussions.28 JEAN-DAVID BENAMOU, WILBERT L. IJZERMAN, AND GIORGI RUKHAIA
+REFERENCES
+[Berman, 2017] Berman, R. J. (2017). The Sinkhorn algorithm, parabolic optimal transport and geometric Monge-Ampere
+equations. ArXiv e-prints.
+[Brix et al., 2014] Brix, K., Hafizogullari, Y., and Platen, A. (2014). Solving the monge-amp`ere equations for the inverse
+reflector problem. Mathematical Models and Methods in Applied Sciences, 25.
+[Brix et al., 2015] Brix, K., Hafizogullari, Y., and Platen, A. (2015). Designing illumination lenses and mirrors by the numerical solution of monge–amp`ere equations. Journal of the Optical Society of America A, 32(11):2227.
+[Caffarelli, 1992] Caffarelli, L. (1992). The regularity of mappings with a convex potential. Journal of The American Mathematical Society - J AMER MATH SOC, 5.
+[Cominetti and Martin, 1994] Cominetti, R. and Martin, J. S. (1994). Asymptotic analysis of the exponential penalty trajectory in linear programming. Mathematical Programming, 67(1):169–187.
+[Conforti and Tamanini, 2019] Conforti, G. and Tamanini, L. (2019). A formula for the time derivative of the entropic cost
+and applications.
+[Cuturi, 2013] Cuturi, M. (2013). Sinkhorn distances: Lightspeed computation of optimal transport. In Burges, C. J. C.,
+Bottou, L., Welling, M., Ghahramani, Z., and Weinberger, K. Q., editors, Advances in Neural Information Processing Systems
+26, pages 2292–2300. Curran Associates, Inc.
+[Feydy et al., 2018] Feydy, J., S ́ejourn ́e, T., Vialard, F.-X., Amari, S.-i., Trouv ́e, A., and Peyr ́e, G. (2018). Interpolating between
+Optimal Transport and MMD using Sinkhorn Divergences. working paper or preprint.
+[Fournier and Guillin, 2015] Fournier, N. and Guillin, A. (2015). On the rate of convergence in Wasserstein distance of the
+empirical measure. Probability Theory and Related Fields, 162(3-4):707.
+[Genevay et al., 2018] Genevay, A., Peyre, G., and Cuturi, M. (2018). Learning generative models with sinkhorn divergences. In Storkey, A. and Perez-Cruz, F., editors, Proceedings of the Twenty-First International Conference on Artificial Intelligence and Statistics, volume 84 of Proceedings of Machine Learning Research, pages 1608–1617, Playa Blanca, Lanzarote,
+Canary Islands. PMLR.
+[Glimm and Oliker, 2003] Glimm, T. and Oliker, V. (2003). Optical design of single reflector systems and the
+monge–kantorovich mass transfer problem. Journal of Mathematical Sciences, 117:4096–4108.
+[Kochengin and Oliker, 2003] Kochengin, S. A. and Oliker, V. I. (2003). Computational algorithms for constructing reflectors.
+Computing and Visualization in Science, 6(1):15–21.
+[Leclerc, 2019] Leclerc, H. (2019). Pysdot software - https://pypi.org/project/pysdot/.
+[L ́evy, 2015] L ́evy, B. (2015). A numerical algorithm for L2 semi-discrete optimal transport in 3D. ESAIM: Mathematical
+Modelling and Numerical Analysis, 49(6):1693 – 1715.
+[L ́eonard, 2013] L ́eonard, C. (2013). A survey of the schr  ̈odinger problem and some of its connections with optimal transport.
+[Machado Manh ̃aes De Castro et al., 2016] Machado Manh ̃aes De Castro, P., M ́erigot, Q., and Thibert, B. (2016). Far-field
+reflector problem and intersection of paraboloids. Numerische Mathematik, 134(2):389–411.
+[M ́erigot, 2011] M ́erigot, Q. (2011). A multiscale approach to optimal transport. Computer Graphics Forum, 30(5):1584–1592.
+18 pages.
+[Pal, 2019] Pal, S. (2019). On the difference between entropic cost and the optimal transport cost.
+[Peyr ́e and Cuturi, 2018] Peyr ́e, G. and Cuturi, M. (2018). Computational Optimal Transport. ArXiv e-prints.
+[Philippis and Figalli, 2014] Philippis, G. D. and Figalli, A. (2014). The monge-amp`ere equation and its link to optimal
+transportation.
+[Ramdas et al., 2017] Ramdas, A., Trillos, N., and Cuturi, M. (2017). On wasserstein two-sample testing and related families
+of nonparametric tests. Entropy, 19(2):47.
+[Romijn et al., 2019] Romijn, L., ten Thije Boonkkamp, J., and IJzerman, W. (2019). Freeform lens design for a point source
+and far-field target. In Optical Design and Fabrication 2019 (Freeform, OFT), page FT1B.2. Optical Society of America.
+[Romijn et al., 2020] Romijn, L., ten Thije Boonkkamp, J., and IJzerman, W. (2020). Inverse reflector design for a point source
+and far-field target. Journal of Computational Physics, 408.
+[Schmitzer, 2016] Schmitzer, B. (2016). Stabilized Sparse Scaling Algorithms for Entropy Regularized Transport Problems.
+arXiv e-prints, page arXiv:1610.06519.
+[Urbas, 1997] Urbas, J. (1997). On the second boundary value problem for equations of monge-amp`ere type. Journal f  ̈ur die
+reine und angewandte Mathematik, 487:115–124.
+[Villani, 2008] Villani, C. (2008). Optimal Transport: Old and New. Grundlehren der mathematischen Wissenschaften. Springer
+Berlin Heidelberg.
+[Wang, 2004] Wang, X.-J. (2004). On the design of a reflector antenna ii. Calculus of Variations and Partial Differential Equations,
+20(3):329–341.
+[Womersley, 2017] Womersley, R. S. (2017). Efficient Spherical Designs with Good Geometric Properties. ArXiv e-prints.
+[Wu et al., 2013] Wu, R., Xu, L., Liu, P., Zhang, Y., Zheng, Z., Li, H., and Liu, X. (2013). Freeform illumination design: a
+nonlinear boundary problem for the elliptic monge&#x2013;amp&#xe9;re equation. Opt. Lett., 38(2):229–231.AN ENTROPIC OPTIMAL TRANSPORT NUMERICAL APPROACH TO THE REFLECTOR PROBLEM 29
+INRIA-PARIS, MOKAPLAN, RUE SIMONE IFF, 75012, PARIS, FRANCE AND CEREMADE, UMR CNRS 7534, UNI-
+VERSIT  ́E PARIS DAUPHINE, PL. DE LATTRE DE TASSIGNY, 75775 PARIS CEDEX 16
+Email address: jean-david.benamou@inria.fr
+SIGNIFY RESEARCH HIGH TECH CAMPUS 7, 5656 AE EINDHOVEN, THE NETHERLANDS
+Email address: wilbert.ijzerman@signify.com
+INRIA-PARIS, MOKAPLAN, RUE SIMONE IFF, 75012, PARIS, FRANCE AND CEREMADE, UMR CNRS 7534, UNI-
+VERSIT  ́E PARIS DAUPHINE, PL. DE LATTRE DE TASSIGNY, 75775 PARIS CEDEX 16
+Email address: giorgi.rukhaia@inria.fr
