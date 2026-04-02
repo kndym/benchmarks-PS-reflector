@@ -65,20 +65,24 @@ def gen_spherical_patch(n, theta_min, theta_max, phi_min, phi_max,
     base2, base3 : Halton bases for u1, u2
     skip : number of Halton indices to skip at the start
     """
-    cos_max = np.cos(theta_min)   # larger cos (smaller θ)
-    cos_min = np.cos(theta_max)   # smaller cos (larger θ)
+
+
+    #cos_max = np.cos(theta_min)   # larger cos (smaller θ)
+    #cos_min = np.cos(theta_max)   # smaller cos (larger θ)
 
     pts = []
     idx = skip
     while len(pts) < n:
         u1 = _halton(idx, base2)
         u2 = _halton(idx, base3)
-        cos_theta = cos_min + u1 * (cos_max - cos_min)
-        sin_theta = np.sqrt(max(0.0, 1.0 - cos_theta ** 2))
+        #sin_theta = np.sqrt(max(0.0, 1.0 - cos_theta ** 2))
         phi = phi_min + u2 * (phi_max - phi_min)
-        pts.append([sin_theta * np.cos(phi),
-                    sin_theta * np.sin(phi),
-                    cos_theta])
+        theta= theta_min + u1 * (theta_max -  theta_min)
+        cos_phi = np.cos(phi)
+        sin_phi = np.sin(phi)
+        pts.append([sin_phi * np.cos(theta),
+                    sin_phi * np.sin(theta),
+                    cos_phi])
         idx += 1
     return np.array(pts, dtype=np.float64)
 
@@ -96,8 +100,8 @@ t_start = time.time()
 # Patch bounds (matching C++ test header)
 SRC_THETA = (np.pi / 12, np.pi / 3)
 SRC_PHI   = (np.pi / 12, np.pi / 4)
-TGT_THETA = (np.pi / 10, np.pi / 5)
-TGT_PHI   = (np.pi / 10, np.pi / 5)
+TGT_THETA = ((np.pi / 10), (np.pi / 5 ) )
+TGT_PHI   = ((np.pi / 10)  - 0.15 , (np.pi / 5) - 0.15 )
 
 print("Generating Halton QMC clouds on spherical patches...")
 x = gen_spherical_patch(NK, *SRC_THETA, *SRC_PHI, skip=0)
@@ -260,7 +264,7 @@ t0 = time.time()
 src_idx  = np.where(mask_p)[0]
 tgt_idx  = np.where(mask_q)[0]
 y_tgt    = y[tgt_idx]
-g_tgt    = g[tgt_idx]
+g_tgt    = g_raw[tgt_idx]
 pushed_y = []
 for i0 in range(0, len(src_idx), chunk):
     i1    = min(i0 + chunk, len(src_idx))

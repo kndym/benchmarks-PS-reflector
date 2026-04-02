@@ -251,7 +251,7 @@ t0 = time.time()
 src_idx  = np.where(mask_p)[0]
 tgt_idx  = np.where(mask_q)[0]
 y_tgt    = y[tgt_idx]          # only supported target points
-g_tgt    = g[tgt_idx]
+g_tgt    = g_raw[tgt_idx]
 pushed_y = []
 for i0 in range(0, len(src_idx), chunk):
     i1    = min(i0 + chunk, len(src_idx))
