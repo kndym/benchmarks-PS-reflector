@@ -175,8 +175,8 @@ def Q_two_gaussians(y: np.ndarray) -> np.ndarray:
 # Default patch bounds (multiples of π)
 _SRC_THETA = (np.pi / 12, np.pi / 3)
 _SRC_PHI   = (np.pi / 12, np.pi / 4)
-_TGT_THETA = (np.pi / 10, np.pi / 5)
-_TGT_PHI   = (np.pi / 10, np.pi / 5)
+_TGT_THETA = (np.pi / 10, np.pi / 5)         # polar angle range
+_TGT_PHI   = (np.pi / 3, 5 * np.pi / 12)   # azimuthal range — non-overlapping with source
 
 
 def P_refraction_patch(x: np.ndarray) -> np.ndarray:

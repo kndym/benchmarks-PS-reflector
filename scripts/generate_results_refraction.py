@@ -26,7 +26,7 @@ sys.path.insert(0, REPO_ROOT)
 
 # Set kappa BEFORE importing anything that caches cost computations
 from reflector.cost import set_kappa, cost_matrix_chunk
-set_kappa(0.6)
+set_kappa(0.4)
 
 from reflector.distributions import P_refraction_patch, Q_refraction_patch
 from reflector.sinkhorn import (
@@ -100,8 +100,8 @@ t_start = time.time()
 # Patch bounds (matching C++ test header)
 SRC_THETA = (np.pi / 12, np.pi / 3)
 SRC_PHI   = (np.pi / 12, np.pi / 4)
-TGT_THETA = ((np.pi / 10), (np.pi / 5 ) )
-TGT_PHI   = ((np.pi / 10)  - 0.15 , (np.pi / 5) - 0.15 )
+TGT_THETA = (np.pi / 3, 5 * np.pi / 12)   # azimuthal range fed to gen_spherical_patch
+TGT_PHI   = (np.pi / 10, np.pi / 5)       # polar range fed to gen_spherical_patch
 
 print("Generating Halton QMC clouds on spherical patches...")
 x = gen_spherical_patch(NK, *SRC_THETA, *SRC_PHI, skip=0)

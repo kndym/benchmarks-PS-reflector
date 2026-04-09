@@ -262,7 +262,9 @@ def sinkhorn_step(x, y, logp, logq, f, g, k, chunk_size=512):
     # log(G[j]) = -k*g[j] - lse_g[j]
     # Absorption: g += log(G)/(2k)  =>  g_new = g/2 - lse_g/(2k)  [contraction]
     log_G = -k * g - lse_g
-    g_new = g + log_G / (2.0 * k)
+    #g_new = g + log_G / (2.0 * k)
+    g_new = -lse_g / k
+
 
     # --- f update ---
     # C++ uses G[j] (freshly computed, not yet absorbed) with CURRENT g[j].
@@ -272,7 +274,9 @@ def sinkhorn_step(x, y, logp, logq, f, g, k, chunk_size=512):
     g_eff = -lse_g / k
     lse_f = _logsumexp_f_update(x, y, logq, f, g_eff, k, chunk_size)
     log_F = -k * f - lse_f
-    f_new = f + log_F / (2.0 * k)
+    #f_new = f + log_F / (2.0 * k)
+    f_new = -lse_f / k
+
 
     # maxdif measured as max|log(F)|/k  (C++ uses cblas_idamax on log(F)/k)
     maxdif = float(np.max(np.abs(log_F / k)))
