@@ -26,7 +26,7 @@ sys.path.insert(0, REPO_ROOT)
 
 # Set kappa BEFORE importing anything that caches cost computations
 from reflector.cost import set_kappa, cost_matrix_chunk
-set_kappa(0.4)
+set_kappa(0.6)
 
 from reflector.distributions import P_refraction_patch, Q_refraction_patch
 from reflector.sinkhorn import (
