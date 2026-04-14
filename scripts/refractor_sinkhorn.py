@@ -1,7 +1,7 @@
 """
 refractor_sinkhorn.py — Sinkhorn divergence for the far-field refraction problem.
 
-Cost: c(x, y) = -log(1 - κ · (x·y))  with κ = 0.7
+Cost: c(x, y) = -log(1 - κ · (x·y))  with κ = 0.6
 Points sampled uniformly (Halton QMC) on spherical patches:
   Source: θ ∈ [0°,  60°], φ ∈ [0°, 360°]
   Target: θ ∈ [120°,180°], φ ∈ [0°, 360°]
@@ -19,7 +19,7 @@ from scipy.special import logsumexp
 # Refraction cost
 # ---------------------------------------------------------------------------
 
-KAPPA = 0.7
+KAPPA = 0.6
 EPS_CLIP = 1e-15
 
 

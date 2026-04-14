@@ -234,6 +234,126 @@ def Q_refraction_patch(y: np.ndarray) -> np.ndarray:
 
 
 # ---------------------------------------------------------------------------
+# Density factories for spherical-patch benchmarks
+#
+# Each factory accepts the same (theta_min, theta_max, phi_min, phi_max) that
+# would be passed to gen_spherical_patch — where phi acts as the polar angle
+# (z = cos(phi)) and theta acts as the azimuthal angle.  It returns a callable
+#   density(pts: ndarray (N, 3)) -> ndarray (N,)
+# that evaluates the density at each unit-sphere point.
+#
+# All densities are defined using angular distance from the patch centre:
+#   d_i = arccos(clip(pts[i] @ centre, -1, 1))
+# and are scaled relative to d_max, the maximum angular distance from the
+# centre to any corner of the patch.
+# ---------------------------------------------------------------------------
+
+def _patch_centre_and_dmax(theta_min, theta_max, phi_min, phi_max):
+    """Compute the Cartesian centre and max corner angular distance for a patch.
+
+    The patch is parameterised in gen_spherical_patch convention:
+        z       = cos(phi),  phi ∈ [phi_min, phi_max]
+        azimuth = theta,     theta ∈ [theta_min, theta_max]
+
+    Returns
+    -------
+    centre : ndarray, shape (3,), unit vector at patch centre.
+    d_max  : float, max angular distance (radians) from centre to any corner.
+    """
+    phi_c   = 0.5 * (phi_min   + phi_max)
+    theta_c = 0.5 * (theta_min + theta_max)
+    centre  = np.array([
+        np.sin(phi_c) * np.cos(theta_c),
+        np.sin(phi_c) * np.sin(theta_c),
+        np.cos(phi_c),
+    ])
+    d_max = 0.0
+    for t in (theta_min, theta_max):
+        for p in (phi_min, phi_max):
+            corner = np.array([np.sin(p) * np.cos(t),
+                               np.sin(p) * np.sin(t),
+                               np.cos(p)])
+            d = np.arccos(np.clip(centre @ corner, -1.0, 1.0))
+            if d > d_max:
+                d_max = d
+    return centre, d_max
+
+
+def make_patch_uniform(theta_min, theta_max, phi_min, phi_max):
+    """Factory: flat (uniform) density — returns 1.0 for every point."""
+    def density(pts):
+        pts = np.asarray(pts, dtype=np.float64)
+        return np.ones(len(pts), dtype=np.float64)
+    return density
+
+
+def make_patch_gaussian(theta_min, theta_max, phi_min, phi_max):
+    """Factory: isotropic Gaussian centred at the patch centre.
+
+    sigma = d_max / 3, so the density is ~0.01 at the patch corners.
+    """
+    centre, d_max = _patch_centre_and_dmax(theta_min, theta_max, phi_min, phi_max)
+    sigma = d_max / 3.0
+
+    def density(pts):
+        pts = np.asarray(pts, dtype=np.float64)
+        d   = np.arccos(np.clip(pts @ centre, -1.0, 1.0))
+        return np.exp(-0.5 * (d / sigma) ** 2)
+    return density
+
+
+def make_patch_donut(theta_min, theta_max, phi_min, phi_max):
+    """Factory: soft Gaussian annulus centred at the patch centre.
+
+    Peaks at angular distance r0 = 0.5 * d_max from the centre,
+    with ring width sigma = d_max / 8.
+    """
+    centre, d_max = _patch_centre_and_dmax(theta_min, theta_max, phi_min, phi_max)
+    r0    = 0.5  * d_max
+    sigma = d_max / 8.0
+
+    def density(pts):
+        pts = np.asarray(pts, dtype=np.float64)
+        d   = np.arccos(np.clip(pts @ centre, -1.0, 1.0))
+        return np.exp(-0.5 * ((d - r0) / sigma) ** 2)
+    return density
+
+
+def make_patch_cross(theta_min, theta_max, phi_min, phi_max):
+    """Factory: cross of 4 Gaussians placed at N/S/E/W from the patch centre.
+
+    The four arm centres are at angular offset delta = d_max / 3 from the
+    patch centre along two orthogonal tangent directions.
+    Each Gaussian has sigma = d_max / 6.
+    """
+    centre, d_max = _patch_centre_and_dmax(theta_min, theta_max, phi_min, phi_max)
+    delta = d_max / 3.0
+    sigma = d_max / 6.0
+
+    # Two orthonormal tangent vectors to 'centre'
+    ref = np.array([0.0, 0.0, 1.0])
+    if abs(centre @ ref) > 0.9:          # centre near a pole
+        ref = np.array([1.0, 0.0, 0.0])
+    e1 = np.cross(centre, ref);  e1 /= np.linalg.norm(e1)
+    e2 = np.cross(centre, e1);   e2 /= np.linalg.norm(e2)
+
+    arm_dirs = [centre + delta * e1,
+                centre - delta * e1,
+                centre + delta * e2,
+                centre - delta * e2]
+    arm_centres = [v / np.linalg.norm(v) for v in arm_dirs]
+
+    def density(pts):
+        pts  = np.asarray(pts, dtype=np.float64)
+        vals = np.zeros(len(pts), dtype=np.float64)
+        for ac in arm_centres:
+            d = np.arccos(np.clip(pts @ ac, -1.0, 1.0))
+            vals += np.exp(-0.5 * (d / sigma) ** 2)
+        return vals
+    return density
+
+
+# ---------------------------------------------------------------------------
 # Benchmark registry
 # ---------------------------------------------------------------------------
 
