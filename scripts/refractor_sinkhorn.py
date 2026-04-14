@@ -120,12 +120,14 @@ def sinkhorn_step(x, y, logp, logq, f, g, k, chunk_size=512):
     """Standard log-domain Sinkhorn step (no damping)."""
     lse_g = _logsumexp_g_update(x, y, logp, f, g, k, chunk_size)
     log_G = -k * g - lse_g
-    g_new = g + log_G / (2.0 * k)
+    g_new = -lse_g / k
 
     g_eff = -lse_g / k
     lse_f = _logsumexp_f_update(x, y, logq, f, g_eff, k, chunk_size)
     log_F = -k * f - lse_f
-    f_new = f + log_F / (2.0 * k)
+    #f_new = f + log_F / (2.0 * k)
+    f_new = - lse_f / k
+
 
     maxdif = float(np.max(np.abs(log_F / k)))
     return f_new, g_new, maxdif
