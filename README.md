@@ -1,5 +1,3 @@
-<img src="images/romsoclogo-logo.png" alt="ROMSOC logo" width="150"/>
-
 # Point Source Far-Field Refractor — Entropic Optimal Transport
 
 Solve the **far-field refractor problem** via Sinkhorn divergence (entropic optimal transport).  
