@@ -1,27 +1,10 @@
 """
 refracter/cost.py
 
-Cost function for the Point Source Far-Field Refractor / Reflector Problem.
+Cost function c(x,y) = -log(1 - κ·(x·y)) for unit vectors x, y on the sphere.
+κ=1.0 → reflector,  κ=0.6 → refractor.
 
-The generalised cost is:
-
-    c(x, y) = -log(1 - κ · (x·y))
-
-where x and y are unit vectors on the sphere and κ ∈ (0, 1] is the
-refraction parameter.
-
-* κ = 1.0  →  standard Wang (2004) reflector cost:  c = -log(1 - x·y)
-* κ = 0.6  →  refraction cost from Figure 4 of the paper
-
-When x·y approaches 1/κ, the cost diverges to +∞.  To avoid numerical
-issues we clip the argument of the logarithm away from 0.
-
-Public API
-----------
-set_kappa(k)                         -> None  (set the module-level κ)
-get_kappa()                          -> float (query the current κ)
-cost_vec(x_vec, y_vec)               -> scalar
-cost_matrix_chunk(x_chunk, y)        -> ndarray (len(x_chunk), len(y))
+Call set_kappa() before importing anything that caches cost computations.
 """
 
 import numpy as np
@@ -36,14 +19,7 @@ _EPS_CLIP = 1e-15
 
 
 def set_kappa(k: float) -> None:
-    """Set the refraction parameter κ used by the cost functions.
-
-    Parameters
-    ----------
-    k : float
-        Must be in (0, 1].  Use 1.0 for the standard reflector cost and
-        0.6 for the refraction benchmark.
-    """
+    """Set the module-level κ; must be in (0, 1]."""
     global _KAPPA
     if not (0.0 < k <= 1.0):
         raise ValueError(f"kappa must be in (0, 1], got {k}")
@@ -56,18 +32,7 @@ def get_kappa() -> float:
 
 
 def cost_vec(x_vec: np.ndarray, y_vec: np.ndarray) -> float:
-    """Compute the cost for a single pair of unit vectors.
-
-    Parameters
-    ----------
-    x_vec : array_like, shape (3,)
-    y_vec : array_like, shape (3,)
-
-    Returns
-    -------
-    float
-        c(x, y) = -log(1 - κ·(x·y)), or +inf if the argument is ≤ 0.
-    """
+    """Scalar cost c(x,y) = -log(1 - κ·(x·y)) for a single pair of unit vectors."""
     x_vec = np.asarray(x_vec, dtype=np.float64)
     y_vec = np.asarray(y_vec, dtype=np.float64)
     dot = np.dot(x_vec, y_vec)
@@ -77,22 +42,7 @@ def cost_vec(x_vec: np.ndarray, y_vec: np.ndarray) -> float:
 
 
 def cost_matrix_chunk(x_chunk: np.ndarray, y: np.ndarray) -> np.ndarray:
-    """Compute a block of the cost matrix.
-
-    Computes c(x_chunk[i], y[j]) = -log(1 - κ·(x_chunk[i]·y[j])) for all i, j.
-
-    Parameters
-    ----------
-    x_chunk : ndarray, shape (M, 3)
-        A chunk of source points.
-    y : ndarray, shape (N, 3)
-        All target points.
-
-    Returns
-    -------
-    C : ndarray, shape (M, N)
-        Block of the cost matrix.
-    """
+    """Return cost matrix block of shape (M, N) for x_chunk (M,3) and y (N,3)."""
     x_chunk = np.asarray(x_chunk, dtype=np.float64)
     y = np.asarray(y, dtype=np.float64)
     # Dot products: (M, N)
