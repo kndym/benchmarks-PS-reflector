@@ -149,66 +149,68 @@ while maxdif > cap_thr:
         break
 print(f"  Final: {i} iters, last maxdif={maxdif:.4e}")
 
-# ---------------------------------------------------------------------------
-# Step 2 — Identity F loop  (source marginal)
-# ---------------------------------------------------------------------------
-print(f"\nStep 2 — Identity Sinkhorn for source (f_id), id_step={id_step}:")
-f_id   = np.zeros(NK, dtype=np.float64)
-regvar = 1;  it = 0
-t0 = time.time()
-while regvar < k_final:
-    f_id_new, _ = sinkhorn_identity_f_step(x, y, logp, f_id, regvar, chunk)
-    f_id = np.where(p > 0, f_id_new, f_id)
-    it += 1
-    print(f"  iter {it:4d}, k={regvar:4d}")
-    regvar += id_step
+using_identity = False  # set to True to also compute identity terms f_id, g_id (source and target marginals)
+if (using_identity):
+    # ---------------------------------------------------------------------------
+    # Step 2 — Identity F loop  (source marginal)
+    # ---------------------------------------------------------------------------
+    print(f"\nStep 2 — Identity Sinkhorn for source (f_id), id_step={id_step}:")
+    f_id   = np.zeros(NK, dtype=np.float64)
+    regvar = 1;  it = 0
+    t0 = time.time()
+    while regvar < k_final:
+        f_id_new, _ = sinkhorn_identity_f_step(x, y, logp, f_id, regvar, chunk)
+        f_id = np.where(p > 0, f_id_new, f_id)
+        it += 1
+        print(f"  iter {it:4d}, k={regvar:4d}")
+        regvar += id_step
 
-maxdif = cap_thr + 1.0;  i = 0
-while maxdif > cap_thr:
-    f_id_new, maxdif = sinkhorn_identity_f_step(x, y, logp, f_id, k_final, chunk)
-    f_id = np.where(p > 0, f_id_new, f_id)
-    i += 1
-    if i >= cap_iter_id: break
-print(f"  Identity F: {i} final iters, last maxdif={maxdif:.4e}  ({time.time()-t0:.1f}s)")
+    maxdif = cap_thr + 1.0;  i = 0
+    while maxdif > cap_thr:
+        f_id_new, maxdif = sinkhorn_identity_f_step(x, y, logp, f_id, k_final, chunk)
+        f_id = np.where(p > 0, f_id_new, f_id)
+        i += 1
+        if i >= cap_iter_id: break
+    print(f"  Identity F: {i} final iters, last maxdif={maxdif:.4e}  ({time.time()-t0:.1f}s)")
 
-# ---------------------------------------------------------------------------
-# Step 3 — Identity G loop  (target marginal)
-# ---------------------------------------------------------------------------
-print(f"\nStep 3 — Identity Sinkhorn for target (g_id), id_step={id_step}:")
-g_id   = np.zeros(NK, dtype=np.float64)
-regvar = 1;  it = 0
-t0 = time.time()
-while regvar < k_final:
-    g_id_new, _ = sinkhorn_identity_g_step(x, y, logq, g_id, regvar, chunk)
-    g_id = np.where(q > 0, g_id_new, g_id)
-    it += 1
-    print(f"  iter {it:4d}, k={regvar:4d}")
-    regvar += id_step
+    # ---------------------------------------------------------------------------
+    # Step 3 — Identity G loop  (target marginal)
+    # ---------------------------------------------------------------------------
+    print(f"\nStep 3 — Identity Sinkhorn for target (g_id), id_step={id_step}:")
+    g_id   = np.zeros(NK, dtype=np.float64)
+    regvar = 1;  it = 0
+    t0 = time.time()
+    while regvar < k_final:
+        g_id_new, _ = sinkhorn_identity_g_step(x, y, logq, g_id, regvar, chunk)
+        g_id = np.where(q > 0, g_id_new, g_id)
+        it += 1
+        print(f"  iter {it:4d}, k={regvar:4d}")
+        regvar += id_step
 
-maxdif = cap_thr + 1.0;  i = 0
-while maxdif > cap_thr:
-    g_id_new, maxdif = sinkhorn_identity_g_step(x, y, logq, g_id, k_final, chunk)
-    g_id = np.where(q > 0, g_id_new, g_id)
-    i += 1
-    if i >= cap_iter_id: break
-print(f"  Identity G: {i} final iters, last maxdif={maxdif:.4e}  ({time.time()-t0:.1f}s)")
+    maxdif = cap_thr + 1.0;  i = 0
+    while maxdif > cap_thr:
+        g_id_new, maxdif = sinkhorn_identity_g_step(x, y, logq, g_id, k_final, chunk)
+        g_id = np.where(q > 0, g_id_new, g_id)
+        i += 1
+        if i >= cap_iter_id: break
+    print(f"  Identity G: {i} final iters, last maxdif={maxdif:.4e}  ({time.time()-t0:.1f}s)")
 
-# ---------------------------------------------------------------------------
-# Step 4 — Normalise and subtract identity terms
-# ---------------------------------------------------------------------------
-f = np.where(p > 0, f, 0.0)
-g = np.where(q > 0, g, 0.0)
+    # ---------------------------------------------------------------------------
+    # Step 4 — Normalise and subtract identity terms
+    # ---------------------------------------------------------------------------
+    f = np.where(p > 0, f, 0.0)
+    g = np.where(q > 0, g, 0.0)
 
-mx_fid = float(np.max(f_id));  f_id -= mx_fid;  g_id += mx_fid
-mx_f   = float(np.max(f));     f    -= mx_f;     g    += mx_f
+    mx_fid = float(np.max(f_id));  f_id -= mx_fid;  g_id += mx_fid
+    mx_f   = float(np.max(f));     f    -= mx_f;     g    += mx_f
 
-f_raw = f.copy()
-g_raw = g.copy()
+    f_raw = f.copy()
+    g_raw = g.copy()
 
-f -= f_id;  g -= g_id
+    f -= f_id;  g -= g_id
 
-total_cost = float(np.sum(p[p>0]*f[p>0]) + np.sum(q[q>0]*g[q>0]))
-print(f"\nTotal cost: {total_cost:.6e}")
+    total_cost = float(np.sum(p[p>0]*f[p>0]) + np.sum(q[q>0]*g[q>0]))
+    print(f"\nTotal cost: {total_cost:.6e}")
 
 # ---------------------------------------------------------------------------
 # Step 5 — Refractor surface
