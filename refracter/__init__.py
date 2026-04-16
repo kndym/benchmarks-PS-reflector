@@ -1,9 +1,8 @@
 """
-reflector: Python rewrite of the Point Source Far-Field Reflector Problem
-using Entropic Optimal Transport (Sinkhorn divergence).
+refracter: Python implementation of the Point Source Far-Field Refractor/Reflector
+Problem using Entropic Optimal Transport (Sinkhorn divergence).
 
-Reference: Benamou, Ijzerman, Rukhaia (2020)
-  "An Entropic Optimal Transport Numerical Approach to the Reflector Problem"
+Default use case: refractor (κ = 0.6).  Set κ = 1.0 for the reflector case.
 """
 
 from .qmc import load_main_cloud, load_small_cloud, load_push_cloud

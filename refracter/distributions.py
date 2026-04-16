@@ -1,5 +1,5 @@
 """
-reflector/distributions.py
+refracter/distributions.py
 
 Source and target density functions for the reflector benchmark problems,
 together with stereographic projection helpers.

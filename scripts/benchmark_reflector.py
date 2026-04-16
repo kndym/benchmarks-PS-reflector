@@ -31,17 +31,17 @@ import os
 import time
 import numpy as np
 
-from reflector.qmc import load_main_cloud, load_small_cloud, load_push_cloud
-from reflector.distributions import BENCHMARKS, stereo_south
-from reflector.sinkhorn import _run_sinkhorn_divergence_inner
-from reflector.build import (
+from refracter.qmc import load_main_cloud, load_small_cloud, load_push_cloud
+from refracter.distributions import BENCHMARKS, stereo_south
+from refracter.sinkhorn import _run_sinkhorn_divergence_inner
+from refracter.build import (
     build_reflector,
     c_transform_gc,
     c_transform_fc,
     build_regular_grid,
     reflector_on_regular_grid,
 )
-from reflector.pushforward import ray_trace
+from refracter.pushforward import ray_trace
 
 
 # ---------------------------------------------------------------------------

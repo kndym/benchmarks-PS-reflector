@@ -26,22 +26,22 @@ REPO_ROOT  = os.path.dirname(SCRIPT_DIR)
 sys.path.insert(0, REPO_ROOT)
 
 # Set kappa BEFORE importing anything that caches cost computations
-from reflector.cost import set_kappa, cost_matrix_chunk
+from refracter.cost import set_kappa, cost_matrix_chunk
 set_kappa(0.6)
 
-from reflector.distributions import (
+from refracter.distributions import (
     make_patch_uniform,
     make_patch_gaussian,
     make_patch_donut,
     make_patch_cross,
     stereo_north,
 )
-from reflector.sinkhorn import (
+from refracter.sinkhorn import (
     sinkhorn_step,
     sinkhorn_identity_f_step,
     sinkhorn_identity_g_step,
 )
-from reflector.build import c_transform_gc, c_transform_fc
+from refracter.build import c_transform_gc, c_transform_fc
 
 # ---------------------------------------------------------------------------
 # Halton quasi-random sequence (identical to generate_results_refraction.py)

@@ -1,135 +1,145 @@
-<img src="images/romsoclogo-logo.png" alt="ROMSOC logo"  width="150"/>
+<img src="images/romsoclogo-logo.png" alt="ROMSOC logo" width="150"/>
 
-# Benchmarks for Point Source to Far Field Reflector Problem
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5171811.svg)](https://doi.org/10.5281/zenodo.5171811) [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ROMSOC/benchmarks-ps-reflector/HEAD?labpath=notebooks/Benchmark.ipynb)
+# Point Source Far-Field Refractor — Entropic Optimal Transport
 
-This repository contains benchmarks for the **Point Source to Far Field reflector problem**, solved via **Entropic Optimal Transport** (Sinkhorn divergence). It includes both a C++ reference implementation and a full Python rewrite.
+Solve the **far-field refractor problem** via Sinkhorn divergence (entropic optimal transport).  
+Given source and target intensity distributions on the unit sphere, the solver finds the refractor surface that redirects light from the source to match the target.
 
-**Reference:** Benamou, Ijzerman, Rukhaia — *An Entropic Optimal Transport Numerical Approach to the Reflector Problem* (2020)
+**Cost function:** `c(x, y) = -log(1 - κ·(x·y))`, κ = 0.6 (refractor), κ = 1.0 (reflector).
+
+---
+
+## Quickstart
+
+```bash
+pip install numpy scipy matplotlib
+```
+
+**Generate refractor results (uniform source → uniform target):**
+
+```bash
+python scripts/generate_results.py
+# Saves: results/results_refraction_NK1600.npz
+```
+
+**Generate all 16 source×target density-pair results:**
+
+```bash
+python scripts/generate_results_all_pairs.py
+# Densities: uniform, gaussian, donut, cross (4×4 = 16 combos)
+# Saves: results/results_refraction_{src}_{tgt}_NK1600.npz
+```
+
+**Load and explore results in Python:**
+
+```python
+import numpy as np
+
+r = np.load('results/results_refraction_NK1600.npz')
+
+x, y   = r['x'], r['y']          # source / target point clouds (NK, 3)
+f, g   = r['f'], r['g']          # Kantorovich potentials
+R, Ref = r['R'], r['Ref']        # refractor scale and surface points
+Y_Pushed_projected = r['Y_Pushed_projected']  # push-forward (u, v, density)
+```
+
+**Primary notebook:** `notebooks/Benchmark_refraction.ipynb`
 
 ---
 
 ## Repository Structure
 
 ```
-benchmarks-ps-reflector/
-├── reflector/              # Python module (core library)
-│   ├── sinkhorn.py         # Sinkhorn divergence algorithm
-│   ├── build.py            # Reflector surface construction and c-transforms
-│   ├── distributions.py    # Benchmark definitions (SquareToCircle, etc.)
-│   ├── pushforward.py      # Ray tracing and push-forward computation
-│   ├── qmc.py              # Quasi-Monte Carlo point cloud loading
-│   └── cost.py             # Cost matrix computation
-├── BenchmarkCode/          # C++ reference implementation
-│   ├── main.cpp            # Full Sinkhorn pipeline
-│   ├── main_fast.cpp       # Optimised variant
-│   ├── Benchmarks/         # Test case headers
-│   ├── PushForward/        # Reflection computation and point clouds
-│   ├── QuasiMonteCarlo/    # QMC grid containers
-│   └── SmallGrid/          # Coarse grid for warm-start initialisation
-├── notebooks/              # Jupyter notebooks
-│   ├── Benchmark.ipynb     # Main walkthrough (mirrors C++ pipeline)
-│   ├── Benchmark_Python.ipynb  # Python-focused exploration
-│   ├── Benchmark_fast.ipynb    # Fast implementation benchmarks
-│   └── Benchmark_old.ipynb     # Legacy notebook
-├── scripts/                # Utility scripts
-│   ├── compare.py          # Compare C++ vs Python results
-│   ├── compare_nk.py       # Per-resolution (NK) comparison
-│   ├── run_compare.py      # Driver for comparisons
-│   ├── run_fast.py         # Fast implementation runner
-│   ├── generate_results.py # Batch result generation
-│   └── visualize.py        # Visualisation utilities
-├── figures/                # Generated plots and visualisations
-├── results/                # Computed output data (NPZ, TXT)
-├── images/                 # Repository images
-├── benchmark.py            # Main Python entry point
-├── Dockerfile              # Docker environment
-└── paper.txt               # Reference paper notes
+benchmarks-PS-reflector/
+├── refracter/                    # Python library (core solver)
+│   ├── sinkhorn.py               # Sinkhorn divergence algorithm
+│   ├── cost.py                   # Cost function c(x,y) = -log(1 - κ·(x·y))
+│   ├── distributions.py          # Density functions and stereographic projections
+│   ├── build.py                  # Surface construction and c-transforms
+│   ├── pushforward.py            # Ray tracing and push-forward
+│   └── qmc.py                    # Quasi-Monte Carlo point cloud loading
+│
+├── scripts/
+│   ├── generate_results.py       # Refractor benchmark, NK=1600 (default)
+│   ├── generate_results_all_pairs.py  # All 16 density-pair combinations
+│   ├── refractor_sinkhorn.py     # Standalone refractor Sinkhorn (self-contained)
+│   ├── visualize.py              # Plot utilities
+│   │
+│   ├── generate_results_reflector.py  # Reflector benchmark (κ=1.0, SquareToCircle)
+│   ├── compare_reflector.py      # Compare C++ vs Python reflector outputs
+│   ├── compare_nk_reflector.py   # Per-NK resolution comparison
+│   ├── run_compare_reflector.py  # Runs Python reflector for C++ comparison
+│   └── run_fast_reflector.py     # Fast reflector runner (NK=381)
+│
+├── notebooks/
+│   ├── Benchmark_refraction.ipynb     # Primary refractor notebook
+│   ├── Benchmark_Python.ipynb         # Reflector exploration
+│   ├── Benchmark_fast.ipynb           # Fast reflector benchmarks
+│   └── archive/                       # Legacy notebooks
+│
+├── results/                      # Computed output bundles (.npz)
+├── figures/                      # Generated plots
+├── BenchmarkCode/                # C++ reference implementation
+├── benchmark_reflector.py        # Full reflector pipeline (CLI)
+└── Dockerfile                    # Docker environment (includes Intel oneAPI)
 ```
 
 ---
 
-## Python Implementation
+## Refractor Pipeline
 
-### Quickstart
+The solver runs on **spherical patches** (upper hemisphere) with κ = 0.6:
+
+1. **Generate QMC cloud** — Halton quasi-Monte Carlo points on the source and target patches
+2. **Evaluate densities** — P(x) on source patch, Q(y) on target patch
+3. **Sinkhorn divergence** — Iterative log-domain solver; produces Kantorovich potentials f, g
+4. **Build refractor surface** — R = exp(f), Ref = 2·x·R
+5. **C-transforms** — Verify optimality: gc ≈ f, fc ≈ g
+6. **Push-forward** — Argmin OT map x_i → y_{j*(i)}; project via north-pole stereographic
+
+Default patch geometry (matching C++ reference):
+- Source: θ ∈ [π/12, π/3], φ ∈ [π/12, π/4]
+- Target: θ ∈ [π/3, 5π/12], φ ∈ [π/10, π/5]
+
+---
+
+## Density Shapes
+
+The `generate_results_all_pairs.py` script runs all 16 combinations of:
+
+| Name | Description |
+|------|-------------|
+| `uniform` | Flat weight across the entire patch |
+| `gaussian` | Isotropic Gaussian centred on the patch |
+| `donut` | Soft annulus peaked at 0.5·d_max from centre |
+| `cross` | Four Gaussians at N/S/E/W of patch centre |
+
+---
+
+## Using the Library
 
 ```python
-from benchmark import run_benchmark
+from refracter.cost import set_kappa
+set_kappa(0.6)   # must be called before other imports that cache cost computations
 
-results = run_benchmark(benchmark='SquareToCircle', output_dir='my_output')
+from refracter.sinkhorn import sinkhorn_step, sinkhorn_identity_f_step, sinkhorn_identity_g_step
+from refracter.build import c_transform_gc, c_transform_fc
+from refracter.distributions import stereo_north, make_patch_gaussian
 ```
 
-Or from the command line:
-
-```bash
-python benchmark.py --benchmark SquareToCircle --output_dir my_output
-```
-
-Available benchmarks: `SquareToCircle`, `SquareToTwoGaussSide`
-
-### Pipeline
-
-The Python rewrite (`benchmark.py` + `reflector/` module) replicates the full C++ pipeline:
-
-1. Load QMC point clouds
-2. Evaluate source/target density functions P and Q
-3. Run the Sinkhorn divergence algorithm (with warm-start from coarse grid)
-4. Build the reflector surface (R, Ref)
-5. Compute c-transforms (gc, fc)
-6. Build a regular grid and compute the reflector on it
-7. Ray-trace the push-forward
-8. Save all outputs (compatible with C++ output format)
-
-### Python Dependencies
-
-```bash
-pip install numpy scipy
-```
+**κ = 0.6** (refractor, default), **κ = 1.0** (reflector).
 
 ---
 
-## C++ Implementation
+## Reflector Benchmark (C++ replication)
 
-The C++ code requires **Intel's MKL** (Math Kernel Library), available via [Intel oneAPI](https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onemkl.html).
-
-Edit the `Makefile` in `BenchmarkCode/` to adjust MKL paths for your installation. The C++ code is Linux-native (uses system file/folder creation commands).
-
----
-
-## Running via Jupyter Notebook
-
-### Binder (cloud, no setup required)
-
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ROMSOC/benchmarks-ps-reflector/HEAD?labpath=notebooks/Benchmark.ipynb)
-
-> Note: mybinder cloud computations are limited to 2 GB of RAM.
-
-### Docker (local, includes Intel oneAPI)
-
-Build the container:
-```bash
-docker build -t benchmarks-ps-reflector .
-```
-
-Run with Jupyter Lab:
-```bash
-docker run -it --rm -p 8888:8888 benchmarks-ps-reflector \
-    jupyter-lab --ip=0.0.0.0 --port=8888 --allow-root
-```
-
----
-
-## Comparing C++ and Python Results
-
-After generating outputs from both implementations, use the comparison scripts:
+For the reflector case (κ = 1.0, SquareToCircle / SquareToTwoGaussSide):
 
 ```bash
-# Compare results for a specific NK resolution
-python scripts/compare_nk.py
-
-# Full comparison
-python scripts/compare.py
+python benchmark_reflector.py --benchmark SquareToCircle --output_dir my_output
 ```
+
+Compares against the C++ reference in `BenchmarkCode/`. Requires Intel MKL for the C++ code.
 
 ---
 
@@ -142,7 +152,6 @@ This SOFTWARE has been designed with an exclusive focus on civil applications. I
 
 ## Acknowledgments
 
-<img src="images/EU_Flag.png" alt="EU Flag"  width="150" height="100" />
+<img src="images/EU_Flag.png" alt="EU Flag" width="150" height="100"/>
 
 The ROMSOC project has received funding from the European Union's Horizon 2020 research and innovation programme under the Marie Skłodowska-Curie Grant Agreement No. 765374.
-This repository reflects the views of the author(s) and does not necessarily reflect the views or policy of the European Commission. The REA cannot be held responsible for any use that may be made of the information this repository contains.

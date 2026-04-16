@@ -1,5 +1,5 @@
 """
-run_fast.py — Self-contained Python Sinkhorn reflector, NK=381
+run_fast_reflector.py — Self-contained Python Sinkhorn reflector, NK=381
 
 Run:  python run_fast.py
 
@@ -20,11 +20,11 @@ import matplotlib
 matplotlib.use("TkAgg")          # use a GUI backend; fall back silently
 import matplotlib.pyplot as plt
 
-# Make sure we can import the reflector package from this directory
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.dirname(SCRIPT_DIR))
 
-from reflector.qmc import load_small_cloud
-from reflector.sinkhorn import (
+from refracter.qmc import load_small_cloud
+from refracter.sinkhorn import (
     sinkhorn_step,
     sinkhorn_identity_f_step,
     sinkhorn_identity_g_step,

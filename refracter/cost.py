@@ -1,7 +1,7 @@
 """
-reflector/cost.py
+refracter/cost.py
 
-Cost function for the Point Source Far-Field Reflector / Refractor Problem.
+Cost function for the Point Source Far-Field Refractor / Reflector Problem.
 
 The generalised cost is:
 

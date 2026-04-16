@@ -1,5 +1,5 @@
 """
-reflector/qmc.py
+refracter/qmc.py
 
 Parse QMC point clouds from the C++ header files.
 

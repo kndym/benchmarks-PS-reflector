@@ -1,5 +1,5 @@
 """
-reflector/sinkhorn.py
+refracter/sinkhorn.py
 
 Full Sinkhorn / Sinkhorn-divergence algorithm matching the C++ implementation
 in BenchmarkCode/main.cpp.

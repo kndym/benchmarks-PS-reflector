@@ -1,5 +1,5 @@
 """
-reflector/pushforward.py
+refracter/pushforward.py
 
 Ray-tracing pushforward on the regular reflector grid.
 

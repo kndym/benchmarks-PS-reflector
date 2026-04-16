@@ -1,10 +1,9 @@
 """
-benchmark.py
+benchmark_reflector.py
 
-Main script for the Python rewrite of the Point Source Far-Field Reflector
-Problem benchmark.
+Reflector benchmark pipeline (κ = 1.0, SquareToCircle / SquareToTwoGaussSide).
 
-This module provides run_benchmark(), which replicates the full C++ pipeline:
+This module provides run_benchmark(), which replicates the full C++ reflector pipeline:
 
   1. Load QMC point clouds.
   2. Evaluate source/target density functions P and Q.
@@ -19,29 +18,29 @@ This module provides run_benchmark(), which replicates the full C++ pipeline:
 
 Usage
 -----
-    from benchmark import run_benchmark
+    from benchmark_reflector import run_benchmark
     results = run_benchmark(benchmark='SquareToCircle', output_dir='Output')
 
 or from the command line:
 
-    python benchmark.py --benchmark SquareToCircle --output_dir Output
+    python benchmark_reflector.py --benchmark SquareToCircle --output_dir Output
 """
 
 import os
 import time
 import numpy as np
 
-from reflector.qmc import load_main_cloud, load_small_cloud, load_push_cloud
-from reflector.distributions import BENCHMARKS, stereo_south
-from reflector.sinkhorn import _run_sinkhorn_divergence_inner
-from reflector.build import (
+from refracter.qmc import load_main_cloud, load_small_cloud, load_push_cloud
+from refracter.distributions import BENCHMARKS, stereo_south
+from refracter.sinkhorn import _run_sinkhorn_divergence_inner
+from refracter.build import (
     build_reflector,
     c_transform_gc,
     c_transform_fc,
     build_regular_grid,
     reflector_on_regular_grid,
 )
-from reflector.pushforward import ray_trace
+from refracter.pushforward import ray_trace
 
 
 # ---------------------------------------------------------------------------

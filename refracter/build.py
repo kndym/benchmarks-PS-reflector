@@ -1,5 +1,5 @@
 """
-reflector/build.py
+refracter/build.py
 
 Build the reflector surface from Sinkhorn potentials and compute the
 c-transforms needed for the Sinkhorn divergence correction.

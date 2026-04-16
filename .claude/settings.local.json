@@ -3,7 +3,11 @@
     "allow": [
       "Bash(xargs grep -l \"mkl\\\\|vdMul\\\\|cblas_dscal\")",
       "Bash(python3 -c \":*)",
-      "Bash(find . -name *.npz)"
+      "Bash(find . -name *.npz)",
+      "Bash(ls *.py)",
+      "Bash(ls refracter/*.py)",
+      "Bash(ls scripts/*.py)",
+      "Bash(ls notebooks/*.ipynb)"
     ]
   }
 }

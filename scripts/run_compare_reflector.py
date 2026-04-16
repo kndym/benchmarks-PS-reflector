@@ -1,5 +1,5 @@
 """
-run_compare.py — Python Sinkhorn reflector for arbitrary NK (Halton QMC).
+run_compare_reflector.py — Python Sinkhorn reflector for arbitrary NK (Halton QMC).
 
 Matches main_compare.cpp exactly:
   - Same Halton cloud (base-2/base-3, half=0.6, skip=0)
@@ -17,9 +17,10 @@ import os, sys, time
 import numpy as np
 from scipy.special import logsumexp
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from reflector.distributions import P_square, Q_circle
-from reflector.sinkhorn import (
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.dirname(SCRIPT_DIR))
+from refracter.distributions import P_square, Q_circle
+from refracter.sinkhorn import (
     sinkhorn_step,
     sinkhorn_identity_f_step,
     sinkhorn_identity_g_step,

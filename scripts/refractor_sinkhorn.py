@@ -79,7 +79,7 @@ def gen_spherical_patch(n, theta_min_deg, theta_max_deg,
 
 
 # ---------------------------------------------------------------------------
-# Log-domain logsumexp helpers (identical structure to reflector/sinkhorn.py
+# Log-domain logsumexp helpers (identical structure to refracter/sinkhorn.py
 # but calling the local refraction cost_matrix_chunk)
 # ---------------------------------------------------------------------------
 
@@ -113,7 +113,7 @@ def _logsumexp_f_update(x, y, logq, f, g, k, chunk_size):
 
 
 # ---------------------------------------------------------------------------
-# Sinkhorn step functions (adapted from reflector/sinkhorn.py)
+# Sinkhorn step functions (adapted from refracter/sinkhorn.py)
 # ---------------------------------------------------------------------------
 
 def sinkhorn_step(x, y, logp, logq, f, g, k, chunk_size=512):
