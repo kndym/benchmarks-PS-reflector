@@ -75,19 +75,23 @@ def sinkhorn_step(x, y, logp, logq, f, g, k, chunk_size=512):
     """One log-domain Sinkhorn step (matches C++ Sinkhorn_axb + absorbtion).
 
     Returns updated (f_new, g_new, maxdif) where maxdif = max|f_new - f|.
-    """
-    # g update
-    lse_g = _logsumexp_g_update(x, y, logp, f, g, k, chunk_size)
-    log_G = -k * g - lse_g
-    g_new = -lse_g / k
 
-    # f update — use g_eff (freshly computed, pre-absorption) to match C++ path
-    g_eff = -lse_g / k
-    lse_f = _logsumexp_f_update(x, y, logq, f, g_eff, k, chunk_size)
+    
+    """
+    # f update
+    
+    lse_f = _logsumexp_f_update(x, y, logq, f, g, k, chunk_size)
     log_F = -k * f - lse_f
     f_new = -lse_f / k
 
-    maxdif = float(np.max(np.abs(log_F / k)))
+    # g update
+    lse_g = _logsumexp_g_update(x, y, logp, f_new, g, k, chunk_size)
+    log_G = -k * g - lse_g
+    g_new = -lse_g / k
+
+    f_diff= np.abs(f_new - f)
+
+    maxdif = float(np.max(f_diff/k))
 
     return f_new, g_new, maxdif
 

@@ -111,6 +111,7 @@ print(f"  Source: {len(x)} pts, z ∈ [{x[:,2].min():.4f}, {x[:,2].max():.4f}]")
 print(f"  Target: {len(y)} pts, z ∈ [{y[:,2].min():.4f}, {y[:,2].max():.4f}]")
 
 # Densities — all points are inside the patch by construction → uniform
+# you can import a different distribution 
 p_raw = P_refraction_patch(x)
 q_raw = Q_refraction_patch(y)
 print(f"  Source support: {int(p_raw.sum()+0.5)} / {NK}")
@@ -121,7 +122,6 @@ q = q_raw / q_raw.sum()
 logp = np.where(p > 0, np.log(p), -np.inf)
 logq = np.where(q > 0, np.log(q), -np.inf)
 
-# Regularisation schedule
 multiplier  = 8
 k_final     = multiplier * int(np.floor(np.sqrt(NK)))
 id_step     = int(np.floor(np.sqrt(k_final)))
