@@ -81,12 +81,12 @@ def sinkhorn_step(x, y, logp, logq, f, g, k, chunk_size=512):
     # f update
     
     lse_f = _logsumexp_f_update(x, y, logq, f, g, k, chunk_size)
-    log_F = -k * f - lse_f
+    #log_F = -k * f - lse_f
     f_new = -lse_f / k
 
     # g update
     lse_g = _logsumexp_g_update(x, y, logp, f_new, g, k, chunk_size)
-    log_G = -k * g - lse_g
+    #log_G = -k * g - lse_g
     g_new = -lse_g / k
 
     f_diff= np.abs(f_new - f)
