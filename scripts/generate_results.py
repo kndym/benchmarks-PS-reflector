@@ -150,6 +150,10 @@ while maxdif > cap_thr:
 print(f"  Final: {i} iters, last maxdif={maxdif:.4e}")
 
 using_identity = False  # set to True to also compute identity terms f_id, g_id (source and target marginals)
+
+f_raw = f.copy()
+g_raw = g.copy()
+
 if (using_identity):
     # ---------------------------------------------------------------------------
     # Step 2 — Identity F loop  (source marginal)
@@ -204,8 +208,6 @@ if (using_identity):
     mx_fid = float(np.max(f_id));  f_id -= mx_fid;  g_id += mx_fid
     mx_f   = float(np.max(f));     f    -= mx_f;     g    += mx_f
 
-    f_raw = f.copy()
-    g_raw = g.copy()
 
     f -= f_id;  g -= g_id
 
