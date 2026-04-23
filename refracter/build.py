@@ -30,39 +30,39 @@ def build_reflector(x: np.ndarray, f: np.ndarray, f_id: np.ndarray):
 # C-transforms
 # ---------------------------------------------------------------------------
 
-def c_transform_gc(x: np.ndarray, y: np.ndarray, g: np.ndarray,
+def c_transform_fc(x: np.ndarray, y: np.ndarray, g: np.ndarray,
                    chunk_size: int = 512) -> np.ndarray:
-    """gc[i] = min_j(C(x[i], y[j]) - g[j])  (c-conjugate of g, C++ Get_gc)."""
+    """fc[i] = min_j(C(x[i], y[j]) - g[j])  (c-conjugate of g, C++ Get_fc)."""
     NK = len(x)
-    gc = np.full(NK, np.inf, dtype=np.float64)
+    fc = np.full(NK, np.inf, dtype=np.float64)
 
     finite_mask = np.isfinite(g)
     y_finite = y[finite_mask]
     g_finite = g[finite_mask]
 
     if len(y_finite) == 0:
-        return gc
+        return fc
 
     for i_start in range(0, NK, chunk_size):
         i_end = min(i_start + chunk_size, NK)
         C_block = cost_matrix_chunk(x[i_start:i_end], y_finite)
-        gc[i_start:i_end] = np.min(C_block - g_finite[None, :], axis=1)
+        fc[i_start:i_end] = np.min(C_block - g_finite[None, :], axis=1)
 
-    return gc
+    return fc
 
 
-def c_transform_fc(x: np.ndarray, y: np.ndarray, f: np.ndarray,
+def c_transform_gc(x: np.ndarray, y: np.ndarray, f: np.ndarray,
                    chunk_size: int = 512) -> np.ndarray:
-    """fc[j] = min_i(C(x[i], y[j]) - f[i])  (c-conjugate of f, C++ Get_fc)."""
+    """gc[j] = min_i(C(x[i], y[j]) - f[i])  (c-conjugate of f, C++ Get_gc)."""
     NK = len(y)
-    fc = np.full(NK, np.inf, dtype=np.float64)
+    gc = np.full(NK, np.inf, dtype=np.float64)
 
     for j_start in range(0, NK, chunk_size):
         j_end = min(j_start + chunk_size, NK)
         C_block = cost_matrix_chunk(x, y[j_start:j_end])
-        fc[j_start:j_end] = np.min(C_block - f[:, None], axis=0)
+        gc[j_start:j_end] = np.min(C_block - f[:, None], axis=0)
 
-    return fc
+    return gc
 
 
 # ---------------------------------------------------------------------------
