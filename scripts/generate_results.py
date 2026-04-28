@@ -157,6 +157,11 @@ g_raw = g.copy()
 # Set to True to also compute identity terms f_id, g_id (source and target marginals).
 using_identity = False
 
+f_id   = np.zeros(NK, dtype=np.float64)
+
+g_id   = np.zeros(NK, dtype=np.float64)
+
+
 if using_identity:
     # ---------------------------------------------------------------------------
     # Step 2 — Identity F loop  (source marginal)
