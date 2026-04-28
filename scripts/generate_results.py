@@ -149,12 +149,15 @@ while maxdif > cap_thr:
         break
 print(f"  Final: {i} iters, last maxdif={maxdif:.4e}")
 
-using_identity = False  # set to True to also compute identity terms f_id, g_id (source and target marginals)
-
+# Snapshot of the cold-start Sinkhorn potentials, used by the c-transform check below
+# regardless of whether the identity correction runs.
 f_raw = f.copy()
 g_raw = g.copy()
 
-if (using_identity):
+# Set to True to also compute identity terms f_id, g_id (source and target marginals).
+using_identity = False
+
+if using_identity:
     # ---------------------------------------------------------------------------
     # Step 2 — Identity F loop  (source marginal)
     # ---------------------------------------------------------------------------
@@ -232,8 +235,10 @@ g_raw_masked = np.where(mask_q, g_raw, -1e300)
 f_raw_masked = np.where(mask_p, f_raw, -1e300)
 gc   = c_transform_gc(x, y, f_raw_masked, chunk)
 fc   = c_transform_fc(x, y, g_raw_masked, chunk)
-Refc = 2.0 * x * np.exp(gc)[:, np.newaxis]
+Refc = 2.0 * x * np.exp(fc)[:, np.newaxis]
 print(f"  done ({time.time()-t0:.2f}s)")
+# FIX THIS PLEASE — sanity check below currently compares f_raw vs gc;
+# revisit after the c_transform_gc / c_transform_fc argument swap.
 print(f"  max|f_raw-gc(g_raw)| (supported) = {np.abs(f_raw[mask_p]-gc[mask_p]).max():.4e}")
 
 # ---------------------------------------------------------------------------
