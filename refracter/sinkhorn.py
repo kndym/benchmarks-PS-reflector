@@ -1,25 +1,15 @@
-"""
-refracter/sinkhorn.py
-
-Log-domain Sinkhorn divergence matching C++ BenchmarkCode/main.cpp.
-
-SD_ε(μ,ν) = OT_ε(μ,ν) - ½(OT_ε(μ,μ') + OT_ε(ν',ν))
-
-All iterations use logsumexp. The cost matrix is never fully materialised;
-chunk_size controls the block size. Identity iterations are damped (half-step).
-"""
+# Log-domain Sinkhorn updates matching the C++ reference implementation.
+# SD_epsilon(mu,nu) = OT_epsilon(mu,nu)
+#   - 1/2*(OT_epsilon(mu,mu') + OT_epsilon(nu',nu)).
+# The cost matrix is processed in chunks, and identity updates use half-steps.
 
 import numpy as np
 from scipy.special import logsumexp
 
 from .cost import cost_matrix_chunk
 
-# ---------------------------------------------------------------------------
-# Helper: chunked logsumexp over one axis of the cost matrix
-# ---------------------------------------------------------------------------
-
+# Target update term: lse[j] = logsumexp_i(k*f[i] + logp[i] - k*C[i,j]).
 def _logsumexp_g_update(x, y, logp, f, g, k, chunk_size):
-    """Chunked logsumexp for g update: lse[j] = logsumexp_i(k*f[i] + logp[i] - k*C[i,j])."""
     N = len(y)
     lse_g = np.full(N, -np.inf)
 
@@ -46,7 +36,7 @@ def _logsumexp_g_update(x, y, logp, f, g, k, chunk_size):
 
 
 def _logsumexp_f_update(x, y, logq, f, g, k, chunk_size):
-    """Chunked logsumexp for f update: lse[i] = logsumexp_j(k*g[j] + logq[j] - k*C[i,j])."""
+    # Source update term: lse[i] = logsumexp_j(k*g[j] + logq[j] - k*C[i,j]).
     N = len(x)
     lse_f = np.full(N, -np.inf)
 
@@ -67,17 +57,9 @@ def _logsumexp_f_update(x, y, logq, f, g, k, chunk_size):
     return lse_f
 
 
-# ---------------------------------------------------------------------------
-# Main Sinkhorn step (no damping)
-# ---------------------------------------------------------------------------
-
+# Perform one log-domain Sinkhorn update for both potentials.
+# The updates are f_new = -lse_f/k and g_new = -lse_g/k.
 def sinkhorn_step(x, y, logp, logq, f, g, k, chunk_size=512):
-    """One log-domain Sinkhorn step (matches C++ Sinkhorn_axb + absorbtion).
-
-    Returns updated (f_new, g_new, maxdif) where maxdif = max|f_new - f|.
-
-    
-    """
     # f update
     
     lse_f = _logsumexp_f_update(x, y, logq, f, g, k, chunk_size)
@@ -96,16 +78,8 @@ def sinkhorn_step(x, y, logp, logq, f, g, k, chunk_size=512):
     return f_new, g_new, maxdif
 
 
-# ---------------------------------------------------------------------------
-# Identity Sinkhorn steps (damped)
-# ---------------------------------------------------------------------------
-
+# Damped source self-transport update: f_id_new = 0.5*f_id + 0.5*std.
 def sinkhorn_identity_f_step(x, y, logp, f_id, k, chunk_size=512):
-    """Damped identity Sinkhorn step for the source marginal (matches C++ Sinkhorn_identity_F_axb).
-
-    Uses source weights on both sides; update is f_id_new = 0.5*f_id + 0.5*std.
-    Returns (f_id_new, maxdif).
-    """
     N = len(x)
 
     b = k * f_id + logp  # weights on y side (same as x for identity problem)
@@ -132,10 +106,7 @@ def sinkhorn_identity_f_step(x, y, logp, f_id, k, chunk_size=512):
 
 
 def sinkhorn_identity_g_step(x, y, logq, g_id, k, chunk_size=512):
-    """Damped identity Sinkhorn step for the target marginal (mirrors f_step with q).
-
-    Returns (g_id_new, maxdif).
-    """
+    # Damped target self-transport update, mirroring the source update.
     N = len(y)
 
     a = k * g_id + logq  # weights on x side (same as y for identity problem)
@@ -161,16 +132,9 @@ def sinkhorn_identity_g_step(x, y, logq, g_id, k, chunk_size=512):
     return g_id_new, maxdif
 
 
-# ---------------------------------------------------------------------------
-# Small-grid Sinkhorn (with kernel pre-conditioning)
-# ---------------------------------------------------------------------------
-
+# Solve the small-grid problem used to warm-start the full reflector solve.
+# Kernel preconditioning uses K = exp(-k_reg*C).
 def run_small_sinkhorn(x_s, y_s, p_s, q_s, k_reg):
-    """Small-grid (381-pt) Sinkhorn with kernel pre-conditioning (matches C++ smallsinkhorn).
-
-    Pre-conditions marginals via K = exp(-k_reg*C), then runs multi-scale loop.
-    Returns (f_small, g_small).
-    """
     NK_s = len(x_s)
 
     C = cost_matrix_chunk(x_s, y_s)  # full (381×381) cost matrix
@@ -211,15 +175,9 @@ def run_small_sinkhorn(x_s, y_s, p_s, q_s, k_reg):
     return f_s, g_s
 
 
-# ---------------------------------------------------------------------------
-# Warm-start via c-transform
-# ---------------------------------------------------------------------------
-
+# Lift small-grid potentials with g_init[j] = min_i(C(x_s[i],y[j]) - f_s[i])
+# and f_init[i] = min_j(C(x[i],y_s[j]) - g_s[j]).
 def warmstart_from_small(x_s, y_s, x, y, f_s, g_s, chunk_size=512):
-    """Warm-start main grid via c-transforms of the small-grid potentials (C++ UseSmall).
-
-    Returns (f_init, g_init).
-    """
     NK = len(x)
 
     # g_init[j] = min_i(C(x_s[i], y[j]) - f_s[i])
@@ -239,12 +197,8 @@ def warmstart_from_small(x_s, y_s, x, y, f_s, g_s, chunk_size=512):
     return f_init, g_init
 
 
-# ---------------------------------------------------------------------------
-# Full Sinkhorn divergence
-# ---------------------------------------------------------------------------
-
+# This legacy entry point is intentionally disabled without small-grid densities.
 def run_sinkhorn_divergence(x, y, p, q, chunk_size=512, verbose=True):
-    """Stub — must be called via run_benchmark() which supplies small-grid densities."""
     from .qmc import load_small_cloud
 
     NK = len(x)
@@ -298,10 +252,7 @@ def run_sinkhorn_divergence(x, y, p, q, chunk_size=512, verbose=True):
 
 def _run_sinkhorn_divergence_inner(x, y, p, q, x_s, y_s, p_s, q_s,
                                    chunk_size=512, verbose=True):
-    """Full Sinkhorn divergence (C++ do_sinkhorn_subtracted_axb).
-
-    Returns dict with keys: f, g, f_id, g_id, total_cost.
-    """
+    # Run the full C++-matching Sinkhorn divergence calculation.
     NK = len(x)
 
     # --- Normalise weights ---

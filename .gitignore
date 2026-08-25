@@ -4,4 +4,7 @@
 .claude/
 .cursor/
 *.html
+!figures/
+!figures/*.png
+!figures/*.html
 CLAUDE.md

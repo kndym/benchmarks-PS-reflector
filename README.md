@@ -55,25 +55,21 @@ benchmarks-PS-reflector/
 │   ├── distributions.py          # Density functions and stereographic projections
 │   ├── build.py                  # Surface construction and c-transforms
 │   ├── pushforward.py            # Ray tracing and push-forward
-│   └── qmc.py                    # Quasi-Monte Carlo point cloud loading
+│   ├── qmc.py                    # Quasi-Monte Carlo point cloud loading
+│   └── refraction_pipeline.py    # Shared cold-start refraction pipeline
 │
 ├── scripts/
-│   ├── generate_results.py       # Refractor benchmark, NK=1600 (default)
-│   ├── generate_results_all_pairs.py  # All 16 density-pair combinations
-│   ├── refractor_sinkhorn.py     # Standalone refractor Sinkhorn (self-contained)
-│   ├── visualize.py              # Plot utilities
-│   │
-│   ├── generate_results_reflector.py  # Reflector benchmark (κ=1.0, SquareToCircle)
-│   ├── compare_reflector.py      # Compare C++ vs Python reflector outputs
-│   ├── compare_nk_reflector.py   # Per-NK resolution comparison
-│   ├── run_compare_reflector.py  # Runs Python reflector for C++ comparison
-│   └── run_fast_reflector.py     # Fast reflector runner (NK=381)
+│   ├── generate_results.py          # Main single-pair refraction CLI
+│   ├── generate_results_all_pairs.py # 16-pair refraction sweep
+│   ├── visualize.py                 # Plot a reflector output directory
+│   └── reflector/                   # Optional legacy C++ comparison helpers
 │
 ├── notebooks/
-│   ├── Benchmark_refraction.ipynb     # Primary refractor notebook
-│   ├── Benchmark_Python.ipynb         # Reflector exploration
-│   ├── Benchmark_fast.ipynb           # Fast reflector benchmarks
-│   └── archive/                       # Legacy notebooks
+│   ├── Benchmark_refraction.ipynb     # Primary refraction notebook
+│   ├── reflector/                     # Current reflector exploration
+│   └── archive/                       # Historical notebooks
+│
+├── archive/                           # Historical diagnostics and scripts
 │
 ├── results/                      # Computed output bundles (.npz)
 ├── figures/                      # Generated plots
@@ -83,6 +79,19 @@ benchmarks-PS-reflector/
 ```
 
 ---
+
+## Which files should I run?
+
+For the maintained refraction workflow, use `scripts/generate_results.py`,
+`scripts/generate_results_all_pairs.py`, and
+`notebooks/Benchmark_refraction.ipynb`. For the maintained reflector CLI, use
+`benchmark_reflector.py`; its optional comparison helpers are documented in
+`scripts/reflector/README.md`. The archived diagnostics and standalone
+generators are retained only for historical reference.
+
+Both refraction commands share their numerical implementation in
+`refracter/refraction_pipeline.py`; the all-pairs command only selects density
+factories and output names.
 
 ## Refractor Pipeline
 

@@ -1,15 +1,5 @@
-"""
-run_fast_reflector.py — Self-contained Python Sinkhorn reflector, NK=381
-
-Run:  python run_fast.py
-
-Uses the same 381-point QMC cloud as main_fast.cpp (source = x_small,
-target = x_small with z negated).  Starts from f=g=0 (no warm-start) to
-match main_fast.cpp exactly.
-
-Outputs to output_python/: f.npy, g.npy, f_id.npy, g_id.npy, R.npy, Ref.npy
-Then shows a 3-D matplotlib scatter of the reflector surface.
-"""
+# Run the 381-point Python reflector case used by main_fast.cpp.
+# Outputs are written to output_python/; run from scripts/reflector/.
 
 import os
 import sys
@@ -21,7 +11,7 @@ matplotlib.use("TkAgg")          # use a GUI backend; fall back silently
 import matplotlib.pyplot as plt
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, os.path.dirname(SCRIPT_DIR))
+sys.path.insert(0, os.path.dirname(os.path.dirname(SCRIPT_DIR)))
 
 from refracter.qmc import load_small_cloud
 from refracter.sinkhorn import (
@@ -30,28 +20,22 @@ from refracter.sinkhorn import (
     sinkhorn_identity_g_step,
 )
 
-# ---------------------------------------------------------------------------
-# Density functions  (SquareToCircle benchmark, matching C++ P and Q)
-# ---------------------------------------------------------------------------
-
+# Match the C++ SquareToCircle source and target densities.
 def P(v):
-    """Source: uniform on stereographic north square [-0.5, 0.5]^2."""
+    # Source: uniform on the north-pole square [-0.5, 0.5]^2.
     p1 = v[0] / (1.0 + v[2])
     p2 = v[1] / (1.0 + v[2])
     return 1.0 if (-0.5 < p1 < 0.5 and -0.5 < p2 < 0.5) else 0.0
 
 
 def Q(v):
-    """Target: uniform on stereographic south disk |.| <= 0.5."""
+    # Target: uniform on the south-pole disk u^2 + v^2 <= 0.25.
     p1 = v[0] / (1.0 - v[2])
     p2 = v[1] / (1.0 - v[2])
     return 1.0 if (p1 * p1 + p2 * p2 <= 0.25) else 0.0
 
 
-# ---------------------------------------------------------------------------
-# Load cloud
-# ---------------------------------------------------------------------------
-
+# Load the 381-point cloud and evaluate both densities.
 print("Loading QMC cloud (NK=381)...")
 x, y = load_small_cloud()   # y has z negated by qmc.py (lower hemisphere)
 NK = len(x)
@@ -70,11 +54,7 @@ logq = np.where(q_w > 0, np.log(q_w), -np.inf)
 print(f"Source support: {int(p_sum + 0.5)} / {NK} points")
 print(f"Target support: {int(q_sum + 0.5)} / {NK} points")
 
-# ---------------------------------------------------------------------------
-# Regularisation schedule  (matching C++ main_fast.cpp)
-# NK=381  → k_final = 8 * floor(sqrt(381)) = 8*19 = 152
-# id_step = floor(sqrt(152)) = 12
-# ---------------------------------------------------------------------------
+# Match the C++ schedule: k_final = 8 * floor(sqrt(NK)).
 
 multiplier  = 8
 k_final     = multiplier * int(np.floor(np.sqrt(NK)))   # 152
@@ -85,17 +65,12 @@ chunk_size  = 512
 
 print(f"\nk_final={k_final}, id_step={id_step}, cap_iter={cap_iter}")
 
-# ---------------------------------------------------------------------------
-# Initialise potentials from zero  (no warm-start, matching C++)
-# ---------------------------------------------------------------------------
+# Start all potentials at zero, as in the C++ fast case.
 
 f = np.zeros(NK, dtype=np.float64)
 g = np.zeros(NK, dtype=np.float64)
 
-# ---------------------------------------------------------------------------
-# Multi-scale loop (k_small → k_final)
-# When NK=381, k_small = k_final = 152 → loop body never runs.
-# ---------------------------------------------------------------------------
+# Run the multi-scale schedule before the final regularization value.
 
 regvar = multiplier * int(np.floor(np.sqrt(381)))   # k_small = 152
 it = 0
@@ -105,9 +80,7 @@ while regvar < k_final:
     print(f"  multi-scale iter {it:3d}, k={regvar}, maxdif={maxdif:.4e}")
     regvar += int(round(k_final ** (1.0 / 3.0)))
 
-# ---------------------------------------------------------------------------
-# Final loop at k_final
-# ---------------------------------------------------------------------------
+# Iterate the main Sinkhorn solve at k_final.
 
 print(f"\nFinal Sinkhorn at k={k_final}:")
 maxdif = cap_thr + 1.0
@@ -121,10 +94,7 @@ while maxdif > cap_thr:
         break
 print(f"Final: {i} iterations, last change={maxdif:.4e}")
 
-# ---------------------------------------------------------------------------
-# Identity F loop (source marginal)
-# Schedule: k = 1, 1+id_step, 1+2*id_step, … < k_final; then final at k_final
-# ---------------------------------------------------------------------------
+# Compute the source self-transport correction.
 
 print(f"\nIdentity Sinkhorn for source (f_id), id_step={id_step}:")
 f_id = np.zeros(NK, dtype=np.float64)
@@ -148,9 +118,7 @@ while maxdif > cap_thr:
         break
 print(f"Identity F: {i} final iterations, last change={maxdif:.4e}  ({time.time()-t0:.1f}s)")
 
-# ---------------------------------------------------------------------------
-# Identity G loop (target marginal)
-# ---------------------------------------------------------------------------
+# Compute the target self-transport correction.
 
 print(f"\nIdentity Sinkhorn for target (g_id), id_step={id_step}:")
 g_id = np.zeros(NK, dtype=np.float64)
@@ -174,9 +142,7 @@ while maxdif > cap_thr:
         break
 print(f"Identity G: {i} final iterations, last change={maxdif:.4e}  ({time.time()-t0:.1f}s)")
 
-# ---------------------------------------------------------------------------
-# Normalise and subtract identity terms  (matching C++ sink_to_Reflector)
-# ---------------------------------------------------------------------------
+# Normalize potentials and subtract the identity terms.
 
 # Shift f_id so max=0, compensate in g_id
 max_f_id = float(np.max(f_id))
@@ -203,9 +169,7 @@ print(f"\nTotal cost: {total_cost:.6e}")
 R   = np.exp(f)
 Ref = 2.0 * x * R[:, np.newaxis]
 
-# ---------------------------------------------------------------------------
-# Save results
-# ---------------------------------------------------------------------------
+# Save the reflector arrays used by the comparison notebook.
 
 os.makedirs("output_python", exist_ok=True)
 np.save("output_python/f.npy",    f)
@@ -217,9 +181,7 @@ np.save("output_python/Ref.npy",  Ref)
 print("\nSaved to output_python/")
 print(f"R: min={R.min():.4f}, max={R.max():.4f}, mean={R.mean():.4f}")
 
-# ---------------------------------------------------------------------------
-# 3-D scatter plot of reflector surface coloured by R
-# ---------------------------------------------------------------------------
+# Show the reflector surface colored by its radial scale.
 
 try:
     from mpl_toolkits.mplot3d import Axes3D   # noqa: F401

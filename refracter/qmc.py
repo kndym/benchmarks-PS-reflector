@@ -1,16 +1,10 @@
-"""
-refracter/qmc.py
-
-Parse and cache QMC point clouds from C++ header files.
-"""
+# Parse and cache quasi-Monte Carlo point clouds from C++ headers.
 
 import re
 import os
 import numpy as np
 
-# ---------------------------------------------------------------------------
-# Paths to the header files (relative to this file's location)
-# ---------------------------------------------------------------------------
+# Resolve the headers relative to this module, not the current directory.
 _HERE = os.path.dirname(os.path.abspath(__file__))
 _BENCHMARK_ROOT = os.path.join(_HERE, "..", "BenchmarkCode")
 
@@ -18,44 +12,19 @@ _MAIN_H   = os.path.join(_BENCHMARK_ROOT, "QuasiMonteCarlo", "MonteCarlo_Pointcl
 _SMALL_H  = os.path.join(_BENCHMARK_ROOT, "SmallGrid", "3D_MonteCarlo_Pointcloud_small.h")
 _PUSH_H   = os.path.join(_BENCHMARK_ROOT, "PushForward", "PushForward_Cloud_128.h")
 
-# Expected sizes
+# Expected sizes in the reference point-cloud files.
 _NK       = 16488
 _NK_SMALL = 381
 _DIM      = 3
 
-# ---------------------------------------------------------------------------
-# Module-level caches
-# ---------------------------------------------------------------------------
+# Cache parsed arrays so repeated benchmark stages do not reread the headers.
 _main_cloud_cache  = None
 _small_cloud_cache = None
 _push_cloud_cache  = None
 
 
 def _parse_h_array(text: str, varname: str, n_rows: int, n_cols: int = 3) -> np.ndarray:
-    """Extract a 2-D numeric array from a C++ header file.
-
-    The function looks for the declaration
-
-        <type> <varname>[...][...] = { ... };
-
-    and then collects all floating-point numbers inside the braces using
-    a regex that matches C++ scientific notation (e.g. ``-6.787942e-01``).
-
-    Parameters
-    ----------
-    text : str
-        Full text of the header file.
-    varname : str
-        C variable name to search for.
-    n_rows : int
-        Expected number of rows in the array.
-    n_cols : int, optional
-        Number of columns (default 3).
-
-    Returns
-    -------
-    np.ndarray of shape (n_rows, n_cols), dtype float64.
-    """
+    # Find a named C++ initializer and return its first n_rows*n_cols numbers.
     # Find the opening brace that belongs to this variable declaration.
     # We search for "<varname>..." followed by "= {" possibly with whitespace.
     pattern = re.compile(
@@ -101,15 +70,7 @@ def _parse_h_array(text: str, varname: str, n_rows: int, n_cols: int = 3) -> np.
 
 
 def load_main_cloud():
-    """Load the main QMC point cloud (NK=16488 points, dim=3).
-
-    Returns
-    -------
-    x : np.ndarray, shape (16488, 3)
-        Source points on the upper hemisphere.
-    y : np.ndarray, shape (16488, 3)
-        Target points on the lower hemisphere.
-    """
+    # Load the 16,488-point source and target clouds used by the reflector case.
     global _main_cloud_cache
     if _main_cloud_cache is not None:
         return _main_cloud_cache
@@ -125,13 +86,7 @@ def load_main_cloud():
 
 
 def load_small_cloud():
-    """Load the small warm-start QMC point cloud (NK_small=381 points).
-
-    Returns
-    -------
-    x_small : np.ndarray, shape (381, 3)
-    y_small : np.ndarray, shape (381, 3)
-    """
+    # Load the 381-point clouds used for the reflector warm start.
     global _small_cloud_cache
     if _small_cloud_cache is not None:
         return _small_cloud_cache
@@ -154,12 +109,7 @@ def load_small_cloud():
 
 
 def load_push_cloud():
-    """Load the push-forward point cloud (16488 points on the upper hemisphere).
-
-    Returns
-    -------
-    push_cloud : np.ndarray, shape (16488, 3)
-    """
+    # Load the source cloud used to test the reflector push-forward.
     global _push_cloud_cache
     if _push_cloud_cache is not None:
         return _push_cloud_cache

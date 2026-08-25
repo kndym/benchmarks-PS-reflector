@@ -1,24 +1,12 @@
-"""
-run_compare_reflector.py — Python Sinkhorn reflector for arbitrary NK (Halton QMC).
-
-Matches main_compare.cpp exactly:
-  - Same Halton cloud (base-2/base-3, half=0.6, skip=0)
-  - Same P/Q (SquareToCircle)
-  - No warm-start (f=g=0 init)
-  - Same cap_iteration=16, cap_thr=1e-5
-  - identity maxdif computed over supported points only
-
-Usage:
-    python run_compare.py 300
-    python run_compare.py 1600
-"""
+# Generate Python reflector outputs for the C++ comparison at a chosen NK.
+# Usage: python run_compare.py 300
 
 import os, sys, time
 import numpy as np
 from scipy.special import logsumexp
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, os.path.dirname(SCRIPT_DIR))
+sys.path.insert(0, os.path.dirname(os.path.dirname(SCRIPT_DIR)))
 from refracter.distributions import P_square, Q_circle
 from refracter.sinkhorn import (
     sinkhorn_step,
@@ -26,10 +14,7 @@ from refracter.sinkhorn import (
     sinkhorn_identity_g_step,
 )
 
-# ---------------------------------------------------------------------------
-# Halton QMC — identical to generate_results.py
-# ---------------------------------------------------------------------------
-
+# Generate the same base-2/base-3 Halton cloud as the C++ comparison.
 def _halton(index, base):
     result, f, i = 0.0, 1.0, index
     while i > 0:
@@ -49,10 +34,7 @@ def gen_cloud(n, upper, skip=0, half=0.6):
         idx += 1
     return np.array(pts, dtype=np.float64)
 
-# ---------------------------------------------------------------------------
-# Parameters
-# ---------------------------------------------------------------------------
-
+# Match the C++ regularization and iteration limits.
 NK = int(sys.argv[1]) if len(sys.argv) > 1 else 300
 chunk       = 512
 multiplier  = 8
@@ -65,10 +47,7 @@ out_dir     = f"output_py_NK{NK}"
 os.makedirs(out_dir, exist_ok=True)
 print(f"NK={NK}, k_final={k_final}, id_step={id_step}")
 
-# ---------------------------------------------------------------------------
-# Cloud generation
-# ---------------------------------------------------------------------------
-
+# Generate the source and target clouds and evaluate their densities.
 print("Generating Halton clouds...")
 x = gen_cloud(NK, upper=True,  skip=0)
 y = gen_cloud(NK, upper=False, skip=0)
@@ -81,10 +60,7 @@ logq  = np.where(q > 0, np.log(q), -np.inf)
 print(f"  Source support: {int(p_raw.sum()+0.5)} / {NK}")
 print(f"  Target support: {int(q_raw.sum()+0.5)} / {NK}")
 
-# ---------------------------------------------------------------------------
-# Step 1 — Final Sinkhorn at k_final  (no warm-start, f=g=0)
-# ---------------------------------------------------------------------------
-
+# Solve the transport problem from zero potentials.
 f = np.zeros(NK, dtype=np.float64)
 g = np.zeros(NK, dtype=np.float64)
 
@@ -98,10 +74,7 @@ while maxdif > cap_thr:
     if i >= cap_iter: break
 print(f"Final: {i} iters, last maxdif={maxdif:.4e}")
 
-# ---------------------------------------------------------------------------
-# Step 2 — Identity F
-# ---------------------------------------------------------------------------
-
+# Solve source self-transport for the Sinkhorn divergence correction.
 print(f"\nIdentity F (id_step={id_step}):")
 f_id   = np.zeros(NK, dtype=np.float64)
 regvar = 1;  it = 0
@@ -121,10 +94,7 @@ while maxdif > cap_thr:
     if i >= cap_iter: break
 print(f"Identity F: {i} final iters, last maxdif={maxdif:.4e}  ({time.time()-t0:.1f}s)")
 
-# ---------------------------------------------------------------------------
-# Step 3 — Identity G
-# ---------------------------------------------------------------------------
-
+# Solve target self-transport for the Sinkhorn divergence correction.
 print(f"\nIdentity G (id_step={id_step}):")
 g_id   = np.zeros(NK, dtype=np.float64)
 regvar = 1;  it = 0
@@ -144,10 +114,7 @@ while maxdif > cap_thr:
     if i >= cap_iter: break
 print(f"Identity G: {i} final iters, last maxdif={maxdif:.4e}  ({time.time()-t0:.1f}s)")
 
-# ---------------------------------------------------------------------------
-# Normalise and build reflector
-# ---------------------------------------------------------------------------
-
+# Normalize supported potentials and build the reflector surface.
 # C++ never updates f/g for unsupported points (p[i]==0 / q[j]==0), keeping them at 0.
 # Python sinkhorn_step updates ALL points; zero out unsupported values to match C++.
 f = np.where(p > 0, f, 0.0)
@@ -167,10 +134,7 @@ mask_p = p > 0
 print(f"R (supported): min={R_arr[mask_p].min():.4f}, max={R_arr[mask_p].max():.4f}, "
       f"mean={R_arr[mask_p].mean():.4f}")
 
-# ---------------------------------------------------------------------------
-# Save
-# ---------------------------------------------------------------------------
-
+# Save arrays in the format expected by the comparison scripts.
 np.save(f"{out_dir}/f.npy",    f)
 np.save(f"{out_dir}/g.npy",    g)
 np.save(f"{out_dir}/f_id.npy", f_id)

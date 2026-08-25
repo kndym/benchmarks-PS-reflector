@@ -1,17 +1,9 @@
-"""
-refracter/distributions.py
-
-Stereographic projections and density functions for the reflector/refractor benchmarks.
-"""
+# Stereographic projections and density functions for the benchmark cases.
 
 import numpy as np
 
-# ---------------------------------------------------------------------------
-# Stereographic projections
-# ---------------------------------------------------------------------------
-
+# North-pole projection: (x0,x1,x2) -> (x0/(1+x2), x1/(1+x2)).
 def stereo_north(pts: np.ndarray) -> tuple:
-    """North-pole stereographic projection: (x0,x1,x2) → (x0/(1+x2), x1/(1+x2))."""
     pts = np.asarray(pts, dtype=np.float64)
     denom = 1.0 + pts[..., 2]
     u = pts[..., 0] / denom
@@ -20,7 +12,7 @@ def stereo_north(pts: np.ndarray) -> tuple:
 
 
 def stereo_south(pts: np.ndarray) -> tuple:
-    """South-pole stereographic projection: (y0,y1,y2) → (y0/(1-y2), y1/(1-y2))."""
+    # South-pole projection: (y0,y1,y2) -> (y0/(1-y2), y1/(1-y2)).
     pts = np.asarray(pts, dtype=np.float64)
     denom = 1.0 - pts[..., 2]
     u = pts[..., 0] / denom
@@ -29,7 +21,7 @@ def stereo_south(pts: np.ndarray) -> tuple:
 
 
 def stereo_north_inverse(u: np.ndarray, v: np.ndarray) -> np.ndarray:
-    """Inverse north-pole projection: (u,v) → upper hemisphere point (3,)."""
+    # Inverse projection: (u,v) -> (2u, 2v, 1-u^2-v^2)/(1+u^2+v^2).
     u = np.asarray(u, dtype=np.float64)
     v = np.asarray(v, dtype=np.float64)
     N2 = u * u + v * v
@@ -40,26 +32,22 @@ def stereo_north_inverse(u: np.ndarray, v: np.ndarray) -> np.ndarray:
     return np.stack([x0, x1, x2], axis=-1)
 
 
-# ---------------------------------------------------------------------------
-# Density functions
-# ---------------------------------------------------------------------------
-
+# Uniform density on the square [-0.5, 0.5]^2 in north-pole coordinates.
 def P_square(x: np.ndarray) -> np.ndarray:
-    """Uniform density on the square [-0.5,0.5]² in north-pole stereographic coords."""
     u, v = stereo_north(x)
     inside = (u > -0.5) & (u < 0.5) & (v > -0.5) & (v < 0.5)
     return inside.astype(np.float64)
 
 
 def Q_circle(y: np.ndarray) -> np.ndarray:
-    """Uniform density on the disc |stereo_south(y)| ≤ 0.5."""
+    # Uniform density on the south-pole disc u^2 + v^2 <= 0.25.
     u, v = stereo_south(y)
     inside = (u * u + v * v) <= 0.25
     return inside.astype(np.float64)
 
 
 def Q_two_gaussians(y: np.ndarray) -> np.ndarray:
-    """Two side-by-side Gaussians in south-pole coordinates (SquareToTwoGaussSide)."""
+    # Two target Gaussians: exp(-16*((u-.25)^2+(v-.25)^2)) and its v-reflection.
     u, v = stereo_south(y)
     g1 = np.exp(-16.0 * ((u - 0.25) ** 2 + (v - 0.25) ** 2))
     g2 = np.exp(-16.0 * ((u - 0.25) ** 2 + (v + 0.25) ** 2))
@@ -76,7 +64,7 @@ _TGT_PHI   = (np.pi / 3, 5 * np.pi / 12)   # azimuthal range — non-overlapping
 
 
 def P_refraction_patch(x: np.ndarray) -> np.ndarray:
-    """Indicator for source patch: θ ∈ [π/12, π/3], φ ∈ [π/12, π/4]."""
+    # Source patch: theta in [pi/12, pi/3], phi in [pi/12, pi/4].
     x = np.asarray(x, dtype=np.float64)
     theta = np.arccos(np.clip(x[..., 2], -1.0, 1.0))
     phi   = np.arctan2(x[..., 1], x[..., 0])
@@ -90,7 +78,7 @@ def P_refraction_patch(x: np.ndarray) -> np.ndarray:
 
 
 def Q_refraction_patch(y: np.ndarray) -> np.ndarray:
-    """Indicator for target patch: θ ∈ [π/10, π/5], φ ∈ [π/3, 5π/12]."""
+    # Target patch: theta in [pi/10, pi/5], phi in [pi/3, 5*pi/12].
     y = np.asarray(y, dtype=np.float64)
     theta = np.arccos(np.clip(y[..., 2], -1.0, 1.0))
     phi   = np.arctan2(y[..., 1], y[..., 0])
@@ -106,7 +94,7 @@ def Q_refraction_patch(y: np.ndarray) -> np.ndarray:
 # Density factories: each returns density(pts (N,3)) -> (N,) using angular distance
 
 def _patch_centre_and_dmax(theta_min, theta_max, phi_min, phi_max):
-    """Return (centre, d_max): unit-vector patch centre and max corner angular distance."""
+    # Use angular distance d = arccos(centre dot point) to set density scales.
     phi_c   = 0.5 * (phi_min   + phi_max)
     theta_c = 0.5 * (theta_min + theta_max)
     centre  = np.array([
@@ -127,7 +115,7 @@ def _patch_centre_and_dmax(theta_min, theta_max, phi_min, phi_max):
 
 
 def make_patch_uniform(theta_min, theta_max, phi_min, phi_max):
-    """Factory: flat (uniform) density — returns 1.0 for every point."""
+    # Build a constant density over the requested patch.
     def density(pts):
         pts = np.asarray(pts, dtype=np.float64)
         return np.ones(len(pts), dtype=np.float64)
@@ -135,7 +123,7 @@ def make_patch_uniform(theta_min, theta_max, phi_min, phi_max):
 
 
 def make_patch_gaussian(theta_min, theta_max, phi_min, phi_max):
-    """Isotropic Gaussian centred at the patch centre (sigma = d_max/3)."""
+    # Gaussian density with sigma = d_max / 3.
     centre, d_max = _patch_centre_and_dmax(theta_min, theta_max, phi_min, phi_max)
     sigma = d_max / 3.0
 
@@ -147,7 +135,7 @@ def make_patch_gaussian(theta_min, theta_max, phi_min, phi_max):
 
 
 def make_patch_donut(theta_min, theta_max, phi_min, phi_max):
-    """Gaussian annulus peaking at r0 = 0.5*d_max with sigma = d_max/8."""
+    # Annular Gaussian centered at r0 = d_max / 2 with sigma = d_max / 8.
     centre, d_max = _patch_centre_and_dmax(theta_min, theta_max, phi_min, phi_max)
     r0    = 0.5  * d_max
     sigma = d_max / 8.0
@@ -160,7 +148,7 @@ def make_patch_donut(theta_min, theta_max, phi_min, phi_max):
 
 
 def make_patch_cross(theta_min, theta_max, phi_min, phi_max):
-    """Four Gaussians at N/S/E/W offsets (delta = d_max/3, sigma = d_max/6)."""
+    # Four Gaussian peaks use delta = d_max / 3 and sigma = d_max / 6.
     centre, d_max = _patch_centre_and_dmax(theta_min, theta_max, phi_min, phi_max)
     delta = d_max / 3.0
     sigma = d_max / 6.0

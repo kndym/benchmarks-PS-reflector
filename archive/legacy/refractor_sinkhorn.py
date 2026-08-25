@@ -1,38 +1,23 @@
-"""
-refractor_sinkhorn.py — Sinkhorn divergence for the far-field refraction problem.
-
-Cost: c(x, y) = -log(1 - κ · (x·y))  with κ = 0.6
-Points sampled uniformly (Halton QMC) on spherical patches:
-  Source: θ ∈ [0°,  60°], φ ∈ [0°, 360°]
-  Target: θ ∈ [120°,180°], φ ∈ [0°, 360°]
-
-Usage:
-    python refractor_sinkhorn.py
-"""
+# Archived standalone refraction solver.
+# Cost: c(x,y) = -log(1 - κ * x·y), with κ = 0.6.
+# It samples source and target spherical patches with Halton QMC points.
 
 import os
 import time
 import numpy as np
 from scipy.special import logsumexp
 
-# ---------------------------------------------------------------------------
-# Refraction cost
-# ---------------------------------------------------------------------------
-
+# Refraction cost c(x,y) = -log(1 - κ * x·y).
 KAPPA = 0.6
 EPS_CLIP = 1e-15
 
 
 def cost_matrix_chunk(x_chunk, y):
-    """Refraction cost c(x,y) = -log(1 - κ·(x·y)) for x_chunk (M,3), y (N,3)."""
     dots = x_chunk @ y.T                          # (M, N)
     return -np.log(np.clip(1.0 - KAPPA * dots, EPS_CLIP, None))
 
 
-# ---------------------------------------------------------------------------
-# Halton sequence
-# ---------------------------------------------------------------------------
-
+# Return one Halton sequence value.
 def _halton(index, base):
     result, f, i = 0.0, 1.0, index
     while i > 0:
@@ -45,19 +30,8 @@ def _halton(index, base):
 def gen_spherical_patch(n, theta_min_deg, theta_max_deg,
                         phi_min_deg=0.0, phi_max_deg=360.0,
                         base2=2, base3=3, skip=0):
-    """Sample n points uniformly on a spherical patch using Halton QMC.
-
-    Uses the equal solid-angle transform:
-        cos(θ) = cos(θ_max) + u1 * (cos(θ_min) - cos(θ_max))
-        φ      = φ_min + u2 * (φ_max - φ_min)
-
-    Parameters
-    ----------
-    theta_min_deg, theta_max_deg : polar angle range in degrees
-    phi_min_deg, phi_max_deg     : azimuthal angle range in degrees
-    base2, base3 : Halton bases for u1, u2
-    skip : number of Halton indices to skip at the start
-    """
+    # Uniform solid-angle sampling uses cos(theta), not theta:
+    # cos(theta) = cos(theta_max) + u1*(cos(theta_min)-cos(theta_max)).
     cos_max = np.cos(np.radians(theta_min_deg))  # larger cos (smaller θ)
     cos_min = np.cos(np.radians(theta_max_deg))  # smaller cos (larger θ)
     phi_min = np.radians(phi_min_deg)
@@ -78,10 +52,7 @@ def gen_spherical_patch(n, theta_min_deg, theta_max_deg,
     return np.array(pts, dtype=np.float64)
 
 
-# ---------------------------------------------------------------------------
-# Log-domain logsumexp helpers (identical structure to refracter/sinkhorn.py
-# but calling the local refraction cost_matrix_chunk)
-# ---------------------------------------------------------------------------
+# Chunked log-sum-exp helpers for the local refraction cost.
 
 def _logsumexp_g_update(x, y, logp, f, g, k, chunk_size):
     N = len(y)
@@ -112,12 +83,10 @@ def _logsumexp_f_update(x, y, logq, f, g, k, chunk_size):
     return lse_f
 
 
-# ---------------------------------------------------------------------------
-# Sinkhorn step functions (adapted from refracter/sinkhorn.py)
-# ---------------------------------------------------------------------------
+# Main and identity Sinkhorn updates.
 
 def sinkhorn_step(x, y, logp, logq, f, g, k, chunk_size=512):
-    """Standard log-domain Sinkhorn step (no damping)."""
+    # Perform one log-domain Sinkhorn update.
     lse_g = _logsumexp_g_update(x, y, logp, f, g, k, chunk_size)
     log_G = -k * g - lse_g
     g_new = -lse_g / k
@@ -134,7 +103,7 @@ def sinkhorn_step(x, y, logp, logq, f, g, k, chunk_size=512):
 
 
 def sinkhorn_identity_f_step(x, y, logp, f_id, k, chunk_size=512):
-    """Damped identity Sinkhorn step for the source marginal."""
+    # Perform the damped source self-transport update.
     N = len(x)
     b = k * f_id + logp
     lse = np.full(N, -np.inf, dtype=np.float64)
@@ -157,7 +126,7 @@ def sinkhorn_identity_f_step(x, y, logp, f_id, k, chunk_size=512):
 
 
 def sinkhorn_identity_g_step(x, y, logq, g_id, k, chunk_size=512):
-    """Damped identity Sinkhorn step for the target marginal."""
+    # Perform the damped target self-transport update.
     N = len(y)
     a = k * g_id + logq
     lse = np.full(N, -np.inf, dtype=np.float64)

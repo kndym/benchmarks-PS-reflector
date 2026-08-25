@@ -1,5 +1,6 @@
 
 import numpy as np
+from pathlib import Path
 
 
 import subprocess, importlib
@@ -76,7 +77,7 @@ fig3d.update_layout(
     width=960, height=720,
 )
 
-html_path = 'fig_optical_3d.html'
+html_path = str(Path(__file__).resolve().parent / 'figures' / 'fig_optical_3d.html')
 fig3d.write_html(html_path, include_plotlyjs='cdn')
 from IPython.display import HTML, display as _display
 _display(HTML(filename=html_path))

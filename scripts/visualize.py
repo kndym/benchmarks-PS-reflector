@@ -1,14 +1,6 @@
 #!/usr/bin/env python3
-"""Reflector benchmark — static matplotlib visualization.
-
-Saves PNG figures to the output directory.
-
-Usage:
-    python visualize.py --output-dir <path> [--benchmark <name>] [--nk <int>]
-
-Called automatically by Benchmark.ipynb (Step 6) but can be re-run standalone
-at any time to regenerate the figures without re-running the full benchmark.
-"""
+# Render the text outputs of the reflector benchmark as PNG figures.
+# Usage: python visualize.py --output-dir <path> [--benchmark <name>] [--nk <int>]
 
 import os
 import sys
@@ -37,7 +29,7 @@ def parse_args():
 # ── Data loaders ──────────────────────────────────────────────────────────────
 
 def load_meshgrid(path):
-    """Load a grid file: every non-empty line is a row of space-separated floats."""
+    # Load a rectangular text grid with one row per non-empty line.
     if not os.path.exists(path):
         return None
     rows = []
@@ -49,7 +41,7 @@ def load_meshgrid(path):
 
 
 def load_vector(path):
-    """Load a file whose first line is a header; remaining lines are float rows."""
+    # Load a vector or matrix file whose first line stores the row count.
     if not os.path.exists(path):
         return None
     with open(path) as fh:
@@ -64,7 +56,7 @@ def load_vector(path):
 
 
 def load_points(path):
-    """Load a file of rows with >= 2 floats (no header)."""
+    # Load projected point rows without a header.
     if not os.path.exists(path):
         return None
     rows = []

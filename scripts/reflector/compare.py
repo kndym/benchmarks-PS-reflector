@@ -1,14 +1,5 @@
-"""
-compare.py — Compare C++ (output_fast/) and Python (output_python/) results.
-
-Run:  python compare.py
-
-Loads:
-  output_fast/R.txt, f.txt, g.txt, Ref.txt   (C++ plain-text output)
-  output_python/R.npy, f.npy, g.npy, Ref.npy  (Python NumPy output)
-
-Prints a numerical comparison report and shows side-by-side 3-D scatter plots.
-"""
+# Compare the C++ and Python reflector outputs in output_fast/ and output_python/.
+# Run from the directory containing both output folders: python compare.py
 
 import os
 import sys
@@ -18,12 +9,8 @@ matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 
 
-# ---------------------------------------------------------------------------
-# Loaders
-# ---------------------------------------------------------------------------
-
+# Read a C++ vector file with a row count on the first line.
 def load_txt_vec(path: str) -> np.ndarray:
-    """Read a C++ output file: first line = N, then N scientific-notation values."""
     with open(path) as fh:
         lines = [l.strip() for l in fh if l.strip()]
     n = int(lines[0])
@@ -34,7 +21,7 @@ def load_txt_vec(path: str) -> np.ndarray:
 
 
 def load_txt_mat(path: str, ncols: int = 3) -> np.ndarray:
-    """Read a C++ matrix output: first line = N, then N lines of ncols values."""
+    # Read a C++ matrix file with a row count on the first line.
     with open(path) as fh:
         lines = [l.strip() for l in fh if l.strip()]
     n = int(lines[0])
@@ -47,10 +34,7 @@ def load_txt_mat(path: str, ncols: int = 3) -> np.ndarray:
     return arr
 
 
-# ---------------------------------------------------------------------------
-# Load C++ results
-# ---------------------------------------------------------------------------
-
+# Load both result sets before comparing their numerical arrays.
 cpp_dir = "output_fast"
 py_dir  = "output_python"
 
@@ -87,10 +71,7 @@ except Exception as e:
     print(f"ERROR reading Python output: {e}")
     sys.exit(1)
 
-# ---------------------------------------------------------------------------
-# Numerical comparison
-# ---------------------------------------------------------------------------
-
+# Report absolute and relative differences between matching arrays.
 NK_cpp = len(R_cpp)
 NK_py  = len(R_py)
 
@@ -129,10 +110,7 @@ if max_R < 0.05:
 else:
     print(f"\n  WARN: max|R_cpp - R_py| = {max_R:.4e} >= 0.05  — larger than expected")
 
-# ---------------------------------------------------------------------------
-# Side-by-side 3-D scatter plots
-# ---------------------------------------------------------------------------
-
+# Plot the two reflector surfaces with a shared radius color scale.
 try:
     from mpl_toolkits.mplot3d import Axes3D   # noqa: F401
 

@@ -1,22 +1,12 @@
-"""
-refracter/build.py
-
-Build the reflector surface from Sinkhorn potentials and compute c-transforms.
-"""
+# Build reflector surfaces from Sinkhorn potentials and compute c-transforms.
 
 import numpy as np
 from .cost import cost_matrix_chunk
 
 
-# ---------------------------------------------------------------------------
-# Reflector from potentials
-# ---------------------------------------------------------------------------
-
+# Build the refractor surface from the corrected potential:
+# R = exp(f), Ref = 2 * x * R.
 def build_reflector(x: np.ndarray, f: np.ndarray, f_id: np.ndarray):
-    """Return (R, Ref) where R = exp(f) and Ref = 2*x*R.
-
-    Expects f already corrected (f_id subtracted) by _run_sinkhorn_divergence_inner.
-    """
     x = np.asarray(x, dtype=np.float64)
     f = np.asarray(f, dtype=np.float64)
 
@@ -26,13 +16,9 @@ def build_reflector(x: np.ndarray, f: np.ndarray, f_id: np.ndarray):
     return R, Ref
 
 
-# ---------------------------------------------------------------------------
-# C-transforms
-# ---------------------------------------------------------------------------
-
+# Compute the c-transform of g on source points: fc[i] = min_j(C[i,j] - g[j]).
 def c_transform_fc(x: np.ndarray, y: np.ndarray, g: np.ndarray,
                    chunk_size: int = 512) -> np.ndarray:
-    """fc[i] = min_j(C(x[i], y[j]) - g[j])  (c-conjugate of g, C++ Get_fc)."""
     NK = len(x)
     fc = np.full(NK, np.inf, dtype=np.float64)
 
@@ -53,7 +39,7 @@ def c_transform_fc(x: np.ndarray, y: np.ndarray, g: np.ndarray,
 
 def c_transform_gc(x: np.ndarray, y: np.ndarray, f: np.ndarray,
                    chunk_size: int = 512) -> np.ndarray:
-    """gc[j] = min_i(C(x[i], y[j]) - f[i])  (c-conjugate of f, C++ Get_gc)."""
+    # Compute the c-transform of f on target points: gc[j] = min_i(C[i,j] - f[i]).
     NK = len(y)
     gc = np.full(NK, np.inf, dtype=np.float64)
 
@@ -65,15 +51,8 @@ def c_transform_gc(x: np.ndarray, y: np.ndarray, f: np.ndarray,
     return gc
 
 
-# ---------------------------------------------------------------------------
-# Regular grid
-# ---------------------------------------------------------------------------
-
+# Map the stereographic square [-0.6, 0.6]^2 to the upper hemisphere.
 def build_regular_grid(final_grid_res: int = 1025):
-    """Regular stereographic grid on [-0.6,0.6]² mapped to upper hemisphere.
-
-    Returns (x_regular, Regular_side) with shapes (res², 3) and (res,).
-    """
     res = final_grid_res
     side = np.linspace(-0.6, 0.6, res)
     Regular_side = side
@@ -93,10 +72,7 @@ def build_regular_grid(final_grid_res: int = 1025):
 
 def reflector_on_regular_grid(x_regular: np.ndarray, y: np.ndarray,
                                g: np.ndarray, chunk_size: int = 512):
-    """Compute c-transform of g on the regular grid and build Ref_regular.
-
-    Returns (f_regular, Ref_regular).
-    """
+    # Evaluate the c-transform and use Ref_regular = 2 * x_regular * exp(f_regular).
     FinalGrid = len(x_regular)
 
     # Finite-g mask

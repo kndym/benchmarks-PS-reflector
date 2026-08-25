@@ -1,16 +1,5 @@
-"""
-compare_nk.py — Compare C++ vs Python results for a given NK.
-
-Usage:
-    python compare_nk.py 300
-    python compare_nk.py 1600
-
-Loads:
-  output_cpp_NK{N}/R.txt, f.txt, g.txt, f_id.txt, g_id.txt
-  output_py_NK{N}/R.npy,  f.npy, g.npy, f_id.npy, g_id.npy
-
-Prints a numerical comparison report and shows side-by-side 3-D scatter plots.
-"""
+# Compare C++ and Python reflector outputs for one requested point-cloud size.
+# Usage: python compare_nk.py 300
 
 import os, sys
 import numpy as np
@@ -18,10 +7,12 @@ import matplotlib
 matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 
-# ---------------------------------------------------------------------------
-# NK from command line
-# ---------------------------------------------------------------------------
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.dirname(os.path.dirname(SCRIPT_DIR))
+FIGURES_DIR = os.path.join(REPO_ROOT, "figures")
+os.makedirs(FIGURES_DIR, exist_ok=True)
 
+# Select the output directories for the requested point-cloud size.
 NK_arg = int(sys.argv[1]) if len(sys.argv) > 1 else 300
 cpp_dir = f"output_cpp_NK{NK_arg}"
 py_dir  = f"output_py_NK{NK_arg}"
@@ -32,10 +23,7 @@ for d in [cpp_dir, py_dir]:
         print("Run  main_compare_{NK}  and  python run_compare.py {NK}  first.")
         sys.exit(1)
 
-# ---------------------------------------------------------------------------
-# Loaders
-# ---------------------------------------------------------------------------
-
+# Read the vector and surface arrays used in the comparison.
 def load_vec(path):
     with open(path) as fh:
         lines = [l.strip() for l in fh if l.strip()]
@@ -48,10 +36,6 @@ def load_mat(path, ncols=3):
     n = int(lines[0])
     rows = [[float(v) for v in line.split()] for line in lines[1:n+1]]
     return np.array(rows, dtype=np.float64)
-
-# ---------------------------------------------------------------------------
-# Load
-# ---------------------------------------------------------------------------
 
 print(f"Loading C++ from {cpp_dir}/")
 R_cpp    = load_vec(f"{cpp_dir}/R.txt")
@@ -78,10 +62,7 @@ if NK_cpp != NK_py:
 NK = NK_cpp
 print(f"{'='*58}")
 
-# ---------------------------------------------------------------------------
-# Numerical report
-# ---------------------------------------------------------------------------
-
+# Report absolute and relative differences between matching arrays.
 def report(name, a, b):
     diff = np.abs(a - b)
     rel  = diff / (np.abs(a) + 1e-10)
@@ -109,10 +90,7 @@ if max_R < thresh:
 else:
     print(f"\n  WARN: max|R_cpp - R_py| = {max_R:.4e} >= {thresh}")
 
-# ---------------------------------------------------------------------------
-# 3-D scatter side-by-side
-# ---------------------------------------------------------------------------
-
+# Save a side-by-side 3-D surface comparison.
 try:
     from mpl_toolkits.mplot3d import Axes3D  # noqa
     vmin = min(R_cpp.min(), R_py.min())
@@ -133,8 +111,9 @@ try:
 
     fig.suptitle(f"Reflector surface comparison — NK={NK}", fontsize=13)
     plt.tight_layout()
-    plt.savefig(f"fig_compare_NK{NK}.png", dpi=150, bbox_inches="tight")
+    fig_path = os.path.join(FIGURES_DIR, f"fig_compare_NK{NK}.png")
+    plt.savefig(fig_path, dpi=150, bbox_inches="tight")
     plt.show()
-    print(f"\nSaved fig_compare_NK{NK}.png")
+    print(f"\nSaved {fig_path}")
 except Exception as e:
     print(f"[plot skipped: {e}]")

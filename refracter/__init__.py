@@ -1,9 +1,5 @@
-"""
-refracter: Python implementation of the Point Source Far-Field Refractor/Reflector
-Problem using Entropic Optimal Transport (Sinkhorn divergence).
-
-Default use case: refractor (κ = 0.6).  Set κ = 1.0 for the reflector case.
-"""
+# Python implementation of the point-source far-field refractor and reflector.
+# The default cost parameter is κ = 0.6 for refraction.
 
 from .qmc import load_main_cloud, load_small_cloud, load_push_cloud
 from .distributions import BENCHMARKS, stereo_north, stereo_south

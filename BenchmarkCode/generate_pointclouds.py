@@ -1,38 +1,8 @@
-"""
-generate_pointclouds.py
-=======================
-Regenerates the 3 Monte-Carlo / quasi-Monte-Carlo point-cloud header files
-at any desired size.
-
-Method
-------
-Source and target patches are defined by spherical-coordinate ranges
-(theta = polar angle from +z, phi = azimuthal angle, both in degrees).
-Points are sampled quasi-randomly inside each patch using the **Halton
-sequence** (base 2 and 3).  Sampling is uniform in solid angle by drawing
-cos(theta) uniformly and phi uniformly, then converting to Cartesian:
-
-  x = sin(theta)*cos(phi),  y = sin(theta)*sin(phi),  z = cos(theta)
-
-Output files
-------------
-  QuasiMonteCarlo/MonteCarlo_Pointcloud_3D_128.h   -> NK   points  (x + y arrays + embedded small arrays)
-  SmallGrid/3D_MonteCarlo_Pointcloud_small.h        -> NK_small points
-  PushForward/PushForward_Cloud_128.h               -> Push_Cloud_Size points  (source patch only)
-
-Usage
------
-  python generate_pointclouds.py [NK] [NK_small] [options]
-
-  python generate_pointclouds.py          # defaults: NK=1600, NK_small=200
-  python generate_pointclouds.py 1600 200 # same as defaults (fast, original sizes)
-  python generate_pointclouds.py 16488 381 # large (slow, original data sizes)
-
-  # Refraction example (both patches upper hemisphere, Figure 4):
-  python generate_pointclouds.py 1600 200 \
-      --src-theta-min 15 --src-theta-max 60 --src-phi-min 15 --src-phi-max 45 \
-      --tgt-theta-min 18 --tgt-theta-max 36 --tgt-phi-min 18 --tgt-phi-max 36
-"""
+# Regenerate the C++ point-cloud headers at a requested size.
+# Use Halton bases 2 and 3; uniform solid angle samples cos(theta), not theta.
+# Cartesian conversion: x = sin(theta) cos(phi), y = sin(theta) sin(phi),
+# z = cos(theta).
+# Usage: python generate_pointclouds.py [NK] [NK_small] [options]
 
 import argparse
 import math
@@ -96,7 +66,7 @@ FMT = "{:.21e}"   # 21-digit scientific notation, matching original data
 # ── Halton sequence ────────────────────────────────────────────────────────────
 
 def halton(index: int, base: int) -> float:
-    """Return the index-th term of the Halton sequence in the given base."""
+    # Return one Halton sequence value.
     result = 0.0
     f = 1.0
     i = index
@@ -110,12 +80,8 @@ def halton(index: int, base: int) -> float:
 # ── Sphere sampling ────────────────────────────────────────────────────────────
 
 def sphere_point(theta: float, phi: float) -> tuple:
-    """
-    Convert spherical coordinates to a unit-sphere Cartesian point.
-
-    theta : polar angle from +z axis  [radians]
-    phi   : azimuthal angle           [radians]
-    """
+    # Convert angles in radians to a unit vector:
+    # (x,y,z) = (sin(theta) cos(phi), sin(theta) sin(phi), cos(theta)).
     st = math.sin(theta)
     return (st * math.cos(phi), st * math.sin(phi), math.cos(theta))
 
@@ -124,15 +90,8 @@ def generate_points(n: int,
                     theta_min_deg: float, theta_max_deg: float,
                     phi_min_deg: float,   phi_max_deg: float,
                     skip: int = 0) -> list:
-    """
-    Generate n quasi-random sphere points uniform in solid angle within
-    the patch [theta_min, theta_max] x [phi_min, phi_max] (degrees).
-
-    Uniform-in-area sampling:
-      - cos(theta) sampled uniformly in [cos(theta_max), cos(theta_min)]
-      - phi        sampled uniformly in [phi_min, phi_max]
-    Uses the Halton sequence (base-2 for phi, base-3 for cos(theta)).
-    """
+    # Generate QMC points uniform in solid angle on the requested patch.
+    # Draw cos(theta) uniformly in [cos(theta_max), cos(theta_min)].
     theta_min = math.radians(theta_min_deg)
     theta_max = math.radians(theta_max_deg)
     phi_min   = math.radians(phi_min_deg)
@@ -156,14 +115,14 @@ def generate_points(n: int,
 
 
 def fmt_row(pt: tuple) -> str:
-    """Format a (x,y,z) triple as a C++ initializer row."""
+    # Format one point for a C++ initializer list.
     return ", ".join(FMT.format(v) for v in pt) + ", "
 
 
 # ── Writers ───────────────────────────────────────────────────────────────────
 
 def write_large(path: str, nk: int, nk_small: int):
-    """Write MonteCarlo_Pointcloud_3D_128.h"""
+    # Write the main and embedded small point clouds.
     x_pts  = generate_points(nk,       SRC_THETA_MIN, SRC_THETA_MAX, SRC_PHI_MIN, SRC_PHI_MAX, skip=0)
     y_pts  = generate_points(nk,       TGT_THETA_MIN, TGT_THETA_MAX, TGT_PHI_MIN, TGT_PHI_MAX, skip=0)
     xs_pts = generate_points(nk_small, SRC_THETA_MIN, SRC_THETA_MAX, SRC_PHI_MIN, SRC_PHI_MAX, skip=nk)
@@ -208,7 +167,7 @@ def write_large(path: str, nk: int, nk_small: int):
 
 
 def write_small(path: str, nk_small: int):
-    """Write 3D_MonteCarlo_Pointcloud_small.h"""
+    # Write the separate small warm-start point cloud.
     # Use same skip offset as write_large so points are different from large cloud
     xs_pts = generate_points(nk_small, SRC_THETA_MIN, SRC_THETA_MAX, SRC_PHI_MIN, SRC_PHI_MAX, skip=NK)
     ys_pts = generate_points(nk_small, TGT_THETA_MIN, TGT_THETA_MAX, TGT_PHI_MIN, TGT_PHI_MAX, skip=NK)
@@ -234,7 +193,7 @@ def write_small(path: str, nk_small: int):
 
 
 def write_push(path: str, nk: int):
-    """Write PushForward_Cloud_128.h  (source patch only)"""
+    # Write the source cloud used by the push-forward benchmark.
     pts = generate_points(nk, SRC_THETA_MIN, SRC_THETA_MAX, SRC_PHI_MIN, SRC_PHI_MAX, skip=0)
 
     with open(path, "w", newline="") as f:

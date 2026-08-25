@@ -1,19 +1,11 @@
-"""
-refracter/pushforward.py
-
-Ray-tracing push-forward on the regular reflector grid.
-Matches C++ Pushforward_Ref_regular / Do_RegularPush / IntCoef.
-"""
+# Ray-tracing push-forward on a regular reflector surface grid.
+# This follows the interpolation and ray solve used by the C++ reference.
 
 import numpy as np
 
 
-# ---------------------------------------------------------------------------
-# Binary search
-# ---------------------------------------------------------------------------
-
+# Find i with arr[i] <= value < arr[i+1], clamped to the grid.
 def _binsearch(val: float, arr: np.ndarray) -> int:
-    """Return i such that arr[i] <= val < arr[i+1]; clamped to valid range."""
     a = 0
     b = len(arr)
     while True:
@@ -26,12 +18,8 @@ def _binsearch(val: float, arr: np.ndarray) -> int:
             a = mid
 
 
-# ---------------------------------------------------------------------------
-# Bilinear interpolation coefficients
-# ---------------------------------------------------------------------------
-
+# Fit z = a0 + a1*x + a2*y + a3*x*y over one grid cell.
 def _bilinear_coefs(Ref_regular: np.ndarray, i: int, j: int, k_res: int) -> np.ndarray:
-    """Bilinear coefficients [a0,a1,a2,a3] for z = a0+a1*x+a2*y+a3*x*y over patch (i,j)."""
     k = k_res
     idx_ij   = i * k + j
     idx_i1j  = (i + 1) * k + j
@@ -89,12 +77,8 @@ def _bilinear_coefs(Ref_regular: np.ndarray, i: int, j: int, k_res: int) -> np.n
     return np.array([a0, a1, a2, a3])
 
 
-# ---------------------------------------------------------------------------
-# Quadratic root
-# ---------------------------------------------------------------------------
-
+# Solve the ray/surface quadratic and choose the root nearest the local radius.
 def _quadratic_root(a: float, b: float, c: float, avg: float) -> float:
-    """Numerically stable quadratic root closest to avg (Citardauq formula)."""
     diskr = b * b - 4.0 * a * c
     if diskr < 0.0:
         return float('nan')
@@ -117,12 +101,9 @@ def _quadratic_root(a: float, b: float, c: float, avg: float) -> float:
     return root2
 
 
-# ---------------------------------------------------------------------------
-# Single-ray push
-# ---------------------------------------------------------------------------
-
+# Trace one incoming ray through the interpolated reflector surface.
+# The reflected direction uses ray_out = ray_in - 2*(ray_in dot normal)*normal.
 def _do_regular_push(sx, sy, sz, Ref_regular, Regular_side, k_res):
-    """Trace a single ray; return (rx, ry, rz, ok) (C++ Do_RegularPush)."""
     denom_proj = 1.0 + sz
     if abs(denom_proj) < 1e-300:
         return 0.0, 0.0, 0.0, False
@@ -179,13 +160,9 @@ def _do_regular_push(sx, sy, sz, Ref_regular, Regular_side, k_res):
     return rx, ry, rz, True
 
 
-# ---------------------------------------------------------------------------
-# Batch push-forward
-# ---------------------------------------------------------------------------
-
+# Return (u_south, v_south, density) for every successfully traced ray.
 def ray_trace(push_cloud: np.ndarray, Ref_regular: np.ndarray,
               Regular_side: np.ndarray, P_func) -> np.ndarray:
-    """Ray-trace push-forward; returns (K,3) array of (u_south, v_south, density)."""
     k_res = len(Regular_side)
     densities = P_func(push_cloud)
 

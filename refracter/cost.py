@@ -1,25 +1,17 @@
-"""
-refracter/cost.py
-
-Cost function c(x,y) = -log(1 - κ·(x·y)) for unit vectors x, y on the sphere.
-κ=1.0 → reflector,  κ=0.6 → refractor.
-
-Call set_kappa() before importing anything that caches cost computations.
-"""
+# Cost function for unit vectors: c(x,y) = -log(1 - κ * x·y).
+# Use κ = 0.6 for refraction and κ = 1.0 for reflection.
 
 import numpy as np
 
-# ---------------------------------------------------------------------------
-# Module-level refraction parameter
-# ---------------------------------------------------------------------------
+# The cost parameter is shared by all cost-matrix calls.
 _KAPPA = 1.0          # default: standard reflector cost
 
-# Clipping value: keep (1 - κ·dot) >= _EPS so that -log(...) is finite.
+# Keep the logarithm finite when roundoff makes the cost argument too small.
 _EPS_CLIP = 1e-15
 
 
 def set_kappa(k: float) -> None:
-    """Set the module-level κ; must be in (0, 1]."""
+    # Set the cost parameter before running a benchmark.
     global _KAPPA
     if not (0.0 < k <= 1.0):
         raise ValueError(f"kappa must be in (0, 1], got {k}")
@@ -27,12 +19,12 @@ def set_kappa(k: float) -> None:
 
 
 def get_kappa() -> float:
-    """Return the current refraction parameter κ."""
+    # Return the current cost parameter.
     return _KAPPA
 
 
 def cost_vec(x_vec: np.ndarray, y_vec: np.ndarray) -> float:
-    """Scalar cost c(x,y) = -log(1 - κ·(x·y)) for a single pair of unit vectors."""
+    # Evaluate the cost for one pair of directions.
     x_vec = np.asarray(x_vec, dtype=np.float64)
     y_vec = np.asarray(y_vec, dtype=np.float64)
     dot = np.dot(x_vec, y_vec)
@@ -42,7 +34,7 @@ def cost_vec(x_vec: np.ndarray, y_vec: np.ndarray) -> float:
 
 
 def cost_matrix_chunk(x_chunk: np.ndarray, y: np.ndarray) -> np.ndarray:
-    """Return cost matrix block of shape (M, N) for x_chunk (M,3) and y (N,3)."""
+    # Evaluate a cost-matrix block without materializing the full matrix.
     x_chunk = np.asarray(x_chunk, dtype=np.float64)
     y = np.asarray(y, dtype=np.float64)
     # Dot products: (M, N)

@@ -1,40 +1,15 @@
-"""
-generate_results_reflector.py — SquareToCircle reflector Sinkhorn benchmark, NK=1600
-
-Generates a 1600-point Halton quasi-Monte Carlo cloud, runs the full
-Sinkhorn-divergence pipeline (cold start, f=g=0, cap_iter=16 — matches
-run_compare.py / main_compare.cpp exactly), then saves a comprehensive
-results bundle to results_NK1600.npz.
-
-Run:  python scripts/generate_results_reflector.py
-
-Saved arrays in results_NK1600.npz
------------------------------------
-  x, y               (1600, 3)  source / target point clouds
-  x_s, y_s           (200, 3)   warm-start clouds
-  p, q               (1600,)    normalised densities
-  f_raw, g_raw       (1600,)    Sinkhorn potentials (after max-shift, before
-                                identity subtraction — used for potential plots)
-  f_id, g_id         (1600,)    identity bias potentials
-  f, g               (1600,)    corrected = f_raw - f_id  (Sinkhorn divergence)
-  R                  (1600,)    reflector radii  exp(f)
-  Ref                (1600, 3)  reflector surface  2·x·R
-  gc                 (1600,)    c-transform of g  min_j C(x_i,y_j) - g_j
-  fc                 (1600,)    c-transform of f  min_i C(x_i,y_j) - f_i
-  Refc               (1600, 3)  reflector from gc
-  X_MeshGrid         (256, 256) source density P on regular 2D grid
-  Y_MeshGrid         (256, 256) target density Q on regular 2D grid
-  grid_side          (256,)     grid axis  linspace(-0.6, 0.6, 256)
-  Y_projected        (K, 3)     target support: (u, v, q)  south-pole 2D
-  Y_Pushed_projected (M, 3)     push-forward:   (u, v, q)  south-pole 2D
-  y_push_3d          (M, 3)     push-forward points on lower hemisphere (3D)
-"""
+# Archived SquareToCircle reflector result generator.
+# Key formulas: R = exp(f), Ref = 2*x*R, and corrected f = f_raw - f_id.
+# C-transforms: gc[j] = min_i(C(x_i,y_j)-f_i),
+# fc[i] = min_j(C(x_i,y_j)-g_j).
+# Run: python scripts/generate_results_reflector.py
 
 import os, sys, math, time
 import numpy as np
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 REPO_ROOT  = os.path.dirname(SCRIPT_DIR)
+FIGURES_DIR = os.path.join(REPO_ROOT, "figures")
 sys.path.insert(0, REPO_ROOT)
 
 from refracter.distributions import P_square, Q_circle
@@ -46,10 +21,7 @@ from refracter.sinkhorn import (
 from refracter.build import c_transform_gc, c_transform_fc
 from refracter.cost import cost_matrix_chunk
 
-# ---------------------------------------------------------------------------
-# Halton quasi-random sequence (base-2 and base-3)
-# Matches the generator in Benchmark_old.ipynb Step 3.
-# ---------------------------------------------------------------------------
+# Generate the base-2/base-3 Halton sequence used by the archived notebook.
 
 def _halton(index, base):
     result, f, i = 0.0, 1.0, index
@@ -60,14 +32,14 @@ def _halton(index, base):
     return result
 
 def _sphere_pt(X, Y, upper=True):
-    """Inverse stereographic projection → unit sphere."""
+    # Inverse stereographic projection: (2X,2Y,1-X^2-Y^2)/(1+X^2+Y^2).
     N2 = X * X + Y * Y
     d  = 1.0 + N2
     z  = (1.0 - N2) / d
     return [2*X/d, 2*Y/d, z if upper else -z]
 
 def gen_cloud(n, upper, skip=0, half=0.6):
-    """Generate n sphere points via Halton(base=2, base=3), starting at skip."""
+    # Generate n points from the Halton sequence.
     pts, idx = [], skip
     while len(pts) < n:
         X = (_halton(idx, 2) - 0.5) * 2.0 * half
@@ -76,9 +48,7 @@ def gen_cloud(n, upper, skip=0, half=0.6):
         idx += 1
     return np.array(pts, dtype=np.float64)
 
-# ---------------------------------------------------------------------------
-# Problem setup
-# ---------------------------------------------------------------------------
+# Set NK, generate both clouds, and evaluate normalized densities.
 
 NK    = int(sys.argv[1]) if len(sys.argv) > 1 else 1600
 chunk = 512
@@ -318,6 +288,7 @@ plt.colorbar(sc, ax=ax, label='R (reflector radius)', shrink=0.65)
 ax.set_title(f'Reflector Surface — Python  (NK={NK}, k_final={k_final})')
 ax.set_xlabel('X');  ax.set_ylabel('Y');  ax.set_zlabel('Z')
 fig.tight_layout()
-fig_path = f"fig_reflector_3d_NK{NK}.png"
+fig_path = os.path.join(FIGURES_DIR, f"fig_reflector_3d_NK{NK}.png")
+os.makedirs(FIGURES_DIR, exist_ok=True)
 fig.savefig(fig_path, dpi=150, bbox_inches='tight')
 print(f"Saved {fig_path}")

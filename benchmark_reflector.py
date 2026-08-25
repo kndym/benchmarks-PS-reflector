@@ -1,30 +1,6 @@
-"""
-benchmark_reflector.py
-
-Reflector benchmark pipeline (κ = 1.0, SquareToCircle / SquareToTwoGaussSide).
-
-This module provides run_benchmark(), which replicates the full C++ reflector pipeline:
-
-  1. Load QMC point clouds.
-  2. Evaluate source/target density functions P and Q.
-  3. Run the Sinkhorn divergence algorithm.
-  4. Build the reflector surface (R, Ref).
-  5. Compute c-transforms (gc, fc, Refc).
-  6. Build the regular grid and compute the reflector on it.
-  7. Ray-trace the push-forward.
-  8. Save all outputs (same filenames as C++).
-  9. Print total cost and timing.
- 10. Return a dict of all results.
-
-Usage
------
-    from benchmark_reflector import run_benchmark
-    results = run_benchmark(benchmark='SquareToCircle', output_dir='Output')
-
-or from the command line:
-
-    python benchmark_reflector.py --benchmark SquareToCircle --output_dir Output
-"""
+# Reflector benchmark pipeline for kappa = 1.0.
+# The cost is c(x,y) = -log(1 - κ·(x·y)).
+# Run from Python with run_benchmark(...) or from the command line.
 
 import os
 import time
@@ -43,12 +19,8 @@ from refracter.build import (
 from refracter.pushforward import ray_trace
 
 
-# ---------------------------------------------------------------------------
-# Save helpers (matching C++ output format)
-# ---------------------------------------------------------------------------
-
+# Save a vector in the text format used by the C++ reference.
 def _save_vector(path: str, arr: np.ndarray):
-    """Save a 1-D array in C++ format: first line N, then one value per line."""
     arr = np.asarray(arr, dtype=np.float64)
     with open(path, "w") as fh:
         fh.write(f"{len(arr)}  \n")
@@ -58,7 +30,7 @@ def _save_vector(path: str, arr: np.ndarray):
 
 
 def _save_matrix(path: str, arr: np.ndarray):
-    """Save a 2-D array in C++ format: first line N, then space-separated rows."""
+    # Save a matrix in the text format used by the C++ reference.
     arr = np.asarray(arr, dtype=np.float64)
     n_rows, n_cols = arr.shape
     with open(path, "w") as fh:
@@ -69,54 +41,17 @@ def _save_matrix(path: str, arr: np.ndarray):
 
 
 def _save_projected(path: str, rows: np.ndarray):
-    """Save projected push-forward: u v density, one row per valid ray."""
+    # Save projected push-forward rows as u, v, and density.
     with open(path, "w") as fh:
         for row in rows:
             fh.write(f"{row[0]:.18e} {row[1]:.18e} {row[2]:.18e} \n")
 
 
-# ---------------------------------------------------------------------------
-# Main benchmark function
-# ---------------------------------------------------------------------------
-
+# Run sampling, Sinkhorn divergence, surface construction, and ray tracing.
 def run_benchmark(benchmark: str = 'SquareToCircle',
                   output_dir: str = None,
                   chunk_size: int = 512,
                   verbose: bool = True) -> dict:
-    """Run the full reflector benchmark pipeline.
-
-    Parameters
-    ----------
-    benchmark : str
-        Name of the benchmark.  One of 'SquareToCircle' or
-        'SquareToTwoGaussSide'.
-    output_dir : str or None
-        Directory to save output files.  If None a timestamped directory is
-        created in the current working directory (same behaviour as C++).
-    chunk_size : int
-        Block size for chunked matrix operations.
-    verbose : bool
-        Print progress information.
-
-    Returns
-    -------
-    dict with keys:
-        x, y           : main QMC point clouds
-        p, q           : normalised source/target weights
-        f, g           : Kantorovich potentials (corrected)
-        f_id, g_id     : identity potentials
-        R, Ref         : reflector scale and surface points
-        gc, fc         : c-transforms
-        Refc           : reflector from c-transform of g
-        x_regular      : regular grid points
-        Regular_side   : regular grid axis
-        f_regular      : reflector potential on regular grid
-        Ref_regular    : reflector surface on regular grid
-        push_result    : (K, 3) array of (u, v, density) for push-forward
-        total_cost     : float
-        elapsed        : float, total wall-clock time in seconds
-        output_dir     : str, path to output directory
-    """
     t0 = time.perf_counter()
 
     # --- Benchmark configuration ---
