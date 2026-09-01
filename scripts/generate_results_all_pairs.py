@@ -87,7 +87,7 @@ chunk = 512
 
 SRC_THETA = (np.pi / 12, np.pi / 3)
 SRC_PHI   = (np.pi / 12, np.pi / 4)
-TGT_THETA = (np.pi / 3,  5 * np.pi / 12)
+TGT_THETA = (np.pi / 10, np.pi / 5)
 TGT_PHI   = (np.pi / 10, np.pi / 5)
 
 # Generate clouds ONCE — same QMC points for all pairs

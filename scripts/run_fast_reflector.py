@@ -103,7 +103,7 @@ while regvar < k_final:
     f, g, maxdif = sinkhorn_step(x, y, logp, logq, f, g, regvar, chunk_size)
     it += 1
     print(f"  multi-scale iter {it:3d}, k={regvar}, maxdif={maxdif:.4e}")
-    regvar += int(round(k_final ** (1.0 / 3.0)))
+    regvar += int(np.floor(k_final ** (1.0 / 3.0)))
 
 # ---------------------------------------------------------------------------
 # Final loop at k_final

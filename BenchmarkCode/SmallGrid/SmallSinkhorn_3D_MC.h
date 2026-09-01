@@ -52,6 +52,7 @@ void smallsinkhorn(int regvariable)
 	}
 
 	sum=0;
+	fill_n(temp_small,NK_small,0);
 	for(int i=0; i<NK_small; i++)
 	{
 		for(int j=0; j<NK_small; j++)
@@ -70,6 +71,7 @@ void smallsinkhorn(int regvariable)
 
 
 	sum=0;
+	fill_n(temp_small,NK_small,0);
 	for(int i=0; i<NK_small; i++)
 	{
 		for(int j=0; j<NK_small; j++)

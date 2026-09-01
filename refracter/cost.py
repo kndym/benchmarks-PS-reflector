@@ -14,10 +14,6 @@ import numpy as np
 # ---------------------------------------------------------------------------
 _KAPPA = 1.0          # default: standard reflector cost
 
-# Clipping value: keep (1 - κ·dot) >= _EPS so that -log(...) is finite.
-_EPS_CLIP = 1e-15
-
-
 def set_kappa(k: float) -> None:
     """Set the module-level κ; must be in (0, 1]."""
     global _KAPPA
@@ -37,7 +33,6 @@ def cost_vec(x_vec: np.ndarray, y_vec: np.ndarray) -> float:
     y_vec = np.asarray(y_vec, dtype=np.float64)
     dot = np.dot(x_vec, y_vec)
     arg = 1.0 - _KAPPA * dot
-    arg = max(arg, _EPS_CLIP)
     return float(-np.log(arg))
 
 
@@ -47,6 +42,4 @@ def cost_matrix_chunk(x_chunk: np.ndarray, y: np.ndarray) -> np.ndarray:
     y = np.asarray(y, dtype=np.float64)
     # Dot products: (M, N)
     dots = x_chunk @ y.T
-    # Clip to ensure argument of log is positive
-    arg = np.clip(1.0 - _KAPPA * dots, _EPS_CLIP, None)
-    return -np.log(arg)
+    return -np.log(1.0 - _KAPPA * dots)

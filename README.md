@@ -97,7 +97,7 @@ The solver runs on **spherical patches** (upper hemisphere) with κ = 0.6:
 
 Default patch geometry (matching C++ reference):
 - Source: θ ∈ [π/12, π/3], φ ∈ [π/12, π/4]
-- Target: θ ∈ [π/3, 5π/12], φ ∈ [π/10, π/5]
+- Target: θ ∈ [π/10, π/5], φ ∈ [π/10, π/5]
 
 ---
 

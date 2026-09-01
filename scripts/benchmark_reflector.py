@@ -33,6 +33,7 @@ import numpy as np
 
 from refracter.qmc import load_main_cloud, load_small_cloud, load_push_cloud
 from refracter.distributions import BENCHMARKS, stereo_south
+from refracter.cost import set_kappa
 from refracter.sinkhorn import _run_sinkhorn_divergence_inner
 from refracter.build import (
     build_reflector,
@@ -127,6 +128,12 @@ def run_benchmark(benchmark: str = 'SquareToCircle',
             f"Available: {list(BENCHMARKS.keys())}"
         )
     cfg = BENCHMARKS[benchmark]
+    if benchmark == "Refraction":
+        raise ValueError(
+            "The main QMC cloud and ray-tracing pipeline are reflector-only; "
+            "use scripts/generate_results.py for the refraction patch benchmark."
+        )
+    set_kappa(cfg.get("kappa", 1.0))
     P_func = cfg["P"]
     Q_func = cfg["Q"]
     testname = cfg["testname"]

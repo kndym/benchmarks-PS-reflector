@@ -26,12 +26,15 @@ Saved arrays in results_NK1600.npz
   Y_MeshGrid         (256, 256) target density Q on regular 2D grid
   grid_side          (256,)     grid axis  linspace(-0.6, 0.6, 256)
   Y_projected        (K, 3)     target support: (u, v, q)  south-pole 2D
-  Y_Pushed_projected (M, 3)     push-forward:   (u, v, q)  south-pole 2D
+  Y_Pushed_projected (M, 3)     push-forward:   (u, v, P(x))  south-pole 2D
   y_push_3d          (M, 3)     push-forward points on lower hemisphere (3D)
 """
 
 import os, sys, math, time
 import numpy as np
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 REPO_ROOT  = os.path.dirname(SCRIPT_DIR)
@@ -209,16 +212,14 @@ print(f"R (supported): min={R[mask_p].min():.4f}, max={R[mask_p].max():.4f}, mea
 # ---------------------------------------------------------------------------
 print("\nStep 6 — C-transforms...")
 t0 = time.time()
-# Use g_raw / f_raw (raw OT potentials) but mask unsupported points to -1e300
-# so the min over j only considers supported target / source points.
-# gc[i] = min_{j: q[j]>0}(C(xi,yj) - g_raw[j]) should ≈ f_raw[i] at convergence.
-g_raw_masked = np.where(mask_q, g_raw, -1e300)
-f_raw_masked = np.where(mask_p, f_raw, -1e300)
-gc   = c_transform_gc(x, y, g_raw_masked, chunk)
-fc   = c_transform_fc(x, y, f_raw_masked, chunk)
+# Use the identity-corrected f/g for the C++-style reflector output.  The
+# original Get_gc/Get_fc routines include every finite potential, including
+# entries whose sampled density is zero, so do not mask by P/Q here.
+gc   = c_transform_gc(x, y, g, chunk)
+fc   = c_transform_fc(x, y, f, chunk)
 Refc = 2.0 * x * np.exp(gc)[:, np.newaxis]
 print(f"  done ({time.time()-t0:.2f}s)")
-print(f"  max|f_raw-gc(g_raw)| (supported) = {np.abs(f_raw[mask_p]-gc[mask_p]).max():.4e}")
+print(f"  max|f-gc(g)| (supported) = {np.abs(f[mask_p]-gc[mask_p]).max():.4e}")
 
 # ---------------------------------------------------------------------------
 # Step 7 — Density meshgrids (256×256 over stereographic [-0.6, 0.6]^2)
@@ -228,21 +229,22 @@ grid_res = 256
 gside = np.linspace(-0.6, 0.6, grid_res)
 UU, VV = np.meshgrid(gside, gside, indexing='ij')   # both (grid_res, grid_res)
 N2 = UU**2 + VV**2;  denom = 1.0 + N2
+jac = 4.0 / (denom * denom)
 
 # Source: upper hemisphere via inverse north-pole stereo
 x_grid = np.stack([2*UU/denom, 2*VV/denom,  (1-N2)/denom], axis=-1).reshape(-1, 3)
-X_MeshGrid = P_square(x_grid).reshape(grid_res, grid_res)
+X_MeshGrid = P_square(x_grid).reshape(grid_res, grid_res) * jac
 
 # Target: lower hemisphere via inverse south-pole stereo
 y_grid = np.stack([2*UU/denom, 2*VV/denom, -(1-N2)/denom], axis=-1).reshape(-1, 3)
-Y_MeshGrid = Q_circle(y_grid).reshape(grid_res, grid_res)
+Y_MeshGrid = Q_circle(y_grid).reshape(grid_res, grid_res) * jac
 
 # ---------------------------------------------------------------------------
 # Step 8 — Y_projected: target support in south-pole 2D projection
 # ---------------------------------------------------------------------------
 denom_y       = 1.0 - y[mask_q, 2]
 u_y, v_y      = y[mask_q, 0] / denom_y, y[mask_q, 1] / denom_y
-Y_projected   = np.column_stack([u_y, v_y, q[mask_q]])
+Y_projected   = np.column_stack([u_y, v_y, Q_circle(y[mask_q])])
 
 # ---------------------------------------------------------------------------
 # Step 9 — Push-forward: optimal transport map  x_i → y_{j*(i)}
@@ -253,7 +255,7 @@ t0 = time.time()
 src_idx  = np.where(mask_p)[0]
 tgt_idx  = np.where(mask_q)[0]
 y_tgt    = y[tgt_idx]          # only supported target points
-g_tgt    = g_raw[tgt_idx]
+g_tgt    = g[tgt_idx]
 pushed_y = []
 for i0 in range(0, len(src_idx), chunk):
     i1    = min(i0 + chunk, len(src_idx))
@@ -265,8 +267,8 @@ pushed_y = np.vstack(pushed_y)                      # (n_src_support, 3)
 
 denom_push        = 1.0 - pushed_y[:, 2]
 u_push, v_push    = pushed_y[:, 0]/denom_push, pushed_y[:, 1]/denom_push
-q_push            = Q_circle(pushed_y)
-Y_Pushed_projected = np.column_stack([u_push, v_push, q_push])
+p_push            = P_square(x[src_idx])
+Y_Pushed_projected = np.column_stack([u_push, v_push, p_push])
 y_push_3d         = pushed_y                        # 3D for Plotly scene
 print(f"  {len(y_push_3d)} pushed rays  ({time.time()-t0:.2f}s)")
 

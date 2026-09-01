@@ -190,9 +190,14 @@ def ray_trace(push_cloud: np.ndarray, Ref_regular: np.ndarray,
     densities = P_func(push_cloud)
 
     rows = []
-    for ind in range(M):
+    for ind in range(len(push_cloud)):
         sx, sy, sz = push_cloud[ind]
         rho = float(densities[ind])
+
+        # Match C++ Pushforward_Ref_regular: unsupported source points do not
+        # contribute a ray or a projected density row.
+        if rho == 0.0:
+            continue
 
         rx, ry, rz, ok = _do_regular_push(sx, sy, sz, Ref_regular, Regular_side, k_res)
         if not ok:

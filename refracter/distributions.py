@@ -71,34 +71,36 @@ def Q_two_gaussians(y: np.ndarray) -> np.ndarray:
 # Default patch bounds (multiples of π)
 _SRC_THETA = (np.pi / 12, np.pi / 3)
 _SRC_PHI   = (np.pi / 12, np.pi / 4)
-_TGT_THETA = (np.pi / 10, np.pi / 5)         # polar angle range
-_TGT_PHI   = (np.pi / 3, 5 * np.pi / 12)   # azimuthal range — non-overlapping with source
+_TGT_THETA = (np.pi / 10, np.pi / 5)
+_TGT_PHI   = (np.pi / 10, np.pi / 5)
 
 
 def P_refraction_patch(x: np.ndarray) -> np.ndarray:
-    """Indicator for source patch: θ ∈ [π/12, π/3], φ ∈ [π/12, π/4]."""
+    """Indicator for source patch with phi as the polar angle."""
     x = np.asarray(x, dtype=np.float64)
-    theta = np.arccos(np.clip(x[..., 2], -1.0, 1.0))
-    phi   = np.arctan2(x[..., 1], x[..., 0])
-    phi   = np.where(phi < 0, phi + 2 * np.pi, phi)
+    phi = np.arccos(np.clip(x[..., 2], -1.0, 1.0))
+    theta = np.arctan2(x[..., 1], x[..., 0])
+    theta = np.where(theta < 0, theta + 2 * np.pi, theta)
+    tol = 1e-12
 
     inside = (
-        (theta >= _SRC_THETA[0]) & (theta <= _SRC_THETA[1]) &
-        (phi   >= _SRC_PHI[0])   & (phi   <= _SRC_PHI[1])
+        (theta >= _SRC_THETA[0] - tol) & (theta <= _SRC_THETA[1] + tol) &
+        (phi   >= _SRC_PHI[0]   - tol) & (phi   <= _SRC_PHI[1]   + tol)
     )
     return inside.astype(np.float64)
 
 
 def Q_refraction_patch(y: np.ndarray) -> np.ndarray:
-    """Indicator for target patch: θ ∈ [π/10, π/5], φ ∈ [π/3, 5π/12]."""
+    """Indicator for target patch with phi as the polar angle."""
     y = np.asarray(y, dtype=np.float64)
-    theta = np.arccos(np.clip(y[..., 2], -1.0, 1.0))
-    phi   = np.arctan2(y[..., 1], y[..., 0])
-    phi   = np.where(phi < 0, phi + 2 * np.pi, phi)
+    phi = np.arccos(np.clip(y[..., 2], -1.0, 1.0))
+    theta = np.arctan2(y[..., 1], y[..., 0])
+    theta = np.where(theta < 0, theta + 2 * np.pi, theta)
+    tol = 1e-12
 
     inside = (
-        (theta >= _TGT_THETA[0]) & (theta <= _TGT_THETA[1]) &
-        (phi   >= _TGT_PHI[0])   & (phi   <= _TGT_PHI[1])
+        (theta >= _TGT_THETA[0] - tol) & (theta <= _TGT_THETA[1] + tol) &
+        (phi   >= _TGT_PHI[0]   - tol) & (phi   <= _TGT_PHI[1]   + tol)
     )
     return inside.astype(np.float64)
 

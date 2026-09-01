@@ -20,13 +20,12 @@ from scipy.special import logsumexp
 # ---------------------------------------------------------------------------
 
 KAPPA = 0.6
-EPS_CLIP = 1e-15
 
 
 def cost_matrix_chunk(x_chunk, y):
     """Refraction cost c(x,y) = -log(1 - κ·(x·y)) for x_chunk (M,3), y (N,3)."""
     dots = x_chunk @ y.T                          # (M, N)
-    return -np.log(np.clip(1.0 - KAPPA * dots, EPS_CLIP, None))
+    return -np.log(1.0 - KAPPA * dots)
 
 
 # ---------------------------------------------------------------------------
@@ -83,7 +82,7 @@ def gen_spherical_patch(n, theta_min_deg, theta_max_deg,
 # but calling the local refraction cost_matrix_chunk)
 # ---------------------------------------------------------------------------
 
-def _logsumexp_g_update(x, y, logp, f, g, k, chunk_size):
+def _logsumexp_g_update(x, y, logp, f, g, k, chunk_size, threshold=None):
     N = len(y)
     lse_g = np.full(N, -np.inf)
     a = k * f + logp
@@ -93,12 +92,18 @@ def _logsumexp_g_update(x, y, logp, f, g, k, chunk_size):
         a_chunk = a[i_start:i_end]
         C_chunk = cost_matrix_chunk(x_chunk, y)
         vals = a_chunk[:, None] - k * C_chunk
+        if threshold is not None:
+            keep = logp[i_start:i_end, None] + k * (
+                f[i_start:i_end, None] + g[None, :] - C_chunk
+            ) >= threshold
+            vals = np.where(keep, vals, -np.inf)
         chunk_lse = logsumexp(vals, axis=0)
         lse_g = np.logaddexp(lse_g, chunk_lse)
     return lse_g
 
 
-def _logsumexp_f_update(x, y, logq, f, g, k, chunk_size):
+def _logsumexp_f_update(x, y, logq, f, g, k, chunk_size, threshold=None,
+                        threshold_g=None):
     N = len(x)
     lse_f = np.full(N, -np.inf)
     b = k * g + logq
@@ -107,6 +112,13 @@ def _logsumexp_f_update(x, y, logq, f, g, k, chunk_size):
         x_chunk = x[i_start:i_end]
         C_chunk = cost_matrix_chunk(x_chunk, y)
         vals = b[None, :] - k * C_chunk
+        if threshold is not None:
+            if threshold_g is None:
+                threshold_g = g
+            keep = logq[None, :] + k * (
+                f[i_start:i_end, None] + threshold_g[None, :] - C_chunk
+            ) >= threshold
+            vals = np.where(keep, vals, -np.inf)
         chunk_lse = logsumexp(vals, axis=1)
         lse_f[i_start:i_end] = chunk_lse
     return lse_f
@@ -117,25 +129,39 @@ def _logsumexp_f_update(x, y, logq, f, g, k, chunk_size):
 # ---------------------------------------------------------------------------
 
 def sinkhorn_step(x, y, logp, logq, f, g, k, chunk_size=512):
-    """Standard log-domain Sinkhorn step (no damping)."""
-    lse_g = _logsumexp_g_update(x, y, logp, f, g, k, chunk_size)
-    log_G = -k * g - lse_g
-    g_new = -lse_g / k
+    """C++-ordered step: G, then F, with half-log absorption."""
+    source_supported = np.isfinite(logp)
+    target_supported = np.isfinite(logq)
+    threshold = np.log(1e-6 / len(x))
+    lse_g = _logsumexp_g_update(
+        x, y, logp, f, g, k, chunk_size, threshold=threshold
+    )
+    log_G = np.where(
+        target_supported & np.isfinite(lse_g), -k * g - lse_g, 0.0
+    )
+    g_star = g + log_G / k
 
-    g_eff = -lse_g / k
-    lse_f = _logsumexp_f_update(x, y, logq, f, g_eff, k, chunk_size)
-    log_F = -k * f - lse_f
-    #f_new = f + log_F / (2.0 * k)
-    f_new = - lse_f / k
+    lse_f = _logsumexp_f_update(
+        x, y, logq, f, g_star, k, chunk_size,
+        threshold=threshold, threshold_g=g
+    )
+    log_F = np.where(
+        source_supported & np.isfinite(lse_f), -k * f - lse_f, 0.0
+    )
 
-
-    maxdif = float(np.max(np.abs(log_F / k)))
+    f_new = f + log_F / (2.0 * k)
+    g_new = g + log_G / (2.0 * k)
+    maxdif = (
+        float(np.max(np.abs(log_F[source_supported] / k)))
+        if source_supported.any() else 0.0
+    )
     return f_new, g_new, maxdif
 
 
 def sinkhorn_identity_f_step(x, y, logp, f_id, k, chunk_size=512):
     """Damped identity Sinkhorn step for the source marginal."""
     N = len(x)
+    threshold = np.log(1e-6 / N)
     b = k * f_id + logp
     lse = np.full(N, -np.inf, dtype=np.float64)
 
@@ -144,13 +170,17 @@ def sinkhorn_identity_f_step(x, y, logp, f_id, k, chunk_size=512):
         x_chunk = x[i_start:i_end]
         C_chunk = cost_matrix_chunk(x_chunk, y)
         vals = b[None, :] - k * C_chunk
+        keep = logp[None, :] + k * (
+            f_id[i_start:i_end, None] + f_id[None, :] - C_chunk
+        ) >= threshold
+        vals = np.where(keep, vals, -np.inf)
         chunk_lse = logsumexp(vals, axis=1)
         lse[i_start:i_end] = chunk_lse
 
-    std = -lse / k
+    std = np.where(np.isfinite(lse), -lse / k, f_id)
     f_id_new = 0.5 * f_id + 0.5 * std
 
-    log_F = -k * f_id - lse
+    log_F = np.where(np.isfinite(lse), -k * f_id - lse, 0.0)
     supported = np.isfinite(logp)
     maxdif = float(np.max(np.abs(log_F[supported] / k))) if supported.any() else 0.0
     return f_id_new, maxdif
@@ -159,6 +189,7 @@ def sinkhorn_identity_f_step(x, y, logp, f_id, k, chunk_size=512):
 def sinkhorn_identity_g_step(x, y, logq, g_id, k, chunk_size=512):
     """Damped identity Sinkhorn step for the target marginal."""
     N = len(y)
+    threshold = np.log(1e-6 / N)
     a = k * g_id + logq
     lse = np.full(N, -np.inf, dtype=np.float64)
 
@@ -168,13 +199,17 @@ def sinkhorn_identity_g_step(x, y, logq, g_id, k, chunk_size=512):
         a_chunk = a[i_start:i_end]
         C_chunk = cost_matrix_chunk(x_chunk, y)
         vals = a_chunk[:, None] - k * C_chunk
+        keep = logq[i_start:i_end, None] + k * (
+            g_id[i_start:i_end, None] + g_id[None, :] - C_chunk
+        ) >= threshold
+        vals = np.where(keep, vals, -np.inf)
         chunk_lse = logsumexp(vals, axis=0)
         lse = np.logaddexp(lse, chunk_lse)
 
-    std = -lse / k
+    std = np.where(np.isfinite(lse), -lse / k, g_id)
     g_id_new = 0.5 * g_id + 0.5 * std
 
-    log_G = -k * g_id - lse
+    log_G = np.where(np.isfinite(lse), -k * g_id - lse, 0.0)
     supported = np.isfinite(logq)
     maxdif = float(np.max(np.abs(log_G[supported] / k))) if supported.any() else 0.0
     return g_id_new, maxdif

@@ -24,8 +24,10 @@ string testname = "3D_FlatPatchRefraction_logcost_MonteCarlo";
 // IMPORTANT: in the notebook Step 3, change y_pts to upper=True.
 
 // Runtime patch bounds — set by main() from argv (same as other benchmarks)
-double src_theta_min, src_theta_max, src_phi_min, src_phi_max;
-double tgt_theta_min, tgt_theta_max, tgt_phi_min, tgt_phi_max;
+double src_theta_min = PI / 12, src_theta_max = PI / 3;
+double src_phi_min   = PI / 12, src_phi_max   = PI / 4;
+double tgt_theta_min = PI / 10, tgt_theta_max = PI / 5;
+double tgt_phi_min   = PI / 10, tgt_phi_max   = PI / 5;
 
 
 // Fills x[NK] with source-patch points and y[NK] with target-patch points,
@@ -56,6 +58,31 @@ void generate_patch_points()
 		y[i][0] = s * cos(phi);
 		y[i][1] = s * sin(phi);
 		y[i][2] = u;
+	}
+
+	// The shared point-cloud header's small arrays are otherwise populated for
+	// the square/circle reflector benchmark.  Refill them for this patch so
+	// SmallSinkhorn evaluates the same P/Q supports as the main grid.
+	double cos_src_small_lo = cos_src_lo;
+	double cos_src_small_hi = cos_src_hi;
+	for (int i = 0; i < NK_small; i++) {
+		double u   = cos_src_small_lo + (cos_src_small_hi - cos_src_small_lo) * U(rng);
+		double phi = src_phi_min + (src_phi_max - src_phi_min) * U(rng);
+		double s   = sqrt(1.0 - u * u);
+		x_small[i][0] = s * cos(phi);
+		x_small[i][1] = s * sin(phi);
+		x_small[i][2] = u;
+	}
+
+	double cos_tgt_small_lo = cos_tgt_lo;
+	double cos_tgt_small_hi = cos_tgt_hi;
+	for (int i = 0; i < NK_small; i++) {
+		double u   = cos_tgt_small_lo + (cos_tgt_small_hi - cos_tgt_small_lo) * U(rng);
+		double phi = tgt_phi_min + (tgt_phi_max - tgt_phi_min) * U(rng);
+		double s   = sqrt(1.0 - u * u);
+		y_small[i][0] = s * cos(phi);
+		y_small[i][1] = s * sin(phi);
+		y_small[i][2] = u;
 	}
 }
 

@@ -16,9 +16,6 @@ import numpy
 from refracter.cost import cost_matrix_chunk, set_kappa
 
 
-EPS_CLIP = 1e-15
-
-
 def naive_cost_matrix(x, y, kappa):
     """Calculate costs using only Python loops and math.log."""
     matrix = []
@@ -28,7 +25,7 @@ def naive_cost_matrix(x, y, kappa):
             dot = 0.0
             for i in range(len(x_vec)):
                 dot += x_vec[i] * y_vec[i]
-            argument = max(1.0 - kappa * dot, EPS_CLIP)
+            argument = 1.0 - kappa * dot
             row.append(-math.log(argument))
         matrix.append(row)
     return matrix

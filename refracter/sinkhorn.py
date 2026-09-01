@@ -18,7 +18,7 @@ from .cost import cost_matrix_chunk
 # Helper: chunked logsumexp over one axis of the cost matrix
 # ---------------------------------------------------------------------------
 
-def _logsumexp_g_update(x, y, logp, f, g, k, chunk_size):
+def _logsumexp_g_update(x, y, logp, f, g, k, chunk_size, threshold=None):
     """Chunked logsumexp for g update: lse[j] = logsumexp_i(k*f[i] + logp[i] - k*C[i,j])."""
     N = len(y)
     lse_g = np.full(N, -np.inf)
@@ -36,6 +36,11 @@ def _logsumexp_g_update(x, y, logp, f, g, k, chunk_size):
         # For each j: logsumexp_i( a[i] - k*C[i,j] )
         # = logsumexp over rows of  (a_chunk[:,None] - k*C_chunk)
         vals = a_chunk[:, None] - k * C_chunk  # (chunk, N)
+        if threshold is not None:
+            keep = logp[i_start:i_end, None] + k * (
+                f[i_start:i_end, None] + g[None, :] - C_chunk
+            ) >= threshold
+            vals = np.where(keep, vals, -np.inf)
         # logsumexp over the chunk dimension (axis=0), accumulate
         chunk_lse = logsumexp(vals, axis=0)  # (N,)
 
@@ -45,7 +50,8 @@ def _logsumexp_g_update(x, y, logp, f, g, k, chunk_size):
     return lse_g
 
 
-def _logsumexp_f_update(x, y, logq, f, g, k, chunk_size):
+def _logsumexp_f_update(x, y, logq, f, g, k, chunk_size, threshold=None,
+                        threshold_g=None):
     """Chunked logsumexp for f update: lse[i] = logsumexp_j(k*g[j] + logq[j] - k*C[i,j])."""
     N = len(x)
     lse_f = np.full(N, -np.inf)
@@ -60,6 +66,13 @@ def _logsumexp_f_update(x, y, logq, f, g, k, chunk_size):
 
         # For each i in chunk: logsumexp_j( b[j] - k*C[i,j] )
         vals = b[None, :] - k * C_chunk  # (chunk, N_y)
+        if threshold is not None:
+            if threshold_g is None:
+                threshold_g = g
+            keep = logq[None, :] + k * (
+                f[i_start:i_end, None] + threshold_g[None, :] - C_chunk
+            ) >= threshold
+            vals = np.where(keep, vals, -np.inf)
         chunk_lse = logsumexp(vals, axis=1)  # (chunk,)
 
         lse_f[i_start:i_end] = chunk_lse
@@ -68,30 +81,50 @@ def _logsumexp_f_update(x, y, logq, f, g, k, chunk_size):
 
 
 # ---------------------------------------------------------------------------
-# Main Sinkhorn step (no damping)
+# Main Sinkhorn step
 # ---------------------------------------------------------------------------
 
 def sinkhorn_step(x, y, logp, logq, f, g, k, chunk_size=512):
-    """One log-domain Sinkhorn step (matches C++ Sinkhorn_axb + absorbtion).
+    """One log-domain Sinkhorn step matching C++ ``Sinkhorn_axb``.
 
-    Returns updated (f_new, g_new, maxdif) where maxdif = max|f_new - f|.
-
-    
+    The C++ implementation updates ``G`` first, then ``F``, absorbs half of
+    each log scaling factor into the potentials, and reports
+    ``max(abs(log(F) / k))``. Unsupported target/source points retain their
+    current potentials, as they do in the C++ loops.
     """
-    # f update
-    
-    lse_f = _logsumexp_f_update(x, y, logq, f, g, k, chunk_size)
-    #log_F = -k * f - lse_f
-    f_new = -lse_f / k
+    source_supported = np.isfinite(logp)
+    target_supported = np.isfinite(logq)
+    threshold = np.log(1e-6 / len(x))
 
-    # g update
-    lse_g = _logsumexp_g_update(x, y, logp, f_new, g, k, chunk_size)
-    #log_G = -k * g - lse_g
-    g_new = -lse_g / k
+    # C++ G update: use the old f and g, then interpret G as an updated
+    # target potential before computing the F update.
+    lse_g = _logsumexp_g_update(
+        x, y, logp, f, g, k, chunk_size, threshold=threshold
+    )
+    log_G = np.where(
+        target_supported & np.isfinite(lse_g), -k * g - lse_g, 0.0
+    )
+    g_star = g + log_G / k
 
-    f_diff= np.abs(f_new - f)
+    # C++ F update: use the updated G and the old f.
+    lse_f = _logsumexp_f_update(
+        x, y, logq, f, g_star, k, chunk_size,
+        threshold=threshold, threshold_g=g
+    )
+    log_F = np.where(
+        source_supported & np.isfinite(lse_f), -k * f - lse_f, 0.0
+    )
 
-    maxdif = float(np.max(f_diff/k))
+    # C++ absorbtion(): f += log(F)/(2*k), g += log(G)/(2*k).
+    f_new = f + log_F / (2.0 * k)
+    g_new = g + log_G / (2.0 * k)
+
+    # C++ computes maxdif from log(F)/k. There is no additional /k here.
+    maxdif = (
+        float(np.max(np.abs(log_F[source_supported] / k)))
+        if source_supported.any()
+        else 0.0
+    )
 
     return f_new, g_new, maxdif
 
@@ -107,6 +140,7 @@ def sinkhorn_identity_f_step(x, y, logp, f_id, k, chunk_size=512):
     Returns (f_id_new, maxdif).
     """
     N = len(x)
+    threshold = np.log(1e-6 / N)
 
     b = k * f_id + logp  # weights on y side (same as x for identity problem)
     lse = np.full(N, -np.inf, dtype=np.float64)
@@ -117,14 +151,18 @@ def sinkhorn_identity_f_step(x, y, logp, f_id, k, chunk_size=512):
 
         C_chunk = cost_matrix_chunk(x_chunk, y)  # (chunk, N)
         vals = b[None, :] - k * C_chunk          # (chunk, N)
+        keep = logp[None, :] + k * (
+            f_id[i_start:i_end, None] + f_id[None, :] - C_chunk
+        ) >= threshold
+        vals = np.where(keep, vals, -np.inf)
         chunk_lse = logsumexp(vals, axis=1)       # (chunk,)
         lse[i_start:i_end] = chunk_lse
 
-    std = -lse / k
+    std = np.where(np.isfinite(lse), -lse / k, f_id)
     f_id_new = 0.5 * f_id + 0.5 * std
 
     # maxdif over supported points only — unsupported are masked by the caller
-    log_F = -k * f_id - lse
+    log_F = np.where(np.isfinite(lse), -k * f_id - lse, 0.0)
     supported = np.isfinite(logp)
     maxdif = float(np.max(np.abs(log_F[supported] / k))) if supported.any() else 0.0
 
@@ -137,6 +175,7 @@ def sinkhorn_identity_g_step(x, y, logq, g_id, k, chunk_size=512):
     Returns (g_id_new, maxdif).
     """
     N = len(y)
+    threshold = np.log(1e-6 / N)
 
     a = k * g_id + logq  # weights on x side (same as y for identity problem)
     lse = np.full(N, -np.inf, dtype=np.float64)
@@ -148,13 +187,17 @@ def sinkhorn_identity_g_step(x, y, logq, g_id, k, chunk_size=512):
 
         C_chunk = cost_matrix_chunk(x_chunk, y)   # (chunk, N)
         vals = a_chunk[:, None] - k * C_chunk      # (chunk, N)
+        keep = logq[i_start:i_end, None] + k * (
+            g_id[i_start:i_end, None] + g_id[None, :] - C_chunk
+        ) >= threshold
+        vals = np.where(keep, vals, -np.inf)
         chunk_lse = logsumexp(vals, axis=0)        # (N,)
         lse = np.logaddexp(lse, chunk_lse)
 
-    std = -lse / k
+    std = np.where(np.isfinite(lse), -lse / k, g_id)
     g_id_new = 0.5 * g_id + 0.5 * std
 
-    log_G = -k * g_id - lse
+    log_G = np.where(np.isfinite(lse), -k * g_id - lse, 0.0)
     supported = np.isfinite(logq)
     maxdif = float(np.max(np.abs(log_G[supported] / k))) if supported.any() else 0.0
 
@@ -185,21 +228,24 @@ def run_small_sinkhorn(x_s, y_s, p_s, q_s, k_reg):
     f_s = np.zeros(NK_s)
     g_s = np.zeros(NK_s)
 
-    step = max(1, int(round(k_reg ** (1.0 / 3.0))))
+    # C++ increments an int by pow(...), so the fractional increment is
+    # truncated on assignment rather than rounded.
+    step = max(1, int(np.floor(k_reg ** (1.0 / 3.0))))
 
     k = 1
     while k < k_reg:
-        Fp = F_s * p_s
-        exp_mat = np.exp(-k * (C - f_s[:, None] - g_s[None, :]))
-        sums_G = exp_mat.T @ Fp
-        G_s = np.where(sums_G > 0, 1.0 / sums_G, 1.0)
-        G_s = np.where(q_s > 0, G_s, 1.0)
-
+        # The C++ small-grid routine updates F first and then G.
         Gq = G_s * q_s
         exp_mat = np.exp(-k * (C - f_s[:, None] - g_s[None, :]))
         sums_F = exp_mat @ Gq
         F_s = np.where(sums_F > 0, 1.0 / sums_F, 1.0)
         F_s = np.where(p_s > 0, F_s, 1.0)
+
+        Fp = F_s * p_s
+        exp_mat = np.exp(-k * (C - f_s[:, None] - g_s[None, :]))
+        sums_G = exp_mat.T @ Fp
+        G_s = np.where(sums_G > 0, 1.0 / sums_G, 1.0)
+        G_s = np.where(q_s > 0, G_s, 1.0)
 
         f_s += np.log(np.maximum(F_s, 1e-300)) / k
         g_s += np.log(np.maximum(G_s, 1e-300)) / k
@@ -244,55 +290,23 @@ def warmstart_from_small(x_s, y_s, x, y, f_s, g_s, chunk_size=512):
 # ---------------------------------------------------------------------------
 
 def run_sinkhorn_divergence(x, y, p, q, chunk_size=512, verbose=True):
-    """Stub — must be called via run_benchmark() which supplies small-grid densities."""
-    from .qmc import load_small_cloud
+    """Run the full divergence when only main-grid weights are available.
 
-    NK = len(x)
-
-    # --- Normalise weights ---
-    p = np.array(p, dtype=np.float64)
-    q = np.array(q, dtype=np.float64)
-    p_sum = p.sum()
-    q_sum = q.sum()
-    p = p / p_sum
-    q = q / q_sum
-
-    # Log-weights (-inf where weight is 0)
-    logp = np.where(p > 0, np.log(p), -np.inf)
-    logq = np.where(q > 0, np.log(q), -np.inf)
-
-    # --- Regularisation schedule ---
-    # C++: multiplier=8, getk(NK)=sqrt(NK), getk(NK_small)=sqrt(NK_small)
-    # NK=16488  -> getk = floor(sqrt(16488)) = 128
-    # NK_small=381 -> getk = floor(sqrt(381)) = 19
-    multiplier = 8
-    k_small = multiplier * int(np.floor(np.sqrt(381)))   # = 152
-    k_final  = multiplier * int(np.floor(np.sqrt(NK)))   # = 1024
-    step = int(round(k_final ** (1.0 / 3.0)))             # = 10
-    cap_iter = 16
-    cap_thr  = 1e-5
-
-    if verbose:
-        print(f"k_small={k_small}, k_final={k_final}, step={step}")
-        print(f"NK={NK}, NK points in source: {int((p>0).sum())}, "
-              f"NK points in target: {int((q>0).sum())}")
-
-    # --- Small grid warm-start ---
-    x_s, y_s = load_small_cloud()
-    NK_s = len(x_s)
-    p_s_raw = np.zeros(NK_s)
-    q_s_raw = np.zeros(NK_s)
-    # Evaluate densities on small grid points using p/q functions stored in caller
-    # Actually the C++ smallsinkhorn calls P(x_small[i]) and Q(y_small[i]).
-    # We receive already-evaluated p, q for the main grid.  For the small grid
-    # we need to re-evaluate — but we don't have the density function here.
-    # Instead we pass in p_s and q_s from the caller.  See run_benchmark().
-    # For standalone use (called directly), compute uniform fallback.
-    # We raise a clear error so that callers know to pass p_s/q_s separately.
-    raise RuntimeError(
-        "run_sinkhorn_divergence must be called via run_benchmark(), which "
-        "supplies p_s and q_s for the small grid.  Alternatively call "
-        "_run_sinkhorn_divergence_inner() directly."
+    The C++ executable receives separate small-grid density evaluations from
+    its benchmark function.  The generic Python API only receives ``p`` and
+    ``q``, so it uses the main grid as its own warm-start grid instead of
+    silently loading incompatible benchmark data.
+    """
+    x = np.asarray(x, dtype=np.float64)
+    y = np.asarray(y, dtype=np.float64)
+    p = np.asarray(p, dtype=np.float64)
+    q = np.asarray(q, dtype=np.float64)
+    if len(x) != len(y) or len(p) != len(x) or len(q) != len(y):
+        raise ValueError("run_sinkhorn_divergence requires equal-sized x/y grids and weights")
+    return _run_sinkhorn_divergence_inner(
+        x, y, p, q, x, y, p, q,
+        chunk_size=chunk_size,
+        verbose=verbose,
     )
 
 
@@ -310,8 +324,10 @@ def _run_sinkhorn_divergence_inner(x, y, p, q, x_s, y_s, p_s, q_s,
     p = p / p.sum()
     q = q / q.sum()
 
-    logp = np.where(p > 0, np.log(p), -np.inf)
-    logq = np.where(q > 0, np.log(q), -np.inf)
+    logp = np.full_like(p, -np.inf)
+    logq = np.full_like(q, -np.inf)
+    np.log(p, out=logp, where=p > 0)
+    np.log(q, out=logq, where=q > 0)
 
     p_s = np.array(p_s, dtype=np.float64)
     q_s = np.array(q_s, dtype=np.float64)
@@ -321,7 +337,8 @@ def _run_sinkhorn_divergence_inner(x, y, p, q, x_s, y_s, p_s, q_s,
     multiplier = 8
     k_small = multiplier * int(np.floor(np.sqrt(len(x_s))))  # 152
     k_final  = multiplier * int(np.floor(np.sqrt(NK)))        # 1024
-    step = int(round(k_final ** (1.0 / 3.0)))                  # 10
+    # C++ stores each fractional increment back into an int (truncation).
+    step = int(np.floor(k_final ** (1.0 / 3.0)))               # 10
     cap_iter = 16
     cap_thr  = 1e-5
 
@@ -362,7 +379,9 @@ def _run_sinkhorn_divergence_inner(x, y, p, q, x_s, y_s, p_s, q_s,
         i += 1
         if verbose:
             print(f"  iter {i:3d}, maxdif={maxdif:.4e}")
-        if i >= cap_iter:
+        # C++ checks i > cap_iteration after the update, so cap_iter=16
+        # permits 17 final iterations in this main.cpp-compatible loop.
+        if i > cap_iter:
             break
     if verbose:
         print(f"Final loop: {i} iterations, last change={maxdif:.4e}")
@@ -371,11 +390,16 @@ def _run_sinkhorn_divergence_inner(x, y, p, q, x_s, y_s, p_s, q_s,
     if verbose:
         print("\nIdentity Sinkhorn for source (f_id):")
     f_id = np.zeros(NK)
-    id_step = int(round(np.sqrt(k_final)))  # 32
+    # C++ uses regvariable += sqrt(k) with an integer regvariable, so this
+    # is truncation/floor rather than round().
+    id_step = int(np.floor(np.sqrt(k_final)))  # 32
     regvar = 1
     i = 0
     while regvar < k_final:
-        f_id, maxdif = sinkhorn_identity_f_step(x, y, logp, f_id, regvar, chunk_size)
+        f_id_new, maxdif = sinkhorn_identity_f_step(
+            x, y, logp, f_id, regvar, chunk_size
+        )
+        f_id = np.where(np.isfinite(logp), f_id_new, f_id)
         i += 1
         if verbose:
             print(f"  iter {i:4d}, k={regvar:5d}, maxdif={maxdif:.4e}")
@@ -386,11 +410,14 @@ def _run_sinkhorn_divergence_inner(x, y, p, q, x_s, y_s, p_s, q_s,
     i = 0
     maxdif = cap_thr + 1.0
     while maxdif > cap_thr:
-        f_id, maxdif = sinkhorn_identity_f_step(x, y, logp, f_id, k_final, chunk_size)
+        f_id_new, maxdif = sinkhorn_identity_f_step(
+            x, y, logp, f_id, k_final, chunk_size
+        )
+        f_id = np.where(np.isfinite(logp), f_id_new, f_id)
         i += 1
         if verbose:
             print(f"  iter {i:3d}, maxdif={maxdif:.4e}")
-        if i >= cap_iter:
+        if i > cap_iter:
             break
     if verbose:
         print(f"Identity F: {i} final iterations, last change={maxdif:.4e}")
@@ -402,7 +429,10 @@ def _run_sinkhorn_divergence_inner(x, y, p, q, x_s, y_s, p_s, q_s,
     regvar = 1
     i = 0
     while regvar < k_final:
-        g_id, maxdif = sinkhorn_identity_g_step(x, y, logq, g_id, regvar, chunk_size)
+        g_id_new, maxdif = sinkhorn_identity_g_step(
+            x, y, logq, g_id, regvar, chunk_size
+        )
+        g_id = np.where(np.isfinite(logq), g_id_new, g_id)
         i += 1
         if verbose:
             print(f"  iter {i:4d}, k={regvar:5d}, maxdif={maxdif:.4e}")
@@ -413,11 +443,14 @@ def _run_sinkhorn_divergence_inner(x, y, p, q, x_s, y_s, p_s, q_s,
     i = 0
     maxdif = cap_thr + 1.0
     while maxdif > cap_thr:
-        g_id, maxdif = sinkhorn_identity_g_step(x, y, logq, g_id, k_final, chunk_size)
+        g_id_new, maxdif = sinkhorn_identity_g_step(
+            x, y, logq, g_id, k_final, chunk_size
+        )
+        g_id = np.where(np.isfinite(logq), g_id_new, g_id)
         i += 1
         if verbose:
             print(f"  iter {i:3d}, maxdif={maxdif:.4e}")
-        if i >= cap_iter:
+        if i > cap_iter:
             break
     if verbose:
         print(f"Identity G: {i} final iterations, last change={maxdif:.4e}")

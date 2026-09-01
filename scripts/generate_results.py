@@ -19,6 +19,9 @@ Run:  python scripts/generate_results.py [NK]
 import os, sys, math, time
 import numpy as np
 
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+
 # Ensure we can import the reflector package from the repo root
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 REPO_ROOT  = os.path.dirname(SCRIPT_DIR)
@@ -55,34 +58,27 @@ def gen_spherical_patch(n, theta_min, theta_max, phi_min, phi_max,
     """Sample n points uniformly on a spherical patch using Halton QMC.
 
     Uses the equal solid-angle transform:
-        cos(θ) = cos(θ_max) + u1 · (cos(θ_min) - cos(θ_max))
-        φ      = φ_min + u2 · (φ_max - φ_min)
+        phi      = phi_min + u2 · (phi_max - phi_min)
+        theta    = theta_min + u1 · (theta_max - theta_min)
 
     Parameters
     ----------
-    theta_min, theta_max : polar angle range in radians
-    phi_min, phi_max     : azimuthal angle range in radians
+    theta_min, theta_max : azimuthal angle range in radians
+    phi_min, phi_max     : polar angle range in radians
     base2, base3 : Halton bases for u1, u2
     skip : number of Halton indices to skip at the start
     """
-
-
-    #cos_max = np.cos(theta_min)   # larger cos (smaller θ)
-    #cos_min = np.cos(theta_max)   # smaller cos (larger θ)
-
     pts = []
     idx = skip
     while len(pts) < n:
         u1 = _halton(idx, base2)
         u2 = _halton(idx, base3)
-        #sin_theta = np.sqrt(max(0.0, 1.0 - cos_theta ** 2))
         phi = phi_min + u2 * (phi_max - phi_min)
-        theta= theta_min + u1 * (theta_max -  theta_min)
-        cos_phi = np.cos(phi)
+        theta = theta_min + u1 * (theta_max - theta_min)
         sin_phi = np.sin(phi)
         pts.append([sin_phi * np.cos(theta),
                     sin_phi * np.sin(theta),
-                    cos_phi])
+                    np.cos(phi)])
         idx += 1
     return np.array(pts, dtype=np.float64)
 
@@ -100,8 +96,8 @@ t_start = time.time()
 # Patch bounds (matching C++ test header)
 SRC_THETA = (np.pi / 12, np.pi / 3)
 SRC_PHI   = (np.pi / 12, np.pi / 4)
-TGT_THETA = (np.pi / 3, 5 * np.pi / 12)   # azimuthal range fed to gen_spherical_patch
-TGT_PHI   = (np.pi / 10, np.pi / 5)       # polar range fed to gen_spherical_patch
+TGT_THETA = (np.pi / 10, np.pi / 5)
+TGT_PHI   = (np.pi / 10, np.pi / 5)
 
 print("Generating Halton QMC clouds on spherical patches...")
 x = gen_spherical_patch(NK, *SRC_THETA, *SRC_PHI, skip=0)
@@ -238,12 +234,10 @@ print("\nStep 6 — C-transforms...")
 t0 = time.time()
 g_raw_masked = np.where(mask_q, g_raw, -1e300)
 f_raw_masked = np.where(mask_p, f_raw, -1e300)
-gc   = c_transform_gc(x, y, f_raw_masked, chunk)
-fc   = c_transform_fc(x, y, g_raw_masked, chunk)
-Refc = 2.0 * x * np.exp(fc)[:, np.newaxis]
+gc   = c_transform_gc(x, y, g_raw_masked, chunk)
+fc   = c_transform_fc(x, y, f_raw_masked, chunk)
+Refc = 2.0 * x * np.exp(gc)[:, np.newaxis]
 print(f"  done ({time.time()-t0:.2f}s)")
-# FIX THIS PLEASE — sanity check below currently compares f_raw vs gc;
-# revisit after the c_transform_gc / c_transform_fc argument swap.
 print(f"  max|f_raw-gc(g_raw)| (supported) = {np.abs(f_raw[mask_p]-gc[mask_p]).max():.4e}")
 
 # ---------------------------------------------------------------------------
