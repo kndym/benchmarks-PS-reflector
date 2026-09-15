@@ -12,7 +12,7 @@ chunk_size controls the block size. Identity iterations are damped (half-step).
 import numpy as np
 from scipy.special import logsumexp
 
-from .cost import cost_matrix_chunk
+from .cost import cost_matrix_chunk, validate_transport_possible
 
 # ---------------------------------------------------------------------------
 # Helper: chunked logsumexp over one axis of the cost matrix
@@ -318,6 +318,17 @@ def _run_sinkhorn_divergence_inner(x, y, p, q, x_s, y_s, p_s, q_s,
     """
     NK = len(x)
 
+    # Check every source/target cloud combination used by main, small, and
+    # warm-start transports in one chunked pass.
+    if x_s is x and y_s is y:
+        validate_transport_possible(x, y, chunk_size=chunk_size)
+    else:
+        validate_transport_possible(
+            np.concatenate((x, x_s), axis=0),
+            np.concatenate((y, y_s), axis=0),
+            chunk_size=chunk_size,
+        )
+
     # --- Normalise weights ---
     p = np.array(p, dtype=np.float64)
     q = np.array(q, dtype=np.float64)
@@ -455,6 +466,12 @@ def _run_sinkhorn_divergence_inner(x, y, p, q, x_s, y_s, p_s, q_s,
     if verbose:
         print(f"Identity G: {i} final iterations, last change={maxdif:.4e}")
 
+    # Keep the raw OT potentials as well as the Sinkhorn-divergence-corrected
+    # potentials.  The hard c-transform map is defined by the raw OT pair;
+    # the corrected source potential is the one used to build the surface.
+    f_raw = f.copy()
+    g_raw = g.copy()
+
     # Normalise: shift max to 0, then subtract identity terms
     max_f_id = np.max(f_id)
     f_id = f_id - max_f_id
@@ -476,6 +493,8 @@ def _run_sinkhorn_divergence_inner(x, y, p, q, x_s, y_s, p_s, q_s,
         print(f"\nTotal cost (approx): {total_cost:.6e}")
 
     return {
+        "f_raw": f_raw,
+        "g_raw": g_raw,
         "f": f,
         "g": g,
         "f_id": f_id,

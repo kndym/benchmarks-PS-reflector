@@ -20,6 +20,14 @@ python scripts/generate_results.py
 # Saves: results/results_refraction_NK1600.npz
 ```
 
+**Generate the default case plus 10 random uniform-patch examples with plots and
+angular Wasserstein diagnostics:**
+
+```bash
+python scripts/generate_sinkhorn_refracter_examples.py
+# Saves: results/sinkhorn_refracter_examples/README.md and per-case PNG/NPZ files
+```
+
 **Generate all 16 source×target density-pair results:**
 
 ```bash

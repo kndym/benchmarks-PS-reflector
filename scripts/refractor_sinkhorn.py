@@ -25,7 +25,13 @@ KAPPA = 0.6
 def cost_matrix_chunk(x_chunk, y):
     """Refraction cost c(x,y) = -log(1 - κ·(x·y)) for x_chunk (M,3), y (N,3)."""
     dots = x_chunk @ y.T                          # (M, N)
-    return -np.log(1.0 - KAPPA * dots)
+    arg = 1.0 - KAPPA * dots
+    if np.any(arg <= 0.0):
+        raise ValueError(
+            "transport cost is undefined: require KAPPA*(x dot y) < 1 "
+            f"(KAPPA={KAPPA:g}, max dot={np.max(dots):.17g})"
+        )
+    return -np.log(arg)
 
 
 # ---------------------------------------------------------------------------

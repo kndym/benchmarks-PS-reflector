@@ -5,3 +5,5 @@
 .cursor/
 *.html
 CLAUDE.md
+/results/sinkhorn_refracter_examples
+scripts/generate_sinkhorn_refracter_examples.py
