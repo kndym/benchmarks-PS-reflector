@@ -7,3 +7,17 @@
 CLAUDE.md
 /results/sinkhorn_refracter_examples
 scripts/generate_sinkhorn_refracter_examples.py
+
+# Keep the refreshed refracter archives and figures available to the notebook
+# when the repository is cloned from GitHub.  Other generated result bundles
+# remain ignored by the rule above.
+!/results/sinkhorn_refracter_examples/
+!/results/sinkhorn_refracter_examples/README.md
+!/results/sinkhorn_refracter_examples/metadata.json
+!/results/sinkhorn_refracter_examples/main (2).tex
+!/results/sinkhorn_refracter_examples/case_*/
+!/results/sinkhorn_refracter_examples/case_*/*.npz
+!/results/sinkhorn_refracter_examples/case_*/*.png
+/results/sinkhorn_refracter_examples/*.aux
+/results/sinkhorn_refracter_examples/*.log
+/results/sinkhorn_refracter_examples/*.pdf

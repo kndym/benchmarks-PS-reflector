@@ -1,0 +1,1667 @@
+{
+  "script": "scripts\\generate_sinkhorn_refracter_examples.py",
+  "seed": 20260914,
+  "nk": 400,
+  "random_cases": 10,
+  "case_count": 11,
+  "chunk_size": 256,
+  "solver": "refracter.sinkhorn.run_sinkhorn_divergence",
+  "cost": "-log(1 - kappa * (x dot y))",
+  "reachability_check": "refracter.cost.validate_transport_possible",
+  "ground_metric": "arccos(y dot y')",
+  "results": [
+    {
+      "label": "case_00_default",
+      "index": 0,
+      "kappa": 0.6,
+      "bounds": {
+        "kappa": 0.6,
+        "source": {
+          "theta_deg": [
+            15.0,
+            60.0
+          ],
+          "phi_deg": [
+            15.0,
+            45.0
+          ]
+        },
+        "target": {
+          "theta_deg": [
+            18.0,
+            36.0
+          ],
+          "phi_deg": [
+            18.0,
+            36.0
+          ]
+        }
+      },
+      "nk": 400,
+      "source_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          14.999999999999998,
+          59.81481481481481
+        ],
+        "phi_observed_deg": [
+          15.222204148861595,
+          45.0
+        ]
+      },
+      "target_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          18.024691358024693,
+          35.925925925925924
+        ],
+        "phi_observed_deg": [
+          18.10259228985947,
+          35.972948936979584
+        ]
+      },
+      "finite_cost_reachable": true,
+      "max_kappa_dot": 0.599999910587471,
+      "radius_min": 0.9945808860184125,
+      "radius_max": 1.0344773773969635,
+      "radius_mean": 1.0139761137893286,
+      "c_transform_residual_max": 0.01690092895379358,
+      "hard_map_unique_targets": 193,
+      "hard_map_target_hit_rate": 0.4825,
+      "pushed_mass_min": 0.0,
+      "pushed_mass_max": 0.024999999999999998,
+      "total_cost": 0.05452252501087872,
+      "wasserstein_w1_angle_rad": 0.017690172979058724,
+      "wasserstein_w2_xy_l2": 0.020109796667973186,
+      "wasserstein_w2_3d_l2": 0.021591550461375463,
+      "assignment_cost_min_rad": 0.0,
+      "assignment_cost_max_rad": 0.10209128080036017,
+      "surface_plot": "case_00_default/case_00_default_surface_3d.png",
+      "source_xy_plot": "case_00_default/case_00_default_source_xy.png",
+      "npz": "case_00_default/case_00_default.npz",
+      "runtime_seconds": 3.640937500007567
+    },
+    {
+      "label": "case_01_random",
+      "index": 1,
+      "kappa": 0.38498442189811555,
+      "bounds": {
+        "kappa": 0.38498442189811555,
+        "source": {
+          "theta_deg": [
+            128.57811377691866,
+            186.33724669582466
+          ],
+          "phi_deg": [
+            51.03549334661241,
+            75.72271601229082
+          ]
+        },
+        "target": {
+          "theta_deg": [
+            167.02454240728719,
+            219.05266869581385
+          ],
+          "phi_deg": [
+            21.66224982714544,
+            38.387225715092995
+          ]
+        }
+      },
+      "nk": 400,
+      "source_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          128.57811377691866,
+          186.09955479080855
+        ],
+        "phi_observed_deg": [
+          51.14543031889205,
+          75.72271601229082
+        ]
+      },
+      "target_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          167.09591157915074,
+          218.90993035208675
+        ],
+        "phi_observed_deg": [
+          21.706329883869856,
+          38.37410954117289
+        ]
+      },
+      "finite_cost_reachable": true,
+      "max_kappa_dot": 0.3751084576290467,
+      "radius_min": 0.9949599403135311,
+      "radius_max": 1.053182323120355,
+      "radius_mean": 1.0346177640559526,
+      "c_transform_residual_max": 0.017624350582378545,
+      "hard_map_unique_targets": 127,
+      "hard_map_target_hit_rate": 0.3175,
+      "pushed_mass_min": 0.0,
+      "pushed_mass_max": 0.05000000000000001,
+      "total_cost": 0.12578143480951534,
+      "wasserstein_w1_angle_rad": 0.05252854221273084,
+      "wasserstein_w2_xy_l2": 0.059917365129557795,
+      "wasserstein_w2_3d_l2": 0.0630408938144488,
+      "assignment_cost_min_rad": 0.0,
+      "assignment_cost_max_rad": 0.21853891823690674,
+      "surface_plot": "case_01_random/case_01_random_surface_3d.png",
+      "source_xy_plot": "case_01_random/case_01_random_source_xy.png",
+      "npz": "case_01_random/case_01_random.npz",
+      "runtime_seconds": 3.17354499999783
+    },
+    {
+      "label": "case_02_random",
+      "index": 2,
+      "kappa": 0.440237911419911,
+      "bounds": {
+        "kappa": 0.440237911419911,
+        "source": {
+          "theta_deg": [
+            206.19195769324003,
+            246.855821088579
+          ],
+          "phi_deg": [
+            54.18058697152794,
+            79.9938683039027
+          ]
+        },
+        "target": {
+          "theta_deg": [
+            182.04875171154956,
+            228.9766438686538
+          ],
+          "phi_deg": [
+            30.96651283787991,
+            58.13249508695951
+          ]
+        }
+      },
+      "nk": 400,
+      "source_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          206.19195769324003,
+          246.6884800869521
+        ],
+        "phi_observed_deg": [
+          54.294080553145605,
+          79.9938683039027
+        ]
+      },
+      "target_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          182.1131246774715,
+          228.8478979368099
+        ],
+        "phi_observed_deg": [
+          31.038103225481564,
+          58.110783184251275
+        ]
+      },
+      "finite_cost_reachable": true,
+      "max_kappa_dot": 0.44023733437937723,
+      "radius_min": 0.9837368304764716,
+      "radius_max": 1.1009960084299282,
+      "radius_mean": 1.0612365223615035,
+      "c_transform_residual_max": 0.02177887849167992,
+      "hard_map_unique_targets": 185,
+      "hard_map_target_hit_rate": 0.4625,
+      "pushed_mass_min": 0.0,
+      "pushed_mass_max": 0.029999999999999995,
+      "total_cost": 0.11753737807752224,
+      "wasserstein_w1_angle_rad": 0.05203863212695044,
+      "wasserstein_w2_xy_l2": 0.05493443265318404,
+      "wasserstein_w2_3d_l2": 0.06039375824989677,
+      "assignment_cost_min_rad": 0.0,
+      "assignment_cost_max_rad": 0.3358867080270212,
+      "surface_plot": "case_02_random/case_02_random_surface_3d.png",
+      "source_xy_plot": "case_02_random/case_02_random_source_xy.png",
+      "npz": "case_02_random/case_02_random.npz",
+      "runtime_seconds": 2.8042233000014676
+    },
+    {
+      "label": "case_03_random",
+      "index": 3,
+      "kappa": 0.6506747874027543,
+      "bounds": {
+        "kappa": 0.6506747874027543,
+        "source": {
+          "theta_deg": [
+            150.29371187975258,
+            201.4167273051776
+          ],
+          "phi_deg": [
+            42.66082339606596,
+            74.28887951683026
+          ]
+        },
+        "target": {
+          "theta_deg": [
+            227.93246775089418,
+            294.5572717057951
+          ],
+          "phi_deg": [
+            34.62138653832868,
+            50.173385646901515
+          ]
+        }
+      },
+      "nk": 400,
+      "source_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          150.29371187975258,
+          201.20634452564911
+        ],
+        "phi_observed_deg": [
+          42.814042949236736,
+          74.28887951683026
+        ]
+      },
+      "target_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          228.1152518495359,
+          294.37448760715336
+        ],
+        "phi_observed_deg": [
+          34.65730803056071,
+          50.16009108921991
+        ]
+      },
+      "finite_cost_reachable": true,
+      "max_kappa_dot": 0.6134980247340871,
+      "radius_min": 0.9417358995715368,
+      "radius_max": 1.0280819429193777,
+      "radius_mean": 1.0073392731828128,
+      "c_transform_residual_max": 0.025608689082687847,
+      "hard_map_unique_targets": 232,
+      "hard_map_target_hit_rate": 0.58,
+      "pushed_mass_min": 0.0,
+      "pushed_mass_max": 0.0375,
+      "total_cost": 0.35098390632718074,
+      "wasserstein_w1_angle_rad": 0.055346898392259786,
+      "wasserstein_w2_xy_l2": 0.058911244332326244,
+      "wasserstein_w2_3d_l2": 0.061519458275394914,
+      "assignment_cost_min_rad": 0.0,
+      "assignment_cost_max_rad": 0.5857203047244808,
+      "surface_plot": "case_03_random/case_03_random_surface_3d.png",
+      "source_xy_plot": "case_03_random/case_03_random_source_xy.png",
+      "npz": "case_03_random/case_03_random.npz",
+      "runtime_seconds": 2.9384625000093365
+    },
+    {
+      "label": "case_04_random",
+      "index": 4,
+      "kappa": 0.5887614990116743,
+      "bounds": {
+        "kappa": 0.5887614990116743,
+        "source": {
+          "theta_deg": [
+            99.83312364092646,
+            155.5142958870703
+          ],
+          "phi_deg": [
+            45.82414925276138,
+            63.36995653890754
+          ]
+        },
+        "target": {
+          "theta_deg": [
+            86.02578495905823,
+            126.29741186145219
+          ],
+          "phi_deg": [
+            19.093698249012952,
+            41.119637237042014
+          ]
+        }
+      },
+      "nk": 400,
+      "source_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          99.83312364092646,
+          155.28515526054295
+        ],
+        "phi_observed_deg": [
+          45.90168762409568,
+          63.369956538907545
+        ]
+      },
+      "target_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          86.0441990545783,
+          126.24216957489196
+        ],
+        "phi_observed_deg": [
+          19.15915272188705,
+          41.103328840318845
+        ]
+      },
+      "finite_cost_reachable": true,
+      "max_kappa_dot": 0.5865378723506163,
+      "radius_min": 0.9843287931673494,
+      "radius_max": 1.0603060733255156,
+      "radius_mean": 1.0378119171676663,
+      "c_transform_residual_max": 0.02229373266419099,
+      "hard_map_unique_targets": 178,
+      "hard_map_target_hit_rate": 0.445,
+      "pushed_mass_min": 0.0,
+      "pushed_mass_max": 0.0225,
+      "total_cost": 0.08719630472554428,
+      "wasserstein_w1_angle_rad": 0.03922630438732895,
+      "wasserstein_w2_xy_l2": 0.04418147954626177,
+      "wasserstein_w2_3d_l2": 0.04673714079789925,
+      "assignment_cost_min_rad": 0.0,
+      "assignment_cost_max_rad": 0.24138279804168564,
+      "surface_plot": "case_04_random/case_04_random_surface_3d.png",
+      "source_xy_plot": "case_04_random/case_04_random_source_xy.png",
+      "npz": "case_04_random/case_04_random.npz",
+      "runtime_seconds": 3.011154499996337
+    },
+    {
+      "label": "case_05_random",
+      "index": 5,
+      "kappa": 0.5352214418447856,
+      "bounds": {
+        "kappa": 0.5352214418447856,
+        "source": {
+          "theta_deg": [
+            123.63765999374554,
+            195.05902399253281
+          ],
+          "phi_deg": [
+            6.304077999967906,
+            24.86739894524796
+          ]
+        },
+        "target": {
+          "theta_deg": [
+            14.874361506083375,
+            30.14229195978475
+          ],
+          "phi_deg": [
+            38.3439331922943,
+            67.60686432175825
+          ]
+        }
+      },
+      "nk": 400,
+      "source_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          123.63765999374556,
+          194.7651089143485
+        ],
+        "phi_observed_deg": [
+          6.478335290566978,
+          24.867398945247967
+        ]
+      },
+      "target_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          14.881342727141309,
+          30.121348296610943
+        ],
+        "phi_observed_deg": [
+          38.4529357584321,
+          67.53361878740603
+        ]
+      },
+      "finite_cost_reachable": true,
+      "max_kappa_dot": 0.4092216419813463,
+      "radius_min": 0.9802452695922057,
+      "radius_max": 1.0039603596498674,
+      "radius_mean": 0.9959778158102445,
+      "c_transform_residual_max": 0.014353779833462976,
+      "hard_map_unique_targets": 140,
+      "hard_map_target_hit_rate": 0.35,
+      "pushed_mass_min": 0.0,
+      "pushed_mass_max": 0.07750000000000003,
+      "total_cost": 0.16586959112533914,
+      "wasserstein_w1_angle_rad": 0.05588884112988115,
+      "wasserstein_w2_xy_l2": 0.04358276437550151,
+      "wasserstein_w2_3d_l2": 0.06916701413326519,
+      "assignment_cost_min_rad": 0.0,
+      "assignment_cost_max_rad": 0.27505082572300005,
+      "surface_plot": "case_05_random/case_05_random_surface_3d.png",
+      "source_xy_plot": "case_05_random/case_05_random_source_xy.png",
+      "npz": "case_05_random/case_05_random.npz",
+      "runtime_seconds": 2.9723162000009324
+    },
+    {
+      "label": "case_06_random",
+      "index": 6,
+      "kappa": 0.8440449453248128,
+      "bounds": {
+        "kappa": 0.8440449453248128,
+        "source": {
+          "theta_deg": [
+            38.407665359670126,
+            75.78609906249335
+          ],
+          "phi_deg": [
+            28.837189205427045,
+            49.89156069031176
+          ]
+        },
+        "target": {
+          "theta_deg": [
+            276.4430923408375,
+            331.0445108696314
+          ],
+          "phi_deg": [
+            45.16126192036346,
+            66.01353877787193
+          ]
+        }
+      },
+      "nk": 400,
+      "source_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          38.407665359670126,
+          75.6322783476669
+        ],
+        "phi_observed_deg": [
+          28.94454882998615,
+          49.89156069031177
+        ]
+      },
+      "target_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          276.46805869590327,
+          330.9696118044341
+        ],
+        "phi_observed_deg": [
+          45.23190240269199,
+          65.95866809514855
+        ]
+      },
+      "finite_cost_reachable": true,
+      "max_kappa_dot": 0.6195254786048179,
+      "radius_min": 0.9086102394128414,
+      "radius_max": 1.0027679953163113,
+      "radius_mean": 0.9738940649306267,
+      "c_transform_residual_max": 0.021003365385370842,
+      "hard_map_unique_targets": 209,
+      "hard_map_target_hit_rate": 0.5225,
+      "pushed_mass_min": 0.0,
+      "pushed_mass_max": 0.027499999999999997,
+      "total_cost": 0.3145104538174603,
+      "wasserstein_w1_angle_rad": 0.06127826533841259,
+      "wasserstein_w2_xy_l2": 0.061954100860924635,
+      "wasserstein_w2_3d_l2": 0.06818612556624903,
+      "assignment_cost_min_rad": 0.0,
+      "assignment_cost_max_rad": 0.49358711795689325,
+      "surface_plot": "case_06_random/case_06_random_surface_3d.png",
+      "source_xy_plot": "case_06_random/case_06_random_source_xy.png",
+      "npz": "case_06_random/case_06_random.npz",
+      "runtime_seconds": 3.2054850999993505
+    },
+    {
+      "label": "case_07_random",
+      "index": 7,
+      "kappa": 0.4721495807608136,
+      "bounds": {
+        "kappa": 0.4721495807608136,
+        "source": {
+          "theta_deg": [
+            269.47909365660615,
+            310.8393431883495
+          ],
+          "phi_deg": [
+            28.269844025774177,
+            50.10725120188416
+          ]
+        },
+        "target": {
+          "theta_deg": [
+            134.86809190537102,
+            178.04563458111045
+          ],
+          "phi_deg": [
+            5.711770591016425,
+            36.91243007575873
+          ]
+        }
+      },
+      "nk": 400,
+      "source_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          269.47909365660615,
+          310.6691364001531
+        ],
+        "phi_observed_deg": [
+          28.382753644681618,
+          50.107251201884154
+        ]
+      },
+      "target_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          134.88783472323829,
+          177.9864061275086
+        ],
+        "phi_observed_deg": [
+          5.820636719735791,
+          36.90332335776963
+        ]
+      },
+      "finite_cost_reachable": true,
+      "max_kappa_dot": 0.40808014039756424,
+      "radius_min": 0.9936782691679179,
+      "radius_max": 1.0126774500987918,
+      "radius_mean": 1.0078359315664052,
+      "c_transform_residual_max": 0.01428407816316496,
+      "hard_map_unique_targets": 143,
+      "hard_map_target_hit_rate": 0.3575,
+      "pushed_mass_min": 0.0,
+      "pushed_mass_max": 0.08000000000000003,
+      "total_cost": 0.06533754971927179,
+      "wasserstein_w1_angle_rad": 0.06386742333694265,
+      "wasserstein_w2_xy_l2": 0.06701651975217392,
+      "wasserstein_w2_3d_l2": 0.07275705674443751,
+      "assignment_cost_min_rad": 0.0,
+      "assignment_cost_max_rad": 0.32880411857642167,
+      "surface_plot": "case_07_random/case_07_random_surface_3d.png",
+      "source_xy_plot": "case_07_random/case_07_random_source_xy.png",
+      "npz": "case_07_random/case_07_random.npz",
+      "runtime_seconds": 4.053644600004191
+    },
+    {
+      "label": "case_08_random",
+      "index": 8,
+      "kappa": 0.5699409751473352,
+      "bounds": {
+        "kappa": 0.5699409751473352,
+        "source": {
+          "theta_deg": [
+            241.49060981825406,
+            280.812362018361
+          ],
+          "phi_deg": [
+            46.48467799092711,
+            73.29222905548176
+          ]
+        },
+        "target": {
+          "theta_deg": [
+            166.5435687020847,
+            183.57025765457553
+          ],
+          "phi_deg": [
+            52.5542530957241,
+            73.16144903306618
+          ]
+        }
+      },
+      "nk": 400,
+      "source_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          241.49060981825403,
+          280.6505441080725
+        ],
+        "phi_observed_deg": [
+          46.60832784747313,
+          73.29222905548176
+        ]
+      },
+      "target_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          166.5747103371144,
+          183.5313306107884
+        ],
+        "phi_observed_deg": [
+          52.57668462200479,
+          73.15214400011789
+        ]
+      },
+      "finite_cost_reachable": true,
+      "max_kappa_dot": 0.40522359309152817,
+      "radius_min": 0.9525985159457251,
+      "radius_max": 1.0008860620155033,
+      "radius_mean": 0.9857068533356196,
+      "c_transform_residual_max": 0.016478079010821822,
+      "hard_map_unique_targets": 154,
+      "hard_map_target_hit_rate": 0.385,
+      "pushed_mass_min": 0.0,
+      "pushed_mass_max": 0.06500000000000002,
+      "total_cost": 0.23290191131090454,
+      "wasserstein_w1_angle_rad": 0.039872570251499144,
+      "wasserstein_w2_xy_l2": 0.039631474085429066,
+      "wasserstein_w2_3d_l2": 0.046980278026894,
+      "assignment_cost_min_rad": 0.0,
+      "assignment_cost_max_rad": 0.1996349487561145,
+      "surface_plot": "case_08_random/case_08_random_surface_3d.png",
+      "source_xy_plot": "case_08_random/case_08_random_source_xy.png",
+      "npz": "case_08_random/case_08_random.npz",
+      "runtime_seconds": 3.9310016999952495
+    },
+    {
+      "label": "case_09_random",
+      "index": 9,
+      "kappa": 0.4113238735522271,
+      "bounds": {
+        "kappa": 0.4113238735522271,
+        "source": {
+          "theta_deg": [
+            20.775482409009605,
+            54.90481146594807
+          ],
+          "phi_deg": [
+            13.093951771740748,
+            27.847024578349902
+          ]
+        },
+        "target": {
+          "theta_deg": [
+            46.03473488940305,
+            105.18770529337564
+          ],
+          "phi_deg": [
+            28.331409462120444,
+            60.23929862111783
+          ]
+        }
+      },
+      "nk": 400,
+      "source_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          20.775482409009605,
+          54.7643615521335
+        ],
+        "phi_observed_deg": [
+          13.182375581609875,
+          27.847024578349906
+        ]
+      },
+      "target_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          46.14292505017849,
+          105.05246759240633
+        ],
+        "phi_observed_deg": [
+          28.37663176296652,
+          60.226927888901095
+        ]
+      },
+      "finite_cost_reachable": true,
+      "max_kappa_dot": 0.41125345754070264,
+      "radius_min": 1.0,
+      "radius_max": 1.0400857623141038,
+      "radius_mean": 1.0267136106136476,
+      "c_transform_residual_max": 0.01701019805242493,
+      "hard_map_unique_targets": 149,
+      "hard_map_target_hit_rate": 0.3725,
+      "pushed_mass_min": 0.0,
+      "pushed_mass_max": 0.05000000000000001,
+      "total_cost": 0.0907249089435249,
+      "wasserstein_w1_angle_rad": 0.07649557716486957,
+      "wasserstein_w2_xy_l2": 0.07433537843229229,
+      "wasserstein_w2_3d_l2": 0.09101572593753882,
+      "assignment_cost_min_rad": 0.0,
+      "assignment_cost_max_rad": 0.33492885787273335,
+      "surface_plot": "case_09_random/case_09_random_surface_3d.png",
+      "source_xy_plot": "case_09_random/case_09_random_source_xy.png",
+      "npz": "case_09_random/case_09_random.npz",
+      "runtime_seconds": 4.659440599993104
+    },
+    {
+      "label": "case_10_random",
+      "index": 10,
+      "kappa": 0.5888396919326067,
+      "bounds": {
+        "kappa": 0.5888396919326067,
+        "source": {
+          "theta_deg": [
+            262.51645887462615,
+            285.3703993698975
+          ],
+          "phi_deg": [
+            19.685907194974856,
+            48.113004757012995
+          ]
+        },
+        "target": {
+          "theta_deg": [
+            252.36738365609133,
+            279.8919607681807
+          ],
+          "phi_deg": [
+            34.47554676874144,
+            57.301056787215934
+          ]
+        }
+      },
+      "nk": 400,
+      "source_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          262.51645887462615,
+          285.27635023205687
+        ],
+        "phi_observed_deg": [
+          19.867078817842764,
+          48.113004757012995
+        ]
+      },
+      "target_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          252.45548243971479,
+          279.82903306559245
+        ],
+        "phi_observed_deg": [
+          34.57372793582435,
+          57.25381243423208
+        ]
+      },
+      "finite_cost_reachable": true,
+      "max_kappa_dot": 0.5888396864457275,
+      "radius_min": 0.9994871521512839,
+      "radius_max": 1.0343449798615656,
+      "radius_mean": 1.017036766941792,
+      "c_transform_residual_max": 0.018631264375008283,
+      "hard_map_unique_targets": 198,
+      "hard_map_target_hit_rate": 0.495,
+      "pushed_mass_min": 0.0,
+      "pushed_mass_max": 0.032499999999999994,
+      "total_cost": 0.03780782789257787,
+      "wasserstein_w1_angle_rad": 0.02856337932140072,
+      "wasserstein_w2_xy_l2": 0.03159478526225095,
+      "wasserstein_w2_3d_l2": 0.03576265253136267,
+      "assignment_cost_min_rad": 0.0,
+      "assignment_cost_max_rad": 0.18671234103093703,
+      "surface_plot": "case_10_random/case_10_random_surface_3d.png",
+      "source_xy_plot": "case_10_random/case_10_random_source_xy.png",
+      "npz": "case_10_random/case_10_random.npz",
+      "runtime_seconds": 3.659964400008903
+    }
+  ],
+  "cases": [
+    {
+      "label": "case_00_default",
+      "index": 0,
+      "kappa": 0.6,
+      "bounds": {
+        "kappa": 0.6,
+        "source": {
+          "theta_deg": [
+            15.0,
+            60.0
+          ],
+          "phi_deg": [
+            15.0,
+            45.0
+          ]
+        },
+        "target": {
+          "theta_deg": [
+            18.0,
+            36.0
+          ],
+          "phi_deg": [
+            18.0,
+            36.0
+          ]
+        }
+      },
+      "nk": 400,
+      "source_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          14.999999999999998,
+          59.81481481481481
+        ],
+        "phi_observed_deg": [
+          15.222204148861595,
+          45.0
+        ]
+      },
+      "target_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          18.024691358024693,
+          35.925925925925924
+        ],
+        "phi_observed_deg": [
+          18.10259228985947,
+          35.972948936979584
+        ]
+      },
+      "finite_cost_reachable": true,
+      "max_kappa_dot": 0.599999910587471,
+      "radius_min": 0.9945808860184125,
+      "radius_max": 1.0344773773969635,
+      "radius_mean": 1.0139761137893286,
+      "c_transform_residual_max": 0.01690092895379358,
+      "hard_map_unique_targets": 193,
+      "hard_map_target_hit_rate": 0.4825,
+      "pushed_mass_min": 0.0,
+      "pushed_mass_max": 0.024999999999999998,
+      "total_cost": 0.05452252501087872,
+      "wasserstein_w1_angle_rad": 0.017690172979058724,
+      "wasserstein_w2_xy_l2": 0.020109796667973186,
+      "wasserstein_w2_3d_l2": 0.021591550461375463,
+      "assignment_cost_min_rad": 0.0,
+      "assignment_cost_max_rad": 0.10209128080036017,
+      "surface_plot": "case_00_default/case_00_default_surface_3d.png",
+      "source_xy_plot": "case_00_default/case_00_default_source_xy.png",
+      "npz": "case_00_default/case_00_default.npz",
+      "runtime_seconds": 3.640937500007567
+    },
+    {
+      "label": "case_01_random",
+      "index": 1,
+      "kappa": 0.38498442189811555,
+      "bounds": {
+        "kappa": 0.38498442189811555,
+        "source": {
+          "theta_deg": [
+            128.57811377691866,
+            186.33724669582466
+          ],
+          "phi_deg": [
+            51.03549334661241,
+            75.72271601229082
+          ]
+        },
+        "target": {
+          "theta_deg": [
+            167.02454240728719,
+            219.05266869581385
+          ],
+          "phi_deg": [
+            21.66224982714544,
+            38.387225715092995
+          ]
+        }
+      },
+      "nk": 400,
+      "source_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          128.57811377691866,
+          186.09955479080855
+        ],
+        "phi_observed_deg": [
+          51.14543031889205,
+          75.72271601229082
+        ]
+      },
+      "target_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          167.09591157915074,
+          218.90993035208675
+        ],
+        "phi_observed_deg": [
+          21.706329883869856,
+          38.37410954117289
+        ]
+      },
+      "finite_cost_reachable": true,
+      "max_kappa_dot": 0.3751084576290467,
+      "radius_min": 0.9949599403135311,
+      "radius_max": 1.053182323120355,
+      "radius_mean": 1.0346177640559526,
+      "c_transform_residual_max": 0.017624350582378545,
+      "hard_map_unique_targets": 127,
+      "hard_map_target_hit_rate": 0.3175,
+      "pushed_mass_min": 0.0,
+      "pushed_mass_max": 0.05000000000000001,
+      "total_cost": 0.12578143480951534,
+      "wasserstein_w1_angle_rad": 0.05252854221273084,
+      "wasserstein_w2_xy_l2": 0.059917365129557795,
+      "wasserstein_w2_3d_l2": 0.0630408938144488,
+      "assignment_cost_min_rad": 0.0,
+      "assignment_cost_max_rad": 0.21853891823690674,
+      "surface_plot": "case_01_random/case_01_random_surface_3d.png",
+      "source_xy_plot": "case_01_random/case_01_random_source_xy.png",
+      "npz": "case_01_random/case_01_random.npz",
+      "runtime_seconds": 3.17354499999783
+    },
+    {
+      "label": "case_02_random",
+      "index": 2,
+      "kappa": 0.440237911419911,
+      "bounds": {
+        "kappa": 0.440237911419911,
+        "source": {
+          "theta_deg": [
+            206.19195769324003,
+            246.855821088579
+          ],
+          "phi_deg": [
+            54.18058697152794,
+            79.9938683039027
+          ]
+        },
+        "target": {
+          "theta_deg": [
+            182.04875171154956,
+            228.9766438686538
+          ],
+          "phi_deg": [
+            30.96651283787991,
+            58.13249508695951
+          ]
+        }
+      },
+      "nk": 400,
+      "source_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          206.19195769324003,
+          246.6884800869521
+        ],
+        "phi_observed_deg": [
+          54.294080553145605,
+          79.9938683039027
+        ]
+      },
+      "target_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          182.1131246774715,
+          228.8478979368099
+        ],
+        "phi_observed_deg": [
+          31.038103225481564,
+          58.110783184251275
+        ]
+      },
+      "finite_cost_reachable": true,
+      "max_kappa_dot": 0.44023733437937723,
+      "radius_min": 0.9837368304764716,
+      "radius_max": 1.1009960084299282,
+      "radius_mean": 1.0612365223615035,
+      "c_transform_residual_max": 0.02177887849167992,
+      "hard_map_unique_targets": 185,
+      "hard_map_target_hit_rate": 0.4625,
+      "pushed_mass_min": 0.0,
+      "pushed_mass_max": 0.029999999999999995,
+      "total_cost": 0.11753737807752224,
+      "wasserstein_w1_angle_rad": 0.05203863212695044,
+      "wasserstein_w2_xy_l2": 0.05493443265318404,
+      "wasserstein_w2_3d_l2": 0.06039375824989677,
+      "assignment_cost_min_rad": 0.0,
+      "assignment_cost_max_rad": 0.3358867080270212,
+      "surface_plot": "case_02_random/case_02_random_surface_3d.png",
+      "source_xy_plot": "case_02_random/case_02_random_source_xy.png",
+      "npz": "case_02_random/case_02_random.npz",
+      "runtime_seconds": 2.8042233000014676
+    },
+    {
+      "label": "case_03_random",
+      "index": 3,
+      "kappa": 0.6506747874027543,
+      "bounds": {
+        "kappa": 0.6506747874027543,
+        "source": {
+          "theta_deg": [
+            150.29371187975258,
+            201.4167273051776
+          ],
+          "phi_deg": [
+            42.66082339606596,
+            74.28887951683026
+          ]
+        },
+        "target": {
+          "theta_deg": [
+            227.93246775089418,
+            294.5572717057951
+          ],
+          "phi_deg": [
+            34.62138653832868,
+            50.173385646901515
+          ]
+        }
+      },
+      "nk": 400,
+      "source_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          150.29371187975258,
+          201.20634452564911
+        ],
+        "phi_observed_deg": [
+          42.814042949236736,
+          74.28887951683026
+        ]
+      },
+      "target_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          228.1152518495359,
+          294.37448760715336
+        ],
+        "phi_observed_deg": [
+          34.65730803056071,
+          50.16009108921991
+        ]
+      },
+      "finite_cost_reachable": true,
+      "max_kappa_dot": 0.6134980247340871,
+      "radius_min": 0.9417358995715368,
+      "radius_max": 1.0280819429193777,
+      "radius_mean": 1.0073392731828128,
+      "c_transform_residual_max": 0.025608689082687847,
+      "hard_map_unique_targets": 232,
+      "hard_map_target_hit_rate": 0.58,
+      "pushed_mass_min": 0.0,
+      "pushed_mass_max": 0.0375,
+      "total_cost": 0.35098390632718074,
+      "wasserstein_w1_angle_rad": 0.055346898392259786,
+      "wasserstein_w2_xy_l2": 0.058911244332326244,
+      "wasserstein_w2_3d_l2": 0.061519458275394914,
+      "assignment_cost_min_rad": 0.0,
+      "assignment_cost_max_rad": 0.5857203047244808,
+      "surface_plot": "case_03_random/case_03_random_surface_3d.png",
+      "source_xy_plot": "case_03_random/case_03_random_source_xy.png",
+      "npz": "case_03_random/case_03_random.npz",
+      "runtime_seconds": 2.9384625000093365
+    },
+    {
+      "label": "case_04_random",
+      "index": 4,
+      "kappa": 0.5887614990116743,
+      "bounds": {
+        "kappa": 0.5887614990116743,
+        "source": {
+          "theta_deg": [
+            99.83312364092646,
+            155.5142958870703
+          ],
+          "phi_deg": [
+            45.82414925276138,
+            63.36995653890754
+          ]
+        },
+        "target": {
+          "theta_deg": [
+            86.02578495905823,
+            126.29741186145219
+          ],
+          "phi_deg": [
+            19.093698249012952,
+            41.119637237042014
+          ]
+        }
+      },
+      "nk": 400,
+      "source_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          99.83312364092646,
+          155.28515526054295
+        ],
+        "phi_observed_deg": [
+          45.90168762409568,
+          63.369956538907545
+        ]
+      },
+      "target_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          86.0441990545783,
+          126.24216957489196
+        ],
+        "phi_observed_deg": [
+          19.15915272188705,
+          41.103328840318845
+        ]
+      },
+      "finite_cost_reachable": true,
+      "max_kappa_dot": 0.5865378723506163,
+      "radius_min": 0.9843287931673494,
+      "radius_max": 1.0603060733255156,
+      "radius_mean": 1.0378119171676663,
+      "c_transform_residual_max": 0.02229373266419099,
+      "hard_map_unique_targets": 178,
+      "hard_map_target_hit_rate": 0.445,
+      "pushed_mass_min": 0.0,
+      "pushed_mass_max": 0.0225,
+      "total_cost": 0.08719630472554428,
+      "wasserstein_w1_angle_rad": 0.03922630438732895,
+      "wasserstein_w2_xy_l2": 0.04418147954626177,
+      "wasserstein_w2_3d_l2": 0.04673714079789925,
+      "assignment_cost_min_rad": 0.0,
+      "assignment_cost_max_rad": 0.24138279804168564,
+      "surface_plot": "case_04_random/case_04_random_surface_3d.png",
+      "source_xy_plot": "case_04_random/case_04_random_source_xy.png",
+      "npz": "case_04_random/case_04_random.npz",
+      "runtime_seconds": 3.011154499996337
+    },
+    {
+      "label": "case_05_random",
+      "index": 5,
+      "kappa": 0.5352214418447856,
+      "bounds": {
+        "kappa": 0.5352214418447856,
+        "source": {
+          "theta_deg": [
+            123.63765999374554,
+            195.05902399253281
+          ],
+          "phi_deg": [
+            6.304077999967906,
+            24.86739894524796
+          ]
+        },
+        "target": {
+          "theta_deg": [
+            14.874361506083375,
+            30.14229195978475
+          ],
+          "phi_deg": [
+            38.3439331922943,
+            67.60686432175825
+          ]
+        }
+      },
+      "nk": 400,
+      "source_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          123.63765999374556,
+          194.7651089143485
+        ],
+        "phi_observed_deg": [
+          6.478335290566978,
+          24.867398945247967
+        ]
+      },
+      "target_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          14.881342727141309,
+          30.121348296610943
+        ],
+        "phi_observed_deg": [
+          38.4529357584321,
+          67.53361878740603
+        ]
+      },
+      "finite_cost_reachable": true,
+      "max_kappa_dot": 0.4092216419813463,
+      "radius_min": 0.9802452695922057,
+      "radius_max": 1.0039603596498674,
+      "radius_mean": 0.9959778158102445,
+      "c_transform_residual_max": 0.014353779833462976,
+      "hard_map_unique_targets": 140,
+      "hard_map_target_hit_rate": 0.35,
+      "pushed_mass_min": 0.0,
+      "pushed_mass_max": 0.07750000000000003,
+      "total_cost": 0.16586959112533914,
+      "wasserstein_w1_angle_rad": 0.05588884112988115,
+      "wasserstein_w2_xy_l2": 0.04358276437550151,
+      "wasserstein_w2_3d_l2": 0.06916701413326519,
+      "assignment_cost_min_rad": 0.0,
+      "assignment_cost_max_rad": 0.27505082572300005,
+      "surface_plot": "case_05_random/case_05_random_surface_3d.png",
+      "source_xy_plot": "case_05_random/case_05_random_source_xy.png",
+      "npz": "case_05_random/case_05_random.npz",
+      "runtime_seconds": 2.9723162000009324
+    },
+    {
+      "label": "case_06_random",
+      "index": 6,
+      "kappa": 0.8440449453248128,
+      "bounds": {
+        "kappa": 0.8440449453248128,
+        "source": {
+          "theta_deg": [
+            38.407665359670126,
+            75.78609906249335
+          ],
+          "phi_deg": [
+            28.837189205427045,
+            49.89156069031176
+          ]
+        },
+        "target": {
+          "theta_deg": [
+            276.4430923408375,
+            331.0445108696314
+          ],
+          "phi_deg": [
+            45.16126192036346,
+            66.01353877787193
+          ]
+        }
+      },
+      "nk": 400,
+      "source_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          38.407665359670126,
+          75.6322783476669
+        ],
+        "phi_observed_deg": [
+          28.94454882998615,
+          49.89156069031177
+        ]
+      },
+      "target_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          276.46805869590327,
+          330.9696118044341
+        ],
+        "phi_observed_deg": [
+          45.23190240269199,
+          65.95866809514855
+        ]
+      },
+      "finite_cost_reachable": true,
+      "max_kappa_dot": 0.6195254786048179,
+      "radius_min": 0.9086102394128414,
+      "radius_max": 1.0027679953163113,
+      "radius_mean": 0.9738940649306267,
+      "c_transform_residual_max": 0.021003365385370842,
+      "hard_map_unique_targets": 209,
+      "hard_map_target_hit_rate": 0.5225,
+      "pushed_mass_min": 0.0,
+      "pushed_mass_max": 0.027499999999999997,
+      "total_cost": 0.3145104538174603,
+      "wasserstein_w1_angle_rad": 0.06127826533841259,
+      "wasserstein_w2_xy_l2": 0.061954100860924635,
+      "wasserstein_w2_3d_l2": 0.06818612556624903,
+      "assignment_cost_min_rad": 0.0,
+      "assignment_cost_max_rad": 0.49358711795689325,
+      "surface_plot": "case_06_random/case_06_random_surface_3d.png",
+      "source_xy_plot": "case_06_random/case_06_random_source_xy.png",
+      "npz": "case_06_random/case_06_random.npz",
+      "runtime_seconds": 3.2054850999993505
+    },
+    {
+      "label": "case_07_random",
+      "index": 7,
+      "kappa": 0.4721495807608136,
+      "bounds": {
+        "kappa": 0.4721495807608136,
+        "source": {
+          "theta_deg": [
+            269.47909365660615,
+            310.8393431883495
+          ],
+          "phi_deg": [
+            28.269844025774177,
+            50.10725120188416
+          ]
+        },
+        "target": {
+          "theta_deg": [
+            134.86809190537102,
+            178.04563458111045
+          ],
+          "phi_deg": [
+            5.711770591016425,
+            36.91243007575873
+          ]
+        }
+      },
+      "nk": 400,
+      "source_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          269.47909365660615,
+          310.6691364001531
+        ],
+        "phi_observed_deg": [
+          28.382753644681618,
+          50.107251201884154
+        ]
+      },
+      "target_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          134.88783472323829,
+          177.9864061275086
+        ],
+        "phi_observed_deg": [
+          5.820636719735791,
+          36.90332335776963
+        ]
+      },
+      "finite_cost_reachable": true,
+      "max_kappa_dot": 0.40808014039756424,
+      "radius_min": 0.9936782691679179,
+      "radius_max": 1.0126774500987918,
+      "radius_mean": 1.0078359315664052,
+      "c_transform_residual_max": 0.01428407816316496,
+      "hard_map_unique_targets": 143,
+      "hard_map_target_hit_rate": 0.3575,
+      "pushed_mass_min": 0.0,
+      "pushed_mass_max": 0.08000000000000003,
+      "total_cost": 0.06533754971927179,
+      "wasserstein_w1_angle_rad": 0.06386742333694265,
+      "wasserstein_w2_xy_l2": 0.06701651975217392,
+      "wasserstein_w2_3d_l2": 0.07275705674443751,
+      "assignment_cost_min_rad": 0.0,
+      "assignment_cost_max_rad": 0.32880411857642167,
+      "surface_plot": "case_07_random/case_07_random_surface_3d.png",
+      "source_xy_plot": "case_07_random/case_07_random_source_xy.png",
+      "npz": "case_07_random/case_07_random.npz",
+      "runtime_seconds": 4.053644600004191
+    },
+    {
+      "label": "case_08_random",
+      "index": 8,
+      "kappa": 0.5699409751473352,
+      "bounds": {
+        "kappa": 0.5699409751473352,
+        "source": {
+          "theta_deg": [
+            241.49060981825406,
+            280.812362018361
+          ],
+          "phi_deg": [
+            46.48467799092711,
+            73.29222905548176
+          ]
+        },
+        "target": {
+          "theta_deg": [
+            166.5435687020847,
+            183.57025765457553
+          ],
+          "phi_deg": [
+            52.5542530957241,
+            73.16144903306618
+          ]
+        }
+      },
+      "nk": 400,
+      "source_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          241.49060981825403,
+          280.6505441080725
+        ],
+        "phi_observed_deg": [
+          46.60832784747313,
+          73.29222905548176
+        ]
+      },
+      "target_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          166.5747103371144,
+          183.5313306107884
+        ],
+        "phi_observed_deg": [
+          52.57668462200479,
+          73.15214400011789
+        ]
+      },
+      "finite_cost_reachable": true,
+      "max_kappa_dot": 0.40522359309152817,
+      "radius_min": 0.9525985159457251,
+      "radius_max": 1.0008860620155033,
+      "radius_mean": 0.9857068533356196,
+      "c_transform_residual_max": 0.016478079010821822,
+      "hard_map_unique_targets": 154,
+      "hard_map_target_hit_rate": 0.385,
+      "pushed_mass_min": 0.0,
+      "pushed_mass_max": 0.06500000000000002,
+      "total_cost": 0.23290191131090454,
+      "wasserstein_w1_angle_rad": 0.039872570251499144,
+      "wasserstein_w2_xy_l2": 0.039631474085429066,
+      "wasserstein_w2_3d_l2": 0.046980278026894,
+      "assignment_cost_min_rad": 0.0,
+      "assignment_cost_max_rad": 0.1996349487561145,
+      "surface_plot": "case_08_random/case_08_random_surface_3d.png",
+      "source_xy_plot": "case_08_random/case_08_random_source_xy.png",
+      "npz": "case_08_random/case_08_random.npz",
+      "runtime_seconds": 3.9310016999952495
+    },
+    {
+      "label": "case_09_random",
+      "index": 9,
+      "kappa": 0.4113238735522271,
+      "bounds": {
+        "kappa": 0.4113238735522271,
+        "source": {
+          "theta_deg": [
+            20.775482409009605,
+            54.90481146594807
+          ],
+          "phi_deg": [
+            13.093951771740748,
+            27.847024578349902
+          ]
+        },
+        "target": {
+          "theta_deg": [
+            46.03473488940305,
+            105.18770529337564
+          ],
+          "phi_deg": [
+            28.331409462120444,
+            60.23929862111783
+          ]
+        }
+      },
+      "nk": 400,
+      "source_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          20.775482409009605,
+          54.7643615521335
+        ],
+        "phi_observed_deg": [
+          13.182375581609875,
+          27.847024578349906
+        ]
+      },
+      "target_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          46.14292505017849,
+          105.05246759240633
+        ],
+        "phi_observed_deg": [
+          28.37663176296652,
+          60.226927888901095
+        ]
+      },
+      "finite_cost_reachable": true,
+      "max_kappa_dot": 0.41125345754070264,
+      "radius_min": 1.0,
+      "radius_max": 1.0400857623141038,
+      "radius_mean": 1.0267136106136476,
+      "c_transform_residual_max": 0.01701019805242493,
+      "hard_map_unique_targets": 149,
+      "hard_map_target_hit_rate": 0.3725,
+      "pushed_mass_min": 0.0,
+      "pushed_mass_max": 0.05000000000000001,
+      "total_cost": 0.0907249089435249,
+      "wasserstein_w1_angle_rad": 0.07649557716486957,
+      "wasserstein_w2_xy_l2": 0.07433537843229229,
+      "wasserstein_w2_3d_l2": 0.09101572593753882,
+      "assignment_cost_min_rad": 0.0,
+      "assignment_cost_max_rad": 0.33492885787273335,
+      "surface_plot": "case_09_random/case_09_random_surface_3d.png",
+      "source_xy_plot": "case_09_random/case_09_random_source_xy.png",
+      "npz": "case_09_random/case_09_random.npz",
+      "runtime_seconds": 4.659440599993104
+    },
+    {
+      "label": "case_10_random",
+      "index": 10,
+      "kappa": 0.5888396919326067,
+      "bounds": {
+        "kappa": 0.5888396919326067,
+        "source": {
+          "theta_deg": [
+            262.51645887462615,
+            285.3703993698975
+          ],
+          "phi_deg": [
+            19.685907194974856,
+            48.113004757012995
+          ]
+        },
+        "target": {
+          "theta_deg": [
+            252.36738365609133,
+            279.8919607681807
+          ],
+          "phi_deg": [
+            34.47554676874144,
+            57.301056787215934
+          ]
+        }
+      },
+      "nk": 400,
+      "source_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          262.51645887462615,
+          285.27635023205687
+        ],
+        "phi_observed_deg": [
+          19.867078817842764,
+          48.113004757012995
+        ]
+      },
+      "target_coverage": {
+        "count": 400,
+        "inside_count": 400,
+        "fully_covered": true,
+        "theta_observed_deg": [
+          252.45548243971479,
+          279.82903306559245
+        ],
+        "phi_observed_deg": [
+          34.57372793582435,
+          57.25381243423208
+        ]
+      },
+      "finite_cost_reachable": true,
+      "max_kappa_dot": 0.5888396864457275,
+      "radius_min": 0.9994871521512839,
+      "radius_max": 1.0343449798615656,
+      "radius_mean": 1.017036766941792,
+      "c_transform_residual_max": 0.018631264375008283,
+      "hard_map_unique_targets": 198,
+      "hard_map_target_hit_rate": 0.495,
+      "pushed_mass_min": 0.0,
+      "pushed_mass_max": 0.032499999999999994,
+      "total_cost": 0.03780782789257787,
+      "wasserstein_w1_angle_rad": 0.02856337932140072,
+      "wasserstein_w2_xy_l2": 0.03159478526225095,
+      "wasserstein_w2_3d_l2": 0.03576265253136267,
+      "assignment_cost_min_rad": 0.0,
+      "assignment_cost_max_rad": 0.18671234103093703,
+      "surface_plot": "case_10_random/case_10_random_surface_3d.png",
+      "source_xy_plot": "case_10_random/case_10_random_source_xy.png",
+      "npz": "case_10_random/case_10_random.npz",
+      "runtime_seconds": 3.659964400008903
+    }
+  ],
+  "final_kappa_in_process": 0.5888396919326067
+}
