@@ -664,12 +664,12 @@ Sinkhorn's algorithm is block-coordinate ascent that alternates between these tw
 
 The KL divergence does \emph{not} appear as an explicit formula anywhere in the Python code. Instead, it is implicitly encoded by the structure of the Sinkhorn updates \eqref{eq:g_update}--\eqref{eq:f_update}: these are precisely the optimality conditions that arise when differentiating the KL-regularized Lagrangian with respect to $f$ and $g$.
 
-In the code, the temperature parameter $\varepsilon$ is represented as $k = 1/\varepsilon$ (an integer), so small $\varepsilon$ corresponds to large $k$. The updates are computed entirely in log-domain using \texttt{logsumexp} for numerical stability. Equations \eqref{eq:g_update}--\eqref{eq:f_update} become
+In the code, the temperature parameter $\varepsilon$ is represented as $k = 1/\varepsilon$ (an integer), so small $\varepsilon$ corresponds to large $k$. The updates are computed using \texttt{logsumexp} for numerical stability. Equations \eqref{eq:g_update}--\eqref{eq:f_update} become
 \begin{align}
     \mathrm{lse}_g[j] &= \mathrm{logsumexp}_i\!\bigl(k \cdot f[i] + \log p[i] - k \cdot C[i,j]\bigr), \\
-    g_{\mathrm{new}}[j] &= g[j]/2 - \mathrm{lse}_g[j]/(2k),
+    g_{\mathrm{new}}[j] &= -\mathrm{lse}_g[j]/k,
 \end{align}
-and symmetrically for $f$. The factor of $1/2$ in the update (rather than a full step) arises from the C++ ``absorption'' scheme that folds the multiplicative kernel factor back into the additive potential after every half-step; the fixed point is identical to the standard Sinkhorn fixed point.
+and symmetrically for $f$.
 
 The cost matrix $C[i,j] = -\log(1 - \kappa \cdot x_i \cdot y_j)$ is never stored in full. It is computed on-the-fly in blocks of 512 rows (\texttt{chunk\_size=512}) to avoid materialising the full $N_K \times N_K$ matrix in memory.
 
@@ -677,7 +677,7 @@ The cost matrix $C[i,j] = -\log(1 - \kappa \cdot x_i \cdot y_j)$ is never stored
 
 The main Sinkhorn solve runs at a \emph{fixed} $k = k_{\mathrm{final}}$ from a cold start ($f = g = 0$). Two stopping conditions are checked after each iteration:
 \begin{enumerate}
-    \item \textbf{Convergence criterion:} $\max_i |f^{(n+1)}[i] - f^{(n)}[i]| < 10^{-5}$. In the code this quantity is \texttt{maxdif}, computed as $\max_i |\log F[i]|/k$ where $F[i]$ is the multiplicative absorption factor.
+    \item \textbf{Convergence criterion:} $\max_i |f^{(n+1)}[i] - f^{(n)}[i]| < 10^{-5}$. In the code this quantity is \texttt{maxdif}.
     \item \textbf{Iteration cap:} a hard maximum of \texttt{cap\_iter = 16} iterations, matching the C++ benchmark exactly.
 \end{enumerate}
 The algorithm stops as soon as either condition is met.
@@ -714,9 +714,44 @@ subset of $S^2$.
 
 Given source and target bounds in spherical-coordinate space, we generate
 $N_K$ source vectors $x_i$ and $N_K$ target vectors $y_j$ with Halton sequences.
-The azimuthal coordinate is sampled from its interval and the cosine of the
-polar coordinate is sampled uniformly.  Sampling $\cos\phi$, rather than
-$\phi$ itself, makes the point cloud uniform with respect to spherical area.
+
+Halton sequences generate rational numbers in $(0,1)$ that are more evenly
+spread out than a simple random sample.  The method uses pairwise coprime
+integers as its bases.  In base $2$, the first element is $H_1=\tfrac12$.  To
+generate the next two elements we shift the list $\{0,\tfrac12\}$ by
+$\tfrac14$:
+\[
+    \{0,\tfrac12\}+\tfrac14=\{\tfrac14,\tfrac34\},
+\]
+so the sequence is now $\tfrac12,\tfrac14,\tfrac34$.  To generate the next
+four we shift $\{0,\tfrac12,\tfrac14,\tfrac34\}$ by $\tfrac18$:
+\[
+    \{0,\tfrac12,\tfrac14,\tfrac34\}+\tfrac18
+    =\{\tfrac18,\tfrac58,\tfrac38,\tfrac78\}.
+\]
+In general, with $H_0=0$, the $N$th step produces the next $2^N$ elements
+\[
+    \{H_{2^N},\ldots,H_{2^{N+1}-1}\}
+    =\{H_0,H_1,\ldots,H_{2^N-1}\}+\frac{1}{2^{N+1}}.
+\]
+For a general base $B$ we replace $2$ by $B$; since there are now $B-1$
+nonzero digits, the step produces $B-1$ shifted copies,
+\[
+    H_{aB^N+m}=H_m+\frac{a}{B^{N+1}},
+    \qquad 0\le m<B^N,\quad a=1,\ldots,B-1.
+\]
+To generate points $(u,v)\in(0,1)\times(0,1)$ we use the base-$2$ sequence for
+the first coordinate and the base-$3$ sequence for the second.
+
+We then map the $N_K$ points $(u,v)\in(0,1)\times(0,1)$ to
+$(1,\phi,\theta)\in\{1\}\times(\phi_1,\phi_2)\times(\theta_1,\theta_2)$ with the
+affine transformation
+\[
+    \phi=\phi_1+u\,(\phi_2-\phi_1),
+    \qquad
+    \theta=\theta_1+v\,(\theta_2-\theta_1),
+\]
+and evaluate $x(\phi,\theta)$.  This gives our points on $S^2$.
 
 Each cloud is then assigned a discrete measure,
 \[
@@ -728,11 +763,30 @@ For a uniform distribution, the weights are simply
 \[
     p_i=q_j=\frac{1}{N_K}.
 \]
-For a nonuniform density, the code evaluates the density at each point and
-normalizes the resulting values so that both weight vectors have total mass
-one.
+For nonuniform densities $h$ on the source and $\ell$ on the target, the weights
+are simply the density functions evaluated at each point and normalized:
+\[
+    p_i=\frac{h(x_i)}{\sum_{l=1}^{N_K}h(x_l)},
+    \qquad
+    q_j=\frac{\ell(y_j)}{\sum_{l=1}^{N_K}\ell(y_l)}.
+\]
 
-The main numerical parameters are
+The main numerical parameters for the Sinkhorn algorithm are $N_K$,
+$\varepsilon$, and $k$.  The theoretical convergence of the Sinkhorn algorithm
+for discretized measures and regularization uses the relationship
+\[
+    \varepsilon\propto\left(\frac{1}{N_K}\right)^{1/d},
+\]
+where $d$ is the intrinsic dimension of the source and target spaces.  Our
+spaces are patches of $S^2$, so $d=2$, and with some constant $c$ we let
+\[
+    \varepsilon=\frac{c}{\sqrt{N_K}}.
+\]
+In the code we use $k$, the inverse of $\varepsilon$, so numerically
+$k=c\sqrt{N_K}$ (with $c=\texttt{multiplier}$ and $\sqrt{N_K}$ rounded down).
+We also cap the number of iterations of the algorithm on the transport problem
+(\texttt{cap\_iter}) as well as the algorithm on the identity-to-identity
+costs in the de-biasing terms (\texttt{cap\_iter\_id}).  The values used are
 \begin{align*}
     \texttt{multiplier} &= 8, \\
     k_{\mathrm{final}} &= \texttt{multiplier}\,\lfloor\sqrt{N_K}\rfloor, \\
@@ -741,11 +795,8 @@ The main numerical parameters are
     \texttt{cap\_iter\_id} &= 16, \\
     \texttt{cap\_thr} &= 10^{-5}.
 \end{align*}
-Here $k$ is the inverse regularization parameter, so the corresponding
-temperature is $\varepsilon=1/k$.  The final main solve therefore uses
-$\varepsilon_{\mathrm{final}}=1/k_{\mathrm{final}}$.
 
-\subsection{Log-domain Sinkhorn iterations}
+\subsection{Sinkhorn iterations}
 
 We initialize the two potential vectors with zeros,
 \[
@@ -767,34 +818,63 @@ The discrete fixed-point equations from Section 6.3 are
     g_j=-\varepsilon\log\sum_i p_i
         \exp\!\left(\frac{f_i-C_{ij}}{\varepsilon}\right).
 \]
-Substituting $k=1/\varepsilon$, $\log p_i$ and $\log q_j$ gives the form used
-by the two mirrored log-sum-exp routines:
-\begin{align}
-    \operatorname{lse}_g[j]
-        &=\operatorname{logsumexp}_i\bigl(kf_i+\log p_i-kC_{ij}\bigr), \\
-    \operatorname{lse}_f[i]
-        &=\operatorname{logsumexp}_j\bigl(kg_j+\log q_j-kC_{ij}\bigr).
-\end{align}
-The logarithm of the sum is evaluated after subtracting the largest exponent
-internally, which avoids overflow and underflow when $k$ is large.  The code
-also computes the cost matrix in row blocks controlled by 
+We now derive the form actually used in the code, taking the $f$ update as
+the example.  First substitute $\varepsilon=1/k$, keeping $q_j$ as it is:
+\[
+    f_i=-\frac1k\log\sum_j q_j\exp\bigl(kg_j-kC_{ij}\bigr).
+\]
+Next rewrite the weight as an exponential, $q_j=e^{\log q_j}$, and combine it
+with the other exponential:
+\[
+    f_i=-\frac1k\log\sum_j \exp\bigl(kg_j+\log q_j-kC_{ij}\bigr).
+\]
+The right-hand side is now $-\tfrac1k$ times a ``log of a sum of
+exponentials''.  For a vector $a=(a_1,\ldots,a_n)$ we define the
+\emph{log-sum-exp} function
+\[
+    \operatorname{LSE}_j(a_j)=\log\sum_{j=1}^{n}e^{a_j}.
+\]
+Evaluating this directly is unstable: when $k$ is large the exponents
+$kg_j-kC_{ij}$ are large in magnitude, so $e^{a_j}$ overflows or underflows.
+Factoring out the largest entry $a^*=\max_j a_j$ gives the equivalent stable
+form
+\[
+    \operatorname{LSE}_j(a_j)=a^*+\log\sum_{j=1}^{n}e^{a_j-a^*},
+\]
+in which every exponent is $\le 0$ and at least one term equals $1$.  With
+this notation,
+\[
+    \operatorname{LSE}_f[i]=\operatorname{LSE}_j\bigl(kg_j+\log q_j-kC_{ij}\bigr),
+    \qquad
+    f_i=-\frac{1}{k}\operatorname{LSE}_f[i].
+\]
+The same three steps applied to the $g$ equation give
+\[
+    \operatorname{LSE}_g[j]=\operatorname{LSE}_i\bigl(kf_i+\log p_i-kC_{ij}\bigr),
+    \qquad
+    g_j=-\frac{1}{k}\operatorname{LSE}_g[j].
+\]
+The code computes the cost matrix in row blocks controlled by
 \texttt{chunk\_size}; it never stores the full $N_K\times N_K$ matrix.
 
-In the repository implementation, \texttt{sinkhorn\_step} first forms the
-target update from $\operatorname{lse}_g$, uses that updated target potential
-for the source update from $\operatorname{lse}_f$, and absorbs the multiplicative
-scalings back into additive potentials.  If $F$ and $G$ are those scaling
-factors, the update is represented as
+One iteration of \texttt{sinkhorn\_step} takes the current potentials
+$f^{\mathrm{old}},g^{\mathrm{old}}$ and proceeds as follows.
+\begin{enumerate}
+    \item Update the target potential using the old source potential,
+    \[
+        g^{\mathrm{new}}_j=-\frac1k\operatorname{LSE}_i\bigl(kf^{\mathrm{old}}_i+\log p_i-kC_{ij}\bigr).
+    \]
+    \item Update the source potential using $g^{\mathrm{new}}$,
+    \[
+        f^{\mathrm{new}}_i=-\frac1k\operatorname{LSE}_j\bigl(kg^{\mathrm{new}}_j+\log q_j-kC_{ij}\bigr).
+    \]
+\end{enumerate}
+The convergence quantity is
 \[
-    f\leftarrow f+\frac{\log F}{2k},
-    \qquad
-    g\leftarrow g+\frac{\log G}{2k}.
+    \texttt{maxdif}=\max_i\bigl|f^{\mathrm{new}}_i-f^{\mathrm{old}}_i\bigr|,
 \]
-The half-step absorption is the damped form used for parity with the C++
-implementation; it has the same fixed point as the full log-domain updates.
-The quantity called \texttt{maxdif} is the largest supported-point change,
-computed from $|\log F|/k$.  We continue until \texttt{maxdif} is below
-\texttt{cap\_thr} or until the relevant iteration cap is reached.
+taken over supported source points.  We continue until \texttt{maxdif} is
+below \texttt{cap\_thr} or until the relevant iteration cap is reached.
 
 \subsection{Refractor and discrete push-forward}
 
@@ -835,7 +915,7 @@ uses an independent small-$\varepsilon$ Sinkhorn divergence,
     -\frac12\operatorname{OT}_\varepsilon(\alpha,\alpha)
     -\frac12\operatorname{OT}_\varepsilon(\beta,\beta).
 \]
-The new generator uses the log-domain alternating updates again for each of the
+The new generator uses the same alternating $f$ and $g$ updates again for each of the
 three ground costs.  The three reported diagnostics are:
 \begin{enumerate}
     \item angular cost $c_{\mathrm{rad}}(u,v)=\arccos(u\cdot v)$, reported as
@@ -850,15 +930,10 @@ three ground costs.  The three reported diagnostics are:
     \]
 \end{enumerate}
 The square roots in the last two quantities convert the squared transport
-costs into distance units.  This replaces the earlier exact equal-mass
-assignment diagnostic with the independent Sinkhorn procedure used for the
-paper-style push-forward error.
+costs into distance units.
 
 \subsection{Representative examples}
 
-Figure~\ref{fig:week15-examples} contains two representative refractor
-surfaces.  The angular errors are left as placeholders so that the values from
-the refreshed NPZ files can be inserted directly after the generator finishes.
 
 \begin{figure}[p]
     \centering

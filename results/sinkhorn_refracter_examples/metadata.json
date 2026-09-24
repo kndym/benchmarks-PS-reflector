@@ -5,7 +5,11 @@
   "random_cases": 10,
   "case_count": 11,
   "chunk_size": 256,
+  "pushforward_epsilon": 1e-06,
+  "pushforward_max_iter": 2000,
+  "pushforward_tolerance": 1e-10,
   "solver": "refracter.sinkhorn.run_sinkhorn_divergence",
+  "pushforward_solver": "paper-style log-domain Sinkhorn divergence",
   "cost": "-log(1 - kappa * (x dot y))",
   "reachability_check": "refracter.cost.validate_transport_possible",
   "ground_metric": "arccos(y dot y')",
@@ -75,15 +79,37 @@
       "pushed_mass_min": 0.0,
       "pushed_mass_max": 0.024999999999999998,
       "total_cost": 0.05452252501087872,
-      "wasserstein_w1_angle_rad": 0.017690172979058724,
-      "wasserstein_w2_xy_l2": 0.020109796667973186,
-      "wasserstein_w2_3d_l2": 0.021591550461375463,
-      "assignment_cost_min_rad": 0.0,
-      "assignment_cost_max_rad": 0.10209128080036017,
+      "sinkhorn_angle_cost": 0.0064610053559115786,
+      "sinkhorn_w2_xy_l2": 0.01113376546934209,
+      "sinkhorn_w2_3d_l2": 0.019271621900868244,
+      "pushforward_sinkhorn_converged": false,
+      "pushforward_sinkhorn_diagnostics": {
+        "angle": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.0064610053559115786
+        },
+        "xy": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 1042,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.0001239607335263143
+        },
+        "3d": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.0003713954106900246
+        }
+      },
       "surface_plot": "case_00_default/case_00_default_surface_3d.png",
       "source_xy_plot": "case_00_default/case_00_default_source_xy.png",
       "npz": "case_00_default/case_00_default.npz",
-      "runtime_seconds": 3.640937500007567
+      "runtime_seconds": 350.4665784999961
     },
     {
       "label": "case_01_random",
@@ -141,24 +167,46 @@
       },
       "finite_cost_reachable": true,
       "max_kappa_dot": 0.3751084576290467,
-      "radius_min": 0.9949599403135311,
+      "radius_min": 0.994959940313531,
       "radius_max": 1.053182323120355,
       "radius_mean": 1.0346177640559526,
-      "c_transform_residual_max": 0.017624350582378545,
+      "c_transform_residual_max": 0.01762435058237849,
       "hard_map_unique_targets": 127,
       "hard_map_target_hit_rate": 0.3175,
       "pushed_mass_min": 0.0,
       "pushed_mass_max": 0.05000000000000001,
-      "total_cost": 0.12578143480951534,
-      "wasserstein_w1_angle_rad": 0.05252854221273084,
-      "wasserstein_w2_xy_l2": 0.059917365129557795,
-      "wasserstein_w2_3d_l2": 0.0630408938144488,
-      "assignment_cost_min_rad": 0.0,
-      "assignment_cost_max_rad": 0.21853891823690674,
+      "total_cost": 0.1257814348095153,
+      "sinkhorn_angle_cost": 0.02073342129426143,
+      "sinkhorn_w2_xy_l2": 0.030749102683077095,
+      "sinkhorn_w2_3d_l2": 0.045892747112355095,
+      "pushforward_sinkhorn_converged": false,
+      "pushforward_sinkhorn_diagnostics": {
+        "angle": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.02073342129426143
+        },
+        "xy": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.0009455073158144189
+        },
+        "3d": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.0021061442375185768
+        }
+      },
       "surface_plot": "case_01_random/case_01_random_surface_3d.png",
       "source_xy_plot": "case_01_random/case_01_random_source_xy.png",
       "npz": "case_01_random/case_01_random.npz",
-      "runtime_seconds": 3.17354499999783
+      "runtime_seconds": 302.2764930999838
     },
     {
       "label": "case_02_random",
@@ -225,15 +273,37 @@
       "pushed_mass_min": 0.0,
       "pushed_mass_max": 0.029999999999999995,
       "total_cost": 0.11753737807752224,
-      "wasserstein_w1_angle_rad": 0.05203863212695044,
-      "wasserstein_w2_xy_l2": 0.05493443265318404,
-      "wasserstein_w2_3d_l2": 0.06039375824989677,
-      "assignment_cost_min_rad": 0.0,
-      "assignment_cost_max_rad": 0.3358867080270212,
+      "sinkhorn_angle_cost": 0.015633787067119858,
+      "sinkhorn_w2_xy_l2": 0.02778800623807578,
+      "sinkhorn_w2_3d_l2": 0.03888263995915166,
+      "pushforward_sinkhorn_converged": false,
+      "pushforward_sinkhorn_diagnostics": {
+        "angle": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.015633787067119858
+        },
+        "xy": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.0007721732906873384
+        },
+        "3d": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.001511859690193017
+        }
+      },
       "surface_plot": "case_02_random/case_02_random_surface_3d.png",
       "source_xy_plot": "case_02_random/case_02_random_source_xy.png",
       "npz": "case_02_random/case_02_random.npz",
-      "runtime_seconds": 2.8042233000014676
+      "runtime_seconds": 203.34564860002138
     },
     {
       "label": "case_03_random",
@@ -292,23 +362,45 @@
       "finite_cost_reachable": true,
       "max_kappa_dot": 0.6134980247340871,
       "radius_min": 0.9417358995715368,
-      "radius_max": 1.0280819429193777,
+      "radius_max": 1.0280819429193775,
       "radius_mean": 1.0073392731828128,
-      "c_transform_residual_max": 0.025608689082687847,
+      "c_transform_residual_max": 0.02560868908268782,
       "hard_map_unique_targets": 232,
       "hard_map_target_hit_rate": 0.58,
       "pushed_mass_min": 0.0,
       "pushed_mass_max": 0.0375,
       "total_cost": 0.35098390632718074,
-      "wasserstein_w1_angle_rad": 0.055346898392259786,
-      "wasserstein_w2_xy_l2": 0.058911244332326244,
-      "wasserstein_w2_3d_l2": 0.061519458275394914,
-      "assignment_cost_min_rad": 0.0,
-      "assignment_cost_max_rad": 0.5857203047244808,
+      "sinkhorn_angle_cost": 0.009177750797145,
+      "sinkhorn_w2_xy_l2": 0.02007346941009685,
+      "sinkhorn_w2_3d_l2": 0.027970994551090755,
+      "pushforward_sinkhorn_converged": false,
+      "pushforward_sinkhorn_diagnostics": {
+        "angle": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.009177750797145
+        },
+        "xy": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.0004029441741580939
+        },
+        "3d": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.0007823765361771487
+        }
+      },
       "surface_plot": "case_03_random/case_03_random_surface_3d.png",
       "source_xy_plot": "case_03_random/case_03_random_source_xy.png",
       "npz": "case_03_random/case_03_random.npz",
-      "runtime_seconds": 2.9384625000093365
+      "runtime_seconds": 148.09179800003767
     },
     {
       "label": "case_04_random",
@@ -369,21 +461,43 @@
       "radius_min": 0.9843287931673494,
       "radius_max": 1.0603060733255156,
       "radius_mean": 1.0378119171676663,
-      "c_transform_residual_max": 0.02229373266419099,
+      "c_transform_residual_max": 0.0222937326641911,
       "hard_map_unique_targets": 178,
       "hard_map_target_hit_rate": 0.445,
       "pushed_mass_min": 0.0,
       "pushed_mass_max": 0.0225,
       "total_cost": 0.08719630472554428,
-      "wasserstein_w1_angle_rad": 0.03922630438732895,
-      "wasserstein_w2_xy_l2": 0.04418147954626177,
-      "wasserstein_w2_3d_l2": 0.04673714079789925,
-      "assignment_cost_min_rad": 0.0,
-      "assignment_cost_max_rad": 0.24138279804168564,
+      "sinkhorn_angle_cost": 0.012635752493132178,
+      "sinkhorn_w2_xy_l2": 0.02232040145516109,
+      "sinkhorn_w2_3d_l2": 0.03392119923332744,
+      "pushforward_sinkhorn_converged": false,
+      "pushforward_sinkhorn_diagnostics": {
+        "angle": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.012635752493132178
+        },
+        "xy": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 734,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.0004982003211195572
+        },
+        "3d": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.0011506477574270942
+        }
+      },
       "surface_plot": "case_04_random/case_04_random_surface_3d.png",
       "source_xy_plot": "case_04_random/case_04_random_source_xy.png",
       "npz": "case_04_random/case_04_random.npz",
-      "runtime_seconds": 3.011154499996337
+      "runtime_seconds": 415.5182161999983
     },
     {
       "label": "case_05_random",
@@ -443,22 +557,44 @@
       "max_kappa_dot": 0.4092216419813463,
       "radius_min": 0.9802452695922057,
       "radius_max": 1.0039603596498674,
-      "radius_mean": 0.9959778158102445,
-      "c_transform_residual_max": 0.014353779833462976,
+      "radius_mean": 0.9959778158102446,
+      "c_transform_residual_max": 0.014353779833462949,
       "hard_map_unique_targets": 140,
       "hard_map_target_hit_rate": 0.35,
       "pushed_mass_min": 0.0,
       "pushed_mass_max": 0.07750000000000003,
       "total_cost": 0.16586959112533914,
-      "wasserstein_w1_angle_rad": 0.05588884112988115,
-      "wasserstein_w2_xy_l2": 0.04358276437550151,
-      "wasserstein_w2_3d_l2": 0.06916701413326519,
-      "assignment_cost_min_rad": 0.0,
-      "assignment_cost_max_rad": 0.27505082572300005,
+      "sinkhorn_angle_cost": 0.017027057487758675,
+      "sinkhorn_w2_xy_l2": 0.03433270951294397,
+      "sinkhorn_w2_3d_l2": 0.04400519500599536,
+      "pushforward_sinkhorn_converged": false,
+      "pushforward_sinkhorn_diagnostics": {
+        "angle": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.017027057487758675
+        },
+        "xy": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.0011787349425001934
+        },
+        "3d": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.0019364571875156794
+        }
+      },
       "surface_plot": "case_05_random/case_05_random_surface_3d.png",
       "source_xy_plot": "case_05_random/case_05_random_source_xy.png",
       "npz": "case_05_random/case_05_random.npz",
-      "runtime_seconds": 2.9723162000009324
+      "runtime_seconds": 319.81213640002534
     },
     {
       "label": "case_06_random",
@@ -517,23 +653,45 @@
       "finite_cost_reachable": true,
       "max_kappa_dot": 0.6195254786048179,
       "radius_min": 0.9086102394128414,
-      "radius_max": 1.0027679953163113,
+      "radius_max": 1.0027679953163111,
       "radius_mean": 0.9738940649306267,
       "c_transform_residual_max": 0.021003365385370842,
       "hard_map_unique_targets": 209,
       "hard_map_target_hit_rate": 0.5225,
       "pushed_mass_min": 0.0,
       "pushed_mass_max": 0.027499999999999997,
-      "total_cost": 0.3145104538174603,
-      "wasserstein_w1_angle_rad": 0.06127826533841259,
-      "wasserstein_w2_xy_l2": 0.061954100860924635,
-      "wasserstein_w2_3d_l2": 0.06818612556624903,
-      "assignment_cost_min_rad": 0.0,
-      "assignment_cost_max_rad": 0.49358711795689325,
+      "total_cost": 0.31451045381746023,
+      "sinkhorn_angle_cost": 0.0133063795832466,
+      "sinkhorn_w2_xy_l2": 0.024940186351140335,
+      "sinkhorn_w2_3d_l2": 0.033414543724399566,
+      "pushforward_sinkhorn_converged": false,
+      "pushforward_sinkhorn_diagnostics": {
+        "angle": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.0133063795832466
+        },
+        "xy": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.0006220128952296066
+        },
+        "3d": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.0011165317323098105
+        }
+      },
       "surface_plot": "case_06_random/case_06_random_surface_3d.png",
       "source_xy_plot": "case_06_random/case_06_random_source_xy.png",
       "npz": "case_06_random/case_06_random.npz",
-      "runtime_seconds": 3.2054850999993505
+      "runtime_seconds": 322.4964592999895
     },
     {
       "label": "case_07_random",
@@ -599,16 +757,38 @@
       "hard_map_target_hit_rate": 0.3575,
       "pushed_mass_min": 0.0,
       "pushed_mass_max": 0.08000000000000003,
-      "total_cost": 0.06533754971927179,
-      "wasserstein_w1_angle_rad": 0.06386742333694265,
-      "wasserstein_w2_xy_l2": 0.06701651975217392,
-      "wasserstein_w2_3d_l2": 0.07275705674443751,
-      "assignment_cost_min_rad": 0.0,
-      "assignment_cost_max_rad": 0.32880411857642167,
+      "total_cost": 0.0653375497192718,
+      "sinkhorn_angle_cost": 0.023368776961007632,
+      "sinkhorn_w2_xy_l2": 0.032891293372173704,
+      "sinkhorn_w2_3d_l2": 0.050247581080557914,
+      "pushforward_sinkhorn_converged": false,
+      "pushforward_sinkhorn_diagnostics": {
+        "angle": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.023368776961007632
+        },
+        "xy": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.0010818371796943978
+        },
+        "3d": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.0025248194044472415
+        }
+      },
       "surface_plot": "case_07_random/case_07_random_surface_3d.png",
       "source_xy_plot": "case_07_random/case_07_random_source_xy.png",
       "npz": "case_07_random/case_07_random.npz",
-      "runtime_seconds": 4.053644600004191
+      "runtime_seconds": 320.8510092999786
     },
     {
       "label": "case_08_random",
@@ -669,21 +849,43 @@
       "radius_min": 0.9525985159457251,
       "radius_max": 1.0008860620155033,
       "radius_mean": 0.9857068533356196,
-      "c_transform_residual_max": 0.016478079010821822,
+      "c_transform_residual_max": 0.016478079010821767,
       "hard_map_unique_targets": 154,
       "hard_map_target_hit_rate": 0.385,
       "pushed_mass_min": 0.0,
       "pushed_mass_max": 0.06500000000000002,
-      "total_cost": 0.23290191131090454,
-      "wasserstein_w1_angle_rad": 0.039872570251499144,
-      "wasserstein_w2_xy_l2": 0.039631474085429066,
-      "wasserstein_w2_3d_l2": 0.046980278026894,
-      "assignment_cost_min_rad": 0.0,
-      "assignment_cost_max_rad": 0.1996349487561145,
+      "total_cost": 0.2329019113109045,
+      "sinkhorn_angle_cost": 0.012246977014541098,
+      "sinkhorn_w2_xy_l2": 0.02939433588405086,
+      "sinkhorn_w2_3d_l2": 0.03694272171544937,
+      "pushforward_sinkhorn_converged": false,
+      "pushforward_sinkhorn_diagnostics": {
+        "angle": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.012246977014541098
+        },
+        "xy": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.0008640269820644
+        },
+        "3d": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.0013647646877451344
+        }
+      },
       "surface_plot": "case_08_random/case_08_random_surface_3d.png",
       "source_xy_plot": "case_08_random/case_08_random_source_xy.png",
       "npz": "case_08_random/case_08_random.npz",
-      "runtime_seconds": 3.9310016999952495
+      "runtime_seconds": 309.41577069996856
     },
     {
       "label": "case_09_random",
@@ -750,15 +952,37 @@
       "pushed_mass_min": 0.0,
       "pushed_mass_max": 0.05000000000000001,
       "total_cost": 0.0907249089435249,
-      "wasserstein_w1_angle_rad": 0.07649557716486957,
-      "wasserstein_w2_xy_l2": 0.07433537843229229,
-      "wasserstein_w2_3d_l2": 0.09101572593753882,
-      "assignment_cost_min_rad": 0.0,
-      "assignment_cost_max_rad": 0.33492885787273335,
+      "sinkhorn_angle_cost": 0.02272669944519257,
+      "sinkhorn_w2_xy_l2": 0.03976656880973398,
+      "sinkhorn_w2_3d_l2": 0.051107707369946735,
+      "pushforward_sinkhorn_converged": false,
+      "pushforward_sinkhorn_diagnostics": {
+        "angle": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.02272669944519257
+        },
+        "xy": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.0015813799948993076
+        },
+        "3d": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.002611997752612108
+        }
+      },
       "surface_plot": "case_09_random/case_09_random_surface_3d.png",
       "source_xy_plot": "case_09_random/case_09_random_source_xy.png",
       "npz": "case_09_random/case_09_random.npz",
-      "runtime_seconds": 4.659440599993104
+      "runtime_seconds": 305.14896030002274
     },
     {
       "label": "case_10_random",
@@ -824,16 +1048,38 @@
       "hard_map_target_hit_rate": 0.495,
       "pushed_mass_min": 0.0,
       "pushed_mass_max": 0.032499999999999994,
-      "total_cost": 0.03780782789257787,
-      "wasserstein_w1_angle_rad": 0.02856337932140072,
-      "wasserstein_w2_xy_l2": 0.03159478526225095,
-      "wasserstein_w2_3d_l2": 0.03576265253136267,
-      "assignment_cost_min_rad": 0.0,
-      "assignment_cost_max_rad": 0.18671234103093703,
+      "total_cost": 0.037807827892577875,
+      "sinkhorn_angle_cost": 0.009994264716599926,
+      "sinkhorn_w2_xy_l2": 0.019415706253261087,
+      "sinkhorn_w2_3d_l2": 0.0279824501540403,
+      "pushforward_sinkhorn_converged": false,
+      "pushforward_sinkhorn_diagnostics": {
+        "angle": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.009994264716599926
+        },
+        "xy": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 666,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.00037696964931292163
+        },
+        "3d": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.0007830175166233501
+        }
+      },
       "surface_plot": "case_10_random/case_10_random_surface_3d.png",
       "source_xy_plot": "case_10_random/case_10_random_source_xy.png",
       "npz": "case_10_random/case_10_random.npz",
-      "runtime_seconds": 3.659964400008903
+      "runtime_seconds": 432.22980159998406
     }
   ],
   "cases": [
@@ -902,15 +1148,37 @@
       "pushed_mass_min": 0.0,
       "pushed_mass_max": 0.024999999999999998,
       "total_cost": 0.05452252501087872,
-      "wasserstein_w1_angle_rad": 0.017690172979058724,
-      "wasserstein_w2_xy_l2": 0.020109796667973186,
-      "wasserstein_w2_3d_l2": 0.021591550461375463,
-      "assignment_cost_min_rad": 0.0,
-      "assignment_cost_max_rad": 0.10209128080036017,
+      "sinkhorn_angle_cost": 0.0064610053559115786,
+      "sinkhorn_w2_xy_l2": 0.01113376546934209,
+      "sinkhorn_w2_3d_l2": 0.019271621900868244,
+      "pushforward_sinkhorn_converged": false,
+      "pushforward_sinkhorn_diagnostics": {
+        "angle": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.0064610053559115786
+        },
+        "xy": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 1042,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.0001239607335263143
+        },
+        "3d": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.0003713954106900246
+        }
+      },
       "surface_plot": "case_00_default/case_00_default_surface_3d.png",
       "source_xy_plot": "case_00_default/case_00_default_source_xy.png",
       "npz": "case_00_default/case_00_default.npz",
-      "runtime_seconds": 3.640937500007567
+      "runtime_seconds": 350.4665784999961
     },
     {
       "label": "case_01_random",
@@ -968,24 +1236,46 @@
       },
       "finite_cost_reachable": true,
       "max_kappa_dot": 0.3751084576290467,
-      "radius_min": 0.9949599403135311,
+      "radius_min": 0.994959940313531,
       "radius_max": 1.053182323120355,
       "radius_mean": 1.0346177640559526,
-      "c_transform_residual_max": 0.017624350582378545,
+      "c_transform_residual_max": 0.01762435058237849,
       "hard_map_unique_targets": 127,
       "hard_map_target_hit_rate": 0.3175,
       "pushed_mass_min": 0.0,
       "pushed_mass_max": 0.05000000000000001,
-      "total_cost": 0.12578143480951534,
-      "wasserstein_w1_angle_rad": 0.05252854221273084,
-      "wasserstein_w2_xy_l2": 0.059917365129557795,
-      "wasserstein_w2_3d_l2": 0.0630408938144488,
-      "assignment_cost_min_rad": 0.0,
-      "assignment_cost_max_rad": 0.21853891823690674,
+      "total_cost": 0.1257814348095153,
+      "sinkhorn_angle_cost": 0.02073342129426143,
+      "sinkhorn_w2_xy_l2": 0.030749102683077095,
+      "sinkhorn_w2_3d_l2": 0.045892747112355095,
+      "pushforward_sinkhorn_converged": false,
+      "pushforward_sinkhorn_diagnostics": {
+        "angle": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.02073342129426143
+        },
+        "xy": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.0009455073158144189
+        },
+        "3d": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.0021061442375185768
+        }
+      },
       "surface_plot": "case_01_random/case_01_random_surface_3d.png",
       "source_xy_plot": "case_01_random/case_01_random_source_xy.png",
       "npz": "case_01_random/case_01_random.npz",
-      "runtime_seconds": 3.17354499999783
+      "runtime_seconds": 302.2764930999838
     },
     {
       "label": "case_02_random",
@@ -1052,15 +1342,37 @@
       "pushed_mass_min": 0.0,
       "pushed_mass_max": 0.029999999999999995,
       "total_cost": 0.11753737807752224,
-      "wasserstein_w1_angle_rad": 0.05203863212695044,
-      "wasserstein_w2_xy_l2": 0.05493443265318404,
-      "wasserstein_w2_3d_l2": 0.06039375824989677,
-      "assignment_cost_min_rad": 0.0,
-      "assignment_cost_max_rad": 0.3358867080270212,
+      "sinkhorn_angle_cost": 0.015633787067119858,
+      "sinkhorn_w2_xy_l2": 0.02778800623807578,
+      "sinkhorn_w2_3d_l2": 0.03888263995915166,
+      "pushforward_sinkhorn_converged": false,
+      "pushforward_sinkhorn_diagnostics": {
+        "angle": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.015633787067119858
+        },
+        "xy": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.0007721732906873384
+        },
+        "3d": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.001511859690193017
+        }
+      },
       "surface_plot": "case_02_random/case_02_random_surface_3d.png",
       "source_xy_plot": "case_02_random/case_02_random_source_xy.png",
       "npz": "case_02_random/case_02_random.npz",
-      "runtime_seconds": 2.8042233000014676
+      "runtime_seconds": 203.34564860002138
     },
     {
       "label": "case_03_random",
@@ -1119,23 +1431,45 @@
       "finite_cost_reachable": true,
       "max_kappa_dot": 0.6134980247340871,
       "radius_min": 0.9417358995715368,
-      "radius_max": 1.0280819429193777,
+      "radius_max": 1.0280819429193775,
       "radius_mean": 1.0073392731828128,
-      "c_transform_residual_max": 0.025608689082687847,
+      "c_transform_residual_max": 0.02560868908268782,
       "hard_map_unique_targets": 232,
       "hard_map_target_hit_rate": 0.58,
       "pushed_mass_min": 0.0,
       "pushed_mass_max": 0.0375,
       "total_cost": 0.35098390632718074,
-      "wasserstein_w1_angle_rad": 0.055346898392259786,
-      "wasserstein_w2_xy_l2": 0.058911244332326244,
-      "wasserstein_w2_3d_l2": 0.061519458275394914,
-      "assignment_cost_min_rad": 0.0,
-      "assignment_cost_max_rad": 0.5857203047244808,
+      "sinkhorn_angle_cost": 0.009177750797145,
+      "sinkhorn_w2_xy_l2": 0.02007346941009685,
+      "sinkhorn_w2_3d_l2": 0.027970994551090755,
+      "pushforward_sinkhorn_converged": false,
+      "pushforward_sinkhorn_diagnostics": {
+        "angle": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.009177750797145
+        },
+        "xy": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.0004029441741580939
+        },
+        "3d": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.0007823765361771487
+        }
+      },
       "surface_plot": "case_03_random/case_03_random_surface_3d.png",
       "source_xy_plot": "case_03_random/case_03_random_source_xy.png",
       "npz": "case_03_random/case_03_random.npz",
-      "runtime_seconds": 2.9384625000093365
+      "runtime_seconds": 148.09179800003767
     },
     {
       "label": "case_04_random",
@@ -1196,21 +1530,43 @@
       "radius_min": 0.9843287931673494,
       "radius_max": 1.0603060733255156,
       "radius_mean": 1.0378119171676663,
-      "c_transform_residual_max": 0.02229373266419099,
+      "c_transform_residual_max": 0.0222937326641911,
       "hard_map_unique_targets": 178,
       "hard_map_target_hit_rate": 0.445,
       "pushed_mass_min": 0.0,
       "pushed_mass_max": 0.0225,
       "total_cost": 0.08719630472554428,
-      "wasserstein_w1_angle_rad": 0.03922630438732895,
-      "wasserstein_w2_xy_l2": 0.04418147954626177,
-      "wasserstein_w2_3d_l2": 0.04673714079789925,
-      "assignment_cost_min_rad": 0.0,
-      "assignment_cost_max_rad": 0.24138279804168564,
+      "sinkhorn_angle_cost": 0.012635752493132178,
+      "sinkhorn_w2_xy_l2": 0.02232040145516109,
+      "sinkhorn_w2_3d_l2": 0.03392119923332744,
+      "pushforward_sinkhorn_converged": false,
+      "pushforward_sinkhorn_diagnostics": {
+        "angle": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.012635752493132178
+        },
+        "xy": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 734,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.0004982003211195572
+        },
+        "3d": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.0011506477574270942
+        }
+      },
       "surface_plot": "case_04_random/case_04_random_surface_3d.png",
       "source_xy_plot": "case_04_random/case_04_random_source_xy.png",
       "npz": "case_04_random/case_04_random.npz",
-      "runtime_seconds": 3.011154499996337
+      "runtime_seconds": 415.5182161999983
     },
     {
       "label": "case_05_random",
@@ -1270,22 +1626,44 @@
       "max_kappa_dot": 0.4092216419813463,
       "radius_min": 0.9802452695922057,
       "radius_max": 1.0039603596498674,
-      "radius_mean": 0.9959778158102445,
-      "c_transform_residual_max": 0.014353779833462976,
+      "radius_mean": 0.9959778158102446,
+      "c_transform_residual_max": 0.014353779833462949,
       "hard_map_unique_targets": 140,
       "hard_map_target_hit_rate": 0.35,
       "pushed_mass_min": 0.0,
       "pushed_mass_max": 0.07750000000000003,
       "total_cost": 0.16586959112533914,
-      "wasserstein_w1_angle_rad": 0.05588884112988115,
-      "wasserstein_w2_xy_l2": 0.04358276437550151,
-      "wasserstein_w2_3d_l2": 0.06916701413326519,
-      "assignment_cost_min_rad": 0.0,
-      "assignment_cost_max_rad": 0.27505082572300005,
+      "sinkhorn_angle_cost": 0.017027057487758675,
+      "sinkhorn_w2_xy_l2": 0.03433270951294397,
+      "sinkhorn_w2_3d_l2": 0.04400519500599536,
+      "pushforward_sinkhorn_converged": false,
+      "pushforward_sinkhorn_diagnostics": {
+        "angle": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.017027057487758675
+        },
+        "xy": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.0011787349425001934
+        },
+        "3d": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.0019364571875156794
+        }
+      },
       "surface_plot": "case_05_random/case_05_random_surface_3d.png",
       "source_xy_plot": "case_05_random/case_05_random_source_xy.png",
       "npz": "case_05_random/case_05_random.npz",
-      "runtime_seconds": 2.9723162000009324
+      "runtime_seconds": 319.81213640002534
     },
     {
       "label": "case_06_random",
@@ -1344,23 +1722,45 @@
       "finite_cost_reachable": true,
       "max_kappa_dot": 0.6195254786048179,
       "radius_min": 0.9086102394128414,
-      "radius_max": 1.0027679953163113,
+      "radius_max": 1.0027679953163111,
       "radius_mean": 0.9738940649306267,
       "c_transform_residual_max": 0.021003365385370842,
       "hard_map_unique_targets": 209,
       "hard_map_target_hit_rate": 0.5225,
       "pushed_mass_min": 0.0,
       "pushed_mass_max": 0.027499999999999997,
-      "total_cost": 0.3145104538174603,
-      "wasserstein_w1_angle_rad": 0.06127826533841259,
-      "wasserstein_w2_xy_l2": 0.061954100860924635,
-      "wasserstein_w2_3d_l2": 0.06818612556624903,
-      "assignment_cost_min_rad": 0.0,
-      "assignment_cost_max_rad": 0.49358711795689325,
+      "total_cost": 0.31451045381746023,
+      "sinkhorn_angle_cost": 0.0133063795832466,
+      "sinkhorn_w2_xy_l2": 0.024940186351140335,
+      "sinkhorn_w2_3d_l2": 0.033414543724399566,
+      "pushforward_sinkhorn_converged": false,
+      "pushforward_sinkhorn_diagnostics": {
+        "angle": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.0133063795832466
+        },
+        "xy": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.0006220128952296066
+        },
+        "3d": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.0011165317323098105
+        }
+      },
       "surface_plot": "case_06_random/case_06_random_surface_3d.png",
       "source_xy_plot": "case_06_random/case_06_random_source_xy.png",
       "npz": "case_06_random/case_06_random.npz",
-      "runtime_seconds": 3.2054850999993505
+      "runtime_seconds": 322.4964592999895
     },
     {
       "label": "case_07_random",
@@ -1426,16 +1826,38 @@
       "hard_map_target_hit_rate": 0.3575,
       "pushed_mass_min": 0.0,
       "pushed_mass_max": 0.08000000000000003,
-      "total_cost": 0.06533754971927179,
-      "wasserstein_w1_angle_rad": 0.06386742333694265,
-      "wasserstein_w2_xy_l2": 0.06701651975217392,
-      "wasserstein_w2_3d_l2": 0.07275705674443751,
-      "assignment_cost_min_rad": 0.0,
-      "assignment_cost_max_rad": 0.32880411857642167,
+      "total_cost": 0.0653375497192718,
+      "sinkhorn_angle_cost": 0.023368776961007632,
+      "sinkhorn_w2_xy_l2": 0.032891293372173704,
+      "sinkhorn_w2_3d_l2": 0.050247581080557914,
+      "pushforward_sinkhorn_converged": false,
+      "pushforward_sinkhorn_diagnostics": {
+        "angle": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.023368776961007632
+        },
+        "xy": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.0010818371796943978
+        },
+        "3d": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.0025248194044472415
+        }
+      },
       "surface_plot": "case_07_random/case_07_random_surface_3d.png",
       "source_xy_plot": "case_07_random/case_07_random_source_xy.png",
       "npz": "case_07_random/case_07_random.npz",
-      "runtime_seconds": 4.053644600004191
+      "runtime_seconds": 320.8510092999786
     },
     {
       "label": "case_08_random",
@@ -1496,21 +1918,43 @@
       "radius_min": 0.9525985159457251,
       "radius_max": 1.0008860620155033,
       "radius_mean": 0.9857068533356196,
-      "c_transform_residual_max": 0.016478079010821822,
+      "c_transform_residual_max": 0.016478079010821767,
       "hard_map_unique_targets": 154,
       "hard_map_target_hit_rate": 0.385,
       "pushed_mass_min": 0.0,
       "pushed_mass_max": 0.06500000000000002,
-      "total_cost": 0.23290191131090454,
-      "wasserstein_w1_angle_rad": 0.039872570251499144,
-      "wasserstein_w2_xy_l2": 0.039631474085429066,
-      "wasserstein_w2_3d_l2": 0.046980278026894,
-      "assignment_cost_min_rad": 0.0,
-      "assignment_cost_max_rad": 0.1996349487561145,
+      "total_cost": 0.2329019113109045,
+      "sinkhorn_angle_cost": 0.012246977014541098,
+      "sinkhorn_w2_xy_l2": 0.02939433588405086,
+      "sinkhorn_w2_3d_l2": 0.03694272171544937,
+      "pushforward_sinkhorn_converged": false,
+      "pushforward_sinkhorn_diagnostics": {
+        "angle": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.012246977014541098
+        },
+        "xy": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.0008640269820644
+        },
+        "3d": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.0013647646877451344
+        }
+      },
       "surface_plot": "case_08_random/case_08_random_surface_3d.png",
       "source_xy_plot": "case_08_random/case_08_random_source_xy.png",
       "npz": "case_08_random/case_08_random.npz",
-      "runtime_seconds": 3.9310016999952495
+      "runtime_seconds": 309.41577069996856
     },
     {
       "label": "case_09_random",
@@ -1577,15 +2021,37 @@
       "pushed_mass_min": 0.0,
       "pushed_mass_max": 0.05000000000000001,
       "total_cost": 0.0907249089435249,
-      "wasserstein_w1_angle_rad": 0.07649557716486957,
-      "wasserstein_w2_xy_l2": 0.07433537843229229,
-      "wasserstein_w2_3d_l2": 0.09101572593753882,
-      "assignment_cost_min_rad": 0.0,
-      "assignment_cost_max_rad": 0.33492885787273335,
+      "sinkhorn_angle_cost": 0.02272669944519257,
+      "sinkhorn_w2_xy_l2": 0.03976656880973398,
+      "sinkhorn_w2_3d_l2": 0.051107707369946735,
+      "pushforward_sinkhorn_converged": false,
+      "pushforward_sinkhorn_diagnostics": {
+        "angle": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.02272669944519257
+        },
+        "xy": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.0015813799948993076
+        },
+        "3d": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.002611997752612108
+        }
+      },
       "surface_plot": "case_09_random/case_09_random_surface_3d.png",
       "source_xy_plot": "case_09_random/case_09_random_source_xy.png",
       "npz": "case_09_random/case_09_random.npz",
-      "runtime_seconds": 4.659440599993104
+      "runtime_seconds": 305.14896030002274
     },
     {
       "label": "case_10_random",
@@ -1651,16 +2117,38 @@
       "hard_map_target_hit_rate": 0.495,
       "pushed_mass_min": 0.0,
       "pushed_mass_max": 0.032499999999999994,
-      "total_cost": 0.03780782789257787,
-      "wasserstein_w1_angle_rad": 0.02856337932140072,
-      "wasserstein_w2_xy_l2": 0.03159478526225095,
-      "wasserstein_w2_3d_l2": 0.03576265253136267,
-      "assignment_cost_min_rad": 0.0,
-      "assignment_cost_max_rad": 0.18671234103093703,
+      "total_cost": 0.037807827892577875,
+      "sinkhorn_angle_cost": 0.009994264716599926,
+      "sinkhorn_w2_xy_l2": 0.019415706253261087,
+      "sinkhorn_w2_3d_l2": 0.0279824501540403,
+      "pushforward_sinkhorn_converged": false,
+      "pushforward_sinkhorn_diagnostics": {
+        "angle": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.009994264716599926
+        },
+        "xy": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 666,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.00037696964931292163
+        },
+        "3d": {
+          "cross_iterations": 2000,
+          "source_self_iterations": 2,
+          "target_self_iterations": 2,
+          "all_converged": false,
+          "raw_divergence": 0.0007830175166233501
+        }
+      },
       "surface_plot": "case_10_random/case_10_random_surface_3d.png",
       "source_xy_plot": "case_10_random/case_10_random_source_xy.png",
       "npz": "case_10_random/case_10_random.npz",
-      "runtime_seconds": 3.659964400008903
+      "runtime_seconds": 432.22980159998406
     }
   ],
   "final_kappa_in_process": 0.5888396919326067

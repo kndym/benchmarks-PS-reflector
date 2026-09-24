@@ -6,7 +6,6 @@
 *.html
 CLAUDE.md
 /results/sinkhorn_refracter_examples
-scripts/generate_sinkhorn_refracter_examples.py
 
 # Keep the refreshed refracter archives and figures available to the notebook
 # when the repository is cloned from GitHub.  Other generated result bundles
