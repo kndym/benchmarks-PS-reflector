@@ -1,38 +1,4 @@
-"""
-Generate radius-coloured Sinkhorn refracter plots and paper-style pushforward
-error diagnostics.
 
-The output contains one default refraction case and ten deterministic random
-cases.  Every case uses equal-sized clouds sampled uniformly with respect to
-spherical area on source and target patches, uniform discrete source/target
-weights, and the repository Sinkhorn-divergence solver.
-
-For each case this script saves:
-
-* ``*_surface_3d.png``: the refracter surface ``2 R x`` in 3-D, coloured by R;
-* ``*_source_xy.png``: source unit vectors projected to their x/y coordinates,
-  coloured by the same radius values;
-* ``*.npz``: notebook-compatible clouds, potentials, refractor/c-transform
-  arrays, projected distributions, and hard-map diagnostics.
-
-The hard push-forward map is
-
-    x_i -> y_argmin_j [ c(x_i, y_j) - g_raw[j] ].
-
-The push-forward diagnostics use independent log-domain Sinkhorn-divergence
-solves, matching the paper's small-regularisation error estimator.  The primary
-error uses squared Euclidean cost after north-pole stereographic projection;
-angular and ambient 3-D costs are retained as supplementary diagnostics.
-
-Run from the repository root:
-
-    python scripts/generate_sinkhorn_refracter_examples.py
-
-Useful options:
-
-    --nk 256 --random-cases 10 --seed 20260914
-    --output-dir results/sinkhorn_refracter_examples
-"""
 
 from __future__ import annotations
 
@@ -299,13 +265,7 @@ def sinkhorn_pushforward_errors(
     max_iter: int,
     tolerance: float,
 ) -> dict[str, object]:
-    """Estimate pushforward errors with the paper's independent Sinkhorn solves.
 
-    The paper compares the ray-traced output and target in a common planar
-    stereographic chart with squared Euclidean ground cost.  The angle and
-    ambient 3-D metrics are retained as supplementary diagnostics, but all
-    three are now Sinkhorn divergences rather than linear assignments.
-    """
     pushed_u, pushed_v = stereo_north(pushed_points)
     target_u, target_v = stereo_north(target_points)
     pushed_plane = np.column_stack([pushed_u, pushed_v])
