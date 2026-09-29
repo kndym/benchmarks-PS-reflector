@@ -80,6 +80,114 @@ def _logsumexp_f_update(x, y, logq, f, g, k, chunk_size, threshold=None,
     return lse_f
 
 
+def entropic_ot_cost(x, y, p, q, epsilon, chunk_size=512, max_iter=2000,
+                     tolerance=1e-9, return_info=False):
+    """Compute the discrete entropic OT objective from equation (2.1).
+
+    The dual objective is
+
+        <f, p> + <g, q> - epsilon *
+        <exp((f + g - c) / epsilon) - 1, p tensor q>.
+
+    The active refraction cost is cached for moderate matrices and evaluated
+    in chunks for larger ones. The marginals are normalized internally. Set
+    ``return_info`` to also get convergence details for the iterations.
+    """
+    x = np.asarray(x, dtype=np.float64)
+    y = np.asarray(y, dtype=np.float64)
+    p = np.asarray(p, dtype=np.float64)
+    q = np.asarray(q, dtype=np.float64)
+    if x.ndim != 2 or y.ndim != 2 or x.shape[1] != y.shape[1]:
+        raise ValueError("x and y must have shape (N, dim) with matching dimensions")
+    if p.shape != (len(x),) or q.shape != (len(y),):
+        raise ValueError("p and q must have one weight per point")
+    if not np.isfinite(p).all() or not np.isfinite(q).all() or (p < 0).any() or (q < 0).any():
+        raise ValueError("p and q must contain finite, non-negative weights")
+    if epsilon <= 0 or not np.isfinite(epsilon):
+        raise ValueError(f"epsilon must be finite and positive, got {epsilon}")
+    if chunk_size <= 0 or max_iter <= 0 or tolerance <= 0:
+        raise ValueError("chunk_size, max_iter, and tolerance must be positive")
+
+    p_sum = p.sum()
+    q_sum = q.sum()
+    if p_sum <= 0 or q_sum <= 0:
+        raise ValueError("p and q must each have positive total mass")
+    p = p / p_sum
+    q = q / q_sum
+    validate_transport_possible(x, y, chunk_size=chunk_size)
+
+    logp = np.full_like(p, -np.inf)
+    logq = np.full_like(q, -np.inf)
+    np.log(p, out=logp, where=p > 0)
+    np.log(q, out=logq, where=q > 0)
+
+    k = 1.0 / float(epsilon)
+    full_cost = None
+    if len(x) * len(y) <= 4_000_000:
+        full_cost = cost_matrix_chunk(x, y)
+    f = np.zeros(len(x), dtype=np.float64)
+    g = np.zeros(len(y), dtype=np.float64)
+    converged = False
+    change = np.inf
+    iterations = 0
+
+    for iterations in range(1, max_iter + 1):
+        if full_cost is None:
+            f_new = -_logsumexp_f_update(
+                x, y, logq, f, g, k, chunk_size
+            ) / k
+            g_new = -_logsumexp_g_update(
+                x, y, logp, f_new, g, k, chunk_size
+            ) / k
+        else:
+            f_new = -logsumexp(
+                k * g[None, :] + logq[None, :] - k * full_cost,
+                axis=1,
+            ) / k
+            g_new = -logsumexp(
+                k * f_new[:, None] + logp[:, None] - k * full_cost,
+                axis=0,
+            ) / k
+        change = max(
+            float(np.max(np.abs(f_new - f))) if len(f) else 0.0,
+            float(np.max(np.abs(g_new - g))) if len(g) else 0.0,
+        )
+        f, g = f_new, g_new
+        if change <= tolerance:
+            converged = True
+            break
+
+    # Evaluate the exponential term in equation (2.1) without materializing
+    # the full transport plan or the full cost matrix.
+    if full_cost is not None:
+        log_plan = (
+            logp[:, None] + logq[None, :] +
+            (f[:, None] + g[None, :] - full_cost) / epsilon
+        )
+        mass = float(np.exp(logsumexp(log_plan)))
+    else:
+        log_mass = -np.inf
+        for i_start in range(0, len(x), chunk_size):
+            i_end = min(i_start + chunk_size, len(x))
+            C_block = cost_matrix_chunk(x[i_start:i_end], y)
+            log_plan = (
+                logp[i_start:i_end, None] + logq[None, :] +
+                (f[i_start:i_end, None] + g[None, :] - C_block) / epsilon
+            )
+            block_log_mass = logsumexp(log_plan)
+            log_mass = np.logaddexp(log_mass, block_log_mass)
+        mass = float(np.exp(log_mass))
+    value = float(np.dot(p, f) + np.dot(q, g) - epsilon * (mass - 1.0))
+    if return_info:
+        return value, {
+            "iterations": iterations,
+            "converged": converged,
+            "potential_change": change,
+            "transport_mass": mass,
+        }
+    return value
+
+
 # ---------------------------------------------------------------------------
 # Main Sinkhorn step
 # ---------------------------------------------------------------------------
@@ -127,6 +235,121 @@ def sinkhorn_step(x, y, logp, logq, f, g, k, chunk_size=512):
     )
 
     return f_new, g_new, maxdif
+
+
+def solve_cold_start_sinkhorn(x, y, p, q, k_final, chunk_size=512,
+                              cap_iter=16, cap_iter_id=16, cap_thr=1e-5,
+                              using_identity=False, verbose=True):
+    """Run the cold-start solve shared by the refractor NPZ generators."""
+    x = np.asarray(x, dtype=np.float64)
+    y = np.asarray(y, dtype=np.float64)
+    p = np.asarray(p, dtype=np.float64)
+    q = np.asarray(q, dtype=np.float64)
+    if p.shape != (len(x),) or q.shape != (len(y),):
+        raise ValueError("p and q must have one weight per source and target point")
+    if chunk_size <= 0:
+        raise ValueError(f"chunk_size must be positive, got {chunk_size}")
+
+    logp = np.full_like(p, -np.inf)
+    logq = np.full_like(q, -np.inf)
+    np.log(p, out=logp, where=p > 0)
+    np.log(q, out=logq, where=q > 0)
+
+    f = np.zeros(len(x), dtype=np.float64)
+    g = np.zeros(len(y), dtype=np.float64)
+    maxdif = cap_thr + 1.0
+    iteration = 0
+    if verbose:
+        print(f"\nStep 1 — Sinkhorn at k={k_final} (cold start, cap_iter={cap_iter}):")
+    while maxdif > cap_thr:
+        f, g, maxdif = sinkhorn_step(x, y, logp, logq, f, g, k_final, chunk_size)
+        iteration += 1
+        if verbose:
+            print(f"  iter {iteration:3d}, maxdif={maxdif:.4e}")
+        if iteration >= cap_iter:
+            break
+    if verbose:
+        print(f"  Final: {iteration} iters, last maxdif={maxdif:.4e}")
+
+    f_raw = f.copy()
+    g_raw = g.copy()
+    f_id = np.zeros(len(x), dtype=np.float64)
+    g_id = np.zeros(len(y), dtype=np.float64)
+    total_cost = None
+
+    if using_identity:
+        id_step = int(np.floor(np.sqrt(k_final)))
+
+        if verbose:
+            print(f"\nStep 2 — Identity Sinkhorn for source (f_id), id_step={id_step}:")
+        regvar = 1
+        while regvar < k_final:
+            f_id_new, _ = sinkhorn_identity_f_step(
+                x, y, logp, f_id, regvar, chunk_size
+            )
+            f_id = np.where(p > 0, f_id_new, f_id)
+            regvar += id_step
+        maxdif = cap_thr + 1.0
+        iteration = 0
+        while maxdif > cap_thr:
+            f_id_new, maxdif = sinkhorn_identity_f_step(
+                x, y, logp, f_id, k_final, chunk_size
+            )
+            f_id = np.where(p > 0, f_id_new, f_id)
+            iteration += 1
+            if iteration >= cap_iter_id:
+                break
+        if verbose:
+            print(f"  Identity F: {iteration} final iters, last maxdif={maxdif:.4e}")
+
+        if verbose:
+            print("\nStep 3 — Identity Sinkhorn for target (g_id):")
+        regvar = 1
+        while regvar < k_final:
+            g_id_new, _ = sinkhorn_identity_g_step(
+                x, y, logq, g_id, regvar, chunk_size
+            )
+            g_id = np.where(q > 0, g_id_new, g_id)
+            regvar += id_step
+        maxdif = cap_thr + 1.0
+        iteration = 0
+        while maxdif > cap_thr:
+            g_id_new, maxdif = sinkhorn_identity_g_step(
+                x, y, logq, g_id, k_final, chunk_size
+            )
+            g_id = np.where(q > 0, g_id_new, g_id)
+            iteration += 1
+            if iteration >= cap_iter_id:
+                break
+        if verbose:
+            print(f"  Identity G: {iteration} final iters, last maxdif={maxdif:.4e}")
+
+        f = np.where(p > 0, f, 0.0)
+        g = np.where(q > 0, g, 0.0)
+        max_f_id = float(np.max(f_id))
+        f_id -= max_f_id
+        g_id += max_f_id
+        max_f = float(np.max(f))
+        f -= max_f
+        g += max_f
+        f_raw = f.copy()
+        g_raw = g.copy()
+        f -= f_id
+        g -= g_id
+        total_cost = float(np.sum(p[p > 0] * f[p > 0]) +
+                           np.sum(q[q > 0] * g[q > 0]))
+        if verbose:
+            print(f"\nTotal cost: {total_cost:.6e}")
+
+    return {
+        "f_raw": f_raw,
+        "g_raw": g_raw,
+        "f_id": f_id,
+        "g_id": g_id,
+        "f": f,
+        "g": g,
+        "total_cost": total_cost,
+    }
 
 
 # ---------------------------------------------------------------------------

@@ -31,6 +31,42 @@ _small_cloud_cache = None
 _push_cloud_cache  = None
 
 
+def halton(index: int, base: int) -> float:
+    """Return one value from a Halton sequence."""
+    result, factor, value = 0.0, 1.0, index
+    while value > 0:
+        factor /= base
+        result += factor * (value % base)
+        value //= base
+    return result
+
+
+def gen_spherical_patch(n: int, theta_min: float, theta_max: float,
+                        phi_min: float, phi_max: float, base2: int = 2,
+                        base3: int = 3, skip: int = 0) -> np.ndarray:
+    """Sample a spherical patch with the Halton sequence used by the benchmark.
+
+    ``phi`` is the polar angle and ``theta`` is the azimuth. The parameter
+    convention matches the original result-generation scripts.
+    """
+    if n < 0:
+        raise ValueError(f"n must be non-negative, got {n}")
+    if base2 <= 1 or base3 <= 1:
+        raise ValueError("Halton bases must be greater than one")
+
+    points = np.empty((n, 3), dtype=np.float64)
+    for row, index in enumerate(range(skip, skip + n)):
+        u1 = halton(index, base2)
+        u2 = halton(index, base3)
+        phi = phi_min + u2 * (phi_max - phi_min)
+        theta = theta_min + u1 * (theta_max - theta_min)
+        sin_phi = np.sin(phi)
+        points[row] = (sin_phi * np.cos(theta),
+                       sin_phi * np.sin(theta),
+                       np.cos(phi))
+    return points
+
+
 def _parse_h_array(text: str, varname: str, n_rows: int, n_cols: int = 3) -> np.ndarray:
     """Extract a 2-D numeric array from a C++ header file.
 

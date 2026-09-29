@@ -21,7 +21,7 @@ matplotlib.use("TkAgg")          # use a GUI backend; fall back silently
 import matplotlib.pyplot as plt
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, os.path.dirname(SCRIPT_DIR))
+sys.path.insert(0, os.path.dirname(os.path.dirname(SCRIPT_DIR)))
 
 from refracter.qmc import load_small_cloud
 from refracter.sinkhorn import (

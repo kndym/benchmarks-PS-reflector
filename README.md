@@ -1,6 +1,6 @@
 # Point Source Far-Field Refractor — Entropic Optimal Transport
 
-Solve the **far-field refractor problem** via Sinkhorn divergence (entropic optimal transport).  
+Solve the **far-field refractor problem** via Sinkhorn-based entropic optimal transport.
 Given source and target intensity distributions on the unit sphere, the solver finds the refractor surface that redirects light from the source to match the target.
 
 **Cost function:** `c(x, y) = -log(1 - κ·(x·y))`, κ = 0.6 (refractor), κ = 1.0 (reflector).
@@ -20,18 +20,16 @@ python scripts/generate_results.py
 # Saves: results/results_refraction_NK1600.npz
 ```
 
-**Generate the default case plus 10 random uniform-patch examples with plots and
-angular Wasserstein diagnostics:**
+The primary exploration notebook loads this NPZ directly:
 
-```bash
-python scripts/generate_sinkhorn_refracter_examples.py
-# Saves: results/sinkhorn_refracter_examples/README.md and per-case PNG/NPZ files
+```text
+notebooks/Benchmark_refraction.ipynb
 ```
 
 **Generate all 16 source×target density-pair results:**
 
 ```bash
-python scripts/generate_results_all_pairs.py
+python scripts/helper_all_pairs.py
 # Densities: uniform, gaussian, donut, cross (4×4 = 16 combos)
 # Saves: results/results_refraction_{src}_{tgt}_NK1600.npz
 ```
@@ -63,19 +61,12 @@ benchmarks-PS-reflector/
 │   ├── distributions.py          # Density functions and stereographic projections
 │   ├── build.py                  # Surface construction and c-transforms
 │   ├── pushforward.py            # Ray tracing and push-forward
-│   └── qmc.py                    # Quasi-Monte Carlo point cloud loading
+│   └── qmc.py                    # Halton sampling and QMC point cloud loading
 │
 ├── scripts/
 │   ├── generate_results.py       # Refractor benchmark, NK=1600 (default)
-│   ├── generate_results_all_pairs.py  # All 16 density-pair combinations
-│   ├── refractor_sinkhorn.py     # Standalone refractor Sinkhorn (self-contained)
-│   ├── visualize.py              # Plot utilities
-│   │
-│   ├── generate_results_reflector.py  # Reflector benchmark (κ=1.0, SquareToCircle)
-│   ├── compare_reflector.py      # Compare C++ vs Python reflector outputs
-│   ├── compare_nk_reflector.py   # Per-NK resolution comparison
-│   ├── run_compare_reflector.py  # Runs Python reflector for C++ comparison
-│   └── run_fast_reflector.py     # Fast reflector runner (NK=381)
+│   ├── helper_all_pairs.py       # Optional 16 density-pair NPZ generation
+│   └── archived/                 # Reflector and notebook-specific legacy utilities
 │
 ├── notebooks/
 │   ├── Benchmark_refraction.ipynb     # Primary refractor notebook
@@ -94,11 +85,19 @@ benchmarks-PS-reflector/
 
 ## Refractor Pipeline
 
+The primary pipeline is `refracter/` → `scripts/generate_results.py` →
+`notebooks/Benchmark_refraction.ipynb`. Run the generator first; it writes the
+common notebook-compatible result schema to `results/results_refraction_NK1600.npz`.
+The all-pairs helper reuses the cold-start solver from `refracter/` and the
+shared sampling, artifact construction, and NPZ writer from `generate_results.py`.
+The notebook measures the push-forward against the target with the entropic OT
+objective from equation 2.1, using the refraction cost and ε = 1/k_final.
+
 The solver runs on **spherical patches** (upper hemisphere) with κ = 0.6:
 
 1. **Generate QMC cloud** — Halton quasi-Monte Carlo points on the source and target patches
 2. **Evaluate densities** — P(x) on source patch, Q(y) on target patch
-3. **Sinkhorn divergence** — Iterative log-domain solver; produces Kantorovich potentials f, g
+3. **Sinkhorn solve** — Iterative log-domain solver; produces Kantorovich potentials f, g
 4. **Build refractor surface** — R = exp(f), Ref = 2·x·R
 5. **C-transforms** — Verify optimality: gc ≈ f, fc ≈ g
 6. **Push-forward** — Argmin OT map x_i → y_{j*(i)}; project via north-pole stereographic
@@ -111,7 +110,7 @@ Default patch geometry (matching C++ reference):
 
 ## Density Shapes
 
-The `generate_results_all_pairs.py` script runs all 16 combinations of:
+The `helper_all_pairs.py` script runs all 16 combinations of:
 
 | Name | Description |
 |------|-------------|

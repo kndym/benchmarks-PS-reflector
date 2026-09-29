@@ -1,12 +1,12 @@
 """
-generate_results_reflector.py — SquareToCircle reflector Sinkhorn benchmark, NK=1600
+helper_reflector.py — SquareToCircle reflector Sinkhorn benchmark, NK=1600
 
 Generates a 1600-point Halton quasi-Monte Carlo cloud, runs the full
 Sinkhorn-divergence pipeline (cold start, f=g=0, cap_iter=16 — matches
 run_compare.py / main_compare.cpp exactly), then saves a comprehensive
 results bundle to results_NK1600.npz.
 
-Run:  python scripts/generate_results_reflector.py
+Run:  python scripts/archived/helper_reflector.py
 
 Saved arrays in results_NK1600.npz
 -----------------------------------
@@ -37,7 +37,7 @@ if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-REPO_ROOT  = os.path.dirname(SCRIPT_DIR)
+REPO_ROOT  = os.path.dirname(os.path.dirname(SCRIPT_DIR))
 sys.path.insert(0, REPO_ROOT)
 
 from refracter.distributions import P_square, Q_circle

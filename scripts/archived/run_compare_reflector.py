@@ -18,7 +18,7 @@ import numpy as np
 from scipy.special import logsumexp
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, os.path.dirname(SCRIPT_DIR))
+sys.path.insert(0, os.path.dirname(os.path.dirname(SCRIPT_DIR)))
 from refracter.distributions import P_square, Q_circle
 from refracter.sinkhorn import (
     sinkhorn_step,
