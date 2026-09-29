@@ -12,13 +12,14 @@ chunk_size controls the block size. Identity iterations are damped (half-step).
 import numpy as np
 from scipy.special import logsumexp
 
-from .cost import cost_matrix_chunk, validate_transport_possible
+from .cost import cost_matrix_chunk, cost_matrix_l2_chunk, validate_point_clouds
 
 # ---------------------------------------------------------------------------
 # Helper: chunked logsumexp over one axis of the cost matrix
 # ---------------------------------------------------------------------------
 
-def _logsumexp_g_update(x, y, logp, f, g, k, chunk_size, threshold=None):
+def _logsumexp_g_update(x, y, logp, f, g, k, chunk_size, threshold=None,
+                        cost_fn=cost_matrix_chunk):
     """Chunked logsumexp for g update: lse[j] = logsumexp_i(k*f[i] + logp[i] - k*C[i,j])."""
     N = len(y)
     lse_g = np.full(N, -np.inf)
@@ -31,7 +32,7 @@ def _logsumexp_g_update(x, y, logp, f, g, k, chunk_size, threshold=None):
         x_chunk = x[i_start:i_end]
         a_chunk = a[i_start:i_end]  # (chunk,)
 
-        C_chunk = cost_matrix_chunk(x_chunk, y)  # (chunk, N)
+        C_chunk = _evaluate_cost_block(cost_fn, x_chunk, y)
 
         # For each j: logsumexp_i( a[i] - k*C[i,j] )
         # = logsumexp over rows of  (a_chunk[:,None] - k*C_chunk)
@@ -51,7 +52,7 @@ def _logsumexp_g_update(x, y, logp, f, g, k, chunk_size, threshold=None):
 
 
 def _logsumexp_f_update(x, y, logq, f, g, k, chunk_size, threshold=None,
-                        threshold_g=None):
+                        threshold_g=None, cost_fn=cost_matrix_chunk):
     """Chunked logsumexp for f update: lse[i] = logsumexp_j(k*g[j] + logq[j] - k*C[i,j])."""
     N = len(x)
     lse_f = np.full(N, -np.inf)
@@ -62,7 +63,7 @@ def _logsumexp_f_update(x, y, logq, f, g, k, chunk_size, threshold=None,
         i_end = min(i_start + chunk_size, len(x))
         x_chunk = x[i_start:i_end]
 
-        C_chunk = cost_matrix_chunk(x_chunk, y)  # (chunk, N_y)
+        C_chunk = _evaluate_cost_block(cost_fn, x_chunk, y)
 
         # For each i in chunk: logsumexp_j( b[j] - k*C[i,j] )
         vals = b[None, :] - k * C_chunk  # (chunk, N_y)
@@ -80,8 +81,28 @@ def _logsumexp_f_update(x, y, logq, f, g, k, chunk_size, threshold=None,
     return lse_f
 
 
+def _checked_cost_block(cost_fn, x_chunk, y):
+    """Evaluate a selected cost function and validate its returned block."""
+    block = np.asarray(cost_fn(x_chunk, y), dtype=np.float64)
+    expected_shape = (len(x_chunk), len(y))
+    if block.shape != expected_shape:
+        raise ValueError(
+            f"cost function must return shape {expected_shape}, got {block.shape}"
+        )
+    if not np.isfinite(block).all():
+        raise ValueError("cost function must return only finite values")
+    return block
+
+
+def _evaluate_cost_block(cost_fn, x_chunk, y):
+    """Evaluate refraction costs directly and validate custom cost functions."""
+    if cost_fn is cost_matrix_chunk:
+        return cost_fn(x_chunk, y)
+    return _checked_cost_block(cost_fn, x_chunk, y)
+
+
 def entropic_ot_cost(x, y, p, q, epsilon, chunk_size=512, max_iter=2000,
-                     tolerance=1e-9, return_info=False):
+                     tolerance=1e-9, return_info=False, cost_fn=None):
     """Compute the discrete entropic OT objective from equation (2.1).
 
     The dual objective is
@@ -89,9 +110,11 @@ def entropic_ot_cost(x, y, p, q, epsilon, chunk_size=512, max_iter=2000,
         <f, p> + <g, q> - epsilon *
         <exp((f + g - c) / epsilon) - 1, p tensor q>.
 
-    The active refraction cost is cached for moderate matrices and evaluated
-    in chunks for larger ones. The marginals are normalized internally. Set
-    ``return_info`` to also get convergence details for the iterations.
+    The default cost is squared Euclidean (L2). Pass a chunked ``cost_fn`` to
+    select another cost, such as ``get_cost_function('refraction')``. The cost
+    matrix is cached for moderate matrices and evaluated in chunks for larger
+    ones. The marginals are normalized internally. Set ``return_info`` to also
+    get convergence details for the iterations.
     """
     x = np.asarray(x, dtype=np.float64)
     y = np.asarray(y, dtype=np.float64)
@@ -107,6 +130,11 @@ def entropic_ot_cost(x, y, p, q, epsilon, chunk_size=512, max_iter=2000,
         raise ValueError(f"epsilon must be finite and positive, got {epsilon}")
     if chunk_size <= 0 or max_iter <= 0 or tolerance <= 0:
         raise ValueError("chunk_size, max_iter, and tolerance must be positive")
+    if cost_fn is None:
+        cost_fn = cost_matrix_l2_chunk
+    if not callable(cost_fn):
+        raise TypeError("cost_fn must be callable")
+    validate_point_clouds(x, y, chunk_size)
 
     p_sum = p.sum()
     q_sum = q.sum()
@@ -114,8 +142,6 @@ def entropic_ot_cost(x, y, p, q, epsilon, chunk_size=512, max_iter=2000,
         raise ValueError("p and q must each have positive total mass")
     p = p / p_sum
     q = q / q_sum
-    validate_transport_possible(x, y, chunk_size=chunk_size)
-
     logp = np.full_like(p, -np.inf)
     logq = np.full_like(q, -np.inf)
     np.log(p, out=logp, where=p > 0)
@@ -124,7 +150,7 @@ def entropic_ot_cost(x, y, p, q, epsilon, chunk_size=512, max_iter=2000,
     k = 1.0 / float(epsilon)
     full_cost = None
     if len(x) * len(y) <= 4_000_000:
-        full_cost = cost_matrix_chunk(x, y)
+        full_cost = _checked_cost_block(cost_fn, x, y)
     f = np.zeros(len(x), dtype=np.float64)
     g = np.zeros(len(y), dtype=np.float64)
     converged = False
@@ -134,10 +160,10 @@ def entropic_ot_cost(x, y, p, q, epsilon, chunk_size=512, max_iter=2000,
     for iterations in range(1, max_iter + 1):
         if full_cost is None:
             f_new = -_logsumexp_f_update(
-                x, y, logq, f, g, k, chunk_size
+                x, y, logq, f, g, k, chunk_size, cost_fn=cost_fn
             ) / k
             g_new = -_logsumexp_g_update(
-                x, y, logp, f_new, g, k, chunk_size
+                x, y, logp, f_new, g, k, chunk_size, cost_fn=cost_fn
             ) / k
         else:
             f_new = -logsumexp(
@@ -169,7 +195,7 @@ def entropic_ot_cost(x, y, p, q, epsilon, chunk_size=512, max_iter=2000,
         log_mass = -np.inf
         for i_start in range(0, len(x), chunk_size):
             i_end = min(i_start + chunk_size, len(x))
-            C_block = cost_matrix_chunk(x[i_start:i_end], y)
+            C_block = _checked_cost_block(cost_fn, x[i_start:i_end], y)
             log_plan = (
                 logp[i_start:i_end, None] + logq[None, :] +
                 (f[i_start:i_end, None] + g[None, :] - C_block) / epsilon
