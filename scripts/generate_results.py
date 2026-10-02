@@ -2,7 +2,7 @@
 generate_results.py — Refractor Sinkhorn benchmark, NK=1600
 
 Generates a 1600-point Halton quasi-Monte Carlo cloud on spherical patches,
-runs the Sinkhorn OT pipeline (cold start, f=g=0, cap_iter=16),
+runs the repository's multi-scale Sinkhorn-divergence pipeline,
 and saves a comprehensive results bundle to results/results_refraction_NK{NK}.npz.
 
 Setup:
@@ -27,7 +27,7 @@ sys.path.insert(0, REPO_ROOT)
 # The cost parameter is set before running the benchmark.
 from refracter.cost import set_kappa, cost_matrix_chunk
 from refracter.distributions import P_refraction_patch, Q_refraction_patch
-from refracter.sinkhorn import solve_cold_start_sinkhorn
+from refracter.sinkhorn import run_sinkhorn_divergence
 from refracter.build import c_transform_gc, c_transform_fc
 from refracter.distributions import stereo_north, stereo_north_inverse
 from refracter.qmc import gen_spherical_patch
@@ -76,13 +76,16 @@ def build_refraction_artifacts(x, y, p, q, f_raw, g_raw, f, g, P, Q,
         raise ValueError("source and target distributions must have positive support")
     y_tgt = y[tgt_idx]
     g_tgt = np.asarray(g_raw)[tgt_idx]
-    pushed_y = []
+    hard_map_indices = np.full(len(x), -1, dtype=np.int64)
     for i0 in range(0, len(src_idx), chunk):
         rows = src_idx[i0:i0 + chunk]
         C_block = cost_matrix_chunk(x[rows], y_tgt)
         j_star = np.argmin(C_block - g_tgt[None, :], axis=1)
-        pushed_y.append(y_tgt[j_star])
-    pushed_y = np.vstack(pushed_y)
+        hard_map_indices[rows] = tgt_idx[j_star]
+    pushed_y = y[hard_map_indices[src_idx]]
+    pushed_mass = np.bincount(
+        hard_map_indices[src_idx], weights=p[src_idx], minlength=len(y)
+    ).astype(np.float64)
 
     u_push, v_push = stereo_north(pushed_y)
     q_push = Q(pushed_y)
@@ -99,6 +102,8 @@ def build_refraction_artifacts(x, y, p, q, f_raw, g_raw, f, g, P, Q,
         "Y_projected": Y_projected,
         "Y_Pushed_projected": Y_Pushed_projected,
         "y_push_3d": pushed_y,
+        "hard_map_indices": hard_map_indices,
+        "pushed_mass": pushed_mass,
     }
 
 
@@ -160,20 +165,10 @@ def main(nk=None):
 
     p = p_raw / p_raw.sum()
     q = q_raw / q_raw.sum()
-    k_final     = REGULARIZATION_MULTIPLIER * int(np.floor(np.sqrt(NK)))
-    id_step     = int(np.floor(np.sqrt(k_final)))
-    cap_iter    = 16
-    cap_iter_id = 16
-    cap_thr     = 1e-5
-
-    print(f"  k_final={k_final}, id_step={id_step}")
-
-    # The default benchmark leaves identity correction off; optional helpers
-    # can request it through this same shared solve.
-    solution = solve_cold_start_sinkhorn(
-        x, y, p, q, k_final, chunk_size=chunk,
-        cap_iter=cap_iter, cap_iter_id=cap_iter_id, cap_thr=cap_thr,
-        using_identity=False,
+    k_final = REGULARIZATION_MULTIPLIER * int(np.floor(np.sqrt(NK)))
+    print(f"  k_final={k_final}")
+    solution = run_sinkhorn_divergence(
+        x, y, p, q, chunk_size=chunk, verbose=True,
     )
     f_raw = solution["f_raw"]
     g_raw = solution["g_raw"]

@@ -1,22 +1,4 @@
-"""
-helper_all_pairs.py — All 16 source×target density-pair NPZs
 
-Runs the refraction Sinkhorn pipeline (κ=0.6) for every ordered pair of the
-four density shapes:
-    uniform  — flat indicator (all weight equal)
-    gaussian — isotropic Gaussian centred at patch centre
-    donut    — soft annulus peaked at half the patch radius
-    cross    — sum of 4 Gaussians at N/S/E/W of patch centre
-
-The QMC point cloud and patch geometry are identical to generate_results.py
-(NK=1600, same SRC_THETA/PHI and TGT_THETA/PHI). Only the density weights change.
-
-Outputs:
-    results/results_refraction_{src}_{tgt}_NK1600.npz   (16 files)
-
-Run:
-    python scripts/helper_all_pairs.py [NK]
-"""
 
 import os, sys, time
 import numpy as np

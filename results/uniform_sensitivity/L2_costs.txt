@@ -1,0 +1,29 @@
+Uniform refraction example and one-parameter sensitivity sweeps
+
+NK: 1600
+Original setup: kappa=0.6; source theta=[15, 60] deg, phi=[15, 45] deg;
+target theta=[18, 36] deg, phi=[18, 36] deg.
+Surface solver/artifacts: existing refracter Sinkhorn and generate_results workflow.
+Uniform discrete source and target weights; original Halton sampling convention.
+
+Pushforward metric: debiased entropic Sinkhorn divergence S_epsilon between
+the pushed 3D sphere points and target 3D sphere points, using squared Euclidean
+cost and epsilon=0.005. sqrt(S_epsilon) is a regularized
+W2-like value, not exact unregularized W2. Convergence is reported per case.
+Mass-L2 separately compares pushed target-atom masses with target masses.
+All cases pass validate_transport_possible.
+
+case | category | kappa | source theta deg | source phi deg | max kappa dot |
+S_epsilon (3D L2) | sqrt(S_epsilon) | converged | EOT iterations cross/self/self |
+mass L2^2 | mass L2 | unique targets | NPZ
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+original_uniform | original | 0.600000 | [15.0, 60.0] | [15.0, 45.0] | 0.5999999982 | 0.00233499112205 | 0.0483217458506 | True | 61/63/47 | 0.00335234375 | 0.0578994278901 | 796/1600 | original_uniform.npz
+kappa_0p25 | kappa_sweep | 0.250000 | [15.0, 60.0] | [15.0, 45.0] | 0.2499999993 | 0.000971426825116 | 0.0311677208842 | True | 67/68/47 | 0.016065625 | 0.126750246548 | 449/1600 | kappa_0p25.npz
+kappa_0p50 | kappa_sweep | 0.500000 | [15.0, 60.0] | [15.0, 45.0] | 0.4999999985 | 0.00115077517567 | 0.033923077332 | True | 62/59/47 | 0.00448203125 | 0.0669479742039 | 754/1600 | kappa_0p50.npz
+kappa_0p90 | kappa_sweep | 0.900000 | [15.0, 60.0] | [15.0, 45.0] | 0.8999999973 | 0.0161828842692 | 0.127211965904 | True | 37/50/47 | 0.00985 | 0.0992471662064 | 404/1600 | kappa_0p90.npz
+source_phi_plus_05deg | source_phi_translation | 0.600000 | [15.0, 60.0] | [20.0, 50.0] | 0.5999999883 | 0.00194388284687 | 0.0440894868066 | True | 62/64/47 | 0.003196875 | 0.0565409143895 | 791/1600 | source_phi_plus_05deg.npz
+source_phi_plus_15deg | source_phi_translation | 0.600000 | [15.0, 60.0] | [30.0, 60.0] | 0.5999999949 | 0.00103260113729 | 0.0321341117396 | True | 63/64/47 | 0.0031890625 | 0.0564717849904 | 788/1600 | source_phi_plus_15deg.npz
+source_phi_plus_25deg | source_phi_translation | 0.600000 | [15.0, 60.0] | [40.0, 70.0] | 0.5984898902 | 0.00045611767855 | 0.0213569117278 | True | 62/61/47 | 0.0044296875 | 0.0665558975599 | 704/1600 | source_phi_plus_25deg.npz
+source_theta_plus_10deg | source_theta_translation | 0.600000 | [25.0, 70.0] | [15.0, 45.0] | 0.5999999913 | 0.00183794247482 | 0.0428712313191 | True | 62/60/47 | 0.00368359375 | 0.0606926169316 | 794/1600 | source_theta_plus_10deg.npz
+source_theta_plus_25deg | source_theta_translation | 0.600000 | [40.0, 85.0] | [15.0, 45.0] | 0.5998089387 | 0.00219184912136 | 0.0468171883111 | True | 56/48/47 | 0.00419375 | 0.0647591692349 | 729/1600 | source_theta_plus_25deg.npz
+source_theta_plus_40deg | source_theta_translation | 0.600000 | [55.0, 100.0] | [15.0, 45.0] | 0.5967944375 | 0.00438409579176 | 0.066212504799 | True | 47/27/47 | 0.00658828125 | 0.0811682280822 | 581/1600 | source_theta_plus_40deg.npz

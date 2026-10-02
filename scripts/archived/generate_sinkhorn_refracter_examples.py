@@ -22,17 +22,20 @@ import matplotlib
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from scipy.special import logsumexp
 
 from refracter.build import c_transform_fc, c_transform_gc
 from refracter.cost import (
     cost_matrix_chunk,
+    get_cost_function,
     get_kappa,
     set_kappa,
     validate_transport_possible,
 )
 from refracter.distributions import stereo_north
-from refracter.sinkhorn import run_sinkhorn_divergence
+from refracter.sinkhorn import (
+    entropic_sinkhorn_divergence,
+    run_sinkhorn_divergence,
+)
 
 
 DEG = math.pi / 180.0
@@ -58,7 +61,7 @@ def parse_args() -> argparse.Namespace:
                         help="seed for random kappa and patch bounds")
     parser.add_argument("--chunk-size", type=int, default=256,
                         help="chunk size for cost/Sinkhorn operations")
-    parser.add_argument("--pushforward-eps", type=float, default=1e-6,
+    parser.add_argument("--pushforward-eps", type=float, default=5e-3,
                         help="regularisation epsilon for paper-style pushforward Sinkhorn")
     parser.add_argument("--pushforward-max-iter", type=int, default=2000,
                         help="iteration cap for each pushforward Sinkhorn solve")
@@ -167,95 +170,6 @@ def patch_indicator(points: np.ndarray, bounds: dict[str, list[float]]) -> np.nd
     return inside.astype(np.float64)
 
 
-def _sinkhorn_ot_cost(
-    cost: np.ndarray,
-    source_weights: np.ndarray,
-    target_weights: np.ndarray,
-    epsilon: float,
-    max_iter: int,
-    tolerance: float,
-) -> tuple[float, int, bool]:
-
-    if epsilon <= 0.0:
-        raise ValueError(f"epsilon must be positive, got {epsilon}")
-    if max_iter <= 0 or tolerance <= 0.0:
-        raise ValueError("max_iter and tolerance must be positive")
-
-    cost = np.asarray(cost, dtype=np.float64)
-    source_weights = np.asarray(source_weights, dtype=np.float64)
-    target_weights = np.asarray(target_weights, dtype=np.float64)
-    if cost.ndim != 2 or cost.shape != (len(source_weights), len(target_weights)):
-        raise ValueError("cost shape must match the source and target weights")
-    if not np.isfinite(cost).all():
-        raise ValueError("cost matrix must contain only finite values")
-    if np.any(source_weights <= 0.0) or np.any(target_weights <= 0.0):
-        raise ValueError("Sinkhorn error weights must be strictly positive")
-
-    source_weights = source_weights / source_weights.sum()
-    target_weights = target_weights / target_weights.sum()
-    log_source = np.log(source_weights)
-    log_target = np.log(target_weights)
-    inv_epsilon = 1.0 / epsilon
-    f = np.zeros(len(source_weights), dtype=np.float64)
-    g = np.zeros(len(target_weights), dtype=np.float64)
-    converged = False
-
-    for iteration in range(1, max_iter + 1):
-        f_new = -epsilon * logsumexp(
-            (g[None, :] - cost) * inv_epsilon + log_target[None, :],
-            axis=1,
-        )
-        g_new = -epsilon * logsumexp(
-            (f_new[:, None] - cost) * inv_epsilon + log_source[:, None],
-            axis=0,
-        )
-        change = max(
-            float(np.max(np.abs(f_new - f))),
-            float(np.max(np.abs(g_new - g))),
-        )
-        f, g = f_new, g_new
-        if change <= tolerance:
-            converged = True
-            break
-
-    value = float(np.dot(source_weights, f) + np.dot(target_weights, g))
-    return value, iteration, converged
-
-
-def _sinkhorn_divergence(
-    source_points: np.ndarray,
-    target_points: np.ndarray,
-    source_weights: np.ndarray,
-    target_weights: np.ndarray,
-    cost_fn,
-    epsilon: float,
-    max_iter: int,
-    tolerance: float,
-) -> tuple[float, dict[str, object]]:
-    """Return paper-style Sinkhorn divergence for one ground cost."""
-    cross = np.asarray(cost_fn(source_points, target_points), dtype=np.float64)
-    source_self = np.asarray(cost_fn(source_points, source_points), dtype=np.float64)
-    target_self = np.asarray(cost_fn(target_points, target_points), dtype=np.float64)
-
-    ot_cross, cross_iter, cross_converged = _sinkhorn_ot_cost(
-        cross, source_weights, target_weights, epsilon, max_iter, tolerance
-    )
-    ot_source, source_iter, source_converged = _sinkhorn_ot_cost(
-        source_self, source_weights, source_weights, epsilon, max_iter, tolerance
-    )
-    ot_target, target_iter, target_converged = _sinkhorn_ot_cost(
-        target_self, target_weights, target_weights, epsilon, max_iter, tolerance
-    )
-    raw_divergence = ot_cross - 0.5 * (ot_source + ot_target)
-    return max(0.0, float(raw_divergence)), {
-        "cross_iterations": cross_iter,
-        "source_self_iterations": source_iter,
-        "target_self_iterations": target_iter,
-        "all_converged": bool(cross_converged and source_converged and target_converged),
-        "raw_divergence": float(raw_divergence),
-    }
-
-
 def sinkhorn_pushforward_errors(
     pushed_points: np.ndarray,
     target_points: np.ndarray,
@@ -274,25 +188,18 @@ def sinkhorn_pushforward_errors(
     def angle_cost(a: np.ndarray, b: np.ndarray) -> np.ndarray:
         return np.arccos(np.clip(a @ b.T, -1.0, 1.0))
 
-    def xy_squared_cost(a: np.ndarray, b: np.ndarray) -> np.ndarray:
-        delta = a[:, None, :] - b[None, :, :]
-        return np.sum(delta * delta, axis=2)
-
-    def xyz_squared_cost(a: np.ndarray, b: np.ndarray) -> np.ndarray:
-        delta = a[:, None, :] - b[None, :, :]
-        return np.sum(delta * delta, axis=2)
-
-    angle_divergence, angle_diag = _sinkhorn_divergence(
+    l2_cost = get_cost_function("l2")
+    angle_divergence, angle_diag = entropic_sinkhorn_divergence(
         pushed_points, target_points, source_weights, target_weights,
-        angle_cost, epsilon, max_iter, tolerance,
+        epsilon, max_iter=max_iter, tolerance=tolerance, cost_fn=angle_cost,
     )
-    xy_divergence, xy_diag = _sinkhorn_divergence(
+    xy_divergence, xy_diag = entropic_sinkhorn_divergence(
         pushed_plane, target_plane, source_weights, target_weights,
-        xy_squared_cost, epsilon, max_iter, tolerance,
+        epsilon, max_iter=max_iter, tolerance=tolerance, cost_fn=l2_cost,
     )
-    xyz_divergence, xyz_diag = _sinkhorn_divergence(
+    xyz_divergence, xyz_diag = entropic_sinkhorn_divergence(
         pushed_points, target_points, source_weights, target_weights,
-        xyz_squared_cost, epsilon, max_iter, tolerance,
+        epsilon, max_iter=max_iter, tolerance=tolerance, cost_fn=l2_cost,
     )
     return {
         "sinkhorn_angle_cost": angle_divergence,
@@ -349,6 +256,44 @@ def _set_equal_axes_3d(ax, points: np.ndarray) -> None:
     ax.set_zlim(centre[2] - half_range, centre[2] + half_range)
 
 
+def save_surface_plot(
+    case_dir: Path,
+    case_label: str,
+    kappa: float,
+    ref: np.ndarray,
+    radii: np.ndarray,
+    metric_label: str,
+    metric_value: float,
+    *,
+    filename: str | None = None,
+    subtitle: str | None = None,
+) -> str:
+    """Save a radius-colored 3D refractor surface using the shared plot style."""
+    case_dir.mkdir(parents=True, exist_ok=True)
+    surface_path = case_dir / (filename or f"{case_label}_surface_3d.png")
+    temp_path = surface_path.with_name(f".{surface_path.stem}.tmp{surface_path.suffix}")
+    fig = plt.figure(figsize=(9, 7))
+    ax = fig.add_subplot(111, projection="3d")
+    scatter = ax.scatter(
+        ref[:, 0], ref[:, 1], ref[:, 2],
+        c=radii, cmap="viridis", s=18, alpha=0.9, depthshade=True,
+    )
+    fig.colorbar(scatter, ax=ax, shrink=0.68, pad=0.10, label="Refracter radius R")
+    title = f"{case_label}: Sinkhorn refracter surface\nκ={kappa:.5f}; {metric_label}={metric_value:.5f}"
+    if subtitle:
+        title += f"\n{subtitle}"
+    ax.set_title(title)
+    ax.set_xlabel("surface X")
+    ax.set_ylabel("surface Y")
+    ax.set_zlabel("surface Z")
+    _set_equal_axes_3d(ax, ref)
+    fig.tight_layout()
+    fig.savefig(temp_path, dpi=160, bbox_inches="tight")
+    plt.close(fig)
+    temp_path.replace(surface_path)
+    return surface_path.name
+
+
 def save_plots(
     case_dir: Path,
     case_label: str,
@@ -359,29 +304,18 @@ def save_plots(
     pushforward_errors: dict[str, object],
 ) -> tuple[str, str]:
     w2_xy = float(pushforward_errors["sinkhorn_w2_xy_l2"])
-    w2_3d = float(pushforward_errors["sinkhorn_w2_3d_l2"])
     kappa = float(case["kappa"])
     cmap = "viridis"
 
-    surface_path = case_dir / f"{case_label}_surface_3d.png"
-    fig = plt.figure(figsize=(9, 7))
-    ax = fig.add_subplot(111, projection="3d")
-    scatter = ax.scatter(
-        ref[:, 0], ref[:, 1], ref[:, 2],
-        c=radii, cmap=cmap, s=18, alpha=0.9, depthshade=True,
+    surface_name = save_surface_plot(
+        case_dir,
+        case_label,
+        kappa,
+        ref,
+        radii,
+        "Sinkhorn W₂",
+        w2_xy,
     )
-    fig.colorbar(scatter, ax=ax, shrink=0.68, pad=0.10, label="Refracter radius R")
-    ax.set_title(
-        f"{case_label}: Sinkhorn refracter surface\n"
-        f"κ={kappa:.5f}; Sinkhorn W₂={w2_xy:.5f}"
-    )
-    ax.set_xlabel("surface X")
-    ax.set_ylabel("surface Y")
-    ax.set_zlabel("surface Z")
-    _set_equal_axes_3d(ax, ref)
-    fig.tight_layout()
-    fig.savefig(surface_path, dpi=160, bbox_inches="tight")
-    plt.close(fig)
 
     source_xy_path = case_dir / f"{case_label}_source_xy.png"
     fig, ax = plt.subplots(figsize=(8, 7))
@@ -401,7 +335,7 @@ def save_plots(
     fig.savefig(source_xy_path, dpi=160, bbox_inches="tight")
     plt.close(fig)
 
-    return surface_path.name, source_xy_path.name
+    return surface_name, source_xy_path.name
 
 
 def _json_ready(value):

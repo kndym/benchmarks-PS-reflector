@@ -12,7 +12,12 @@ chunk_size controls the block size. Identity iterations are damped (half-step).
 import numpy as np
 from scipy.special import logsumexp
 
-from .cost import cost_matrix_chunk, cost_matrix_l2_chunk, validate_point_clouds
+from .cost import (
+    cost_matrix_chunk,
+    cost_matrix_l2_chunk,
+    validate_point_clouds,
+    validate_transport_possible,
+)
 
 # ---------------------------------------------------------------------------
 # Helper: chunked logsumexp over one axis of the cost matrix
@@ -101,6 +106,18 @@ def _evaluate_cost_block(cost_fn, x_chunk, y):
     return _checked_cost_block(cost_fn, x_chunk, y)
 
 
+def _coalesce_weighted_points(points, weights):
+    """Merge identical support points without changing their empirical measure."""
+    positive = weights > 0.0
+    points = points[positive]
+    weights = weights[positive]
+    unique, inverse = np.unique(points, axis=0, return_inverse=True)
+    if len(unique) == len(points):
+        return points, weights
+    merged_weights = np.bincount(inverse, weights=weights, minlength=len(unique))
+    return unique, merged_weights
+
+
 def entropic_ot_cost(x, y, p, q, epsilon, chunk_size=512, max_iter=2000,
                      tolerance=1e-9, return_info=False, cost_fn=None):
     """Compute the discrete entropic OT objective from equation (2.1).
@@ -142,6 +159,11 @@ def entropic_ot_cost(x, y, p, q, epsilon, chunk_size=512, max_iter=2000,
         raise ValueError("p and q must each have positive total mass")
     p = p / p_sum
     q = q / q_sum
+    # Hard pushforwards commonly repeat target atoms. Coalescing those rows
+    # preserves the exact discrete measure and shrinks all subsequent cost
+    # blocks without adding a second transport implementation.
+    x, p = _coalesce_weighted_points(x, p)
+    y, q = _coalesce_weighted_points(y, q)
     logp = np.full_like(p, -np.inf)
     logq = np.full_like(q, -np.inf)
     np.log(p, out=logp, where=p > 0)
@@ -212,6 +234,51 @@ def entropic_ot_cost(x, y, p, q, epsilon, chunk_size=512, max_iter=2000,
             "transport_mass": mass,
         }
     return value
+
+
+def entropic_sinkhorn_divergence(
+    x, y, p, q, epsilon, chunk_size=512, max_iter=2000,
+    tolerance=1e-9, cost_fn=None,
+):
+    """Compute the debiased entropic OT divergence for a selectable ground cost.
+
+    This shares :func:`entropic_ot_cost` for the cross and both self transports:
+
+        S_epsilon(x, y) = OT_epsilon(x, y)
+                           - 0.5 * (OT_epsilon(x, x) + OT_epsilon(y, y)).
+
+    The returned value is clamped at zero to absorb small negative roundoff.
+    Diagnostics retain the unclamped value and convergence status of all three
+    EOT solves. ``cost_fn`` follows the same chunked interface as
+    :func:`entropic_ot_cost`; it defaults to squared Euclidean distance.
+    """
+    common = {
+        "epsilon": epsilon,
+        "chunk_size": chunk_size,
+        "max_iter": max_iter,
+        "tolerance": tolerance,
+        "cost_fn": cost_fn,
+        "return_info": True,
+    }
+    cross, cross_info = entropic_ot_cost(x, y, p, q, **common)
+    source_self, source_info = entropic_ot_cost(x, x, p, p, **common)
+    target_self, target_info = entropic_ot_cost(y, y, q, q, **common)
+    raw_divergence = float(cross - 0.5 * (source_self + target_self))
+    diagnostics = {
+        "cross": cross_info,
+        "source_self": source_info,
+        "target_self": target_info,
+        "cross_iterations": cross_info["iterations"],
+        "source_self_iterations": source_info["iterations"],
+        "target_self_iterations": target_info["iterations"],
+        "all_converged": bool(
+            cross_info["converged"]
+            and source_info["converged"]
+            and target_info["converged"]
+        ),
+        "raw_divergence": raw_divergence,
+    }
+    return max(0.0, raw_divergence), diagnostics
 
 
 # ---------------------------------------------------------------------------

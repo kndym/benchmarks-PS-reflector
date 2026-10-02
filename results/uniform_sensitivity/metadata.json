@@ -1,0 +1,625 @@
+{
+  "nk": 1600,
+  "k_final": 320,
+  "solver": "refracter.sinkhorn.run_sinkhorn_divergence",
+  "artifact_builder": "scripts.generate_results.build_refraction_artifacts",
+  "npz_writer": "scripts.generate_results.save_refraction_npz",
+  "l2_metric": "sqrt of debiased entropic Sinkhorn divergence using squared 3D Euclidean ground cost",
+  "pushforward_metric": "debiased entropic Sinkhorn divergence with squared 3D Euclidean cost",
+  "pushforward_epsilon": 0.005,
+  "pushforward_max_iter": 2000,
+  "pushforward_tolerance": 1e-09,
+  "pushforward_solver": "refracter.sinkhorn.entropic_sinkhorn_divergence",
+  "results": [
+    {
+      "label": "original_uniform",
+      "category": "original",
+      "parameter": "baseline",
+      "kappa": 0.6,
+      "source_bounds_deg": {
+        "theta_deg": [
+          15.0,
+          60.0
+        ],
+        "phi_deg": [
+          15.0,
+          45.0
+        ]
+      },
+      "target_bounds_deg": {
+        "theta_deg": [
+          18.0,
+          36.0
+        ],
+        "phi_deg": [
+          18.0,
+          36.0
+        ]
+      },
+      "nk": 1600,
+      "k_final": 320,
+      "pushforward_metric": "3D squared Euclidean Sinkhorn divergence",
+      "pushforward_epsilon": 0.005,
+      "npz": "original_uniform.npz",
+      "max_source_target_dot": 0.9999999970028206,
+      "pushforward_target_sinkhorn_divergence_3d_l2": 0.0023349911220512214,
+      "pushforward_target_sinkhorn_w2_3d_l2": 0.048321745850612864,
+      "pushforward_target_sinkhorn_converged": true,
+      "pushforward_target_sinkhorn_diagnostics": {
+        "cross": {
+          "iterations": 61,
+          "converged": true,
+          "potential_change": 9.243210905875154e-10,
+          "transport_mass": 1.0
+        },
+        "source_self": {
+          "iterations": 63,
+          "converged": true,
+          "potential_change": 8.249145030253535e-10,
+          "transport_mass": 1.0
+        },
+        "target_self": {
+          "iterations": 47,
+          "converged": true,
+          "potential_change": 7.994609193401336e-10,
+          "transport_mass": 1.0
+        },
+        "all_converged": true,
+        "raw_divergence": 0.0023349911220512214
+      },
+      "pushforward_target_mass_l2_squared": 0.0033523437500000003,
+      "pushforward_target_mass_l2": 0.057899427890092316,
+      "unique_targets_hit": 796,
+      "runtime_seconds": 23.829489500029013
+    },
+    {
+      "label": "kappa_0p25",
+      "category": "kappa_sweep",
+      "parameter": "kappa=0.25",
+      "kappa": 0.25,
+      "source_bounds_deg": {
+        "theta_deg": [
+          15.0,
+          60.0
+        ],
+        "phi_deg": [
+          15.0,
+          45.0
+        ]
+      },
+      "target_bounds_deg": {
+        "theta_deg": [
+          18.0,
+          36.0
+        ],
+        "phi_deg": [
+          18.0,
+          36.0
+        ]
+      },
+      "nk": 1600,
+      "k_final": 320,
+      "pushforward_metric": "3D squared Euclidean Sinkhorn divergence",
+      "pushforward_epsilon": 0.005,
+      "npz": "kappa_0p25.npz",
+      "max_source_target_dot": 0.9999999970028206,
+      "pushforward_target_sinkhorn_divergence_3d_l2": 0.0009714268251159921,
+      "pushforward_target_sinkhorn_w2_3d_l2": 0.03116772088420955,
+      "pushforward_target_sinkhorn_converged": true,
+      "pushforward_target_sinkhorn_diagnostics": {
+        "cross": {
+          "iterations": 67,
+          "converged": true,
+          "potential_change": 8.330943677969938e-10,
+          "transport_mass": 1.0
+        },
+        "source_self": {
+          "iterations": 68,
+          "converged": true,
+          "potential_change": 9.620061049847584e-10,
+          "transport_mass": 1.0
+        },
+        "target_self": {
+          "iterations": 47,
+          "converged": true,
+          "potential_change": 7.994609193401336e-10,
+          "transport_mass": 1.0
+        },
+        "all_converged": true,
+        "raw_divergence": 0.0009714268251159921
+      },
+      "pushforward_target_mass_l2_squared": 0.016065625000000014,
+      "pushforward_target_mass_l2": 0.12675024654808373,
+      "unique_targets_hit": 449,
+      "runtime_seconds": 17.86416909995023
+    },
+    {
+      "label": "kappa_0p50",
+      "category": "kappa_sweep",
+      "parameter": "kappa=0.50",
+      "kappa": 0.5,
+      "source_bounds_deg": {
+        "theta_deg": [
+          15.0,
+          60.0
+        ],
+        "phi_deg": [
+          15.0,
+          45.0
+        ]
+      },
+      "target_bounds_deg": {
+        "theta_deg": [
+          18.0,
+          36.0
+        ],
+        "phi_deg": [
+          18.0,
+          36.0
+        ]
+      },
+      "nk": 1600,
+      "k_final": 320,
+      "pushforward_metric": "3D squared Euclidean Sinkhorn divergence",
+      "pushforward_epsilon": 0.005,
+      "npz": "kappa_0p50.npz",
+      "max_source_target_dot": 0.9999999970028206,
+      "pushforward_target_sinkhorn_divergence_3d_l2": 0.001150775175673963,
+      "pushforward_target_sinkhorn_w2_3d_l2": 0.03392307733201637,
+      "pushforward_target_sinkhorn_converged": true,
+      "pushforward_target_sinkhorn_diagnostics": {
+        "cross": {
+          "iterations": 62,
+          "converged": true,
+          "potential_change": 9.526243439916815e-10,
+          "transport_mass": 1.0
+        },
+        "source_self": {
+          "iterations": 59,
+          "converged": true,
+          "potential_change": 8.353205124128626e-10,
+          "transport_mass": 1.0000000000000009
+        },
+        "target_self": {
+          "iterations": 47,
+          "converged": true,
+          "potential_change": 7.994609193401336e-10,
+          "transport_mass": 1.0
+        },
+        "all_converged": true,
+        "raw_divergence": 0.001150775175673963
+      },
+      "pushforward_target_mass_l2_squared": 0.004482031250000002,
+      "pushforward_target_mass_l2": 0.06694797420385476,
+      "unique_targets_hit": 754,
+      "runtime_seconds": 22.63165640004445
+    },
+    {
+      "label": "kappa_0p90",
+      "category": "kappa_sweep",
+      "parameter": "kappa=0.90",
+      "kappa": 0.9,
+      "source_bounds_deg": {
+        "theta_deg": [
+          15.0,
+          60.0
+        ],
+        "phi_deg": [
+          15.0,
+          45.0
+        ]
+      },
+      "target_bounds_deg": {
+        "theta_deg": [
+          18.0,
+          36.0
+        ],
+        "phi_deg": [
+          18.0,
+          36.0
+        ]
+      },
+      "nk": 1600,
+      "k_final": 320,
+      "pushforward_metric": "3D squared Euclidean Sinkhorn divergence",
+      "pushforward_epsilon": 0.005,
+      "npz": "kappa_0p90.npz",
+      "max_source_target_dot": 0.9999999970028206,
+      "pushforward_target_sinkhorn_divergence_3d_l2": 0.01618288426915144,
+      "pushforward_target_sinkhorn_w2_3d_l2": 0.12721196590396455,
+      "pushforward_target_sinkhorn_converged": true,
+      "pushforward_target_sinkhorn_diagnostics": {
+        "cross": {
+          "iterations": 37,
+          "converged": true,
+          "potential_change": 8.558664540969652e-10,
+          "transport_mass": 1.0000000000000018
+        },
+        "source_self": {
+          "iterations": 50,
+          "converged": true,
+          "potential_change": 9.623264407565557e-10,
+          "transport_mass": 1.0
+        },
+        "target_self": {
+          "iterations": 47,
+          "converged": true,
+          "potential_change": 7.994609193401336e-10,
+          "transport_mass": 1.0
+        },
+        "all_converged": true,
+        "raw_divergence": 0.01618288426915144
+      },
+      "pushforward_target_mass_l2_squared": 0.009850000000000006,
+      "pushforward_target_mass_l2": 0.09924716620639606,
+      "unique_targets_hit": 404,
+      "runtime_seconds": 15.564150899997912
+    },
+    {
+      "label": "source_phi_plus_05deg",
+      "category": "source_phi_translation",
+      "parameter": "source phi bounds +5 degrees",
+      "kappa": 0.6,
+      "source_bounds_deg": {
+        "theta_deg": [
+          15.0,
+          60.0
+        ],
+        "phi_deg": [
+          20.0,
+          50.0
+        ]
+      },
+      "target_bounds_deg": {
+        "theta_deg": [
+          18.0,
+          36.0
+        ],
+        "phi_deg": [
+          18.0,
+          36.0
+        ]
+      },
+      "nk": 1600,
+      "k_final": 320,
+      "pushforward_metric": "3D squared Euclidean Sinkhorn divergence",
+      "pushforward_epsilon": 0.005,
+      "npz": "source_phi_plus_05deg.npz",
+      "max_source_target_dot": 0.9999999804524636,
+      "pushforward_target_sinkhorn_divergence_3d_l2": 0.0019438828468668363,
+      "pushforward_target_sinkhorn_w2_3d_l2": 0.04408948680657143,
+      "pushforward_target_sinkhorn_converged": true,
+      "pushforward_target_sinkhorn_diagnostics": {
+        "cross": {
+          "iterations": 62,
+          "converged": true,
+          "potential_change": 8.695060184013559e-10,
+          "transport_mass": 1.0
+        },
+        "source_self": {
+          "iterations": 64,
+          "converged": true,
+          "potential_change": 8.218215188232625e-10,
+          "transport_mass": 1.0
+        },
+        "target_self": {
+          "iterations": 47,
+          "converged": true,
+          "potential_change": 7.994609193401336e-10,
+          "transport_mass": 1.0
+        },
+        "all_converged": true,
+        "raw_divergence": 0.0019438828468668363
+      },
+      "pushforward_target_mass_l2_squared": 0.003196875,
+      "pushforward_target_mass_l2": 0.056540914389493206,
+      "unique_targets_hit": 791,
+      "runtime_seconds": 28.166779599967413
+    },
+    {
+      "label": "source_phi_plus_15deg",
+      "category": "source_phi_translation",
+      "parameter": "source phi bounds +15 degrees",
+      "kappa": 0.6,
+      "source_bounds_deg": {
+        "theta_deg": [
+          15.0,
+          60.0
+        ],
+        "phi_deg": [
+          30.0,
+          60.0
+        ]
+      },
+      "target_bounds_deg": {
+        "theta_deg": [
+          18.0,
+          36.0
+        ],
+        "phi_deg": [
+          18.0,
+          36.0
+        ]
+      },
+      "nk": 1600,
+      "k_final": 320,
+      "pushforward_metric": "3D squared Euclidean Sinkhorn divergence",
+      "pushforward_epsilon": 0.005,
+      "npz": "source_phi_plus_15deg.npz",
+      "max_source_target_dot": 0.9999999914196349,
+      "pushforward_target_sinkhorn_divergence_3d_l2": 0.0010326011372946576,
+      "pushforward_target_sinkhorn_w2_3d_l2": 0.03213411173962426,
+      "pushforward_target_sinkhorn_converged": true,
+      "pushforward_target_sinkhorn_diagnostics": {
+        "cross": {
+          "iterations": 63,
+          "converged": true,
+          "potential_change": 8.735470966372838e-10,
+          "transport_mass": 1.0
+        },
+        "source_self": {
+          "iterations": 64,
+          "converged": true,
+          "potential_change": 8.592141755026095e-10,
+          "transport_mass": 1.0
+        },
+        "target_self": {
+          "iterations": 47,
+          "converged": true,
+          "potential_change": 7.994609193401336e-10,
+          "transport_mass": 1.0
+        },
+        "all_converged": true,
+        "raw_divergence": 0.0010326011372946576
+      },
+      "pushforward_target_mass_l2_squared": 0.0031890625,
+      "pushforward_target_mass_l2": 0.056471784990382586,
+      "unique_targets_hit": 788,
+      "runtime_seconds": 25.109491000068374
+    },
+    {
+      "label": "source_phi_plus_25deg",
+      "category": "source_phi_translation",
+      "parameter": "source phi bounds +25 degrees",
+      "kappa": 0.6,
+      "source_bounds_deg": {
+        "theta_deg": [
+          15.0,
+          60.0
+        ],
+        "phi_deg": [
+          40.0,
+          70.0
+        ]
+      },
+      "target_bounds_deg": {
+        "theta_deg": [
+          18.0,
+          36.0
+        ],
+        "phi_deg": [
+          18.0,
+          36.0
+        ]
+      },
+      "nk": 1600,
+      "k_final": 320,
+      "pushforward_metric": "3D squared Euclidean Sinkhorn divergence",
+      "pushforward_epsilon": 0.005,
+      "npz": "source_phi_plus_25deg.npz",
+      "max_source_target_dot": 0.9974831502910916,
+      "pushforward_target_sinkhorn_divergence_3d_l2": 0.000456117678549613,
+      "pushforward_target_sinkhorn_w2_3d_l2": 0.02135691172781339,
+      "pushforward_target_sinkhorn_converged": true,
+      "pushforward_target_sinkhorn_diagnostics": {
+        "cross": {
+          "iterations": 62,
+          "converged": true,
+          "potential_change": 8.13374532657174e-10,
+          "transport_mass": 1.0
+        },
+        "source_self": {
+          "iterations": 61,
+          "converged": true,
+          "potential_change": 9.62335159476746e-10,
+          "transport_mass": 1.0
+        },
+        "target_self": {
+          "iterations": 47,
+          "converged": true,
+          "potential_change": 7.994609193401336e-10,
+          "transport_mass": 1.0
+        },
+        "all_converged": true,
+        "raw_divergence": 0.000456117678549613
+      },
+      "pushforward_target_mass_l2_squared": 0.0044296875000000005,
+      "pushforward_target_mass_l2": 0.06655589755987068,
+      "unique_targets_hit": 704,
+      "runtime_seconds": 24.48064819991123
+    },
+    {
+      "label": "source_theta_plus_10deg",
+      "category": "source_theta_translation",
+      "parameter": "source theta bounds +10 degrees",
+      "kappa": 0.6,
+      "source_bounds_deg": {
+        "theta_deg": [
+          25.0,
+          70.0
+        ],
+        "phi_deg": [
+          15.0,
+          45.0
+        ]
+      },
+      "target_bounds_deg": {
+        "theta_deg": [
+          18.0,
+          36.0
+        ],
+        "phi_deg": [
+          18.0,
+          36.0
+        ]
+      },
+      "nk": 1600,
+      "k_final": 320,
+      "pushforward_metric": "3D squared Euclidean Sinkhorn divergence",
+      "pushforward_epsilon": 0.005,
+      "npz": "source_theta_plus_10deg.npz",
+      "max_source_target_dot": 0.9999999855490906,
+      "pushforward_target_sinkhorn_divergence_3d_l2": 0.0018379424748157323,
+      "pushforward_target_sinkhorn_w2_3d_l2": 0.04287123131909944,
+      "pushforward_target_sinkhorn_converged": true,
+      "pushforward_target_sinkhorn_diagnostics": {
+        "cross": {
+          "iterations": 62,
+          "converged": true,
+          "potential_change": 8.135857676580191e-10,
+          "transport_mass": 1.0
+        },
+        "source_self": {
+          "iterations": 60,
+          "converged": true,
+          "potential_change": 9.532209466200925e-10,
+          "transport_mass": 1.0
+        },
+        "target_self": {
+          "iterations": 47,
+          "converged": true,
+          "potential_change": 7.994609193401336e-10,
+          "transport_mass": 1.0
+        },
+        "all_converged": true,
+        "raw_divergence": 0.0018379424748157323
+      },
+      "pushforward_target_mass_l2_squared": 0.0036835937500000007,
+      "pushforward_target_mass_l2": 0.06069261693155108,
+      "unique_targets_hit": 794,
+      "runtime_seconds": 23.55097250000108
+    },
+    {
+      "label": "source_theta_plus_25deg",
+      "category": "source_theta_translation",
+      "parameter": "source theta bounds +25 degrees",
+      "kappa": 0.6,
+      "source_bounds_deg": {
+        "theta_deg": [
+          40.0,
+          85.0
+        ],
+        "phi_deg": [
+          15.0,
+          45.0
+        ]
+      },
+      "target_bounds_deg": {
+        "theta_deg": [
+          18.0,
+          36.0
+        ],
+        "phi_deg": [
+          18.0,
+          36.0
+        ]
+      },
+      "nk": 1600,
+      "k_final": 320,
+      "pushforward_metric": "3D squared Euclidean Sinkhorn divergence",
+      "pushforward_epsilon": 0.005,
+      "npz": "source_theta_plus_25deg.npz",
+      "max_source_target_dot": 0.999681564436551,
+      "pushforward_target_sinkhorn_divergence_3d_l2": 0.0021918491213604938,
+      "pushforward_target_sinkhorn_w2_3d_l2": 0.04681718831113733,
+      "pushforward_target_sinkhorn_converged": true,
+      "pushforward_target_sinkhorn_diagnostics": {
+        "cross": {
+          "iterations": 56,
+          "converged": true,
+          "potential_change": 9.057662306820313e-10,
+          "transport_mass": 1.0
+        },
+        "source_self": {
+          "iterations": 48,
+          "converged": true,
+          "potential_change": 8.314481811377838e-10,
+          "transport_mass": 1.0
+        },
+        "target_self": {
+          "iterations": 47,
+          "converged": true,
+          "potential_change": 7.994609193401336e-10,
+          "transport_mass": 1.0
+        },
+        "all_converged": true,
+        "raw_divergence": 0.0021918491213604938
+      },
+      "pushforward_target_mass_l2_squared": 0.004193750000000001,
+      "pushforward_target_mass_l2": 0.0647591692349431,
+      "unique_targets_hit": 729,
+      "runtime_seconds": 20.651139999972656
+    },
+    {
+      "label": "source_theta_plus_40deg",
+      "category": "source_theta_translation",
+      "parameter": "source theta bounds +40 degrees",
+      "kappa": 0.6,
+      "source_bounds_deg": {
+        "theta_deg": [
+          55.0,
+          100.0
+        ],
+        "phi_deg": [
+          15.0,
+          45.0
+        ]
+      },
+      "target_bounds_deg": {
+        "theta_deg": [
+          18.0,
+          36.0
+        ],
+        "phi_deg": [
+          18.0,
+          36.0
+        ]
+      },
+      "nk": 1600,
+      "k_final": 320,
+      "pushforward_metric": "3D squared Euclidean Sinkhorn divergence",
+      "pushforward_epsilon": 0.005,
+      "npz": "source_theta_plus_40deg.npz",
+      "max_source_target_dot": 0.9946573958480629,
+      "pushforward_target_sinkhorn_divergence_3d_l2": 0.004384095791764041,
+      "pushforward_target_sinkhorn_w2_3d_l2": 0.06621250479904865,
+      "pushforward_target_sinkhorn_converged": true,
+      "pushforward_target_sinkhorn_diagnostics": {
+        "cross": {
+          "iterations": 47,
+          "converged": true,
+          "potential_change": 9.836575642560574e-10,
+          "transport_mass": 1.0
+        },
+        "source_self": {
+          "iterations": 27,
+          "converged": true,
+          "potential_change": 7.421898148146644e-10,
+          "transport_mass": 1.0
+        },
+        "target_self": {
+          "iterations": 47,
+          "converged": true,
+          "potential_change": 7.994609193401336e-10,
+          "transport_mass": 1.0
+        },
+        "all_converged": true,
+        "raw_divergence": 0.004384095791764041
+      },
+      "pushforward_target_mass_l2_squared": 0.006588281250000003,
+      "pushforward_target_mass_l2": 0.08116822808217512,
+      "unique_targets_hit": 581,
+      "runtime_seconds": 17.216360899969004
+    }
+  ]
+}
