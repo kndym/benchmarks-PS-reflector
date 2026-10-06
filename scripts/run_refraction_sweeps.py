@@ -5,6 +5,7 @@ Run from the repository root: python scripts/run_refraction_sweeps.py
 import argparse
 import csv
 import json
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import numpy as np
@@ -20,10 +21,28 @@ from generate_results import (
 )
 from refracter.cost import set_kappa, cost_matrix_chunk
 from refracter.sinkhorn import run_sinkhorn_divergence, entropic_ot_cost
+import refracter.sinkhorn as sinkhorn_module
 
 
 def joint_epsilon(nk):
     return 1.0 / (REGULARIZATION_MULTIPLIER * int(np.floor(np.sqrt(nk))))
+
+
+def enable_threaded_reductions(workers):
+    """Split independent outputs, still evaluating each with SciPy logsumexp."""
+    if workers <= 1:
+        return
+    pool = ThreadPoolExecutor(max_workers=workers)
+    original = sinkhorn_module.logsumexp
+
+    def threaded(a, axis=None, **kwargs):
+        if a.ndim != 2 or axis not in (0, 1) or a.size < 1_000_000 or kwargs:
+            return original(a, axis=axis, **kwargs)
+        # Columns are independent for axis=0; rows are independent for axis=1.
+        pieces = np.array_split(a, min(workers, a.shape[1-axis]), axis=1-axis)
+        return np.concatenate(list(pool.map(lambda piece: original(piece, axis=axis), pieces)))
+
+    sinkhorn_module.logsumexp = threaded
 
 
 def main():
@@ -41,10 +60,12 @@ def main():
                         help="Experiment 4 uses only the coupled refractor epsilon(NK) schedule")
     parser.add_argument("--pf-max-iter", type=int, default=2000)
     parser.add_argument("--pf-cache-entries", type=int, default=4_000_000)
+    parser.add_argument("--workers", type=int, default=1, help="Threads for independent SciPy reductions")
     parser.add_argument("--pf-warm-start", action="store_true",
                         help="Reuse PF potentials from the preceding larger epsilon")
     parser.add_argument("--output", type=Path, default=Path(REPO_ROOT) / "results/refraction_sweeps")
     args = parser.parse_args()
+    enable_threaded_reductions(args.workers)
     default_nk = np.rint(np.geomspace(100, 10000, 20)).astype(int).tolist() if args.expanded else [100, 225, 400, 900, 1600]
     default_epsilon = np.geomspace(.000125, .0125, 20).tolist() if args.expanded else [1/80, 1/160, 1/320, 1/640]
     args.nk = args.nk or default_nk

@@ -119,12 +119,14 @@ The expanded bounded experiment uses 20 logarithmic NK values from 100 to
 10,000 and 20 epsilon values from 0.000125 to 0.0125 (100x ranges):
 
 ```bash
-python -B scripts/run_refraction_sweeps.py --expanded --joint-only --pf-warm-start --pf-max-iter 10000 --output results/refraction_sweeps_expanded
+python -B scripts/run_refraction_sweeps.py --expanded --joint-only --pf-warm-start --pf-max-iter 10000 --workers 4 --output results/refraction_sweeps_expanded
 ```
 
 Experiment 4 then has 400 evaluations on the original coupled refractor
 schedule, with 20 PF-epsilon lines. PF warm starts reuse the preceding larger
 epsilon's potentials; the objective and stopping tolerance are unchanged.
+Optional reduction workers split independent row/column outputs and evaluate
+each using the same SciPy `logsumexp`, rather than changing the solver.
 Raw refractor marginal residuals are saved separately as `residual_*.json`;
 they diagnose the inherited iteration caps without changing them.
 Autonomous side investigations are isolated under the locally Git-excluded
