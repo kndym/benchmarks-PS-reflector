@@ -93,6 +93,43 @@ shared sampling, artifact construction, and NPZ writer from `generate_results.py
 The notebook measures the push-forward against the target with the entropic OT
 objective from equation 2.1, using the refraction cost and ε = 1/k_final.
 
+Run the four uniform refractor parameter experiments:
+
+```bash
+python -B scripts/run_refraction_sweeps.py
+```
+
+This reuses the original multi-scale solver and hard pushforward builder.
+Experiments 1–3 plot its approximate `total_cost`: joint
+ε = 1/(8 floor(sqrt(NK))), fixed ε with varying NK, and fixed NK with varying ε.
+Experiment 4 evaluates equation 2.1 with the notebook's current default,
+squared Euclidean cost on 3D pushed points, independently varying the PF
+evaluation ε. Each panel fixes the refractor ε (plus a joint-schedule panel);
+each line fixes the PF ε. This is entropic OT, with no self-cost subtraction,
+and is not the paper's projected-plane ray-tracing Wasserstein error.
+Defaults: NK = 100, 225, 400, 900, 1600; fixed NK = 1600; fixed ε = 1/320;
+refractor and PF ε grids = 1/80, 1/160, 1/320, 1/640.
+Plots, `costs.csv`, `parameters.json`, and `ordering.json` are written to
+`results/refraction_sweeps/`. Use `--help` to change these grids.
+The original refractor iteration caps are retained; PF cost evaluations must
+pass the existing convergence check. The smaller density display grid used by
+the sweep runner does not affect the solver or pushed measure.
+
+The expanded bounded experiment uses 20 logarithmic NK values from 100 to
+10,000 and 20 epsilon values from 0.000125 to 0.0125 (100x ranges):
+
+```bash
+python -B scripts/run_refraction_sweeps.py --expanded --joint-only --pf-warm-start --pf-max-iter 10000 --output results/refraction_sweeps_expanded
+```
+
+Experiment 4 then has 400 evaluations on the original coupled refractor
+schedule, with 20 PF-epsilon lines. PF warm starts reuse the preceding larger
+epsilon's potentials; the objective and stopping tolerance are unchanged.
+Raw refractor marginal residuals are saved separately as `residual_*.json`;
+they diagnose the inherited iteration caps without changing them.
+Autonomous side investigations are isolated under the locally Git-excluded
+`.research/refraction/` folder.
+
 The solver runs on **spherical patches** (upper hemisphere) with κ = 0.6:
 
 1. **Generate QMC cloud** — Halton quasi-Monte Carlo points on the source and target patches

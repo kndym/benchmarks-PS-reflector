@@ -119,7 +119,8 @@ def _coalesce_weighted_points(points, weights):
 
 
 def entropic_ot_cost(x, y, p, q, epsilon, chunk_size=512, max_iter=2000,
-                     tolerance=1e-9, return_info=False, cost_fn=None):
+                     tolerance=1e-9, return_info=False, cost_fn=None,
+                     initial_potentials=None, return_potentials=False):
     """Compute the discrete entropic OT objective from equation (2.1).
 
     The dual objective is
@@ -132,6 +133,8 @@ def entropic_ot_cost(x, y, p, q, epsilon, chunk_size=512, max_iter=2000,
     matrix is cached for moderate matrices and evaluated in chunks for larger
     ones. The marginals are normalized internally. Set ``return_info`` to also
     get convergence details for the iterations.
+    Optional potentials use the coalesced point ordering and allow warm starts
+    across epsilon values. The objective and stopping rule are unchanged.
     """
     x = np.asarray(x, dtype=np.float64)
     y = np.asarray(y, dtype=np.float64)
@@ -175,6 +178,10 @@ def entropic_ot_cost(x, y, p, q, epsilon, chunk_size=512, max_iter=2000,
         full_cost = _checked_cost_block(cost_fn, x, y)
     f = np.zeros(len(x), dtype=np.float64)
     g = np.zeros(len(y), dtype=np.float64)
+    if initial_potentials is not None:
+        f, g = (np.asarray(v, dtype=np.float64).copy() for v in initial_potentials)
+        if f.shape != (len(x),) or g.shape != (len(y),) or not np.isfinite(f).all() or not np.isfinite(g).all():
+            raise ValueError("initial potentials must match the coalesced clouds and be finite")
     converged = False
     change = np.inf
     iterations = 0
@@ -227,12 +234,15 @@ def entropic_ot_cost(x, y, p, q, epsilon, chunk_size=512, max_iter=2000,
         mass = float(np.exp(log_mass))
     value = float(np.dot(p, f) + np.dot(q, g) - epsilon * (mass - 1.0))
     if return_info:
-        return value, {
+        info = {
             "iterations": iterations,
             "converged": converged,
             "potential_change": change,
             "transport_mass": mass,
         }
+        if return_potentials:
+            info["potentials"] = (f, g)
+        return value, info
     return value
 
 
@@ -538,6 +548,7 @@ def run_small_sinkhorn(x_s, y_s, p_s, q_s, k_reg):
     K = np.exp(-k_reg * C)
     p_s = (K @ p_s); p_s /= p_s.sum()
     q_s = (K @ q_s); q_s /= q_s.sum()
+    del K
 
     F_s = np.ones(NK_s)
     G_s = np.ones(NK_s)
@@ -558,7 +569,7 @@ def run_small_sinkhorn(x_s, y_s, p_s, q_s, k_reg):
         F_s = np.where(p_s > 0, F_s, 1.0)
 
         Fp = F_s * p_s
-        exp_mat = np.exp(-k * (C - f_s[:, None] - g_s[None, :]))
+        # f_s/g_s have not changed yet, so the same matrix serves both updates.
         sums_G = exp_mat.T @ Fp
         G_s = np.where(sums_G > 0, 1.0 / sums_G, 1.0)
         G_s = np.where(q_s > 0, G_s, 1.0)
@@ -605,13 +616,15 @@ def warmstart_from_small(x_s, y_s, x, y, f_s, g_s, chunk_size=512):
 # Full Sinkhorn divergence
 # ---------------------------------------------------------------------------
 
-def run_sinkhorn_divergence(x, y, p, q, chunk_size=512, verbose=True):
+def run_sinkhorn_divergence(x, y, p, q, chunk_size=512, verbose=True, epsilon=None):
     """Run the full divergence when only main-grid weights are available.
 
     The C++ executable receives separate small-grid density evaluations from
     its benchmark function.  The generic Python API only receives ``p`` and
     ``q``, so it uses the main grid as its own warm-start grid instead of
     silently loading incompatible benchmark data.
+    Optional ``epsilon`` overrides the final regularization; omitting it keeps
+    the original k_final = 8 * floor(sqrt(NK)) schedule.
     """
     x = np.asarray(x, dtype=np.float64)
     y = np.asarray(y, dtype=np.float64)
@@ -623,11 +636,12 @@ def run_sinkhorn_divergence(x, y, p, q, chunk_size=512, verbose=True):
         x, y, p, q, x, y, p, q,
         chunk_size=chunk_size,
         verbose=verbose,
+        epsilon=epsilon,
     )
 
 
 def _run_sinkhorn_divergence_inner(x, y, p, q, x_s, y_s, p_s, q_s,
-                                   chunk_size=512, verbose=True):
+                                   chunk_size=512, verbose=True, epsilon=None):
     """Full Sinkhorn divergence (C++ do_sinkhorn_subtracted_axb).
 
     Returns dict with keys: f, g, f_id, g_id, total_cost.
@@ -664,6 +678,11 @@ def _run_sinkhorn_divergence_inner(x, y, p, q, x_s, y_s, p_s, q_s,
     multiplier = 8
     k_small = multiplier * int(np.floor(np.sqrt(len(x_s))))  # 152
     k_final  = multiplier * int(np.floor(np.sqrt(NK)))        # 1024
+    if epsilon is not None:
+        if not np.isfinite(epsilon) or epsilon <= 0 or epsilon > 1:
+            raise ValueError("epsilon must be finite and in (0, 1]")
+        k_final = 1.0 / float(epsilon)
+        k_small = min(k_small, k_final)
     # C++ stores each fractional increment back into an int (truncation).
     step = int(np.floor(k_final ** (1.0 / 3.0)))               # 10
     cap_iter = 16
@@ -693,7 +712,7 @@ def _run_sinkhorn_divergence_inner(x, y, p, q, x_s, y_s, p_s, q_s,
         f, g, maxdif = sinkhorn_step(x, y, logp, logq, f, g, regvar, chunk_size)
         it += 1
         if verbose:
-            print(f"  iter {it:4d}, k={regvar:5d}, maxdif={maxdif:.4e}")
+            print(f"  iter {it:4d}, k={regvar:5g}, maxdif={maxdif:.4e}")
         regvar += step
 
     # --- 4. Final loop at k_final ---
