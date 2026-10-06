@@ -31,6 +31,7 @@ def main():
     parser.add_argument("--expanded", action="store_true", help="20 logarithmic values per axis, spanning 100x")
     parser.add_argument("--experiments", nargs="+", type=int, choices=[1, 2, 3, 4], default=[1, 2, 3, 4])
     parser.add_argument("--import-costs", type=Path, help="CSV from another machine for experiments 1-3")
+    parser.add_argument("--skip-pf-nk", nargs="*", type=int, default=[], help="PF cases assigned to another machine")
     parser.add_argument("--nk", nargs="+", type=int)
     parser.add_argument("--epsilon", nargs="+", type=float)
     parser.add_argument("--pf-epsilon", nargs="+", type=float)
@@ -60,10 +61,15 @@ def main():
     cache = {}
     rows = []
     imported = {}
+    imported_pf = {}
     if args.import_costs:
         with args.import_costs.open(newline="", encoding="utf-8") as stream:
-            imported = {(int(r["experiment"]), int(r["nk"]), float(r["refractor_epsilon"])): r
-                        for r in csv.DictReader(stream) if r["experiment"] != "4"}
+            for row in csv.DictReader(stream):
+                key = (int(row["experiment"]), int(row["nk"]), float(row["refractor_epsilon"]))
+                if row["experiment"] == "4":
+                    imported_pf[key[1], key[2], float(row["pf_epsilon"])] = row
+                else:
+                    imported[key] = row
 
     def write_costs():
         with (args.output / "costs.csv").open("w", newline="", encoding="utf-8") as stream:
@@ -170,12 +176,18 @@ def main():
     fig, axes = plt.subplots(nrows, columns, figsize=(10*columns, 6*nrows), squeeze=False)
     ordering = []
     pf_potentials = {}
+    pf_nk = [nk for nk in args.nk if nk not in args.skip_pf_nk]
     for ax, (title, fixed_e) in zip(axes.flat, schedules):
         ax.set_prop_cycle(color=plt.cm.viridis(np.linspace(0, 1, len(args.pf_epsilon))))
         for pf_e in sorted(args.pf_epsilon, reverse=args.pf_warm_start):
             costs = []
-            for nk in args.nk:
+            for nk in pf_nk:
                 e = joint_epsilon(nk) if fixed_e is None else fixed_e
+                if (nk, e, pf_e) in imported_pf:
+                    row = imported_pf[nk, e, pf_e]
+                    rows.append(row)
+                    costs.append(float(row["cost"]))
+                    continue
                 _, artifacts, y, p, q = solve(nk, e)
                 checkpoint = args.output / f"pf_NK{nk}_eps{e:.17g}_eval{pf_e:.17g}.json"
                 if checkpoint.exists():
@@ -198,9 +210,9 @@ def main():
                 rows.append(dict(experiment=4, nk=nk, refractor_epsilon=e,
                                  pf_epsilon=pf_e, cost=value, **{k: info[k] for k in ("converged", "iterations")}))
                 print(f"  PF NK={nk}, eps={pf_e:.6g}: {value:.9g}", flush=True)
-            ax.plot(args.nk, costs, "o-", label=f"PF eps={pf_e:.6g}")
+            ax.plot(pf_nk, costs, "o-", label=f"PF eps={pf_e:.6g}")
             ordering.append(dict(schedule=title, pf_epsilon=pf_e,
-                                 nk_in_ascending_cost_order=[args.nk[i] for i in np.argsort(costs)],
+                                 nk_in_ascending_cost_order=[pf_nk[i] for i in np.argsort(costs)],
                                  decreases_with_nk=bool(np.all(np.diff(costs) <= 0))))
         ax.set(title=title, xlabel=r"$N_k$", ylabel=r"$OT_\epsilon(PF,T)$ (squared Euclidean, 3D)")
         ax.set_xscale("log")
