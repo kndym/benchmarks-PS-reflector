@@ -120,7 +120,8 @@ def _coalesce_weighted_points(points, weights):
 
 def entropic_ot_cost(x, y, p, q, epsilon, chunk_size=512, max_iter=2000,
                      tolerance=1e-9, return_info=False, cost_fn=None,
-                     initial_potentials=None, return_potentials=False):
+                     initial_potentials=None, return_potentials=False,
+                     max_cache_entries=4_000_000):
     """Compute the discrete entropic OT objective from equation (2.1).
 
     The dual objective is
@@ -135,6 +136,7 @@ def entropic_ot_cost(x, y, p, q, epsilon, chunk_size=512, max_iter=2000,
     get convergence details for the iterations.
     Optional potentials use the coalesced point ordering and allow warm starts
     across epsilon values. The objective and stopping rule are unchanged.
+    ``max_cache_entries`` bounds optional cost-matrix caching by entry count.
     """
     x = np.asarray(x, dtype=np.float64)
     y = np.asarray(y, dtype=np.float64)
@@ -174,7 +176,7 @@ def entropic_ot_cost(x, y, p, q, epsilon, chunk_size=512, max_iter=2000,
 
     k = 1.0 / float(epsilon)
     full_cost = None
-    if len(x) * len(y) <= 4_000_000:
+    if len(x) * len(y) <= max_cache_entries:
         full_cost = _checked_cost_block(cost_fn, x, y)
     f = np.zeros(len(x), dtype=np.float64)
     g = np.zeros(len(y), dtype=np.float64)

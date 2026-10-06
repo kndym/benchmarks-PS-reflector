@@ -39,6 +39,7 @@ def main():
     parser.add_argument("--joint-only", action="store_true",
                         help="Experiment 4 uses only the coupled refractor epsilon(NK) schedule")
     parser.add_argument("--pf-max-iter", type=int, default=2000)
+    parser.add_argument("--pf-cache-entries", type=int, default=4_000_000)
     parser.add_argument("--pf-warm-start", action="store_true",
                         help="Reuse PF potentials from the preceding larger epsilon")
     parser.add_argument("--output", type=Path, default=Path(REPO_ROOT) / "results/refraction_sweeps")
@@ -185,6 +186,7 @@ def main():
                         epsilon=pf_e, return_info=True, max_iter=args.pf_max_iter,
                         initial_potentials=pf_potentials.get((nk, e)),
                         return_potentials=args.pf_warm_start,
+                        max_cache_entries=args.pf_cache_entries,
                     )
                     if args.pf_warm_start:
                         pf_potentials[nk, e] = info.pop("potentials")
