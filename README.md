@@ -100,8 +100,11 @@ python -B scripts/run_refraction_sweeps.py
 ```
 
 This reuses the original multi-scale solver and hard pushforward builder.
-Experiments 1–3 plot its approximate `total_cost`: joint
-ε = 1/(8 floor(sqrt(NK))), fixed ε with varying NK, and fixed NK with varying ε.
+Experiments 1–3 plot pushforward-to-target EOT with squared Euclidean cost,
+holding evaluation epsilon at 1/320 (override with `--cost-epsilon`). They vary
+the refractor parameters: joint ε = 1/(8 floor(sqrt(NK))), fixed ε with varying
+NK, and fixed NK with varying ε. The refractor's approximate `total_cost` is
+retained only in solve checkpoints and is not the plotted EOT objective.
 Experiment 4 evaluates equation 2.1 with the notebook's current default,
 squared Euclidean cost on 3D pushed points, independently varying the PF
 evaluation ε. Each panel fixes the refractor ε (plus a joint-schedule panel);
@@ -114,6 +117,65 @@ Plots, `costs.csv`, `parameters.json`, and `ordering.json` are written to
 The original refractor iteration caps are retained; PF cost evaluations must
 pass the existing convergence check. The smaller density display grid used by
 the sweep runner does not affect the solver or pushed measure.
+
+Target point count defaults to 1600. Source grids (`--nk`), refractor grids
+(`--epsilon`), evaluation epsilon (`--cost-epsilon`), transport and self-solve
+limits (`--refractor-max-iter`, `--identity-max-iter`), stopping tolerances
+(`--refractor-tolerance`, `--pf-tolerance`), and `--chunk-size` can all be
+set from the command line. Iteration limits default to 17 final updates;
+0 removes a final-loop limit. Small-grid and continuation schedules are unchanged.
+Residual JSON files record final iteration counts and potential changes as
+well as marginal errors. A potential-change stopping tolerance alone does
+not guarantee small marginal error. Changed refractor limits/tolerances use
+distinct checkpoint names to prevent reusing capped solves.
+
+For the comparable extended sweep with much higher limits:
+
+```bash
+python -B scripts/run_refraction_sweeps.py --extended --experiments 1 2 3 --target-nk 1600 --refractor-max-iter 2000 --identity-max-iter 2000 --workers 4 --output results/refraction_sweeps_extended_high_iter
+```
+
+To rerun the original non-expanded sweeps with only the source NK varying and
+the target held at 1600 points:
+
+```bash
+python -B scripts/run_refraction_sweeps.py --target-nk 1600 --workers 4 --output results/refraction_sweeps
+```
+
+Fixed-target checkpoint names include the target count, so old varying-target
+checkpoints are not reused. Rectangular transports use each marginal's own
+support for warm-start smoothing and self-cost corrections; the inherited
+equal-size solver behavior and stopping rules are preserved.
+
+For denser, wider main experiments 1–3 (40 values per axis), run:
+
+```bash
+python -B scripts/run_refraction_sweeps.py --extended --experiments 1 2 3 --workers 4 --output results/refraction_sweeps_extended
+```
+
+NK spans 100–20,000; epsilon spans 0.0000625–0.025. Experiment 2 keeps
+epsilon = 1/320, and experiment 3 keeps NK = 1600. The original stopping
+rules are retained. Inspect the saved marginal residuals before interpreting
+the pushed measures as coming from converged refractor solves. The CSV is saved after every
+case, and completed solve checkpoints can be reused when resuming the command.
+This is a main experiment output directory, separate from autonomous research.
+
+Completed fixed-target extended results are saved for both final-loop caps:
+
+| Transport / self cap | Results | Evaluations | Source marginal L1 range | Target marginal L1 range |
+| --- | --- | --- | --- | --- |
+| 17 / 17 | [Baseline plots and data](results/refraction_sweeps_extended/) | 120, all PF-converged | 2.51e-7–0.17678 | 0.000174–0.54792 |
+| 2000 / 2000 | [Higher-iteration plots and data](results/refraction_sweeps_extended_high_iter/) | 120, all PF-converged | 5.24e-9–0.01472 | 0.000174–0.01472 |
+
+Each directory includes the three individual plots, a combined plot, `costs.csv`,
+parameters, solve/PF checkpoints, residual diagnostics, and a validation summary.
+Both runs use the same 40-value grids, target of 1600 points, and squared-Euclidean
+3D PF-to-target EOT evaluation at epsilon 1/320. The baseline predates explicit
+cap fields in its parameters file and uses the inherited 17-update limits.
+In the 2000-cap run, all 120 transport and both sets of 120 self solves met the
+1e-5 potential-change tolerance; none hit the cap. The longest final loops used
+659 transport, 551 source-self, and 15 target-self updates. PF convergence and
+potential-change stopping remain distinct from marginal feasibility.
 
 The expanded bounded experiment uses 20 logarithmic NK values from 100 to
 10,000 and 20 epsilon values from 0.000125 to 0.0125 (100x ranges):

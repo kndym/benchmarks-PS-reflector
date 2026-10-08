@@ -4,6 +4,8 @@
 .claude/
 .cursor/
 *.html
+!/results/refraction_sweeps_extended/*.png
+!/results/refraction_sweeps_extended_high_iter/*.png
 CLAUDE.md
 /results/sinkhorn_refracter_examples
 

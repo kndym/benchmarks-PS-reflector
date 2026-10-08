@@ -536,7 +536,7 @@ def sinkhorn_identity_g_step(x, y, logq, g_id, k, chunk_size=512):
 # Small-grid Sinkhorn (with kernel pre-conditioning)
 # ---------------------------------------------------------------------------
 
-def run_small_sinkhorn(x_s, y_s, p_s, q_s, k_reg):
+def run_small_sinkhorn(x_s, y_s, p_s, q_s, k_reg, separate_marginals=False):
     """Small-grid (381-pt) Sinkhorn with kernel pre-conditioning (matches C++ smallsinkhorn).
 
     Pre-conditions marginals via K = exp(-k_reg*C), then runs multi-scale loop.
@@ -548,14 +548,21 @@ def run_small_sinkhorn(x_s, y_s, p_s, q_s, k_reg):
 
     # Kernel pre-conditioning
     K = np.exp(-k_reg * C)
-    p_s = (K @ p_s); p_s /= p_s.sum()
-    q_s = (K @ q_s); q_s /= q_s.sum()
+    if len(x_s) == len(y_s) and not separate_marginals:
+        p_s = K @ p_s
+        q_s = K @ q_s
+    else:
+        # Smooth each marginal on its own support for rectangular transports.
+        p_s = np.exp(-k_reg * cost_matrix_chunk(x_s, x_s)) @ p_s
+        q_s = np.exp(-k_reg * cost_matrix_chunk(y_s, y_s)) @ q_s
+    p_s /= p_s.sum()
+    q_s /= q_s.sum()
     del K
 
     F_s = np.ones(NK_s)
-    G_s = np.ones(NK_s)
+    G_s = np.ones(len(y_s))
     f_s = np.zeros(NK_s)
-    g_s = np.zeros(NK_s)
+    g_s = np.zeros(len(y_s))
 
     # C++ increments an int by pow(...), so the fractional increment is
     # truncated on assignment rather than rounded.
@@ -598,9 +605,9 @@ def warmstart_from_small(x_s, y_s, x, y, f_s, g_s, chunk_size=512):
     NK = len(x)
 
     # g_init[j] = min_i(C(x_s[i], y[j]) - f_s[i])
-    g_init = np.full(NK, np.inf)
-    for j_start in range(0, NK, chunk_size):
-        j_end = min(j_start + chunk_size, NK)
+    g_init = np.full(len(y), np.inf)
+    for j_start in range(0, len(y), chunk_size):
+        j_end = min(j_start + chunk_size, len(y))
         C_block = cost_matrix_chunk(x_s, y[j_start:j_end])
         g_init[j_start:j_end] = np.min(C_block - f_s[:, None], axis=0)
 
@@ -618,7 +625,9 @@ def warmstart_from_small(x_s, y_s, x, y, f_s, g_s, chunk_size=512):
 # Full Sinkhorn divergence
 # ---------------------------------------------------------------------------
 
-def run_sinkhorn_divergence(x, y, p, q, chunk_size=512, verbose=True, epsilon=None):
+def run_sinkhorn_divergence(x, y, p, q, chunk_size=512, verbose=True, epsilon=None,
+                            separate_marginals=False, max_iter=17,
+                            identity_max_iter=17, tolerance=1e-5):
     """Run the full divergence when only main-grid weights are available.
 
     The C++ executable receives separate small-grid density evaluations from
@@ -627,28 +636,43 @@ def run_sinkhorn_divergence(x, y, p, q, chunk_size=512, verbose=True, epsilon=No
     silently loading incompatible benchmark data.
     Optional ``epsilon`` overrides the final regularization; omitting it keeps
     the original k_final = 8 * floor(sqrt(NK)) schedule.
+    ``separate_marginals`` uses each marginal's own support for smoothing and
+    identity corrections, consistently across equal and unequal grid sizes.
+    ``max_iter`` and ``identity_max_iter`` cap final-loop updates (default 17);
+    None disables the corresponding cap. ``tolerance`` is the potential-change
+    stopping threshold, not a marginal-feasibility guarantee. Returned numeric
+    diagnostics record the final update count and change for all three solves.
     """
     x = np.asarray(x, dtype=np.float64)
     y = np.asarray(y, dtype=np.float64)
     p = np.asarray(p, dtype=np.float64)
     q = np.asarray(q, dtype=np.float64)
-    if len(x) != len(y) or len(p) != len(x) or len(q) != len(y):
-        raise ValueError("run_sinkhorn_divergence requires equal-sized x/y grids and weights")
+    if len(p) != len(x) or len(q) != len(y):
+        raise ValueError("run_sinkhorn_divergence requires weights matching each point cloud")
     return _run_sinkhorn_divergence_inner(
         x, y, p, q, x, y, p, q,
         chunk_size=chunk_size,
         verbose=verbose,
         epsilon=epsilon,
+        separate_marginals=separate_marginals,
+        max_iter=max_iter, identity_max_iter=identity_max_iter, tolerance=tolerance,
     )
 
 
 def _run_sinkhorn_divergence_inner(x, y, p, q, x_s, y_s, p_s, q_s,
-                                   chunk_size=512, verbose=True, epsilon=None):
+                                   chunk_size=512, verbose=True, epsilon=None,
+                                   separate_marginals=False, max_iter=17,
+                                   identity_max_iter=17, tolerance=1e-5):
     """Full Sinkhorn divergence (C++ do_sinkhorn_subtracted_axb).
 
     Returns dict with keys: f, g, f_id, g_id, total_cost.
     """
     NK = len(x)
+    if any(limit is not None and (not isinstance(limit, (int, np.integer)) or limit < 1)
+           for limit in (max_iter, identity_max_iter)):
+        raise ValueError("Iteration limits must be positive integers or None (uncapped)")
+    if not np.isfinite(tolerance) or tolerance <= 0:
+        raise ValueError("tolerance must be finite and positive")
 
     # Check every source/target cloud combination used by main, small, and
     # warm-start transports in one chunked pass.
@@ -687,8 +711,8 @@ def _run_sinkhorn_divergence_inner(x, y, p, q, x_s, y_s, p_s, q_s,
         k_small = min(k_small, k_final)
     # C++ stores each fractional increment back into an int (truncation).
     step = int(np.floor(k_final ** (1.0 / 3.0)))               # 10
-    cap_iter = 16
-    cap_thr  = 1e-5
+    cap_iter = identity_max_iter
+    cap_thr = tolerance
 
     if verbose:
         print(f"Regularisation: k_small={k_small}, k_final={k_final}, step={step}")
@@ -697,7 +721,8 @@ def _run_sinkhorn_divergence_inner(x, y, p, q, x_s, y_s, p_s, q_s,
     # --- 1. Small Sinkhorn ---
     if verbose:
         print("\nRunning small Sinkhorn (warm-start)...")
-    f_s, g_s = run_small_sinkhorn(x_s, y_s, p_s.copy(), q_s.copy(), k_small)
+    f_s, g_s = run_small_sinkhorn(x_s, y_s, p_s.copy(), q_s.copy(), k_small,
+                                 separate_marginals=separate_marginals)
 
     # --- 2. Warm-start main grid ---
     if verbose:
@@ -727,10 +752,10 @@ def _run_sinkhorn_divergence_inner(x, y, p, q, x_s, y_s, p_s, q_s,
         i += 1
         if verbose:
             print(f"  iter {i:3d}, maxdif={maxdif:.4e}")
-        # C++ checks i > cap_iteration after the update, so cap_iter=16
-        # permits 17 final iterations in this main.cpp-compatible loop.
-        if i > cap_iter:
+        # The default preserves the original C++-compatible 17 updates.
+        if max_iter is not None and i >= max_iter:
             break
+    final_iterations, final_change = i, maxdif
     if verbose:
         print(f"Final loop: {i} iterations, last change={maxdif:.4e}")
 
@@ -738,6 +763,9 @@ def _run_sinkhorn_divergence_inner(x, y, p, q, x_s, y_s, p_s, q_s,
     if verbose:
         print("\nIdentity Sinkhorn for source (f_id):")
     f_id = np.zeros(NK)
+    legacy_identity = len(x) == len(y) and not separate_marginals
+    identity_y = y if legacy_identity else x
+    identity_x = x if legacy_identity else y
     # C++ uses regvariable += sqrt(k) with an integer regvariable, so this
     # is truncation/floor rather than round().
     id_step = int(np.floor(np.sqrt(k_final)))  # 32
@@ -745,7 +773,7 @@ def _run_sinkhorn_divergence_inner(x, y, p, q, x_s, y_s, p_s, q_s,
     i = 0
     while regvar < k_final:
         f_id_new, maxdif = sinkhorn_identity_f_step(
-            x, y, logp, f_id, regvar, chunk_size
+            x, identity_y, logp, f_id, regvar, chunk_size
         )
         f_id = np.where(np.isfinite(logp), f_id_new, f_id)
         i += 1
@@ -759,26 +787,27 @@ def _run_sinkhorn_divergence_inner(x, y, p, q, x_s, y_s, p_s, q_s,
     maxdif = cap_thr + 1.0
     while maxdif > cap_thr:
         f_id_new, maxdif = sinkhorn_identity_f_step(
-            x, y, logp, f_id, k_final, chunk_size
+            x, identity_y, logp, f_id, k_final, chunk_size
         )
         f_id = np.where(np.isfinite(logp), f_id_new, f_id)
         i += 1
         if verbose:
             print(f"  iter {i:3d}, maxdif={maxdif:.4e}")
-        if i > cap_iter:
+        if cap_iter is not None and i >= cap_iter:
             break
+    source_identity_iterations, source_identity_change = i, maxdif
     if verbose:
         print(f"Identity F: {i} final iterations, last change={maxdif:.4e}")
 
     # --- 6. Identity G loop ---
     if verbose:
         print("\nIdentity Sinkhorn for target (g_id):")
-    g_id = np.zeros(NK)
+    g_id = np.zeros(len(y))
     regvar = 1
     i = 0
     while regvar < k_final:
         g_id_new, maxdif = sinkhorn_identity_g_step(
-            x, y, logq, g_id, regvar, chunk_size
+            identity_x, y, logq, g_id, regvar, chunk_size
         )
         g_id = np.where(np.isfinite(logq), g_id_new, g_id)
         i += 1
@@ -792,14 +821,15 @@ def _run_sinkhorn_divergence_inner(x, y, p, q, x_s, y_s, p_s, q_s,
     maxdif = cap_thr + 1.0
     while maxdif > cap_thr:
         g_id_new, maxdif = sinkhorn_identity_g_step(
-            x, y, logq, g_id, k_final, chunk_size
+            identity_x, y, logq, g_id, k_final, chunk_size
         )
         g_id = np.where(np.isfinite(logq), g_id_new, g_id)
         i += 1
         if verbose:
             print(f"  iter {i:3d}, maxdif={maxdif:.4e}")
-        if i > cap_iter:
+        if cap_iter is not None and i >= cap_iter:
             break
+    target_identity_iterations, target_identity_change = i, maxdif
     if verbose:
         print(f"Identity G: {i} final iterations, last change={maxdif:.4e}")
 
@@ -837,4 +867,10 @@ def _run_sinkhorn_divergence_inner(x, y, p, q, x_s, y_s, p_s, q_s,
         "f_id": f_id,
         "g_id": g_id,
         "total_cost": total_cost,
+        "final_iterations": final_iterations,
+        "final_change": final_change,
+        "source_identity_iterations": source_identity_iterations,
+        "source_identity_change": source_identity_change,
+        "target_identity_iterations": target_identity_iterations,
+        "target_identity_change": target_identity_change,
     }
