@@ -1,0 +1,24 @@
+{
+  "nk": [
+    100,
+    225,
+    400,
+    900,
+    1600
+  ],
+  "epsilon": [
+    0.0125,
+    0.00625,
+    0.003125,
+    0.0015625
+  ],
+  "pf_epsilon": [
+    0.0125,
+    0.00625,
+    0.003125,
+    0.0015625
+  ],
+  "fixed_nk": 1600,
+  "fixed_epsilon": 0.003125,
+  "output": "C:\\Users\\knday\\Github\\benchmarks-PS-reflector\\results\\refraction_sweeps"
+}

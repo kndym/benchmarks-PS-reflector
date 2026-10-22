@@ -1,0 +1,162 @@
+[
+  {
+    "schedule": "Joint epsilon(NK)",
+    "pf_epsilon": 0.0125,
+    "nk_in_ascending_cost_order": [
+      10000
+    ],
+    "decreases_with_nk": true
+  },
+  {
+    "schedule": "Joint epsilon(NK)",
+    "pf_epsilon": 0.009809499629393254,
+    "nk_in_ascending_cost_order": [
+      10000
+    ],
+    "decreases_with_nk": true
+  },
+  {
+    "schedule": "Joint epsilon(NK)",
+    "pf_epsilon": 0.007698102638325323,
+    "nk_in_ascending_cost_order": [
+      10000
+    ],
+    "decreases_with_nk": true
+  },
+  {
+    "schedule": "Joint epsilon(NK)",
+    "pf_epsilon": 0.006041162798214688,
+    "nk_in_ascending_cost_order": [
+      10000
+    ],
+    "decreases_with_nk": true
+  },
+  {
+    "schedule": "Joint epsilon(NK)",
+    "pf_epsilon": 0.00474086273841531,
+    "nk_in_ascending_cost_order": [
+      10000
+    ],
+    "decreases_with_nk": true
+  },
+  {
+    "schedule": "Joint epsilon(NK)",
+    "pf_epsilon": 0.0037204393020391475,
+    "nk_in_ascending_cost_order": [
+      10000
+    ],
+    "decreases_with_nk": true
+  },
+  {
+    "schedule": "Joint epsilon(NK)",
+    "pf_epsilon": 0.0029196518363626502,
+    "nk_in_ascending_cost_order": [
+      10000
+    ],
+    "decreases_with_nk": true
+  },
+  {
+    "schedule": "Joint epsilon(NK)",
+    "pf_epsilon": 0.0022912258885405437,
+    "nk_in_ascending_cost_order": [
+      10000
+    ],
+    "decreases_with_nk": true
+  },
+  {
+    "schedule": "Joint epsilon(NK)",
+    "pf_epsilon": 0.001798062360359578,
+    "nk_in_ascending_cost_order": [
+      10000
+    ],
+    "decreases_with_nk": true
+  },
+  {
+    "schedule": "Joint epsilon(NK)",
+    "pf_epsilon": 0.0014110473646058597,
+    "nk_in_ascending_cost_order": [
+      10000
+    ],
+    "decreases_with_nk": true
+  },
+  {
+    "schedule": "Joint epsilon(NK)",
+    "pf_epsilon": 0.0011073334880126024,
+    "nk_in_ascending_cost_order": [
+      10000
+    ],
+    "decreases_with_nk": true
+  },
+  {
+    "schedule": "Joint epsilon(NK)",
+    "pf_epsilon": 0.0008689909952219504,
+    "nk_in_ascending_cost_order": [
+      10000
+    ],
+    "decreases_with_nk": true
+  },
+  {
+    "schedule": "Joint epsilon(NK)",
+    "pf_epsilon": 0.0006819493476460648,
+    "nk_in_ascending_cost_order": [
+      10000
+    ],
+    "decreases_with_nk": true
+  },
+  {
+    "schedule": "Joint epsilon(NK)",
+    "pf_epsilon": 0.0005351665498399242,
+    "nk_in_ascending_cost_order": [
+      10000
+    ],
+    "decreases_with_nk": true
+  },
+  {
+    "schedule": "Joint epsilon(NK)",
+    "pf_epsilon": 0.00041997728578547247,
+    "nk_in_ascending_cost_order": [
+      10000
+    ],
+    "decreases_with_nk": true
+  },
+  {
+    "schedule": "Joint epsilon(NK)",
+    "pf_epsilon": 0.0003295813623412946,
+    "nk_in_ascending_cost_order": [
+      10000
+    ],
+    "decreases_with_nk": true
+  },
+  {
+    "schedule": "Joint epsilon(NK)",
+    "pf_epsilon": 0.00025864226013934866,
+    "nk_in_ascending_cost_order": [
+      10000
+    ],
+    "decreases_with_nk": true
+  },
+  {
+    "schedule": "Joint epsilon(NK)",
+    "pf_epsilon": 0.00020297209239859005,
+    "nk_in_ascending_cost_order": [
+      10000
+    ],
+    "decreases_with_nk": true
+  },
+  {
+    "schedule": "Joint epsilon(NK)",
+    "pf_epsilon": 0.00015928437321289162,
+    "nk_in_ascending_cost_order": [
+      10000
+    ],
+    "decreases_with_nk": true
+  },
+  {
+    "schedule": "Joint epsilon(NK)",
+    "pf_epsilon": 0.000125,
+    "nk_in_ascending_cost_order": [
+      10000
+    ],
+    "decreases_with_nk": true
+  }
+]
