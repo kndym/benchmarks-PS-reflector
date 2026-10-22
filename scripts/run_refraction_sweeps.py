@@ -21,6 +21,7 @@ from generate_results import (
 )
 from refracter.cost import set_kappa, cost_matrix_chunk
 from refracter.sinkhorn import run_sinkhorn_divergence, entropic_ot_cost
+from refracter.optics import entropic_surface_normals, refract_using_normals
 import refracter.sinkhorn as sinkhorn_module
 
 
@@ -71,6 +72,8 @@ def main():
     parser.add_argument("--chunk-size", type=int, default=512)
     parser.add_argument("--pf-cache-entries", type=int, default=4_000_000)
     parser.add_argument("--workers", type=int, default=1, help="Threads for independent SciPy reductions")
+    parser.add_argument("--pushforward", choices=["hard", "entropic"], default="hard",
+                        help="Hard c-transform or entropic-surface normals with Snell refraction")
     parser.add_argument("--pf-warm-start", action="store_true",
                         help="Reuse PF potentials from the preceding larger epsilon")
     parser.add_argument("--output", type=Path, default=Path(REPO_ROOT) / "results/refraction_sweeps")
@@ -103,9 +106,12 @@ def main():
     (args.output / "parameters.json").write_text(json.dumps(vars(args), default=str, indent=2), encoding="utf-8")
     set_kappa(0.6)
     cache = {}
+    pf_potentials = {}
     solver_tag = ""
     if (args.refractor_max_iter, args.identity_max_iter, args.refractor_tolerance) != (17, 17, 1e-5):
         solver_tag = f"_iter{args.refractor_max_iter}_id{args.identity_max_iter}_tol{args.refractor_tolerance:.17g}"
+    if args.pushforward == "entropic":
+        solver_tag += "_entropic_v1"
     rows = []
     imported = {}
     imported_pf = {}
@@ -118,17 +124,25 @@ def main():
                 else:
                     imported[key] = row
 
+    def checkpoint_tag(nk, *, evaluation=False):
+        tag = f"_targetNK{args.target_nk or nk}_self" if args.target_nk is not None else ""
+        tag += solver_tag
+        if evaluation and args.pf_tolerance != 1e-9:
+            tag += f"_pftol{args.pf_tolerance:.17g}"
+        return tag
+
     def write_costs():
-        with (args.output / "costs.csv").open("w", newline="", encoding="utf-8") as stream:
+        temporary = args.output / "costs.tmp.csv"
+        with temporary.open("w", newline="", encoding="utf-8") as stream:
             writer = csv.DictWriter(stream, fieldnames=rows[0].keys())
             writer.writeheader()
             writer.writerows(rows)
+        temporary.replace(args.output / "costs.csv")
 
     def solve(nk, epsilon):
         key = (nk, epsilon)
         target_nk = args.target_nk or nk
-        target_tag = f"_targetNK{target_nk}_self" if args.target_nk is not None else ""
-        target_tag += solver_tag
+        target_tag = checkpoint_tag(nk)
         if key not in cache:
             checkpoint = args.output / f"solve_NK{nk}{target_tag}_eps{epsilon:.17g}.npz"
             if checkpoint.exists():
@@ -167,17 +181,55 @@ def main():
             diagnostic.update({name: solution[name] for name in (
                 "final_iterations", "final_change", "source_identity_iterations",
                 "source_identity_change", "target_identity_iterations", "target_identity_change")})
-            (args.output / f"residual_NK{nk}{target_tag}_eps{epsilon:.17g}.json").write_text(
-                json.dumps(diagnostic, indent=2), encoding="utf-8")
             artifacts = build_refraction_artifacts(
                 x, y, p, q, solution["f_raw"], solution["g_raw"],
                 solution["f"], solution["g"], P_refraction_patch, Q_refraction_patch,
                 grid_res=16,
             )
+            entropic_arrays = {}
+            if args.pushforward == "entropic":
+                normals, log_radius = entropic_surface_normals(
+                    x, y, q, solution["g_raw"], epsilon, .6, args.chunk_size)
+                transmitted = refract_using_normals(x[p > 0], normals[p > 0], .6)
+                if not np.isfinite(transmitted).all() or not np.allclose(
+                        np.linalg.norm(transmitted, axis=1), 1, atol=1e-10, rtol=0):
+                    raise RuntimeError("Nonfinite or nonunit entropic transmitted directions")
+                entropic_arrays = dict(x=x, f_raw=solution["f_raw"], g_raw=solution["g_raw"],
+                                       surface_normals=normals, log_radius=log_radius,
+                                       hard_y_push_3d=artifacts["y_push_3d"].copy())
+                artifacts["y_push_3d"] = transmitted
+                diagnostic.update(pushforward="entropic", normal_dot_error=float(
+                    np.max(np.abs(np.sum(x*normals, axis=1)-1))),
+                    transmitted_norm_error=float(np.max(np.abs(np.linalg.norm(transmitted, axis=1)-1))))
+            (args.output / f"residual_NK{nk}{target_tag}_eps{epsilon:.17g}.json").write_text(
+                json.dumps(diagnostic, indent=2), encoding="utf-8")
             cache[key] = (solution, artifacts, y, p, q)
             np.savez(checkpoint, total_cost=solution["total_cost"],
-                     y_push_3d=artifacts["y_push_3d"], y=y, p=p, q=q)
+                     y_push_3d=artifacts["y_push_3d"], y=y, p=p, q=q, **entropic_arrays)
         return cache[key]
+
+    def evaluate_cost(nk, epsilon, pf_epsilon, *, warm_start=False):
+        """One PF EOT evaluation/cache path shared by all four experiments."""
+        _, artifacts, y, p, q = solve(nk, epsilon)
+        tag = checkpoint_tag(nk, evaluation=True)
+        checkpoint = args.output / f"pf_NK{nk}{tag}_eps{epsilon:.17g}_eval{pf_epsilon:.17g}.json"
+        if checkpoint.exists():
+            value, info = json.loads(checkpoint.read_text(encoding="utf-8"))
+        else:
+            value, info = entropic_ot_cost(
+                artifacts["y_push_3d"], y[q > 0], p[p > 0], q[q > 0],
+                epsilon=pf_epsilon, return_info=True, chunk_size=args.chunk_size,
+                tolerance=args.pf_tolerance, max_iter=args.pf_max_iter,
+                max_cache_entries=args.pf_cache_entries,
+                initial_potentials=pf_potentials.get((nk, epsilon)) if warm_start else None,
+                return_potentials=warm_start)
+            if warm_start:
+                pf_potentials[nk, epsilon] = info.pop("potentials")
+            if info["converged"] and np.isfinite(value):
+                checkpoint.write_text(json.dumps([value, info]), encoding="utf-8")
+        if not info["converged"] or not np.isfinite(value):
+            raise RuntimeError(f"PF EOT evaluation failed: NK={nk}, refractor={epsilon}, PF={pf_epsilon}: {info}")
+        return value, info
 
     def cost_row(experiment, nk, epsilon):
         if (experiment, nk, epsilon) in imported:
@@ -187,23 +239,7 @@ def main():
             rows.append(row)
             write_costs()
             return float(row["cost"])
-        _, artifacts, y, p, q = solve(nk, epsilon)
-        target_tag = f"_targetNK{args.target_nk}_self" if args.target_nk is not None else ""
-        target_tag += solver_tag
-        if args.pf_tolerance != 1e-9:
-            target_tag += f"_pftol{args.pf_tolerance:.17g}"
-        checkpoint = args.output / f"pf_NK{nk}{target_tag}_eps{epsilon:.17g}_eval{args.cost_epsilon:.17g}.json"
-        if checkpoint.exists():
-            value, info = json.loads(checkpoint.read_text(encoding="utf-8"))
-        else:
-            value, info = entropic_ot_cost(artifacts["y_push_3d"], y[q > 0], p[p > 0], q[q > 0],
-                                           epsilon=args.cost_epsilon, return_info=True,
-                                           chunk_size=args.chunk_size, tolerance=args.pf_tolerance,
-                                           max_iter=args.pf_max_iter, max_cache_entries=args.pf_cache_entries)
-            if info["converged"]:
-                checkpoint.write_text(json.dumps([value, info]), encoding="utf-8")
-        if not info["converged"] or not np.isfinite(value):
-            raise RuntimeError(f"PF EOT evaluation failed: NK={nk}, epsilon={epsilon}: {info}")
+        value, info = evaluate_cost(nk, epsilon, args.cost_epsilon)
         row = dict(experiment=experiment, nk=nk, refractor_epsilon=epsilon,
                    pf_epsilon=args.cost_epsilon, cost=value,
                    converged=info["converged"], iterations=info["iterations"])
@@ -230,6 +266,7 @@ def main():
             xlabel = r"Source $N_k$" if experiment != 3 else xlabel
         if solver_tag:
             title += f"\nTransport cap: {args.refractor_max_iter or 'none'}; self cap: {args.identity_max_iter or 'none'}"
+        title += f"\nPush-forward: {args.pushforward}"
         if experiment not in args.experiments:
             ax.set_visible(False)
             continue
@@ -259,7 +296,6 @@ def main():
     nrows = int(np.ceil(len(schedules) / columns))
     fig, axes = plt.subplots(nrows, columns, figsize=(10*columns, 6*nrows), squeeze=False)
     ordering = []
-    pf_potentials = {}
     pf_nk = [nk for nk in args.nk if nk not in args.skip_pf_nk]
     for ax, (title, fixed_e) in zip(axes.flat, schedules):
         ax.set_prop_cycle(color=plt.cm.viridis(np.linspace(0, 1, len(args.pf_epsilon))))
@@ -272,29 +308,7 @@ def main():
                     rows.append(row)
                     costs.append(float(row["cost"]))
                     continue
-                _, artifacts, y, p, q = solve(nk, e)
-                target_tag = f"_targetNK{args.target_nk}_self" if args.target_nk is not None else ""
-                target_tag += solver_tag
-                if args.pf_tolerance != 1e-9:
-                    target_tag += f"_pftol{args.pf_tolerance:.17g}"
-                checkpoint = args.output / f"pf_NK{nk}{target_tag}_eps{e:.17g}_eval{pf_e:.17g}.json"
-                if checkpoint.exists():
-                    value, info = json.loads(checkpoint.read_text(encoding="utf-8"))
-                else:
-                    value, info = entropic_ot_cost(
-                        artifacts["y_push_3d"], y[q > 0], p[p > 0], q[q > 0],
-                        epsilon=pf_e, return_info=True, max_iter=args.pf_max_iter,
-                        chunk_size=args.chunk_size, tolerance=args.pf_tolerance,
-                        initial_potentials=pf_potentials.get((nk, e)),
-                        return_potentials=args.pf_warm_start,
-                        max_cache_entries=args.pf_cache_entries,
-                    )
-                    if args.pf_warm_start:
-                        pf_potentials[nk, e] = info.pop("potentials")
-                    if info["converged"]:
-                        checkpoint.write_text(json.dumps([value, info]), encoding="utf-8")
-                if not info["converged"]:
-                    raise RuntimeError(f"PF cost failed to converge: NK={nk}, epsilon={e}, PF={pf_e}: {info}")
+                value, info = evaluate_cost(nk, e, pf_e, warm_start=args.pf_warm_start)
                 costs.append(value)
                 rows.append(dict(experiment=4, nk=nk, refractor_epsilon=e,
                                  pf_epsilon=pf_e, cost=value, **{k: info[k] for k in ("converged", "iterations")}))

@@ -6,6 +6,26 @@
 *.html
 !/results/refraction_sweeps_extended/*.png
 !/results/refraction_sweeps_extended_high_iter/*.png
+!/results/refraction_sweeps/*.png
+!/results/archive/**/*.png
+!/results/snapshots/**/*.png
+!/figures/*.png
+!/geometric_optics_progress/images/*.png
+
+# Local workers and disposable test output; published snapshots are immutable.
+/results/**/*.pid
+/results/**/*.log
+/results/**/*.err
+/results/**/queued_run.json
+/results/**/run_manifest.json
+/results/*smoke*/
+/results/refraction_sweeps_extended_entropic_high_iter/
+/geometric_optics_progress.zip
+/geometric_optics_progress/*.aux
+/geometric_optics_progress/*.log
+/geometric_optics_progress/*.pdf
+/geometric_optics_progress/*.out
+**/__pycache__/
 CLAUDE.md
 /results/sinkhorn_refracter_examples
 

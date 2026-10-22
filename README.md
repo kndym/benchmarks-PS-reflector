@@ -3,6 +3,11 @@
 Solve the **far-field refractor problem** via Sinkhorn-based entropic optimal transport.
 Given source and target intensity distributions on the unit sphere, the solver finds the refractor surface that redirects light from the source to match the target.
 
+**Browse the [results catalog](results/README.md)** for completed fixed-target
+sweeps, archived laptop sweeps, the current entropic-surface comparison snapshot,
+and the [LaTeX write-up](geometric_optics_progress/). The catalog separates
+different metrics and target grids and records which results are incomplete.
+
 **Cost function:** `c(x, y) = -log(1 - κ·(x·y))`, κ = 0.6 (refractor), κ = 1.0 (reflector).
 
 ---
@@ -61,6 +66,7 @@ benchmarks-PS-reflector/
 │   ├── distributions.py          # Density functions and stereographic projections
 │   ├── build.py                  # Surface construction and c-transforms
 │   ├── pushforward.py            # Ray tracing and push-forward
+│   ├── optics.py                 # Entropic-surface normals and vector Snell refraction
 │   └── qmc.py                    # Halton sampling and QMC point cloud loading
 │
 ├── scripts/
@@ -176,6 +182,24 @@ In the 2000-cap run, all 120 transport and both sets of 120 self solves met the
 1e-5 potential-change tolerance; none hit the cap. The longest final loops used
 659 transport, 551 source-self, and 15 target-self updates. PF convergence and
 potential-change stopping remain distinct from marginal feasibility.
+
+For the same extended grid with the entropic interpolation surface and
+Snell refraction instead of the hard c-transform push-forward:
+
+```bash
+python -B scripts/run_refraction_sweeps.py --extended --experiments 1 2 3 --target-nk 1600 --pushforward entropic --refractor-max-iter 2000 --identity-max-iter 2000 --workers 4 --output results/refraction_sweeps_extended_entropic_high_iter
+python -B scripts/plot_refraction_pushforward_comparison.py results/refraction_sweeps_extended_entropic_high_iter --baseline results/refraction_sweeps_extended_high_iter --watch
+```
+
+`refracter/optics.py` computes softmin weights in the log domain from raw
+target potentials, the normals of `R(x)=exp(f_epsilon(x))`, and transmitted
+unit directions using vector Snell's law with `kappa=n2/n1=0.6`. Total internal
+reflection raises an error rather than silently dropping rays. The new run
+uses separate `_entropic_v1` checkpoints, storing normals, log radii, raw
+potentials, hard-map directions, and the entropic transmitted directions.
+The optical solves are unchanged; only the push-forward used for EOT
+evaluation changes. Comparison plots match both runs' grids, target size,
+caps, and tolerances, and explicitly label partial results.
 
 The expanded bounded experiment uses 20 logarithmic NK values from 100 to
 10,000 and 20 epsilon values from 0.000125 to 0.0125 (100x ranges):

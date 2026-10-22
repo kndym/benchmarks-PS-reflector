@@ -1,0 +1,111 @@
+{
+  "datasets": [
+    {
+      "path": "refraction_sweeps",
+      "rows": 114,
+      "unique_parameter_pairs": 102,
+      "repeated_joint_and_fixed_schedule_rows": 12,
+      "experiment_counts": {
+        "1": 5,
+        "2": 5,
+        "3": 4,
+        "4": 100
+      },
+      "finite_costs": true,
+      "pf_rows": 114,
+      "pf_converged_rows": 114,
+      "internal_cost_rows": 0
+    },
+    {
+      "path": "refraction_sweeps_extended",
+      "rows": 120,
+      "unique_parameter_pairs": 120,
+      "repeated_joint_and_fixed_schedule_rows": 0,
+      "experiment_counts": {
+        "1": 40,
+        "2": 40,
+        "3": 40
+      },
+      "finite_costs": true,
+      "pf_rows": 120,
+      "pf_converged_rows": 120,
+      "internal_cost_rows": 0
+    },
+    {
+      "path": "refraction_sweeps_extended_high_iter",
+      "rows": 120,
+      "unique_parameter_pairs": 120,
+      "repeated_joint_and_fixed_schedule_rows": 0,
+      "experiment_counts": {
+        "1": 40,
+        "2": 40,
+        "3": 40
+      },
+      "finite_costs": true,
+      "pf_rows": 120,
+      "pf_converged_rows": 120,
+      "internal_cost_rows": 0
+    },
+    {
+      "path": "snapshots/entropic_high_iter_20261022",
+      "rows": 21,
+      "unique_parameter_pairs": 21,
+      "repeated_joint_and_fixed_schedule_rows": 0,
+      "experiment_counts": {
+        "1": 21
+      },
+      "finite_costs": true,
+      "pf_rows": 21,
+      "pf_converged_rows": 21,
+      "internal_cost_rows": 0
+    },
+    {
+      "path": "archive/laptop_expanded",
+      "rows": 460,
+      "unique_parameter_pairs": 460,
+      "repeated_joint_and_fixed_schedule_rows": 0,
+      "experiment_counts": {
+        "1": 20,
+        "2": 20,
+        "3": 20,
+        "4": 400
+      },
+      "finite_costs": true,
+      "pf_rows": 400,
+      "pf_converged_rows": 400,
+      "internal_cost_rows": 60
+    },
+    {
+      "path": "archive/laptop_pilot",
+      "rows": 114,
+      "unique_parameter_pairs": 102,
+      "repeated_joint_and_fixed_schedule_rows": 12,
+      "experiment_counts": {
+        "1": 5,
+        "2": 5,
+        "3": 4,
+        "4": 100
+      },
+      "finite_costs": true,
+      "pf_rows": 100,
+      "pf_converged_rows": 100,
+      "internal_cost_rows": 14
+    },
+    {
+      "path": "archive/extended_varying_target_20261006",
+      "rows": 39,
+      "unique_parameter_pairs": 39,
+      "repeated_joint_and_fixed_schedule_rows": 0,
+      "experiment_counts": {
+        "1": 39
+      },
+      "finite_costs": true,
+      "pf_rows": 39,
+      "pf_converged_rows": 39,
+      "internal_cost_rows": 0
+    }
+  ],
+  "laptop_import_commit": "9d4cd211e45e5c3d6a49e3770e9e78102f703c3e",
+  "desktop_shards_exactly_matched": 67,
+  "live_entropic_not_interrupted": true
+}
