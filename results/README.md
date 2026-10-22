@@ -53,6 +53,16 @@ provenance; they are not additional independent experiments.
 
 ## Other existing benchmark bundles
 
+The laptop agent also reported separate Git-ignored exploratory studies under
+`.research/refraction/`: density controls (192 PF evaluations), convergence
+probes (24), dense controls (12), and PF bias/reference-grid evaluations (72,
+including eight that did not pass the existing tests), plus an illustrated
+report. These counts are laptop-reported, not validated by this consolidation.
+Those research files and ten laptop-only sensitivity surface renders have
+**not yet been transferred into this branch**. A follow-up packaging request
+was sent, but its delivery/completion has not been confirmed. The sweep bundles
+listed above have been received and validated independently of that request.
+
 - [Uniform sensitivity](uniform_sensitivity/): ten kappa/source-angle controls;
   [numeric summary](uniform_sensitivity/L2_costs_numeric.csv). Its projected-plane
   assignment Wasserstein and target-atom mass L2 metrics differ from sweep EOT.
