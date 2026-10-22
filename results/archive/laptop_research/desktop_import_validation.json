@@ -1,0 +1,93 @@
+{
+  "laptop_source_commit": "6568ee528a848c2b354e01a03f1c2a981486cc55",
+  "payload_hashes_verified": 205,
+  "text_line_endings_normalized_for_hashes": [
+    "convergence/REPORT.md"
+  ],
+  "local_html_links_verified": 34,
+  "research_pngs_decoded": 10,
+  "surface_images_verified": 10,
+  "surfaces": [
+    {
+      "image": "results/uniform_sensitivity/kappa_0p25_surface.png",
+      "image_sha256": "8bbf469a24bca62077188c0ab6c16653b01ada9e06c6d651eccf1556b420cf94",
+      "npz": "results/uniform_sensitivity/kappa_0p25.npz",
+      "npz_sha256": "a983378c27b7fe3584bdcb1d13a44d645dcc0d1905b748789fabbd4ba69f28d1",
+      "surface_arrays_match_laptop": true
+    },
+    {
+      "image": "results/uniform_sensitivity/kappa_0p50_surface.png",
+      "image_sha256": "a760e98fa5436a2c713a8bb37a61258069f64b5c8ee26214f6d7efe9a956298b",
+      "npz": "results/uniform_sensitivity/kappa_0p50.npz",
+      "npz_sha256": "59b3c211a2be86ea862d0f03eff344a575cb1977254b249d60aa448d29888eea",
+      "surface_arrays_match_laptop": true
+    },
+    {
+      "image": "results/uniform_sensitivity/kappa_0p90_surface.png",
+      "image_sha256": "6b83fd8fc9699ce4eb59b1e926e4bac946bed0811083fba3c9c6428d3f46bbd4",
+      "npz": "results/uniform_sensitivity/kappa_0p90.npz",
+      "npz_sha256": "c7b645c81969c4f1d6fd2366de8a76e1115bfc67e32569cbea266efd0a5e2234",
+      "surface_arrays_match_laptop": true
+    },
+    {
+      "image": "results/uniform_sensitivity/original_uniform_surface.png",
+      "image_sha256": "b696798e1e8d8b1079eeb3c544b71c146e24244dd9a0cbb95ba39185b496a785",
+      "npz": "results/uniform_sensitivity/original_uniform.npz",
+      "npz_sha256": "a0dc63fd422a528712631f9e885376b418d0ddeaee0ceeb970a64850e4fd0f53",
+      "surface_arrays_match_laptop": true
+    },
+    {
+      "image": "results/uniform_sensitivity/source_phi_plus_05deg_surface.png",
+      "image_sha256": "3843100301c12c06ceba8013cb8f18461b192d95c209cea23507f362e10c8afc",
+      "npz": "results/uniform_sensitivity/source_phi_plus_05deg.npz",
+      "npz_sha256": "e6695a0f05073920d9d0458be54524c9f05f554dda25be61ed7202a89b6ae79c",
+      "surface_arrays_match_laptop": true
+    },
+    {
+      "image": "results/uniform_sensitivity/source_phi_plus_15deg_surface.png",
+      "image_sha256": "5949870ca43c8169faaa4b1e8611e6c8190ff49fde173ae1aa444a5ae0d053cb",
+      "npz": "results/uniform_sensitivity/source_phi_plus_15deg.npz",
+      "npz_sha256": "ae6d49654644493b41c710138f152e7df66e3d5716f0abeb3bcb01459244e3b9",
+      "surface_arrays_match_laptop": true
+    },
+    {
+      "image": "results/uniform_sensitivity/source_phi_plus_25deg_surface.png",
+      "image_sha256": "508dba456ef4ca5e45c28359dcf4d80992bd8fbb6ffc978cf7f571398ddcd0bf",
+      "npz": "results/uniform_sensitivity/source_phi_plus_25deg.npz",
+      "npz_sha256": "43281597a219ad2dbee2a8dab1a805585414578100fe7854addcbb32941cd301",
+      "surface_arrays_match_laptop": true
+    },
+    {
+      "image": "results/uniform_sensitivity/source_theta_plus_10deg_surface.png",
+      "image_sha256": "31ff233129775eb3e5bf0bfacb645a0044606d1a73325576c79d8d44b379051b",
+      "npz": "results/uniform_sensitivity/source_theta_plus_10deg.npz",
+      "npz_sha256": "53b25ca65e87dee339c18cc9e468104947b9f326b35761f7ed11397b83b52b3b",
+      "surface_arrays_match_laptop": true
+    },
+    {
+      "image": "results/uniform_sensitivity/source_theta_plus_25deg_surface.png",
+      "image_sha256": "3c6cd77ded2852eff7a0c76e1d6775f371feb0ee50109c13775431167ca186d7",
+      "npz": "results/uniform_sensitivity/source_theta_plus_25deg.npz",
+      "npz_sha256": "372475ff3e1c87d95caf3e9839b8e36b3799081916897abe063a5524230e6718",
+      "surface_arrays_match_laptop": true
+    },
+    {
+      "image": "results/uniform_sensitivity/source_theta_plus_40deg_surface.png",
+      "image_sha256": "f2c85083106720995a8f0a338cb55cc529b0adef29367b4327abe73bf7160f3a",
+      "npz": "results/uniform_sensitivity/source_theta_plus_40deg.npz",
+      "npz_sha256": "fd64fb05841042bfcc30d14dc760d490161df6757ce18c78651dc4317255e542",
+      "surface_arrays_match_laptop": true
+    }
+  ],
+  "density_pf_rows": 192,
+  "density_source_cases": 48,
+  "convergence_rows": 24,
+  "convergence_budget_failures": 6,
+  "refinement_table_rows": 48,
+  "pf_rows": 72,
+  "pf_passing": 64,
+  "pf_failed_preserved": 8,
+  "numerical_runs_started": 0,
+  "svg_figures_parsed": 6,
+  "generated_svg_whitespace": "Original generated path formatting retained to preserve imported hashes."
+}

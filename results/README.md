@@ -53,19 +53,26 @@ provenance; they are not additional independent experiments.
 
 ## Other existing benchmark bundles
 
-The laptop agent also reported separate Git-ignored exploratory studies under
-`.research/refraction/`: density controls (192 PF evaluations), convergence
-probes (24), dense controls (12), and PF bias/reference-grid evaluations (72,
-including eight that did not pass the existing tests), plus an illustrated
-report. These counts are laptop-reported, not validated by this consolidation.
-Those research files and ten laptop-only sensitivity surface renders have
-**not yet been transferred into this branch**. A follow-up packaging request
-was sent, but its delivery/completion has not been confirmed. The sweep bundles
-listed above have been received and validated independently of that request.
+The [laptop exploratory research archive](archive/laptop_research/) is now
+included, with a [GitHub-readable illustrated overview](archive/laptop_research/report/README.md)
+and the original [HTML report](archive/laptop_research/report/index.html).
+It contains density controls (192 PF evaluations), convergence probes (24),
+refinement controls (12), and PF bias/reference-grid evaluations (72, including
+eight that did not pass the existing tests). Failed evaluations and incomplete
+diagnostic probes are preserved and identified; they are not additional solved
+sweep cases. These exploratory studies differ from the fixed-target production
+sweeps and the currently running entropic-normal comparison.
+
+The remaining laptop transfer is complete: all 205 payload hashes, 34 local
+HTML links and the ten surface image mappings were checked. See the
+[desktop import validation](archive/laptop_research/desktop_import_validation.json)
+and the [original provenance manifest](archive/laptop_research/manifest.json).
 
 - [Uniform sensitivity](uniform_sensitivity/): ten kappa/source-angle controls;
-  [numeric summary](uniform_sensitivity/L2_costs_numeric.csv). Its projected-plane
-  assignment Wasserstein and target-atom mass L2 metrics differ from sweep EOT.
+  [numeric summary and surface gallery](uniform_sensitivity/README.md). The current summary
+  uses debiased Sinkhorn divergence with squared Euclidean 3D cost and epsilon
+  0.005, its square root, and a separate target-atom mass L2 metric. These differ
+  from the non-debiased sweep EOT; the square root is not exact unregularized W2.
 - [Representative refractor examples](sinkhorn_refracter_examples/): saved
   surfaces, metadata, figures and original LaTeX source.
 - `results_refraction_*_NK1600.npz`: the source/target density-pair examples

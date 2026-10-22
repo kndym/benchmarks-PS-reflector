@@ -8,6 +8,8 @@
 !/results/refraction_sweeps_extended_high_iter/*.png
 !/results/refraction_sweeps/*.png
 !/results/archive/**/*.png
+!/results/archive/laptop_research/**/*.html
+!/results/uniform_sensitivity/*_surface.png
 !/results/snapshots/**/*.png
 !/figures/*.png
 !/geometric_optics_progress/images/*.png
