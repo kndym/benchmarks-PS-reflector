@@ -23,7 +23,7 @@ def read_rows(folder):
 
 def render(output, baseline, *, value_field="cost",
            ylabel="PF-to-target EOT (squared Euclidean, 3D)",
-           progress_label="entropic evaluations"):
+           progress_label="entropic evaluations", yscales=("linear", "log")):
     params = json.loads((output / "parameters.json").read_text(encoding="utf-8"))
     hard_params = json.loads((baseline / "parameters.json").read_text(encoding="utf-8"))
     for key in ("nk", "epsilon", "fixed_nk", "fixed_epsilon", "target_nk", "cost_epsilon",
@@ -46,6 +46,25 @@ def render(output, baseline, *, value_field="cost",
                f"transport/self caps {params['refractor_max_iter']}/{params['identity_max_iter']}\n"
                f"Evaluation epsilon {params['cost_epsilon']:.6g}; "
                f"{progress_label} {len(soft)}/{expected}" + (" (complete)" if complete else " (partial)"))
+    nonpositive = sum(float(r[value_field]) <= 0 for r in hard + soft)
+
+    def save_variants(figure, panels, stem, fontsize):
+        for scale in yscales:
+            for panel in panels:
+                if scale == 'log':
+                    panel.set_yscale('log', nonpositive='mask')
+                else:
+                    panel.set_yscale('linear')
+            note = '' if scale == 'linear' else '; logarithmic y axis'
+            if scale == 'log' and nonpositive:
+                note += f'; {nonpositive} nonpositive values omitted'
+            figure.suptitle(context + note, fontsize=fontsize)
+            figure.tight_layout(rect=(0, 0, 1, .90))
+            suffix = '' if scale == 'linear' else '_log'
+            temporary = output / f'{stem}{suffix}.tmp.png'
+            figure.savefig(temporary, dpi=180)
+            atomic_replace(temporary, output / f'{stem}{suffix}.png')
+
     combined, axes = plt.subplots(1, 3, figsize=(17, 5.5))
     for e, ax in zip((1, 2, 3), axes):
         single, one = plt.subplots(figsize=(8, 6))
@@ -63,17 +82,9 @@ def render(output, baseline, *, value_field="cost",
                        ylabel=ylabel, xscale='log')
             target.grid(alpha=.3)
             target.legend(fontsize=8)
-        single.suptitle(context, fontsize=10)
-        single.tight_layout(rect=(0, 0, 1, .90))
-        tmp = output / f'comparison_experiment_{e}.tmp.png'
-        single.savefig(tmp, dpi=180)
-        atomic_replace(tmp, output / f'comparison_experiment_{e}.png')
+        save_variants(single, [one], f'comparison_experiment_{e}', 10)
         plt.close(single)
-    combined.suptitle(context, fontsize=12)
-    combined.tight_layout(rect=(0, 0, 1, .90))
-    tmp = output / 'comparison_experiments_1_2_3.tmp.png'
-    combined.savefig(tmp, dpi=180)
-    atomic_replace(tmp, output / 'comparison_experiments_1_2_3.png')
+    save_variants(combined, axes, 'comparison_experiments_1_2_3', 12)
     plt.close(combined)
     return complete
 
@@ -83,10 +94,17 @@ if __name__ == '__main__':
     parser.add_argument('output', type=Path)
     parser.add_argument('--baseline', type=Path, required=True)
     parser.add_argument('--watch', action='store_true')
+    parser.add_argument('--metric', choices=('eot', 'divergence'), default='eot')
+    parser.add_argument('--log-only', action='store_true', help='Write only log-y plots alongside an existing linear plot worker')
     args = parser.parse_args()
     deadline = time.monotonic() + 7*24*3600
     while True:
-        complete = render(args.output, args.baseline)
+        options = dict(yscales=('log',)) if args.log_only else {}
+        if args.metric == 'divergence':
+            options.update(value_field='divergence',
+                           ylabel=r'$S_{1/320}(PF,T)$ (squared Euclidean, 3D)',
+                           progress_label='debiased entropic cases')
+        complete = render(args.output, args.baseline, **options)
         if complete or not args.watch:
             break
         if time.monotonic() > deadline:

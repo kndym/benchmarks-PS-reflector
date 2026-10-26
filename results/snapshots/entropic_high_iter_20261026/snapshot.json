@@ -216,6 +216,14 @@
     "solve_NK7727_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_entropic_v1_eps0.0014367816091954023.npz": "9698db858a1fb7a3c6e7b02efd330e963082e57983442facf1f985d00a74b6f8",
     "solve_NK879_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_entropic_v1_eps0.0031250000000000002.npz": "a39d5d730252e7e10b51e2cd6addbbb942139a72a950d47cd75a4b4aa5b69bfb",
     "solve_NK879_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_entropic_v1_eps0.0043103448275862068.npz": "542d31d0addb7d5282717fff22f76a5a1bf1afe2a644f353e90ff464bf490ffa",
-    "solve_NK8852_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_entropic_v1_eps0.0013297872340425532.npz": "4a4c8c2e12024fb825f3ecf4bfdfcc049b70d3fbeeaf46ae68670d13367e14b7"
-  }
+    "solve_NK8852_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_entropic_v1_eps0.0013297872340425532.npz": "4a4c8c2e12024fb825f3ecf4bfdfcc049b70d3fbeeaf46ae68670d13367e14b7",
+    "comparison_experiments_1_2_3_log.png": "bdde078a3ee37afce622e1f8b2b736fe4f7389ea6a618a5e579db26b78fb888c",
+    "comparison_experiment_1_log.png": "94dba75e230e8efa9fc82294b80a61dd53d9bd4e518504df34c4cc66cf234200",
+    "comparison_experiment_2_log.png": "71d63551d10208ae7eb76901905506605eb48cdff6aa64133444de4a1b01badb",
+    "comparison_experiment_3_log.png": "f92d1f322e032980176d2b5545d177d3b3a1e3e1d2cca0c6cd567a89bcbde1a6"
+  },
+  "plot_variants": [
+    "linear_y_log_x",
+    "log_y_log_x"
+  ]
 }

@@ -213,6 +213,14 @@
     "hard/divergence_NK879_eps0.0043103448275862068.json": "2f1871070ebb587e126174a49c50435e193d3d7de5983c4faa3203f73ab6e9b1",
     "hard/divergence_NK8852_eps0.0013297872340425532.json": "fe9d4c9d26717a370278343ea6a6ba71d56148a6106f7150f1979986f7f911af",
     "hard/divergence_NK8852_eps0.0031250000000000002.json": "e7a0c7b62517b86e6f0191e478fdd41147e5905db161de65e4c3679ca161b21b",
-    "hard/parameters.json": "995194b4366be59ca3246722e6fab3feb9d5b5feb23b9df0c974e135ac0dda36"
-  }
+    "hard/parameters.json": "995194b4366be59ca3246722e6fab3feb9d5b5feb23b9df0c974e135ac0dda36",
+    "entropic/comparison_experiments_1_2_3_log.png": "9a6918a29d9717cba8a0abe7a39b9e1e5085be5c17d05e4948919e1716d00065",
+    "entropic/comparison_experiment_1_log.png": "0281d9dd7debd4ea9999a56c47caa2bf0388efd609169634fb7b7f9bf78b4f82",
+    "entropic/comparison_experiment_2_log.png": "e71556abdebaf41ab24b6e8710c5024c30096577796a48aa6a40187c3a6891e8",
+    "entropic/comparison_experiment_3_log.png": "4db2490a57800240e94d23b44f707201d5b41708f571b90eabe9674a23eb6a2d"
+  },
+  "plot_variants": [
+    "linear_y_log_x",
+    "log_y_log_x"
+  ]
 }

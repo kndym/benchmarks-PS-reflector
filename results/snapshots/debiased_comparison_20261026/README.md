@@ -7,3 +7,11 @@ All three EOT terms converged for every published row. Evaluation uses squared E
 ![Hard versus entropic debiased comparison](entropic/comparison_experiments_1_2_3.png)
 
 [Hard data](hard/costs.csv) | [Entropic data](entropic/costs.csv) | [Validation and counts](snapshot.json)
+
+## Logarithmic plots
+
+Both axes use logarithmic scales; nonpositive values are omitted without changing the CSV data.
+
+![Log-log comparison](entropic/comparison_experiments_1_2_3_log.png)
+
+[Experiment 1](entropic/comparison_experiment_1_log.png) | [Experiment 2](entropic/comparison_experiment_2_log.png) | [Experiment 3](entropic/comparison_experiment_3_log.png)

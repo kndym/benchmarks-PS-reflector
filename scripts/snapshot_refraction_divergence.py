@@ -84,6 +84,7 @@ def snapshot(source, destination):
         'The graph shows Sinkhorn divergence itself, without a square root. Optical potential '
         'stopping and marginal feasibility are separate; see the optical snapshot residuals.\n\n'
         '![Hard versus entropic debiased comparison](entropic/comparison_experiments_1_2_3.png)\n\n'
+        '![Log-log debiased comparison](entropic/comparison_experiments_1_2_3_log.png)\n\n'
         '[Hard data](hard/costs.csv) | [Entropic data](entropic/costs.csv) | '
         '[Validation and counts](snapshot.json)\n', encoding='utf-8')
     print(json.dumps({k:v for k,v in report.items() if k != 'files_sha256'}, indent=2))
