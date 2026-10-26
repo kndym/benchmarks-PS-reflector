@@ -20,12 +20,16 @@ components separately.
 
 ### October 26 progress and numerical fixes
 
-[Debiased comparison and plots](snapshots/debiased_comparison_20261026/):
-**hard 120/120, entropic 63/120**, with all three EOT terms converged for each
+[Debiased comparison and plots](snapshots/debiased_comparison_20261026_1348/):
+**hard 120/120, entropic 71/120**, with all three EOT terms converged for each
 published row. The metric is `EOT(PF,T) - (EOT(PF,PF) + EOT(T,T))/2` at epsilon
 1/320, using squared Euclidean 3D cost. Hard interpolation has lower divergence
-in all 63 currently paired cases. This is a partial comparison: experiment 1
-has 40 pairs, experiment 2 has 23, and experiment 3 has no entropic cases yet.
+in all 71 currently paired cases. This is a partial comparison: experiment 1
+has 40 pairs, experiment 2 has 31, and experiment 3 has no entropic cases yet.
+At the October 26, 13:48 ET progress check, the live entropic optical sweep
+had 72/120 completed cases (40 in experiment 1, 32 in experiment 2). The optical
+worker was solving experiment 2 at NK=7727; debiasing was evaluating the saved
+NK=6746 push-forward. Both workers were active with no new errors in their logs.
 
 [Entropic optical snapshot](snapshots/entropic_high_iter_20261026/) contains
 63 validated optical/PF checkpoints and the separate cross-EOT plots.
