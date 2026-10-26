@@ -6,6 +6,27 @@ quantities. Do not concatenate these families into a single unlabeled table.**
 
 ## Current fixed-target experiments
 
+### Background workers independent of Codex
+
+Windows Task Scheduler runs `Reflector-EntropicSweep`,
+`Reflector-DebiasedEvaluation`, and `Reflector-ComparisonPlots` under the current
+Windows user. Their supervisors are children of the Windows scheduling service,
+so closing Codex or its SSH/CLI connection does not terminate them. Workers retry
+after 30 seconds if they exit before all expected cases are complete; Task
+Scheduler retries a failed supervisor after one minute. Tasks have no execution
+time limit and resume at the user's next Windows login after a reboot or logout.
+These are interactive-user tasks: they require the Windows user to be logged in.
+The computer must remain powered on and awake for computation to continue.
+
+Local live state and append-only logs are in
+`results/refraction_worker_supervision/` (Git-ignored). Read `sweep.json`,
+`debiased.json`, and `plots.json` there for current worker PIDs, start times,
+restart counts, and completion state. Reinstall/start the tasks with
+`powershell -File scripts/install_refraction_worker_tasks.ps1`; inspect them with
+`Get-ScheduledTask -TaskName 'Reflector-*'`. Tasks stop doing work once their
+expected completed-case sets are present. Parameter JSON publication is atomic
+so the evaluator cannot observe a partially rewritten file during resumption.
+
 [Maximum absolute hard push-forward mass error](snapshots/hard_pushforward_max_error_20261026/)
 plots `max_j |mu_PF(y_j) - q_j|` for all 120 cases, including empty target
 locations. The target reference is the saved mass `q_j = 1/1600`; source
@@ -20,12 +41,19 @@ components separately.
 
 ### October 26 progress and numerical fixes
 
-[Debiased comparison and plots](snapshots/debiased_comparison_20261026_1348/):
-**hard 120/120, entropic 71/120**, with all three EOT terms converged for each
+[Debiased comparison and plots](snapshots/debiased_comparison_20261026_1559/):
+**hard 120/120, entropic 75/120**, with all three EOT terms converged for each
 published row. The metric is `EOT(PF,T) - (EOT(PF,PF) + EOT(T,T))/2` at epsilon
 1/320, using squared Euclidean 3D cost. Hard interpolation has lower divergence
-in all 71 currently paired cases. This is a partial comparison: experiment 1
-has 40 pairs, experiment 2 has 31, and experiment 3 has no entropic cases yet.
+in all 75 currently paired cases. This is a partial comparison: experiment 1
+has 40 pairs, experiment 2 has 35, and experiment 3 has no entropic cases yet.
+At the October 26, 15:59 ET check, optical and debiased entropic evaluations
+had both reached 75/120. The workers were no longer running, with no failure
+reported in either error log; the cause of termination is unknown. The sweep,
+debiased evaluator, and linear/log plot worker were restarted from saved
+checkpoints. The next optical case is experiment 2, NK=11615.
+
+Earlier progress check:
 At the October 26, 13:48 ET progress check, the live entropic optical sweep
 had 72/120 completed cases (40 in experiment 1, 32 in experiment 2). The optical
 worker was solving experiment 2 at NK=7727; debiasing was evaluating the saved

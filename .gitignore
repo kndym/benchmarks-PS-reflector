@@ -23,6 +23,7 @@
 /results/*smoke*/
 /results/refraction_sweeps_extended_entropic_high_iter/
 /results/refraction_sweeps_extended_debiased_comparison/
+/results/refraction_worker_supervision/
 /geometric_optics_progress.zip
 /geometric_optics_progress/*.aux
 /geometric_optics_progress/*.log

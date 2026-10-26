@@ -23,7 +23,7 @@ from refracter.cost import set_kappa, cost_matrix_chunk
 from refracter.sinkhorn import run_sinkhorn_divergence, entropic_ot_cost
 from refracter.optics import entropic_surface_normals, refract_using_normals
 import refracter.sinkhorn as sinkhorn_module
-from atomic_io import atomic_replace
+from atomic_io import atomic_replace, atomic_write_json
 
 
 def joint_epsilon(nk):
@@ -104,7 +104,7 @@ def main():
     args.output.mkdir(parents=True, exist_ok=True)
     args.self_cost_mode = "separate_marginals_v1" if args.target_nk is not None else "legacy"
     args.cost_metric = "pushforward_target_eot_squared_euclidean"
-    (args.output / "parameters.json").write_text(json.dumps(vars(args), default=str, indent=2), encoding="utf-8")
+    atomic_write_json(args.output / "parameters.json", vars(args))
     set_kappa(0.6)
     cache = {}
     pf_potentials = {}
@@ -327,7 +327,7 @@ def main():
     save(fig, "experiment_4_pushforward")
     write_costs()
     (args.output / "ordering.json").write_text(json.dumps(ordering, indent=2), encoding="utf-8")
-    (args.output / "parameters.json").write_text(json.dumps(vars(args), default=str, indent=2), encoding="utf-8")
+    atomic_write_json(args.output / "parameters.json", vars(args))
     print(f"Saved plots, costs, parameters and ordering to {args.output}", flush=True)
 
 
