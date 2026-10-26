@@ -6,6 +6,38 @@ quantities. Do not concatenate these families into a single unlabeled table.**
 
 ## Current fixed-target experiments
 
+### October 26 progress and numerical fixes
+
+[Debiased comparison and plots](snapshots/debiased_comparison_20261026/):
+**hard 120/120, entropic 63/120**, with all three EOT terms converged for each
+published row. The metric is `EOT(PF,T) - (EOT(PF,PF) + EOT(T,T))/2` at epsilon
+1/320, using squared Euclidean 3D cost. Hard interpolation has lower divergence
+in all 63 currently paired cases. This is a partial comparison: experiment 1
+has 40 pairs, experiment 2 has 23, and experiment 3 has no entropic cases yet.
+
+[Entropic optical snapshot](snapshots/entropic_high_iter_20261026/) contains
+63 validated optical/PF checkpoints and the separate cross-EOT plots.
+The sweep had stopped on a Windows CSV sharing violation. CSV and plot
+publication now retry temporary sharing failures. Small-grid kernel smoothing
+and scaling updates now use logsumexp to avoid underflow and reciprocal
+overflow. Tests check agreement with the original updates at moderate
+regularization and finite outputs at inverse regularization 16000.
+Existing validated checkpoints are retained; the restarted optical worker
+uses log-domain warm starts. These changes preserve the experiment
+grids, objectives, caps and stopping tolerances. Potential-change stopping
+still does not guarantee marginal feasibility; the published residuals remain
+part of the interpretation of these results.
+
+The canonical local checkout is `C:\Users\Kevin\Github\benchmarks-PS-reflector`.
+The former `benchmarks-PS-reflector-v2` path is a Windows junction to the same
+directory. Both Git histories were combined, including the latest main-branch
+figure uploads. All 3353 copied files were verified byte-for-byte before the
+workers restarted from saved checkpoints in the canonical folder. A recovery
+copy is stored outside the GitHub directory at
+`C:\Users\Kevin\.codex\backups\reflector-consolidation-20261026`.
+
+### Cross-EOT datasets
+
 All three main sweeps use kappa=0.6, Halton source points, a target fixed at
 1600 points, and PF-to-target EOT with squared Euclidean 3D cost and evaluation
 epsilon 1/320. Exact grids and tolerances are in each `parameters.json`.
@@ -33,7 +65,8 @@ The live entropic worker remains in the Git-ignored local directory
 `refraction_sweeps_extended_entropic_high_iter/`. Published snapshots contain
 only completed CSV cases, their matching finite checkpoints, and comparison
 plots rendered from that exact captured CSV. This avoids committing a changing
-mix of plot and data versions. No active worker directory was moved or restarted.
+mix of plot and data versions. Workers resumed from checkpoints during the
+October 26 checkout consolidation described above.
 
 ## Historical sweeps: different targets or metrics
 

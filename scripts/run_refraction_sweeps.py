@@ -23,6 +23,7 @@ from refracter.cost import set_kappa, cost_matrix_chunk
 from refracter.sinkhorn import run_sinkhorn_divergence, entropic_ot_cost
 from refracter.optics import entropic_surface_normals, refract_using_normals
 import refracter.sinkhorn as sinkhorn_module
+from atomic_io import atomic_replace
 
 
 def joint_epsilon(nk):
@@ -137,7 +138,7 @@ def main():
             writer = csv.DictWriter(stream, fieldnames=rows[0].keys())
             writer.writeheader()
             writer.writerows(rows)
-        temporary.replace(args.output / "costs.csv")
+        atomic_replace(temporary, args.output / "costs.csv")
 
     def solve(nk, epsilon):
         key = (nk, epsilon)

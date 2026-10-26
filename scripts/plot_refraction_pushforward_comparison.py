@@ -10,6 +10,9 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 
+from atomic_io import atomic_replace
+
+
 def read_rows(folder):
     path = folder / "costs.csv"
     if not path.exists():
@@ -18,7 +21,9 @@ def read_rows(folder):
         return list(csv.DictReader(stream))
 
 
-def render(output, baseline):
+def render(output, baseline, *, value_field="cost",
+           ylabel="PF-to-target EOT (squared Euclidean, 3D)",
+           progress_label="entropic evaluations"):
     params = json.loads((output / "parameters.json").read_text(encoding="utf-8"))
     hard_params = json.loads((baseline / "parameters.json").read_text(encoding="utf-8"))
     for key in ("nk", "epsilon", "fixed_nk", "fixed_epsilon", "target_nk", "cost_epsilon",
@@ -32,7 +37,7 @@ def render(output, baseline):
     def key(r):
         return int(r["experiment"]), int(r["nk"]), float(r["refractor_epsilon"])
     hard_keys = {key(r) for r in hard}
-    if any(key(r) not in hard_keys or r["converged"] != "True" or not math.isfinite(float(r['cost']))
+    if any(key(r) not in hard_keys or r["converged"] != "True" or not math.isfinite(float(r[value_field]))
            or float(r["pf_epsilon"]) != params["cost_epsilon"] for r in soft):
         raise ValueError("Unmatched or unconverged entropic evaluation")
     expected = sum(len(params['epsilon'] if e == 3 else params['nk']) for e in (1, 2, 3))
@@ -40,7 +45,7 @@ def render(output, baseline):
     context = (f"Target fixed at {params['target_nk']} points; "
                f"transport/self caps {params['refractor_max_iter']}/{params['identity_max_iter']}\n"
                f"Evaluation epsilon {params['cost_epsilon']:.6g}; "
-               f"entropic evaluations {len(soft)}/{expected}" + (" (complete)" if complete else " (partial)"))
+               f"{progress_label} {len(soft)}/{expected}" + (" (complete)" if complete else " (partial)"))
     combined, axes = plt.subplots(1, 3, figsize=(17, 5.5))
     for e, ax in zip((1, 2, 3), axes):
         single, one = plt.subplots(figsize=(8, 6))
@@ -50,25 +55,25 @@ def render(output, baseline):
         for data, label, style in ((hard, 'Hard c-transform', 'o-'),
                                     (soft, 'Entropic surface + Snell', 's-')):
             values = sorted((r for r in data if int(r['experiment']) == e), key=lambda r:float(r[field]))
-            xx, yy = [float(r[field]) for r in values], [float(r['cost']) for r in values]
+            xx, yy = [float(r[field]) for r in values], [float(r[value_field]) for r in values]
             for target in (ax, one):
                 target.plot(xx, yy, style, label=label, markersize=3)
         for target in (ax, one):
             target.set(title=title, xlabel=r'Refractor $\epsilon$' if e == 3 else r'Source $N_K$',
-                       ylabel='PF-to-target EOT (squared Euclidean, 3D)', xscale='log')
+                       ylabel=ylabel, xscale='log')
             target.grid(alpha=.3)
             target.legend(fontsize=8)
         single.suptitle(context, fontsize=10)
         single.tight_layout(rect=(0, 0, 1, .90))
         tmp = output / f'comparison_experiment_{e}.tmp.png'
         single.savefig(tmp, dpi=180)
-        tmp.replace(output / f'comparison_experiment_{e}.png')
+        atomic_replace(tmp, output / f'comparison_experiment_{e}.png')
         plt.close(single)
     combined.suptitle(context, fontsize=12)
     combined.tight_layout(rect=(0, 0, 1, .90))
     tmp = output / 'comparison_experiments_1_2_3.tmp.png'
     combined.savefig(tmp, dpi=180)
-    tmp.replace(output / 'comparison_experiments_1_2_3.png')
+    atomic_replace(tmp, output / 'comparison_experiments_1_2_3.png')
     plt.close(combined)
     return complete
 

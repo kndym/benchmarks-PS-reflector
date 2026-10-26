@@ -22,6 +22,7 @@
 /results/**/run_manifest.json
 /results/*smoke*/
 /results/refraction_sweeps_extended_entropic_high_iter/
+/results/refraction_sweeps_extended_debiased_comparison/
 /geometric_optics_progress.zip
 /geometric_optics_progress/*.aux
 /geometric_optics_progress/*.log

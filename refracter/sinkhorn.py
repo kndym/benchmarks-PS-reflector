@@ -275,6 +275,23 @@ def entropic_sinkhorn_divergence(
     cross, cross_info = entropic_ot_cost(x, y, p, q, **common)
     source_self, source_info = entropic_ot_cost(x, x, p, p, **common)
     target_self, target_info = entropic_ot_cost(y, y, q, q, **common)
+    return sinkhorn_divergence_from_terms(
+        (cross, cross_info), (source_self, source_info), (target_self, target_info))
+
+
+def sinkhorn_divergence_from_terms(cross, source_self, target_self):
+    """Combine evaluated/cached EOT terms using the same divergence formula.
+
+    Each argument is a (value, diagnostics) tuple from entropic_ot_cost.
+    The caller must use identical epsilon, cost and measure conventions for
+    all three terms. This permits reuse of saved cross evaluations and a
+    shared target self evaluation without solving those transports again.
+    """
+    cross, cross_info = cross
+    source_self, source_info = source_self
+    target_self, target_info = target_self
+    if not np.isfinite([cross, source_self, target_self]).all():
+        raise ValueError("EOT terms must be finite")
     raw_divergence = float(cross - 0.5 * (source_self + target_self))
     diagnostics = {
         "cross": cross_info,
@@ -546,21 +563,24 @@ def run_small_sinkhorn(x_s, y_s, p_s, q_s, k_reg, separate_marginals=False):
 
     C = cost_matrix_chunk(x_s, y_s)  # full (381×381) cost matrix
 
-    # Kernel pre-conditioning
-    K = np.exp(-k_reg * C)
+    # Evaluate kernel smoothing in log space: exp(-k*C) can underflow
+    # even when the normalized smoothed marginal is well defined.
+    def smooth_log_weights(cost, weights):
+        weights = np.asarray(weights, dtype=np.float64)
+        if not np.isfinite(weights).all() or np.any(weights < 0) or weights.sum() <= 0:
+            raise ValueError("Small-grid weights must be finite, nonnegative and have positive mass")
+        log_weights = np.full_like(weights, -np.inf)
+        np.log(weights, out=log_weights, where=weights > 0)
+        smoothed = logsumexp(-k_reg * cost + log_weights[None, :], axis=1)
+        return smoothed - logsumexp(smoothed)
+
     if len(x_s) == len(y_s) and not separate_marginals:
-        p_s = K @ p_s
-        q_s = K @ q_s
+        logp_s = smooth_log_weights(C, p_s)
+        logq_s = smooth_log_weights(C, q_s)
     else:
         # Smooth each marginal on its own support for rectangular transports.
-        p_s = np.exp(-k_reg * cost_matrix_chunk(x_s, x_s)) @ p_s
-        q_s = np.exp(-k_reg * cost_matrix_chunk(y_s, y_s)) @ q_s
-    p_s /= p_s.sum()
-    q_s /= q_s.sum()
-    del K
-
-    F_s = np.ones(NK_s)
-    G_s = np.ones(len(y_s))
+        logp_s = smooth_log_weights(cost_matrix_chunk(x_s, x_s), p_s)
+        logq_s = smooth_log_weights(cost_matrix_chunk(y_s, y_s), q_s)
     f_s = np.zeros(NK_s)
     g_s = np.zeros(len(y_s))
 
@@ -571,22 +591,12 @@ def run_small_sinkhorn(x_s, y_s, p_s, q_s, k_reg, separate_marginals=False):
     k = 1
     while k < k_reg:
         # The C++ small-grid routine updates F first and then G.
-        Gq = G_s * q_s
-        exp_mat = np.exp(-k * (C - f_s[:, None] - g_s[None, :]))
-        sums_F = exp_mat @ Gq
-        F_s = np.where(sums_F > 0, 1.0 / sums_F, 1.0)
-        F_s = np.where(p_s > 0, F_s, 1.0)
-
-        Fp = F_s * p_s
+        log_mat = -k * (C - f_s[:, None] - g_s[None, :])
+        log_F = -logsumexp(log_mat + logq_s[None, :], axis=1)
         # f_s/g_s have not changed yet, so the same matrix serves both updates.
-        sums_G = exp_mat.T @ Fp
-        G_s = np.where(sums_G > 0, 1.0 / sums_G, 1.0)
-        G_s = np.where(q_s > 0, G_s, 1.0)
-
-        f_s += np.log(np.maximum(F_s, 1e-300)) / k
-        g_s += np.log(np.maximum(G_s, 1e-300)) / k
-        F_s[:] = 1.0
-        G_s[:] = 1.0
+        log_G = -logsumexp(log_mat + (log_F + logp_s)[:, None], axis=0)
+        f_s += log_F / k
+        g_s += log_G / k
 
         k += step
 

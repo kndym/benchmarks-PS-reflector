@@ -1,0 +1,16 @@
+{
+  "nk": 1007,
+  "target_nk": 1600,
+  "epsilon": 0.003125,
+  "source_marginal_l1": 1.9535561556925304e-07,
+  "target_marginal_l1": 0.0020176029665671903,
+  "final_iterations": 49,
+  "final_change": 9.976795863497755e-06,
+  "source_identity_iterations": 124,
+  "source_identity_change": 9.925822067335944e-06,
+  "target_identity_iterations": 13,
+  "target_identity_change": 9.72380860577715e-06,
+  "pushforward": "entropic",
+  "normal_dot_error": 2.90878432451791e-14,
+  "transmitted_norm_error": 5.551115123125783e-16
+}

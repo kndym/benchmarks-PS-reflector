@@ -8,6 +8,12 @@ sweeps, archived laptop sweeps, the current entropic-surface comparison snapshot
 and the [LaTeX write-up](geometric_optics_progress/). The catalog separates
 different metrics and target grids and records which results are incomplete.
 
+Latest published results (October 26): [debiased hard versus entropic comparison](results/snapshots/debiased_comparison_20261026/)
+and [entropic optical checkpoints](results/snapshots/entropic_high_iter_20261026/).
+The debiased snapshot has 120/120 hard cases and 63/120 entropic cases; remaining
+cases run in the background. See the [results catalog](results/README.md) for
+the numerical fixes and checkout consolidation.
+
 **Cost function:** `c(x, y) = -log(1 - κ·(x·y))`, κ = 0.6 (refractor), κ = 1.0 (reflector).
 
 ---
@@ -200,6 +206,23 @@ potentials, hard-map directions, and the entropic transmitted directions.
 The optical solves are unchanged; only the push-forward used for EOT
 evaluation changes. Comparison plots match both runs' grids, target size,
 caps, and tolerances, and explicitly label partial results.
+
+To compare the saved hard/entropic pushed measures using debiased Sinkhorn
+divergence at the same evaluation epsilon (1/320), without repeating optical
+solves or stopping the live sweep:
+
+```bash
+python -B scripts/evaluate_saved_refraction_divergence.py --hard results/refraction_sweeps_extended_high_iter --entropic results/refraction_sweeps_extended_entropic_high_iter --output results/refraction_sweeps_extended_debiased_comparison --watch
+```
+
+This separate evaluator reuses saved cross EOT checkpoints and calls the existing
+EOT routine only for missing self terms. Content-hashed self caches share the
+target term and identical pushed measures; settings and convergence diagnostics
+are retained. It plots `S_epsilon(PF,T)` itself, without a square root, and preserves
+the unclamped divergence alongside the plotting value. Hard/entropic curves,
+tables and per-case diagnostics live under the output's `hard/` and `entropic/`
+folders. Use a single-thread, lower-priority worker for this auxiliary evaluation:
+the entropic pushed-measure self term scales quadratically with source size.
 
 The expanded bounded experiment uses 20 logarithmic NK values from 100 to
 10,000 and 20 epsilon values from 0.000125 to 0.0125 (100x ranges):
