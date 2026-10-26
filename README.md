@@ -8,7 +8,11 @@ sweeps, archived laptop sweeps, the current entropic-surface comparison snapshot
 and the [LaTeX write-up](geometric_optics_progress/). The catalog separates
 different metrics and target grids and records which results are incomplete.
 
-Latest published results (October 26): [debiased hard versus entropic comparison](results/snapshots/debiased_comparison_20261026_1559/)
+Latest images (October 26, 18:39 ET): [updated comparison gallery](results/snapshots/comparison_images_20261026_1839/)
+with 79/120 entropic cross-EOT cases and 78/120 debiased entropic cases, including
+linear-y and log-log plots. Hard results are complete at 120/120.
+
+Earlier published results: [debiased hard versus entropic comparison](results/snapshots/debiased_comparison_20261026_1559/)
 and [entropic optical checkpoints](results/snapshots/entropic_high_iter_20261026/).
 The debiased snapshot has 120/120 hard cases and 75/120 entropic cases; remaining
 cases run in the background. See the [results catalog](results/README.md) for

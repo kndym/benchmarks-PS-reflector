@@ -6,6 +6,14 @@ quantities. Do not concatenate these families into a single unlabeled table.**
 
 ## Current fixed-target experiments
 
+**[Latest comparison images: October 26, 18:39 ET](snapshots/comparison_images_20261026_1839/).**
+Entropic cross-EOT: 79/120 cases (40 experiment 1, 39 experiment 2).
+Debiased entropic: 78/120 (40 experiment 1, 38 experiment 2). Hard: 120/120.
+Experiment 3 entropic cases remain pending. The gallery includes both metrics,
+linear-y and log-log variants, individual experiments, and captured CSVs.
+The scheduler recovered memory-allocation interruptions in the largest cases;
+both compute workers were running again at this check, with one restart each.
+
 ### Background workers independent of Codex
 
 Windows Task Scheduler runs `Reflector-EntropicSweep`,
