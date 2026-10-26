@@ -7,10 +7,11 @@ quantities. Do not concatenate these families into a single unlabeled table.**
 ## Current fixed-target experiments
 
 [Hard push-forward atom counts](snapshots/hard_pushforward_atom_counts_20261026/)
-show how many distinct occupied locations have aggregated mass different from
+show how many target locations have aggregated mass different from
 `1/NK`, across all 120 hard-map cases. Linear-y and log-log plots are included.
-Coincident source weights are summed first; empty target locations are recorded
-separately in the CSV and excluded from the occupied-atom count.
+Coincident source weights are summed first; empty target locations have zero
+mass and are included in the total. Plots also show the empty and merged-weight
+components separately.
 
 ### October 26 progress and numerical fixes
 

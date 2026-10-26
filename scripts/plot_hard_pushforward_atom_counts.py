@@ -1,4 +1,4 @@
-"""Count occupied hard-map atoms whose aggregated mass differs from 1/NK."""
+"""Count all target locations whose hard push-forward mass differs from 1/NK."""
 import argparse
 import csv
 import hashlib
@@ -29,11 +29,14 @@ def count_atoms(points, weights, target):
     masses = np.bincount(indices, weights=weights, minlength=len(target))
     occupied = multiplicities > 0
     unequal = occupied & ~np.isclose(masses, 1/nk, rtol=1e-10, atol=1e-14)
+    unequal_all = ~np.isclose(masses, 1/nk, rtol=1e-10, atol=1e-14)
     if not np.array_equal(unequal, multiplicities > 1):
         raise ValueError('Aggregated masses disagree with integer collision counts')
     if not np.isclose(masses.sum(), 1, rtol=0, atol=1e-12):
         raise ValueError('Push-forward mass is not conserved')
     return dict(occupied_atoms=int(occupied.sum()), unequal_weight_atoms=int(unequal.sum()),
+                target_locations=len(target), unequal_target_locations=int(unequal_all.sum()),
+                unequal_fraction_of_target=float(unequal_all.mean()),
                 singleton_atoms=int((multiplicities == 1).sum()),
                 empty_target_locations=int((multiplicities == 0).sum()),
                 source_points_in_merged_atoms=int(multiplicities[unequal].sum()),
@@ -46,6 +49,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('source', type=Path)
     parser.add_argument('output', type=Path)
+    parser.add_argument('--update', action='store_true', help='Refresh plots and tables in an existing output directory')
     args = parser.parse_args()
     params = json.loads((args.source/'parameters.json').read_text())
     if params.get('pushforward', 'hard') != 'hard':
@@ -72,13 +76,13 @@ def main():
         rows.append(dict(experiment=experiment, nk=nk, refractor_epsilon=eps,
                          reference_atom_mass=1/nk, **stats, checkpoint=path.name))
         provenance[path.name] = hashlib.sha256(path.read_bytes()).hexdigest()
-    args.output.mkdir(parents=True, exist_ok=False)
+    args.output.mkdir(parents=True, exist_ok=args.update)
     with (args.output/'atom_counts.csv').open('w', newline='') as stream:
         writer = csv.DictWriter(stream, fieldnames=rows[0].keys())
         writer.writeheader(); writer.writerows(rows)
     context = (f'Hard c-transform; target fixed at {params["target_nk"]}; '
                f'transport/self caps {params["refractor_max_iter"]}/{params["identity_max_iter"]}\n'
-               'Count distinct occupied locations after summing coincident source weights; empty locations excluded')
+               'All target locations included: unequal mass = empty locations + occupied locations receiving multiple source points')
     combined, axes = plt.subplots(1, 3, figsize=(17, 5.5))
     for experiment, panel in zip((1, 2, 3), axes):
         single, axis = plt.subplots(figsize=(8, 6))
@@ -87,9 +91,14 @@ def main():
         title = {1:'1. Joint movement', 2:f'2. Fixed refractor epsilon = {params["fixed_epsilon"]:.6g}',
                  3:f'3. Fixed source NK = {params["fixed_nk"]}'}[experiment]
         for ax in (panel, axis):
-            ax.plot([r[field] for r in cases], [r['unequal_weight_atoms'] for r in cases], 'o-', markersize=3)
+            for metric, label, style in (
+                    ('unequal_target_locations', 'Total with unequal mass (including empty)', 'o-'),
+                    ('empty_target_locations', 'Empty target locations (mass 0)', '--'),
+                    ('unequal_weight_atoms', 'Occupied locations with merged weights', ':')):
+                ax.plot([r[field] for r in cases], [r[metric] for r in cases], style, label=label, markersize=3)
             ax.set(title=title, xscale='log', xlabel=r'Refractor $\epsilon$' if experiment == 3 else r'Source $N_K$',
-                   ylabel=r'Occupied atoms with mass $\ne 1/N_K$')
+                   ylabel=r'Number of target locations')
+            ax.legend(fontsize=7)
             ax.grid(alpha=.3)
             ax.yaxis.set_major_locator(MaxNLocator(integer=True))
             ax.set_ylim(bottom=0)
@@ -114,22 +123,28 @@ def main():
     plt.close(combined)
     summary = dict(source=args.source.as_posix(), cases=len(rows),
                    counts={str(e):sum(r['experiment'] == e for r in rows) for e in (1,2,3)},
-                   definition='Distinct occupied atoms with aggregated mass != 1/NK; empty target locations excluded',
+                   definition='All target locations with aggregated mass != 1/NK, including empty locations with mass zero',
+                   plotted_total='unequal_target_locations = unequal_weight_atoms + empty_target_locations',
                    mass_comparison=dict(rtol=1e-10, atol=1e-14),
                    all_source_weights_uniform=True, all_masses_conserved=True,
                    unequal_atom_range=[min(r['unequal_weight_atoms'] for r in rows),max(r['unequal_weight_atoms'] for r in rows)],
+                   unequal_target_location_range=[min(r['unequal_target_locations'] for r in rows),max(r['unequal_target_locations'] for r in rows)],
                    source_checkpoint_sha256=provenance)
-    summary['files_sha256']={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(args.output.iterdir())}
+    summary['files_sha256']={p.name:hashlib.sha256(p.read_bytes()).hexdigest()
+                             for p in sorted(args.output.iterdir()) if p.suffix in ('.csv', '.png')}
     (args.output/'validation.json').write_text(json.dumps(summary,indent=2)+'\n')
     (args.output/'README.md').write_text(
         '# Hard push-forward atom weights\n\n'
         f'{len(rows)} saved cases from the hard-transform 2000/2000-cap sweep; no optical solves were repeated.\n\n'
-        'At each distinct occupied push-forward location, sum the weights of all source points mapped there. '
-        'Count the resulting atoms whose mass differs from `1/NK` (source NK). For these uniform-source runs, '
-        'this is exactly the number of locations receiving at least two source points. '
-        'Empty target locations carry zero mass and are excluded from this count.\n\n'
+        'At every saved target location, sum the weights of all source points mapped there, assigning zero '
+        'to empty locations. Count all locations whose mass differs from `1/NK` (source NK). '
+        'For these uniform-source runs, the total equals empty locations plus locations receiving at '
+        'least two source points, or equivalently target count minus singleton locations. '
+        'The plots show the total and its empty/merged components.\n\n'
         '![Atom counts](experiments_1_2_3.png)\n\n![Log-log atom counts](experiments_1_2_3_log.png)\n\n'
-        '[Per-case counts](atom_counts.csv) include occupied/singleton counts, empty target locations, '
+        '[Per-case counts](atom_counts.csv) use `unequal_target_locations` for the total including empty '
+        'locations; the previous `unequal_weight_atoms` column still counts only occupied locations with '
+        'merged weights. Other columns include occupied/singleton counts, empty target locations, '
         'source points in merged atoms, maximum multiplicity, and unequal fraction of occupied support. '
         '[Validation](validation.json) records uniform-source and mass-conservation checks and checkpoint hashes.\n',
         encoding='utf-8')

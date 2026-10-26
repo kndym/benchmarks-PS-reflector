@@ -6,7 +6,8 @@
     "2": 40,
     "3": 40
   },
-  "definition": "Distinct occupied atoms with aggregated mass != 1/NK; empty target locations excluded",
+  "definition": "All target locations with aggregated mass != 1/NK, including empty locations with mass zero",
+  "plotted_total": "unequal_target_locations = unequal_weight_atoms + empty_target_locations",
   "mass_comparison": {
     "rtol": 1e-10,
     "atol": 1e-14
@@ -15,6 +16,10 @@
   "all_masses_conserved": true,
   "unequal_atom_range": [
     4,
+    1597
+  ],
+  "unequal_target_location_range": [
+    782,
     1597
   ],
   "source_checkpoint_sha256": {
@@ -140,14 +145,14 @@
     "solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.025000000000000001.npz": "2d51802910414f735d5f840e30b002a17c81e3e759e00aea9830eeb7cd75844c"
   },
   "files_sha256": {
-    "atom_counts.csv": "a58eec4bc1ef0c7079cf51bc8a379c461efbe74004d92eaa2cd4b1661920ee1e",
-    "experiment_1.png": "6e8d60aebd1de1d1f7985fe8202ee46aaa40f6b9684902dd9b2722448d4a10fc",
-    "experiment_1_log.png": "a476852eb8d37dbea0527fe4f4ac19bcb19b56a24b748bc3c153c3bba8becdec",
-    "experiment_2.png": "256b93ca231cf75465bd8fc30c5df4d24d8f7759e2653a536e7b82f1c6ec6a72",
-    "experiment_2_log.png": "250e789352121e43ff76f7ad03f6d1f2d88d026ace4b1034fdbd5caceddc5441",
-    "experiment_3.png": "d8af09d6c2a08ba222d3d68bbca824827530782a9bace64b23606d6ac4a96f33",
-    "experiment_3_log.png": "22427fe3210fbab5fa0e9d3418fb8ac471e584fc524c88029bb90abd4a6d3351",
-    "experiments_1_2_3.png": "24e67d085929428d26d9985fddcecd8caba5c09c6234f3ce07719d916881de96",
-    "experiments_1_2_3_log.png": "4dd288ed081e4b4c3a6bb4049218f8e2e1dc012ad0509239d689ad1a3d4438c5"
+    "atom_counts.csv": "cbb8ec038115766f83a74e6aa585a3e8e624d5ef1ad817919f72e49820ace817",
+    "experiment_1.png": "2e563422b1174081645f9d2f0bb18fb9e81fe348ce4b57dbe5bc30a62d5461be",
+    "experiment_1_log.png": "db6b8ed555fc28ef8c40f3a2136f4ca41a404d872d0f6eee6b83dbce8502cacc",
+    "experiment_2.png": "9090d07a839938f42b9ef084a46447d9a318c6ab31fa27b787a41539add888ea",
+    "experiment_2_log.png": "a45bf36c149cbbb6c6d67ab28199405fd918f1ac53b6ab6f60eab36a5a83a066",
+    "experiment_3.png": "5f5df57d5dffa24b2954aa2d3871308455b9ddd7bb8e5f8e562d23093993f951",
+    "experiment_3_log.png": "c1a3d076d365554342496158c6dc12888c701190e22b048756da79715234469f",
+    "experiments_1_2_3.png": "fc94297e86e02fc8bc3b3beafbc64b37a18ec81e587b91fbafb8cbb8c80fc390",
+    "experiments_1_2_3_log.png": "139a62dddf4e92d5b6c5d4415c6926830a65f14b36962ae1560566afd13b0215"
   }
 }
