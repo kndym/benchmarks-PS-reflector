@@ -6,6 +6,11 @@ quantities. Do not concatenate these families into a single unlabeled table.**
 
 ## Current fixed-target experiments
 
+[Maximum absolute hard push-forward mass error](snapshots/hard_pushforward_max_error_20261026/)
+plots `max_j |mu_PF(y_j) - q_j|` for all 120 cases, including empty target
+locations. The target reference is the saved mass `q_j = 1/1600`; source
+weights are `1/NK`. Linear-y and log-log plots and per-case CSVs are included.
+
 [Hard push-forward atom counts](snapshots/hard_pushforward_atom_counts_20261026/)
 show how many target locations have aggregated mass different from
 `1/NK`, across all 120 hard-map cases. Linear-y and log-log plots are included.
