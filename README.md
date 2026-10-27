@@ -8,7 +8,11 @@ sweeps, archived laptop sweeps, the current entropic-surface comparison snapshot
 and the [LaTeX write-up](geometric_optics_progress/). The catalog separates
 different metrics and target grids and records which results are incomplete.
 
-Latest images (October 26, 18:39 ET): [updated comparison gallery](results/snapshots/comparison_images_20261026_1839/)
+Latest debiased results: [89-case comparison and resource benchmark](results/snapshots/debiased_resources_20261026/).
+Cross-EOT generation is paused; debiasing has processed all 89 available saved
+entropic maps and is configured for four threads at normal CPU priority.
+
+Earlier images (October 26, 18:39 ET): [updated comparison gallery](results/snapshots/comparison_images_20261026_1839/)
 with 79/120 entropic cross-EOT cases and 78/120 debiased entropic cases, including
 linear-y and log-log plots. Hard results are complete at 120/120.
 

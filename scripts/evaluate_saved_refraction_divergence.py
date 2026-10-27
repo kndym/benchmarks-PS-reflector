@@ -18,6 +18,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from refracter.sinkhorn import entropic_ot_cost, sinkhorn_divergence_from_terms
 from plot_refraction_pushforward_comparison import read_rows, render
 from atomic_io import atomic_replace
+from sinkhorn_resources import enable_threaded_reductions
 
 
 def atomic_json(path, value):
@@ -48,7 +49,11 @@ def main():
     parser.add_argument('--watch', action='store_true')
     parser.add_argument('--chunk-size', type=int, default=256)
     parser.add_argument('--cache-entries', type=int, default=2_000_000)
+    parser.add_argument('--workers', type=int, default=1, help='Threads for independent SciPy reductions')
     args = parser.parse_args()
+    if args.workers < 1:
+        parser.error('Workers must be positive')
+    enable_threaded_reductions(args.workers)
     params = json.loads((args.entropic/'parameters.json').read_text(encoding='utf-8'))
     hard_params = json.loads((args.hard/'parameters.json').read_text(encoding='utf-8'))
     for name in ('nk', 'epsilon', 'fixed_nk', 'fixed_epsilon', 'target_nk',
@@ -67,6 +72,9 @@ def main():
     if settings_path.exists() and json.loads(settings_path.read_text()) != settings:
         raise ValueError('Existing self cache has different numerical settings')
     atomic_json(settings_path, settings)
+    atomic_json(args.output/'resource_settings.json', dict(workers=args.workers,
+        chunk_size=args.chunk_size,cache_entries=args.cache_entries,
+        note='Execution settings only; objective, tolerance and cache numerical settings are unchanged'))
     tables, completed = {}, {}
     fields = ['experiment', 'nk', 'refractor_epsilon', 'pf_epsilon', 'eot',
               'source_self', 'target_self', 'divergence', 'raw_divergence',

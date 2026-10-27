@@ -6,7 +6,14 @@ quantities. Do not concatenate these families into a single unlabeled table.**
 
 ## Current fixed-target experiments
 
-**[Latest comparison images: October 26, 18:39 ET](snapshots/comparison_images_20261026_1839/).**
+**[Latest debiased comparison and resource benchmark](snapshots/debiased_resources_20261026/):
+89/120 entropic cases, all 89 available maps processed.** Experiments 1 and 2
+are complete at 40 cases each; experiment 3 has 9 completed cases. Cross-EOT
+generation is paused, so the remaining 31 maps are not yet available. The
+debiased task remains active with four threads, normal CPU priority, and a
+32 MB cost cache. Persistent pause markers protect the user's cross-EOT pause.
+
+**[Earlier comparison images: October 26, 18:39 ET](snapshots/comparison_images_20261026_1839/).**
 Entropic cross-EOT: 79/120 cases (40 experiment 1, 39 experiment 2).
 Debiased entropic: 78/120 (40 experiment 1, 38 experiment 2). Hard: 120/120.
 Experiment 3 entropic cases remain pending. The gallery includes both metrics,
@@ -25,6 +32,22 @@ Scheduler retries a failed supervisor after one minute. Tasks have no execution
 time limit and resume at the user's next Windows login after a reboot or logout.
 These are interactive-user tasks: they require the Windows user to be logged in.
 The computer must remain powered on and awake for computation to continue.
+
+Cross-EOT was paused at the user's request on October 26. The sweep and its
+comparison plot task were stopped, and persistent `sweep.pause.json` and
+`plots.pause.json` markers in the local supervision folder prevent relaunch
+after login or an automatic restart. Debiased evaluation remains active on
+already-saved cross results. Removing a pause marker is an explicit resume
+operation; starting or reinstalling tasks alone does not resume a paused role.
+
+The debiased supervisor now assigns four threads to independent SciPy
+logsumexp outputs, normal CPU priority, and up to four million cached cost
+entries (32 MB for a float64 cost matrix). The measured 1600-point self solve
+took 13.52 seconds with one thread and 8.19 seconds with four (1.65x faster),
+with exactly matching objective, iteration count, convergence, and diagnostics.
+That is a sample benchmark, not a guaranteed speedup for every case. Numerical
+settings and completed checkpoints are preserved. The thread pool does not
+parallelize separate large self-cost solves, limiting peak memory use.
 
 Local live state and append-only logs are in
 `results/refraction_worker_supervision/` (Git-ignored). Read `sweep.json`,

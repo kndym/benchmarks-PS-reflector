@@ -19,7 +19,8 @@ COMMANDS = {
               '--target-nk','1600','--pushforward','entropic','--refractor-max-iter','2000',
               '--identity-max-iter','2000','--workers','4','--output',SOFT],
     'debiased': ['scripts/evaluate_saved_refraction_divergence.py','--hard',HARD,
-                 '--entropic',SOFT,'--output',DEBIASED,'--watch'],
+                 '--entropic',SOFT,'--output',DEBIASED,'--workers','4',
+                 '--cache-entries','4000000','--watch'],
     'plots': ['scripts/plot_refraction_pushforward_comparison.py',SOFT,'--baseline',HARD,'--watch'],
 }
 
@@ -62,10 +63,19 @@ def main():
     command=[str(python),'-u','-B',*COMMANDS[args.role]]
     restarts=0
     while not complete(args.role):
+        pause_file=state_dir/f'{args.role}.pause.json'
+        if pause_file.exists():
+            atomic_write_json(status,dict(state='paused',role=args.role,supervisor_pid=os.getpid(),
+                worker_pid=None,restarts=restarts,pause_file=str(pause_file),
+                updated_at=datetime.now(timezone.utc).isoformat()))
+            time.sleep(30)
+            continue
         with (state_dir/f'{args.role}.worker.log').open('a',encoding='utf-8') as log:
             child=subprocess.Popen(command,cwd=ROOT,stdin=subprocess.DEVNULL,stdout=log,
                                    stderr=subprocess.STDOUT,
-                                   creationflags=subprocess.CREATE_NO_WINDOW if os.name == 'nt' else 0)
+                                   creationflags=(subprocess.CREATE_NO_WINDOW |
+                                       (subprocess.NORMAL_PRIORITY_CLASS if args.role == 'debiased' else 0))
+                                       if os.name == 'nt' else 0)
             atomic_write_json(status,dict(state='running',role=args.role,supervisor_pid=os.getpid(),
                 worker_pid=child.pid,started_at=datetime.now(timezone.utc).isoformat(),
                 restarts=restarts,command=command))
