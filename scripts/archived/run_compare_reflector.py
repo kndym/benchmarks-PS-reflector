@@ -13,6 +13,10 @@ Usage:
     python run_compare.py 1600
 """
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from scripts.result_paths import artifact_path, artifact_glob, resolve_path, dated_run_dir, ensure_readme
 import os, sys, time
 import numpy as np
 from scipy.special import logsumexp
@@ -60,7 +64,7 @@ k_final     = multiplier * int(np.floor(np.sqrt(NK)))
 id_step     = int(np.floor(np.sqrt(k_final)))
 cap_iter    = 16      # match C++ cap_iteration
 cap_thr     = 1e-5
-out_dir     = f"output_py_NK{NK}"
+out_dir = dated_run_dir("reference_runs", f"python_comparison_nk{NK}")
 
 os.makedirs(out_dir, exist_ok=True)
 print(f"NK={NK}, k_final={k_final}, id_step={id_step}")
@@ -171,10 +175,10 @@ print(f"R (supported): min={R_arr[mask_p].min():.4f}, max={R_arr[mask_p].max():.
 # Save
 # ---------------------------------------------------------------------------
 
-np.save(f"{out_dir}/f.npy",    f)
-np.save(f"{out_dir}/g.npy",    g)
-np.save(f"{out_dir}/f_id.npy", f_id)
-np.save(f"{out_dir}/g_id.npy", g_id)
-np.save(f"{out_dir}/R.npy",    R_arr)
-np.save(f"{out_dir}/Ref.npy",  Ref_arr)
+np.save(artifact_path(out_dir, "f.npy", for_write=True),    f)
+np.save(artifact_path(out_dir, "g.npy", for_write=True),    g)
+np.save(artifact_path(out_dir, "f_id.npy", for_write=True), f_id)
+np.save(artifact_path(out_dir, "g_id.npy", for_write=True), g_id)
+np.save(artifact_path(out_dir, "R.npy", for_write=True),    R_arr)
+np.save(artifact_path(out_dir, "Ref.npy", for_write=True),  Ref_arr)
 print(f"\nSaved to {out_dir}/")

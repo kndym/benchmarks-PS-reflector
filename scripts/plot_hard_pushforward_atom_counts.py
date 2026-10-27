@@ -1,4 +1,8 @@
 """Count all target locations whose hard push-forward mass differs from 1/NK."""
+try:
+    from result_paths import artifact_path, artifact_glob, resolve_path, dated_run_dir, ensure_readme, self_cost_dir
+except ModuleNotFoundError:
+    from scripts.result_paths import artifact_path, artifact_glob, resolve_path, dated_run_dir, ensure_readme, self_cost_dir
 import argparse
 import csv
 import hashlib
@@ -51,10 +55,11 @@ def main():
     parser.add_argument('output', type=Path)
     parser.add_argument('--update', action='store_true', help='Refresh plots and tables in an existing output directory')
     args = parser.parse_args()
-    params = json.loads((args.source/'parameters.json').read_text())
+    args.source, args.output = map(resolve_path, (args.source, args.output))
+    params = json.loads(artifact_path(args.source, 'parameters.json').read_text())
     if params.get('pushforward', 'hard') != 'hard':
         raise ValueError('Expected hard-transform checkpoints')
-    with (args.source/'costs.csv').open(newline='') as stream:
+    with artifact_path(args.source, 'costs.csv').open(newline='') as stream:
         source_rows = list(csv.DictReader(stream))
     rows, provenance, seen = [], {}, set()
     for row in source_rows:
@@ -65,7 +70,7 @@ def main():
         if key in seen:
             raise ValueError(f'Duplicate case: {key}')
         seen.add(key)
-        matches = list(args.source.glob(f'solve_NK{nk}_*eps{eps:.17g}.npz'))
+        matches = artifact_glob(args.source, f'solve_NK{nk}_*eps{eps:.17g}.npz')
         if len(matches) != 1:
             raise ValueError(f'Missing/ambiguous checkpoint: {key}')
         path = matches[0]
@@ -77,7 +82,7 @@ def main():
                          reference_atom_mass=1/nk, **stats, checkpoint=path.name))
         provenance[path.name] = hashlib.sha256(path.read_bytes()).hexdigest()
     args.output.mkdir(parents=True, exist_ok=args.update)
-    with (args.output/'atom_counts.csv').open('w', newline='') as stream:
+    with (artifact_path(args.output, 'atom_counts.csv', for_write=True)).open('w', newline='') as stream:
         writer = csv.DictWriter(stream, fieldnames=rows[0].keys())
         writer.writeheader(); writer.writerows(rows)
     context = (f'Hard c-transform; target fixed at {params["target_nk"]}; '
@@ -109,7 +114,7 @@ def main():
                 axis.set_yscale('log', nonpositive='mask'); axis.autoscale(axis='y')
             single.suptitle(context+note, fontsize=9)
             single.tight_layout(rect=(0, 0, 1, .86))
-            single.savefig(args.output/f'experiment_{experiment}{suffix}.png', dpi=180)
+            single.savefig(artifact_path(args.output, f'experiment_{experiment}{suffix}.png', for_write=True), dpi=180)
         plt.close(single)
     for scale in ('linear', 'log'):
         suffix = '' if scale == 'linear' else '_log'
@@ -119,7 +124,7 @@ def main():
                 axis.set_yscale('log', nonpositive='mask'); axis.autoscale(axis='y')
         combined.suptitle(context+note, fontsize=11)
         combined.tight_layout(rect=(0, 0, 1, .86))
-        combined.savefig(args.output/f'experiments_1_2_3{suffix}.png', dpi=180)
+        combined.savefig(artifact_path(args.output, f'experiments_1_2_3{suffix}.png', for_write=True), dpi=180)
     plt.close(combined)
     summary = dict(source=args.source.as_posix(), cases=len(rows),
                    counts={str(e):sum(r['experiment'] == e for r in rows) for e in (1,2,3)},
@@ -130,9 +135,10 @@ def main():
                    unequal_atom_range=[min(r['unequal_weight_atoms'] for r in rows),max(r['unequal_weight_atoms'] for r in rows)],
                    unequal_target_location_range=[min(r['unequal_target_locations'] for r in rows),max(r['unequal_target_locations'] for r in rows)],
                    source_checkpoint_sha256=provenance)
-    summary['files_sha256']={p.name:hashlib.sha256(p.read_bytes()).hexdigest()
-                             for p in sorted(args.output.iterdir()) if p.suffix in ('.csv', '.png')}
-    (args.output/'validation.json').write_text(json.dumps(summary,indent=2)+'\n')
+    summary['hash_base'] = '..'
+    summary['files_sha256']={p.relative_to(args.output).as_posix():hashlib.sha256(p.read_bytes()).hexdigest()
+                             for p in sorted(args.output.rglob('*')) if p.suffix in ('.csv', '.png')}
+    artifact_path(args.output, 'validation.json', for_write=True).write_text(json.dumps(summary,indent=2)+'\n')
     (args.output/'README.md').write_text(
         '# Hard push-forward atom weights\n\n'
         f'{len(rows)} saved cases from the hard-transform 2000/2000-cap sweep; no optical solves were repeated.\n\n'
@@ -141,12 +147,12 @@ def main():
         'For these uniform-source runs, the total equals empty locations plus locations receiving at '
         'least two source points, or equivalently target count minus singleton locations. '
         'The plots show the total and its empty/merged components.\n\n'
-        '![Atom counts](experiments_1_2_3.png)\n\n![Log-log atom counts](experiments_1_2_3_log.png)\n\n'
-        '[Per-case counts](atom_counts.csv) use `unequal_target_locations` for the total including empty '
+        '![Atom counts](plots/experiments_1_2_3.png)\n\n![Log-log atom counts](plots/experiments_1_2_3_log.png)\n\n'
+        '[Per-case counts](data/atom_counts.csv) use `unequal_target_locations` for the total including empty '
         'locations; the previous `unequal_weight_atoms` column still counts only occupied locations with '
         'merged weights. Other columns include occupied/singleton counts, empty target locations, '
         'source points in merged atoms, maximum multiplicity, and unequal fraction of occupied support. '
-        '[Validation](validation.json) records uniform-source and mass-conservation checks and checkpoint hashes.\n',
+        '[Validation](metadata/validation.json) records uniform-source and mass-conservation checks and checkpoint hashes.\n',
         encoding='utf-8')
     print(json.dumps({k:v for k,v in summary.items() if not k.endswith('sha256')},indent=2))
 

@@ -1,0 +1,28 @@
+{
+  "results": [
+    {
+      "workers": 1,
+      "seconds": 13.52202340005897,
+      "value": 0.005910479554503229,
+      "info": {
+        "iterations": 69,
+        "converged": true,
+        "potential_change": 9.392640111863249e-10,
+        "transport_mass": 1.0
+      }
+    },
+    {
+      "workers": 4,
+      "seconds": 8.18542329990305,
+      "value": 0.005910479554503229,
+      "info": {
+        "iterations": 69,
+        "converged": true,
+        "potential_change": 9.392640111863249e-10,
+        "transport_mass": 1.0
+      }
+    }
+  ],
+  "speedup": 1.651963851425879,
+  "checkpoint": "results/runs/smooth_refraction_2000_updates_oct_26_26/checkpoints/solutions/solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_entropic_v1_eps0.00011554681136556815.npz"
+}

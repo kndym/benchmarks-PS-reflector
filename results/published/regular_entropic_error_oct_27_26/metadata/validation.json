@@ -1,0 +1,21 @@
+{
+  "metric": "cross_EOT_KL_relative_to_product",
+  "evaluation_epsilon": 0.003125,
+  "ground_cost": "squared_euclidean_3d",
+  "self_subtraction": false,
+  "square_root": false,
+  "target_points": 1600,
+  "cases_per_map": 120,
+  "sources": {
+    "hard": {
+      "path": "results/published/debiased_comparison_complete_oct_26_26/hard/data/costs.csv",
+      "sha256": "a82d98318efad4651328bd7b4dde2c3bd50a3b5a84da2551befad1a3eff031d5"
+    },
+    "entropic": {
+      "path": "results/published/debiased_comparison_complete_oct_26_26/entropic/data/costs.csv",
+      "sha256": "fdd456e2e144c4164fe19fa3478fcc0102d14775ae5ae22971604084a86ef1c2"
+    }
+  },
+  "all_evaluations_converged": true,
+  "costs_sha256": "ddd3080013de68f02f33ca9d4c6bba02496a9e4379fa125bfdd181b09db82c93"
+}

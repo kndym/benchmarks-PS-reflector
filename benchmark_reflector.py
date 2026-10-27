@@ -42,6 +42,7 @@ from refracter.build import (
     reflector_on_regular_grid,
 )
 from refracter.pushforward import ray_trace
+from scripts.result_paths import dated_run_dir, ensure_readme
 
 
 # ---------------------------------------------------------------------------
@@ -105,6 +106,17 @@ def _save_discrete_mesh(path: str, side: np.ndarray, density_fn, upper: bool):
 # Main benchmark function
 # ---------------------------------------------------------------------------
 
+def _prepare_output_directory(testname, output_dir=None):
+    """Choose a documented dated default; preserve explicit output paths."""
+    if output_dir is None:
+        run = dated_run_dir('reference_runs',
+                            f"python_reflector_{testname}_{time.strftime('%H%M%S')}")
+        output_dir = str(run / 'data')
+    ensure_readme(output_dir,
+        f"C++-compatible text arrays, potentials, reflector geometry, and logs for {testname}. "
+        "Explicit output_dir paths are used exactly as supplied; default runs are grouped under results/reference_runs/.")
+    return output_dir
+
 def run_benchmark(benchmark: str = 'SquareToCircle',
                   output_dir: str = None,
                   chunk_size: int = 512,
@@ -117,8 +129,9 @@ def run_benchmark(benchmark: str = 'SquareToCircle',
         Name of the benchmark.  One of 'SquareToCircle' or
         'SquareToTwoGaussSide'.
     output_dir : str or None
-        Directory to save output files.  If None a timestamped directory is
-        created in the current working directory (same behaviour as C++).
+        Directory to save output files. If None, creates a dated run under
+        results/reference_runs/ with numerical files in data/. Explicit paths
+        are used exactly as supplied.
     chunk_size : int
         Block size for chunked matrix operations.
     verbose : bool
@@ -166,10 +179,7 @@ def run_benchmark(benchmark: str = 'SquareToCircle',
         print(f"=== Benchmark: {benchmark} ({testname}) ===\n")
 
     # --- Output directory ---
-    if output_dir is None:
-        ts = time.strftime("_%Y_%m_%d_%H-%M-%S")
-        output_dir = f"Output{ts}_{testname}"
-    os.makedirs(output_dir, exist_ok=True)
+    output_dir = _prepare_output_directory(testname, output_dir)
 
     if verbose:
         print(f"Output directory: {output_dir}\n")
@@ -427,7 +437,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--output_dir", "-o",
         default=None,
-        help="Output directory (default: auto-generated timestamped directory).",
+        help="Output directory (default: dated results/reference_runs/ run, data/ subfolder).",
     )
     parser.add_argument(
         "--chunk_size", "-c",

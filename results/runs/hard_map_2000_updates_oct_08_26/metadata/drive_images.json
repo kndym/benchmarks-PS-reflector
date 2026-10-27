@@ -1,0 +1,43 @@
+[
+  {
+    "id": "1AoT-h4zwtn2QhmADEcgZ_QlrPw7dNzCr",
+    "title": "Extended target fixed 1600 EOT cap 2000 experiment_1 complete.png",
+    "mime_type": null,
+    "size": "77995",
+    "url": "https://drive.google.com/file/d/1AoT-h4zwtn2QhmADEcgZ_QlrPw7dNzCr/view?usp=drivesdk",
+    "display_url": "https://drive.google.com/file/d/1AoT-h4zwtn2QhmADEcgZ_QlrPw7dNzCr/view?usp=drivesdk",
+    "file_or_folder": null,
+    "created_time": null,
+    "modified_time": "2026-10-07T05:50:40.818Z",
+    "parent_ids": null,
+    "drive_id": null,
+    "current_user_can_share": null,
+    "has_augmented_permissions": null,
+    "shared": null,
+    "permissions": null,
+    "source_visibility_status": "access_not_verified",
+    "local_plot": "experiment_1.png"
+  },
+  {
+    "id": "1xYZkREVjVczDM9Itt1VuYwBkUWMFE7Y2",
+    "title": "Extended target fixed 1600 EOT cap 2000 experiment_2 complete.png",
+    "url": "https://drive.google.com/file/d/1xYZkREVjVczDM9Itt1VuYwBkUWMFE7Y2/view?usp=drivesdk",
+    "local_plot": "experiment_2.png"
+  },
+  {
+    "id": "1iXGUfYHLFRK1TrjKdn2MSNr8ofWuzBjL",
+    "title": "Extended target fixed 1600 EOT cap 2000 experiment_3 complete.png",
+    "url": "https://drive.google.com/file/d/1iXGUfYHLFRK1TrjKdn2MSNr8ofWuzBjL/view?usp=drivesdk",
+    "size": "73600",
+    "local_plot": "experiment_3.png",
+    "metadata_verified": true
+  },
+  {
+    "id": "1jWSXYnohBMHVHsjLJuNV_g0jWSUkNIyx",
+    "title": "Extended target fixed 1600 EOT cap 2000 experiments_1_2_3 complete.png",
+    "url": "https://drive.google.com/file/d/1jWSXYnohBMHVHsjLJuNV_g0jWSUkNIyx/view?usp=drivesdk",
+    "size": "158215",
+    "local_plot": "experiments_1_2_3.png",
+    "metadata_verified": true
+  }
+]

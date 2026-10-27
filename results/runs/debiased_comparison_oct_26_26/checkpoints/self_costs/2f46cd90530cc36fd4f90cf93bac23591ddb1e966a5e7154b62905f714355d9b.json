@@ -1,0 +1,17 @@
+{
+  "measure_sha256": "2f46cd90530cc36fd4f90cf93bac23591ddb1e966a5e7154b62905f714355d9b",
+  "settings": {
+    "epsilon": 0.003125,
+    "tolerance": 1e-09,
+    "max_iter": 2000,
+    "ground_cost": "squared_euclidean_3d",
+    "objective": "KL_relative_to_product"
+  },
+  "value": 0.006567404376630837,
+  "info": {
+    "iterations": 77,
+    "converged": true,
+    "potential_change": 9.535208508187898e-10,
+    "transport_mass": 1.0
+  }
+}

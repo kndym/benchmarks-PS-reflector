@@ -1,4 +1,8 @@
 """Plot max_j |(T_hard # p)_j - q_j| on the full saved target grid."""
+try:
+    from result_paths import artifact_path, artifact_glob, resolve_path, dated_run_dir, ensure_readme, self_cost_dir
+except ModuleNotFoundError:
+    from scripts.result_paths import artifact_path, artifact_glob, resolve_path, dated_run_dir, ensure_readme, self_cost_dir
 import argparse
 import csv
 import hashlib
@@ -45,10 +49,11 @@ def main():
     parser.add_argument('source', type=Path)
     parser.add_argument('output', type=Path)
     args = parser.parse_args()
-    params = json.loads((args.source/'parameters.json').read_text())
+    args.source, args.output = map(resolve_path, (args.source, args.output))
+    params = json.loads(artifact_path(args.source, 'parameters.json').read_text())
     if params.get('pushforward', 'hard') != 'hard':
         raise ValueError('Expected hard-transform checkpoints')
-    with (args.source/'costs.csv').open(newline='') as stream:
+    with artifact_path(args.source, 'costs.csv').open(newline='') as stream:
         source_rows = list(csv.DictReader(stream))
     rows, provenance, seen = [], {}, set()
     target_min, target_max = np.inf, -np.inf
@@ -60,7 +65,7 @@ def main():
         if key in seen:
             raise ValueError(f'Duplicate case: {key}')
         seen.add(key)
-        matches = list(args.source.glob(f'solve_NK{nk}_*eps{eps:.17g}.npz'))
+        matches = artifact_glob(args.source, f'solve_NK{nk}_*eps{eps:.17g}.npz')
         if len(matches) != 1:
             raise ValueError(f'Missing/ambiguous checkpoint: {key}')
         path = matches[0]
@@ -73,7 +78,7 @@ def main():
         rows.append(dict(experiment=experiment, nk=nk, refractor_epsilon=eps, **stats, checkpoint=path.name))
         provenance[path.name] = hashlib.sha256(path.read_bytes()).hexdigest()
     args.output.mkdir(parents=True, exist_ok=False)
-    with (args.output/'max_mass_error.csv').open('w', newline='') as stream:
+    with (artifact_path(args.output, 'max_mass_error.csv', for_write=True)).open('w', newline='') as stream:
         writer = csv.DictWriter(stream, fieldnames=rows[0].keys())
         writer.writeheader(); writer.writerows(rows)
     context = (f'Hard c-transform; target fixed at {params["target_nk"]}; '
@@ -90,7 +95,7 @@ def main():
             note = '' if scale == 'linear' else '\nLogarithmic y axis; exact zero errors omitted'
             figure.suptitle(context+note, fontsize=size)
             figure.tight_layout(rect=(0,0,1,.86))
-            figure.savefig(args.output/f'{stem}{suffix}.png', dpi=180)
+            figure.savefig(artifact_path(args.output, f'{stem}{suffix}.png', for_write=True), dpi=180)
 
     for experiment, panel in zip((1,2,3), axes):
         single, axis = plt.subplots(figsize=(8,6))
@@ -114,8 +119,9 @@ def main():
                   target_mass_range=[float(target_min),float(target_max)],
                   max_abs_error_range=[min(r['max_abs_mass_difference'] for r in rows),max(r['max_abs_mass_difference'] for r in rows)],
                   source_checkpoint_sha256=provenance)
-    report['files_sha256']={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(args.output.iterdir())}
-    (args.output/'validation.json').write_text(json.dumps(report,indent=2)+'\n')
+    report['hash_base'] = '..'
+    report['files_sha256']={p.relative_to(args.output).as_posix():hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(args.output.rglob('*')) if p.is_file() and p.name != 'README.md'}
+    artifact_path(args.output, 'validation.json', for_write=True).write_text(json.dumps(report,indent=2)+'\n')
     (args.output/'README.md').write_text(
         '# Maximum absolute hard push-forward mass error\n\n'
         f'All {len(rows)} saved hard-transform cases; no optical solves were repeated.\n\n'
@@ -124,9 +130,9 @@ def main():
         'is the saved target measure `q`, which here has mass **1/1600** per target location; '
         'source masses are **1/NK**. Values are absolute probability-mass differences, not density '
         'errors or a spatial transport distance.\n\n'
-        '![Maximum mass error](experiments_1_2_3.png)\n\n'
-        '![Log-log maximum mass error](experiments_1_2_3_log.png)\n\n'
-        '[Per-case CSV](max_mass_error.csv) | [Validation and checkpoint hashes](validation.json)\n\n'
+        '![Maximum mass error](plots/experiments_1_2_3.png)\n\n'
+        '![Log-log maximum mass error](plots/experiments_1_2_3_log.png)\n\n'
+        '[Per-case CSV](data/max_mass_error.csv) | [Validation and checkpoint hashes](metadata/validation.json)\n\n'
         'The CSV also records maximum excess/deficit and the saved zero-based target index where '
         'the absolute error is largest (first index if tied).\n',encoding='utf-8')
     print(json.dumps({k:v for k,v in report.items() if not k.endswith('sha256')},indent=2))

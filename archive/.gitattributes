@@ -1,0 +1,2 @@
+# Preserve exact artifact bytes so recorded SHA256 hashes survive every checkout.
+** -text

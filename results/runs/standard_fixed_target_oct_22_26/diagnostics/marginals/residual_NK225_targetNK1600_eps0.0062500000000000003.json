@@ -1,0 +1,7 @@
+{
+  "nk": 225,
+  "target_nk": 1600,
+  "epsilon": 0.00625,
+  "source_marginal_l1": 5.383412231274587e-07,
+  "target_marginal_l1": 0.0020848079862014874
+}

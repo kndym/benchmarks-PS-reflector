@@ -1,0 +1,15 @@
+# Diagnostics
+
+Numerical diagnostics, separated from plotted transport costs and optical solution arrays.
+
+<!-- directory-index:start -->
+
+## Directory guide
+
+[Parent directory](../README.md)
+
+| Folder | Contents |
+| --- | --- |
+| [marginals/](marginals/README.md) | Source/target marginal residuals and optical stopping diagnostics. Potential-change stopping and marginal feasibility are distinct checks. |
+
+<!-- directory-index:end -->

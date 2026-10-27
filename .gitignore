@@ -1,48 +1,57 @@
-*.jpg
-*.png
-*.jpeg
+# Local assistant/editor state never belongs on GitHub.
 .claude/
 .cursor/
+.agents/
+.codex/
+.research/
+AGENTS.md
+CLAUDE.md
+**/__pycache__/
+.pytest_cache/
+
+# Generated media is published only inside documented artifact folders.
+*.jpg
+*.jpeg
+*.png
 *.html
-!/results/refraction_sweeps_extended/*.png
-!/results/refraction_sweeps_extended_high_iter/*.png
-!/results/refraction_sweeps/*.png
-!/results/archive/**/*.png
-!/results/archive/laptop_research/**/*.html
-!/results/uniform_sensitivity/*_surface.png
-!/results/snapshots/**/*.png
-!/figures/*.png
+!/results/**/plots/*.png
+!/results/**/interactive/*.html
+!/archive/**/plots/*.png
+!/archive/**/interactive/*.html
+!/notebooks/archive/**/plots/*.png
+!/notebooks/archive/**/interactive/*.html
 !/geometric_optics_progress/images/*.png
 
-# Local workers and disposable test output; published snapshots are immutable.
-/results/**/*.pid
-/results/**/*.log
-/results/**/*.err
-/results/**/queued_run.json
-/results/**/run_manifest.json
-/results/*smoke*/
-/results/refraction_sweeps_extended_entropic_high_iter/
-/results/refraction_sweeps_extended_debiased_comparison/
-/results/refraction_worker_supervision/
-/geometric_optics_progress.zip
+# Operational logs and one-off smoke outputs remain local, with README indexes.
+**/*.pid
+**/*.log
+**/*.err
+**/queued_run.json
+**/run_manifest.json
+**/logs/*
+!**/logs/README.md
+/results/local_runtime/**
+!/results/local_runtime/**/
+!/results/local_runtime/**/README.md
+/results/archive/smoke_checks/**
+!/results/archive/smoke_checks/**/
+!/results/archive/smoke_checks/**/README.md
+
+# Compiler/editor intermediates and temporary export packages.
+/BenchmarkCode/*.exe
+/BenchmarkCode/main
+/BenchmarkCode/main_fast
+/BenchmarkCode/main_compare
+*.o
+*.obj
 /geometric_optics_progress/*.aux
 /geometric_optics_progress/*.log
 /geometric_optics_progress/*.pdf
 /geometric_optics_progress/*.out
-**/__pycache__/
-CLAUDE.md
-/results/sinkhorn_refracter_examples
-
-# Keep the refreshed refracter archives and figures available to the notebook
-# when the repository is cloned from GitHub.  Other generated result bundles
-# remain ignored by the rule above.
-!/results/sinkhorn_refracter_examples/
-!/results/sinkhorn_refracter_examples/README.md
-!/results/sinkhorn_refracter_examples/metadata.json
-!/results/sinkhorn_refracter_examples/main (2).tex
-!/results/sinkhorn_refracter_examples/case_*/
-!/results/sinkhorn_refracter_examples/case_*/*.npz
-!/results/sinkhorn_refracter_examples/case_*/*.png
-/results/sinkhorn_refracter_examples/*.aux
-/results/sinkhorn_refracter_examples/*.log
-/results/sinkhorn_refracter_examples/*.pdf
+/geometric_optics_progress/exports/*.zip
+/geometric_optics_progress/metadata/overleaf_sync.json
+**/*.synctex.gz
+/archive/writeup_exports_oct_27_26/packages/*.zip
+/results/examples/refractor_surfaces_sep_24_26/source/*.aux
+/results/examples/refractor_surfaces_sep_24_26/source/*.log
+/results/examples/refractor_surfaces_sep_24_26/source/*.pdf

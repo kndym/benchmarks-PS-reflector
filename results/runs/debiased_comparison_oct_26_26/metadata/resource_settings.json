@@ -1,0 +1,6 @@
+{
+  "workers": 4,
+  "chunk_size": 256,
+  "cache_entries": 4000000,
+  "note": "Execution settings only; objective, tolerance and cache numerical settings are unchanged"
+}

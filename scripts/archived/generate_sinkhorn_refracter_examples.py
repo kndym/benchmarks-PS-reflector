@@ -2,6 +2,10 @@
 
 from __future__ import annotations
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from scripts.result_paths import artifact_path, artifact_glob, resolve_path, dated_run_dir, ensure_readme
 import argparse
 import json
 import math
@@ -68,7 +72,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--pushforward-tol", type=float, default=1e-10,
                         help="stopping tolerance for each pushforward Sinkhorn solve")
     parser.add_argument("--output-dir", default=None,
-                        help="output directory (default: results/sinkhorn_refracter_examples)")
+                        help="output directory (default: results/examples/refractor_surfaces_sep_24_26)")
     return parser.parse_args()
 
 
@@ -270,7 +274,7 @@ def save_surface_plot(
 ) -> str:
     """Save a radius-colored 3D refractor surface using the shared plot style."""
     case_dir.mkdir(parents=True, exist_ok=True)
-    surface_path = case_dir / (filename or f"{case_label}_surface_3d.png")
+    surface_path = artifact_path(case_dir, filename or f"{case_label}_surface_3d.png", for_write=True)
     temp_path = surface_path.with_name(f".{surface_path.stem}.tmp{surface_path.suffix}")
     fig = plt.figure(figsize=(9, 7))
     ax = fig.add_subplot(111, projection="3d")
@@ -291,7 +295,7 @@ def save_surface_plot(
     fig.savefig(temp_path, dpi=160, bbox_inches="tight")
     plt.close(fig)
     temp_path.replace(surface_path)
-    return surface_path.name
+    return surface_path.relative_to(case_dir).as_posix()
 
 
 def save_plots(
@@ -317,7 +321,7 @@ def save_plots(
         w2_xy,
     )
 
-    source_xy_path = case_dir / f"{case_label}_source_xy.png"
+    source_xy_path = artifact_path(case_dir, f"{case_label}_source_xy.png", for_write=True)
     fig, ax = plt.subplots(figsize=(8, 7))
     scatter = ax.scatter(
         x[:, 0], x[:, 1], c=radii, cmap=cmap, s=18, alpha=0.9,
@@ -335,7 +339,7 @@ def save_plots(
     fig.savefig(source_xy_path, dpi=160, bbox_inches="tight")
     plt.close(fig)
 
-    return surface_name, source_xy_path.name
+    return surface_name, source_xy_path.relative_to(case_dir).as_posix()
 
 
 def _json_ready(value):
@@ -436,7 +440,7 @@ def write_report(output_dir: Path, metadata: dict[str, object]) -> None:
         ])
 
     report_path.write_text("\n".join(lines), encoding="utf-8")
-    (output_dir / "metadata.json").write_text(
+    artifact_path(output_dir, "metadata.json", for_write=True).write_text(
         json.dumps(_json_ready(metadata), indent=2), encoding="utf-8"
     )
 
@@ -529,7 +533,7 @@ def run_case(case_index: int, case: dict[str, object], args: argparse.Namespace,
     ])
 
     np.savez_compressed(
-        case_dir / f"{label}.npz",
+        artifact_path(case_dir, f"{label}.npz", for_write=True),
         x=x,
         y=y,
         x_s=np.zeros((0, 3), dtype=np.float64),
@@ -599,7 +603,7 @@ def run_case(case_index: int, case: dict[str, object], args: argparse.Namespace,
         },
         "surface_plot": f"{label}/{plots[0]}",
         "source_xy_plot": f"{label}/{plots[1]}",
-        "npz": f"{label}/{label}.npz",
+        "npz": f"{label}/data/{label}.npz",
         "runtime_seconds": time.perf_counter() - started,
     }
     print(
@@ -629,9 +633,7 @@ def main() -> None:
             "and --pushforward-tol must be positive; --random-cases cannot be negative"
         )
 
-    output_dir = Path(args.output_dir) if args.output_dir else (
-        REPO_ROOT / "results" / "sinkhorn_refracter_examples"
-    )
+    output_dir = resolve_path(args.output_dir) if args.output_dir else dated_run_dir("examples", "refractor_surfaces")
     output_dir.mkdir(parents=True, exist_ok=True)
 
     rng = np.random.default_rng(args.seed)
@@ -668,7 +670,7 @@ def main() -> None:
     }
     write_report(output_dir, metadata)
     print(f"\nWrote report: {output_dir / 'README.md'}")
-    print(f"Wrote metadata: {output_dir / 'metadata.json'}")
+    print(f"Wrote metadata: {artifact_path(output_dir, 'metadata.json')}")
 
 
 if __name__ == "__main__":

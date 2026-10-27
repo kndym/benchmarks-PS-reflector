@@ -2,7 +2,12 @@
 
 Run from the repository root: python scripts/run_refraction_sweeps.py
 """
+try:
+    from result_paths import artifact_path, artifact_glob, resolve_path, dated_run_dir, ensure_readme, self_cost_dir
+except ModuleNotFoundError:
+    from scripts.result_paths import artifact_path, artifact_glob, resolve_path, dated_run_dir, ensure_readme, self_cost_dir
 import argparse
+import sys
 import csv
 import json
 from concurrent.futures import ThreadPoolExecutor
@@ -77,8 +82,18 @@ def main():
                         help="Hard c-transform or entropic-surface normals with Snell refraction")
     parser.add_argument("--pf-warm-start", action="store_true",
                         help="Reuse PF potentials from the preceding larger epsilon")
-    parser.add_argument("--output", type=Path, default=Path(REPO_ROOT) / "results/refraction_sweeps")
+    parser.add_argument("--output", type=Path, default=Path(REPO_ROOT) / "results/runs/standard_fixed_target_oct_22_26")
     args = parser.parse_args()
+    args.output = resolve_path(args.output)
+    if not any(value == "--output" or value.startswith("--output=") for value in sys.argv[1:]):
+        label = "uniform_refraction_hard_map" if args.pushforward == "hard" else "smooth_refraction"
+        if args.extended:
+            label += "_extended"
+        elif args.expanded:
+            label += "_expanded"
+        args.output = dated_run_dir("runs", label)
+    if args.import_costs:
+        args.import_costs = resolve_path(args.import_costs)
     if min(args.refractor_max_iter, args.identity_max_iter) < 0:
         parser.error("Iteration caps must be nonnegative (0 means uncapped)")
     if args.chunk_size < 1 or not all(np.isfinite(v) and v > 0 for v in (args.refractor_tolerance, args.pf_tolerance)):
@@ -104,7 +119,7 @@ def main():
     args.output.mkdir(parents=True, exist_ok=True)
     args.self_cost_mode = "separate_marginals_v1" if args.target_nk is not None else "legacy"
     args.cost_metric = "pushforward_target_eot_squared_euclidean"
-    atomic_write_json(args.output / "parameters.json", vars(args))
+    atomic_write_json(artifact_path(args.output, "parameters.json", for_write=True), vars(args))
     set_kappa(0.6)
     cache = {}
     pf_potentials = {}
@@ -133,19 +148,19 @@ def main():
         return tag
 
     def write_costs():
-        temporary = args.output / "costs.tmp.csv"
+        temporary = artifact_path(args.output, "costs.tmp.csv", for_write=True)
         with temporary.open("w", newline="", encoding="utf-8") as stream:
             writer = csv.DictWriter(stream, fieldnames=rows[0].keys())
             writer.writeheader()
             writer.writerows(rows)
-        atomic_replace(temporary, args.output / "costs.csv")
+        atomic_replace(temporary, artifact_path(args.output, "costs.csv", for_write=True))
 
     def solve(nk, epsilon):
         key = (nk, epsilon)
         target_nk = args.target_nk or nk
         target_tag = checkpoint_tag(nk)
         if key not in cache:
-            checkpoint = args.output / f"solve_NK{nk}{target_tag}_eps{epsilon:.17g}.npz"
+            checkpoint = artifact_path(args.output, f"solve_NK{nk}{target_tag}_eps{epsilon:.17g}.npz")
             if checkpoint.exists():
                 with np.load(checkpoint) as data:
                     cache[key] = ({"total_cost": float(data["total_cost"])},
@@ -202,10 +217,10 @@ def main():
                 diagnostic.update(pushforward="entropic", normal_dot_error=float(
                     np.max(np.abs(np.sum(x*normals, axis=1)-1))),
                     transmitted_norm_error=float(np.max(np.abs(np.linalg.norm(transmitted, axis=1)-1))))
-            (args.output / f"residual_NK{nk}{target_tag}_eps{epsilon:.17g}.json").write_text(
+            (artifact_path(args.output, f"residual_NK{nk}{target_tag}_eps{epsilon:.17g}.json", for_write=True)).write_text(
                 json.dumps(diagnostic, indent=2), encoding="utf-8")
             cache[key] = (solution, artifacts, y, p, q)
-            np.savez(checkpoint, total_cost=solution["total_cost"],
+            np.savez(artifact_path(args.output, checkpoint.name, for_write=True), total_cost=solution["total_cost"],
                      y_push_3d=artifacts["y_push_3d"], y=y, p=p, q=q, **entropic_arrays)
         return cache[key]
 
@@ -213,7 +228,7 @@ def main():
         """One PF EOT evaluation/cache path shared by all four experiments."""
         _, artifacts, y, p, q = solve(nk, epsilon)
         tag = checkpoint_tag(nk, evaluation=True)
-        checkpoint = args.output / f"pf_NK{nk}{tag}_eps{epsilon:.17g}_eval{pf_epsilon:.17g}.json"
+        checkpoint = artifact_path(args.output, f"pf_NK{nk}{tag}_eps{epsilon:.17g}_eval{pf_epsilon:.17g}.json")
         if checkpoint.exists():
             value, info = json.loads(checkpoint.read_text(encoding="utf-8"))
         else:
@@ -227,7 +242,7 @@ def main():
             if warm_start:
                 pf_potentials[nk, epsilon] = info.pop("potentials")
             if info["converged"] and np.isfinite(value):
-                checkpoint.write_text(json.dumps([value, info]), encoding="utf-8")
+                artifact_path(args.output, checkpoint.name, for_write=True).write_text(json.dumps([value, info]), encoding="utf-8")
         if not info["converged"] or not np.isfinite(value):
             raise RuntimeError(f"PF EOT evaluation failed: NK={nk}, refractor={epsilon}, PF={pf_epsilon}: {info}")
         return value, info
@@ -250,7 +265,7 @@ def main():
 
     def save(fig, name):
         fig.tight_layout()
-        fig.savefig(args.output / f"{name}.png", dpi=180)
+        fig.savefig(artifact_path(args.output, f"{name}.png", for_write=True), dpi=180)
         plt.close(fig)
 
     fig, axes = plt.subplots(1, 3, figsize=(15, 4.5))
@@ -326,8 +341,8 @@ def main():
         ax.set_visible(False)
     save(fig, "experiment_4_pushforward")
     write_costs()
-    (args.output / "ordering.json").write_text(json.dumps(ordering, indent=2), encoding="utf-8")
-    atomic_write_json(args.output / "parameters.json", vars(args))
+    (artifact_path(args.output, "ordering.json", for_write=True)).write_text(json.dumps(ordering, indent=2), encoding="utf-8")
+    atomic_write_json(artifact_path(args.output, "parameters.json", for_write=True), vars(args))
     print(f"Saved plots, costs, parameters and ordering to {args.output}", flush=True)
 
 

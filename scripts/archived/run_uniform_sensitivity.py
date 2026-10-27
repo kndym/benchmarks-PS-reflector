@@ -2,11 +2,15 @@
 
 This thin experiment driver reuses the repository QMC sampler, Sinkhorn solver,
 notebook artifact builder, and NPZ writer. The default output is
-``results/uniform_sensitivity``.
+``results/examples/uniform_sensitivity_oct_02_26``.
 """
 
 from __future__ import annotations
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from scripts.result_paths import artifact_path, artifact_glob, resolve_path, dated_run_dir, ensure_readme
 import argparse
 import csv
 import json
@@ -204,7 +208,7 @@ def run_case(case: dict[str, object], output_dir: Path) -> dict[str, object]:
         "hard_map_unique_targets": np.int64(np.count_nonzero(artifacts["pushed_mass"])),
         "run_config_json": json.dumps(config, sort_keys=True),
     }
-    npz_path = output_dir / f"{label}.npz"
+    npz_path = artifact_path(output_dir, f"{label}.npz", for_write=True)
     save_refraction_npz(
         npz_path,
         x=x,
@@ -223,7 +227,7 @@ def run_case(case: dict[str, object], output_dir: Path) -> dict[str, object]:
     )
     result = {
         **config,
-        "npz": npz_path.name,
+        "npz": npz_path.relative_to(output_dir).as_posix(),
         "max_source_target_dot": max_dot,
         "pushforward_target_sinkhorn_divergence_3d_l2": sinkhorn_divergence,
         "pushforward_target_sinkhorn_w2_3d_l2": sinkhorn_w2,
@@ -327,8 +331,8 @@ def write_summary(output_dir: Path, results: list[dict[str, object]]) -> None:
             "total_targets": NK,
             "npz": result["npz"],
         })
-    (output_dir / "L2_costs.txt").write_text("\n".join(lines) + "\n", encoding="utf-8")
-    with (output_dir / "L2_costs_numeric.csv").open(
+    artifact_path(output_dir, "L2_costs.txt", for_write=True).write_text("\n".join(lines) + "\n", encoding="utf-8")
+    with artifact_path(output_dir, "L2_costs_numeric.csv", for_write=True).open(
         "w", newline="", encoding="utf-8",
     ) as csv_file:
         writer = csv.DictWriter(csv_file, fieldnames=csv_fields)
@@ -348,13 +352,15 @@ def write_summary(output_dir: Path, results: list[dict[str, object]]) -> None:
         "pushforward_solver": "refracter.sinkhorn.entropic_sinkhorn_divergence",
         "results": results,
     }
-    (output_dir / "metadata.json").write_text(
+    artifact_path(output_dir, "metadata.json", for_write=True).write_text(
         json.dumps(metadata, indent=2) + "\n", encoding="utf-8"
     )
 
 
 def main() -> None:
     args = parse_args()
+    explicit_output = any(value == "--output-dir" or value.startswith("--output-dir=") for value in sys.argv[1:])
+    args.output_dir = resolve_path(args.output_dir) if explicit_output else dated_run_dir("examples", "uniform_sensitivity")
     args.output_dir.mkdir(parents=True, exist_ok=True)
     results = [run_case(case, args.output_dir) for case in cases()]
     write_summary(args.output_dir, results)

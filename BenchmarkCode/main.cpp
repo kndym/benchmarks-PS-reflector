@@ -10,6 +10,7 @@
 
 #include <ctime>
 #include <iomanip>
+#include "Benchmarks/OutputPaths.h"
 
 
 //	Functions for computing reflection from the reflector computed on the regular (rectangular instead of monte-carlo) grid
@@ -164,23 +165,12 @@ int main()
 {
 	clock_t Totaltime = clock();
 
-	char name1[100];
-	time_t rawtime;
-  	struct tm * timeinfo;
-  	time (&rawtime);
-  	timeinfo = localtime (&rawtime);
-  	strftime (name1,100,"_%Y_%m_%d_%H:%M:%S",timeinfo);
-
-	name="Output"+string(name1)+"_"+to_string(dim)+"D_NK"+to_string(NK)+"_";
-	outputname="Output"+string(name1);
-	command="mkdir "+outputname;
-	system(command.c_str());
-
+	name = testname + "_nk" + to_string(NK) + "_";
+	outputname = reference_output_directory(testname + "_nk" + to_string(NK));
 
 	command=outputname+"/log.txt";
 	freopen(command.c_str(),"w",stdout);
 
-	string addname="_NumbOfIt__Steppow_1l3";
 
 
 
@@ -217,10 +207,7 @@ int main()
 	
 	cout<<endl;
 
-	command="Results_"+testname;
-	system(("mkdir "+command).c_str());
-	command="mv "+outputname+" "+command+"/"+name+addname;
-	system(command.c_str());
+	cout << "Results written to " << outputname << endl;
 
 	system("spd-say done ");
 

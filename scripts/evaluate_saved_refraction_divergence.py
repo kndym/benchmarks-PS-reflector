@@ -4,6 +4,10 @@ Reuses each saved cross EOT and caches only missing self EOT terms. The target
 self term is shared. With --watch, incorporates completed source CSV rows as
 the independent original worker advances. Run this worker at low priority.
 """
+try:
+    from result_paths import artifact_path, artifact_glob, resolve_path, dated_run_dir, ensure_readme, self_cost_dir
+except ModuleNotFoundError:
+    from scripts.result_paths import artifact_path, artifact_glob, resolve_path, dated_run_dir, ensure_readme, self_cost_dir
 import argparse
 import csv
 import hashlib
@@ -51,11 +55,12 @@ def main():
     parser.add_argument('--cache-entries', type=int, default=2_000_000)
     parser.add_argument('--workers', type=int, default=1, help='Threads for independent SciPy reductions')
     args = parser.parse_args()
+    args.hard, args.entropic, args.output = map(resolve_path, (args.hard, args.entropic, args.output))
     if args.workers < 1:
         parser.error('Workers must be positive')
     enable_threaded_reductions(args.workers)
-    params = json.loads((args.entropic/'parameters.json').read_text(encoding='utf-8'))
-    hard_params = json.loads((args.hard/'parameters.json').read_text(encoding='utf-8'))
+    params = json.loads(artifact_path(args.entropic, 'parameters.json').read_text(encoding='utf-8'))
+    hard_params = json.loads(artifact_path(args.hard, 'parameters.json').read_text(encoding='utf-8'))
     for name in ('nk', 'epsilon', 'fixed_nk', 'fixed_epsilon', 'target_nk',
                  'cost_epsilon', 'refractor_max_iter', 'identity_max_iter',
                  'refractor_tolerance', 'pf_tolerance', 'self_cost_mode'):
@@ -67,12 +72,12 @@ def main():
     settings = dict(epsilon=eta, tolerance=tolerance, max_iter=max_iter,
                     ground_cost='squared_euclidean_3d', objective='KL_relative_to_product')
     args.output.mkdir(parents=True, exist_ok=True)
-    cache = args.output/'self_cache'; cache.mkdir(exist_ok=True)
-    settings_path = args.output/'evaluation_settings.json'
+    cache = self_cost_dir(args.output, for_write=True)
+    settings_path = artifact_path(args.output, 'evaluation_settings.json')
     if settings_path.exists() and json.loads(settings_path.read_text()) != settings:
         raise ValueError('Existing self cache has different numerical settings')
-    atomic_json(settings_path, settings)
-    atomic_json(args.output/'resource_settings.json', dict(workers=args.workers,
+    atomic_json(artifact_path(args.output, 'evaluation_settings.json', for_write=True), settings)
+    atomic_json(artifact_path(args.output, 'resource_settings.json', for_write=True), dict(workers=args.workers,
         chunk_size=args.chunk_size,cache_entries=args.cache_entries,
         note='Execution settings only; objective, tolerance and cache numerical settings are unchanged'))
     tables, completed = {}, {}
@@ -84,17 +89,17 @@ def main():
         metadata = dict(params, pushforward=mode,
                         cost_metric='debiased_sinkhorn_divergence_squared_euclidean_3d',
                         experiments=[1, 2, 3])
-        atomic_json(folder/'parameters.json', metadata)
+        atomic_json(artifact_path(folder, 'parameters.json', for_write=True), metadata)
         tables[mode] = read_rows(folder)
         completed[mode] = {row_key(r) for r in tables[mode]}
 
     def save_tables():
         for mode, rows in tables.items():
-            temporary = args.output/mode/'costs.tmp.csv'
+            temporary = artifact_path(args.output/mode, 'costs.tmp.csv', for_write=True)
             with temporary.open('w', newline='', encoding='utf-8') as stream:
                 writer = csv.DictWriter(stream, fieldnames=fields)
                 writer.writeheader(); writer.writerows(rows)
-            atomic_replace(temporary, args.output/mode/'costs.csv')
+            atomic_replace(temporary, artifact_path(args.output/mode, 'costs.csv', for_write=True))
 
     def plot():
         render(args.output/'entropic', args.output/'hard', value_field='divergence',
@@ -126,12 +131,12 @@ def main():
         experiment, nk, epsilon = row_key(source_row)
         if source_row['converged'] != 'True' or float(source_row['pf_epsilon']) != eta:
             raise ValueError('Invalid saved cross evaluation')
-        matches = list(folder.glob(f'solve_NK{nk}_*eps{epsilon:.17g}.npz'))
+        matches = artifact_glob(folder, f'solve_NK{nk}_*eps{epsilon:.17g}.npz')
         if len(matches) != 1:
             raise ValueError(f'Missing or ambiguous saved map: {mode}, NK={nk}, epsilon={epsilon}')
         solve = matches[0]
         suffix = solve.stem.removeprefix('solve_')
-        cross_path = folder/f'pf_{suffix}_eval{eta:.17g}.json'
+        cross_path = artifact_path(folder, f'pf_{suffix}_eval{eta:.17g}.json')
         cross = json.loads(cross_path.read_text())
         if not cross[1]['converged'] or not np.isclose(cross[0], float(source_row['cost']), atol=1e-15, rtol=0):
             raise ValueError('Saved cross checkpoint does not match source CSV')
@@ -150,7 +155,7 @@ def main():
                       eot=cross[0], source_self=source_self[0], target_self=target_self[0],
                       divergence=value, raw_divergence=info['raw_divergence'], converged=True,
                       **{k:info[k] for k in ('cross_iterations', 'source_self_iterations', 'target_self_iterations')})
-        atomic_json(args.output/mode/f'divergence_NK{nk}_eps{epsilon:.17g}.json',
+        atomic_json(artifact_path(args.output/mode, f'divergence_NK{nk}_eps{epsilon:.17g}.json', for_write=True),
                     dict(result=result, diagnostics=info, cross_checkpoint=str(cross_path),
                          cross_checkpoint_sha256=hashlib.sha256(cross_path.read_bytes()).hexdigest(),
                          saved_map=str(solve), saved_map_sha256=hashlib.sha256(solve.read_bytes()).hexdigest()))
@@ -174,7 +179,7 @@ def main():
                     changed = True
             if changed:
                 save_tables(); plot()
-                atomic_json(args.output/'progress.json', dict(
+                atomic_json(artifact_path(args.output, 'progress.json', for_write=True), dict(
                     hard_completed=len(completed['hard']), entropic_completed=len(completed['entropic']),
                     entropic_available=len(soft_rows), expected_per_map=expected))
         for row in hard_rows:

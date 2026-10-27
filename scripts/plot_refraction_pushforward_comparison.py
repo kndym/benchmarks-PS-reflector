@@ -1,4 +1,8 @@
 """Plot completed/partial entropic Snell sweeps against matching hard-map data."""
+try:
+    from result_paths import artifact_path, artifact_glob, resolve_path, dated_run_dir, ensure_readme, self_cost_dir
+except ModuleNotFoundError:
+    from scripts.result_paths import artifact_path, artifact_glob, resolve_path, dated_run_dir, ensure_readme, self_cost_dir
 import argparse
 import csv
 import json
@@ -14,7 +18,7 @@ from atomic_io import atomic_replace
 
 
 def read_rows(folder):
-    path = folder / "costs.csv"
+    path = artifact_path(folder, "costs.csv")
     if not path.exists():
         return []
     with path.open(newline="", encoding="utf-8") as stream:
@@ -24,8 +28,8 @@ def read_rows(folder):
 def render(output, baseline, *, value_field="cost",
            ylabel="PF-to-target EOT (squared Euclidean, 3D)",
            progress_label="entropic evaluations", yscales=("linear", "log")):
-    params = json.loads((output / "parameters.json").read_text(encoding="utf-8"))
-    hard_params = json.loads((baseline / "parameters.json").read_text(encoding="utf-8"))
+    params = json.loads(artifact_path(output, "parameters.json").read_text(encoding="utf-8"))
+    hard_params = json.loads(artifact_path(baseline, "parameters.json").read_text(encoding="utf-8"))
     for key in ("nk", "epsilon", "fixed_nk", "fixed_epsilon", "target_nk", "cost_epsilon",
                 "refractor_max_iter", "identity_max_iter", "refractor_tolerance", "pf_tolerance",
                 "self_cost_mode"):
@@ -53,6 +57,9 @@ def render(output, baseline, *, value_field="cost",
             for panel in panels:
                 if scale == 'log':
                     panel.set_yscale('log', nonpositive='mask')
+                    if not any(float(value) > 0 for line in panel.lines
+                               for value in line.get_ydata()):
+                        panel.set_ylim(1e-12, 1)
                 else:
                     panel.set_yscale('linear')
             note = '' if scale == 'linear' else '; logarithmic y axis'
@@ -61,9 +68,9 @@ def render(output, baseline, *, value_field="cost",
             figure.suptitle(context + note, fontsize=fontsize)
             figure.tight_layout(rect=(0, 0, 1, .90))
             suffix = '' if scale == 'linear' else '_log'
-            temporary = output / f'{stem}{suffix}.tmp.png'
+            temporary = artifact_path(output, f'{stem}{suffix}.tmp.png', for_write=True)
             figure.savefig(temporary, dpi=180)
-            atomic_replace(temporary, output / f'{stem}{suffix}.png')
+            atomic_replace(temporary, artifact_path(output, f'{stem}{suffix}.png', for_write=True))
 
     combined, axes = plt.subplots(1, 3, figsize=(17, 5.5))
     for e, ax in zip((1, 2, 3), axes):

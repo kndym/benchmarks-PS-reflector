@@ -1,0 +1,23 @@
+{
+  "captured_at": "2026-10-26T23:00:48.362320-04:00",
+  "comparison": "results/published/debiased_comparison_complete_oct_26_26",
+  "hard_cases": 120,
+  "entropic_cases": 120,
+  "counts": [
+    40,
+    40,
+    40
+  ],
+  "hard_lower_pairs": 120,
+  "csv_sha256": {
+    "hard": "a82d98318efad4651328bd7b4dde2c3bd50a3b5a84da2551befad1a3eff031d5",
+    "entropic": "fdd456e2e144c4164fe19fa3478fcc0102d14775ae5ae22971604084a86ef1c2"
+  },
+  "artifact_sha256": {
+    "new_developments.tex": "63ae125b9617634a9493ab996ccf64240a19458a96df849ee2fdf39d832c9d18",
+    "images/latest_sinkhorn_comparison.png": "0fbe619c47bda5629dc19348b6bf624a07f71cdbd91c706a3dfc8e817bae0d0a",
+    "images/latest_hard_mass_error.png": "224f61b9abf2146586eac583c8e4cff4db4e0b98202f2c056abbcffd6a59aec7"
+  },
+  "optical_snapshot": "results/published/smooth_refraction_complete_oct_26_26",
+  "artifact_hash_base": ".."
+}

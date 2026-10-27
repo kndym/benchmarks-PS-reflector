@@ -27,6 +27,10 @@ or from the command line:
     python benchmark.py --benchmark SquareToCircle --output_dir Output
 """
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from scripts.result_paths import artifact_path, artifact_glob, resolve_path, dated_run_dir, ensure_readme
 import os
 import time
 import numpy as np
@@ -144,7 +148,7 @@ def run_benchmark(benchmark: str = 'SquareToCircle',
     # --- Output directory ---
     if output_dir is None:
         ts = time.strftime("_%Y_%m_%d_%H-%M-%S")
-        output_dir = f"Output{ts}_{testname}"
+        output_dir = str(ensure_readme(dated_run_dir("archive", f"legacy_reflector_{testname}") / "data"))
     os.makedirs(output_dir, exist_ok=True)
 
     if verbose:

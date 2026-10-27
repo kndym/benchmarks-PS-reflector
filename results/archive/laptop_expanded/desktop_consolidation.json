@@ -1,9 +1,0 @@
-{
-  "laptop_source_commit": "9d4cd211e45e5c3d6a49e3770e9e78102f703c3e",
-  "supplemented_desktop_shards": [
-    "refraction_sweeps_pc_e3",
-    "refraction_sweeps_pc_pf",
-    "refraction_sweeps_pc_pf_7848"
-  ],
-  "deduplication": "Master costs.csv is canonical; raw imported cases copied only when checkpoint filename was absent. Laptop NK10000 PF checkpoints folded into master without a duplicate cost table."
-}

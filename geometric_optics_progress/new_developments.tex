@@ -124,180 +124,216 @@ Moreover,
 This identity remains $x\cdot N_\kappa=1$; the factors of $\kappa$ cancel
 inside the sum. In particular, the normal is nonzero.
 
+\subsubsection{Step 3: Apply the vector formula for refraction}
+
+We can now use the standard vector formula for refraction to find the
+push-forward direction $\widehat y(x)$. Let $x$ be the unit incident ray,
+$\kappa=n_2/n_1$, and normalize the surface normal:
+\[
+ n=\frac{N_\kappa(x)}{\|N_\kappa(x)\|},
+ \qquad a=x\cdot n=\frac{1}{\|N_\kappa(x)\|}>0.
+\]
+The incident ray splits into a normal component $an$ and a tangential
+component $x-an$. Snell's law divides the tangential component by
+$\kappa$. Requiring the refracted ray to have unit length then gives
+\begin{equation}
+ \boxed{\widehat y(x)=\frac{x-an}{\kappa}
+       +\sqrt{1-\frac{1-a^2}{\kappa^2}}\,n.}
+ \label{eq:new-snell-map}
+\end{equation}
+We choose the positive square root so that the transmitted ray points
+through the surface in the direction of $n$. We also check
+\[
+ D(x)=1-\frac{1-a^2}{\kappa^2}\geq0.
+\]
+A negative value means total internal reflection: there is no real
+transmitted direction. The computation flags this case as an error when
+checking the interpolation, rather than dropping the ray. The resulting
+push-forward measure is $\alpha_{\mathrm{ent}}=\sum_i p_i
+\delta_{\widehat y(x_i)}$.
+
 \subsection{Extended refraction experiments: common setup}
 
-We completed experiments 1--3 twice: once with the inherited final-loop
-limits of 17 transport updates and 17 updates per self solve, and once
-with both limits raised to 2000. The target was held fixed at
-\textbf{1600 points in every evaluation}; only the source point count
-and refractor regularization were varied. Both runs use the same Halton
-patches and normalized density weights described earlier, with
+We compare the hard $c$-transform map with the smooth surface and Snell
+map derived above. The source and target use the earlier Halton patches,
+with uniform discrete weights
 \[
- \kappa=0.6,\qquad
- \varepsilon_{\mathrm{eval}}=\frac1{320}=0.003125.
+ p_i=\frac1{N_K},\qquad q_j=\frac1{1600},\qquad\kappa=0.6.
 \]
-The source count has 40 logarithmically spaced values, rounded to integers,
-from 100 to 20,000. The refractor epsilon grid has 40 logarithmically
-spaced values from $0.0000625$ to $0.025$.
+The target stays fixed at 1600 points. We use 40 logarithmically spaced
+source counts from 100 to 20,000, rounded to integers, and 40 refractor
+regularizations from $6.25\times10^{-5}$ to $0.025$:
 \begin{enumerate}
- \item \textbf{Joint movement:} vary the source count $N_K$ and set
+ \item Vary $N_K$ and set
  $\varepsilon_{\mathrm{refr}}=1/(8\lfloor\sqrt{N_K}\rfloor)$.
- \item \textbf{Fixed refractor epsilon:} vary the source count $N_K$
- with $\varepsilon_{\mathrm{refr}}=1/320$.
- \item \textbf{Fixed source count:} fix $N_K=1600$ and vary
- $\varepsilon_{\mathrm{refr}}$ over the 40-value epsilon grid.
+ \item Vary $N_K$ with $\varepsilon_{\mathrm{refr}}=1/320$.
+ \item Fix $N_K=1600$ and vary $\varepsilon_{\mathrm{refr}}$.
 \end{enumerate}
-Each experiment has 40 evaluations, giving 120 per run and 240 in total.
-The refractor potential-change tolerance remains $10^{-5}$ in both runs;
-the independent PF evaluation tolerance is $10^{-9}$. The small-grid and
-continuation schedules were retained. Rectangular transports use each
-marginal's own support for smoothing and self-cost corrections.
+The optical transport and self solves allow up to 2000 final updates,
+with potential-change tolerance $10^{-5}$. Small-grid warm starts and
+continuation are retained. The independent transport evaluations use
+$\eta=\varepsilon_{\mathrm{eval}}=1/320$ and tolerance $10^{-9}$.
+Thus changing the refractor epsilon does not change the evaluation metric.
 
-\paragraph{Clarification of the iteration count.}
-The earlier notes used the internal variable \texttt{cap\_iter=16}.
-The inherited loop checks $i>16$ \emph{after} an update, permitting
-17 final updates. The comparable baseline is therefore labeled 17/17,
-and the new run 2000/2000. These limits apply to the final loops;
-warm-start and continuation updates are additional. The current solver
-uses a small-grid warm start and continuation, rather than a cold start
-directly at the final regularization.
+The results captured on October 26, 2026 at 11:00 PM ET contain all 120 hard-map cases and
+120 entropic-map cases: 40 in experiment 1, 40 in
+experiment 2, and 40 in experiment 3. Both maps now cover the full grid.
 
-\subsection{What the plotted cost measures}
+\subsection{Push-forward maps and the evaluation cost}
 
-The discrete push-forward in these experiments is the hard $c$-transform
-map used by the existing refractor pipeline:
+For the hard map, each source ray is assigned to a target direction:
 \[
  j^*(i)=\underset{j}{\operatorname{argmin}}
-       \{c_\kappa(x_i,y_j)-g_j^{\mathrm{raw}}\},
- \qquad z_i=y_{j^*(i)},\qquad
- \alpha=\sum_i p_i\delta_{z_i},\quad
- \nu=\sum_{j=1}^{1600}q_j\delta_{y_j}.
+ \{c_\kappa(x_i,y_j)-g_j^{\mathrm{raw}}\},\qquad
+ z_i^{\mathrm{hard}}=y_{j^*(i)}.
 \]
-The plotted objective is the \emph{entropically regularized OT objective}
-between this pushed measure and the prescribed target:
+For the entropic map, $z_i^{\mathrm{ent}}=\widehat y(x_i)$ from
+\eqref{eq:new-snell-map}. These directions need not be target sample
+points. In either case, write
+\[
+ \alpha=\sum_i p_i\delta_{z_i},\qquad
+ \nu=\sum_j q_j\delta_{y_j}.
+\]
+We first evaluate the entropically regularized transport cost
 \begin{equation}
-\begin{aligned}
- \operatorname{EOT}_{\eta}(\alpha,\nu)
- &=\min_{\pi\in\Pi(p,q)}
- \left\{\sum_{i,j}\pi_{ij}\|z_i-y_j\|_2^2
- +\eta\,\operatorname{KL}(\pi\mid p\otimes q)\right\},
- \\
- &\hspace{1cm}\eta=\frac1{320}.
-\end{aligned}
+ \operatorname{EOT}_\eta(\alpha,\nu)
+ =\min_{\pi\in\Pi(p,q)}\left\{
+ \sum_{i,j}\pi_{ij}\|z_i-y_j\|_2^2
+ +\eta\sum_{i,j}\pi_{ij}\log\frac{\pi_{ij}}{p_iq_j}\right\},
  \label{eq:new-eot-evaluation}
 \end{equation}
-The ground cost is squared Euclidean distance between unit directions in
-three-dimensional coordinates. In contrast to the earlier illustrative
-error diagnostics, these plots show the EOT objective itself, without
-self-term subtraction or a square root. They do not plot the optical
-solver's approximate internal \texttt{total\_cost}. Keeping
-$\varepsilon_{\mathrm{eval}}$ fixed separates the evaluation regularization
-from the refractor epsilon being swept. A nonzero regularized objective
-alone does not imply that the pushed and target measures differ.
+where $\Pi(p,q)$ consists of nonnegative matrices with row sums $p_i$
+and column sums $q_j$. The first term measures squared spatial
+separation in three dimensions; the second penalizes departure from the
+product coupling $p\otimes q$.
 
-\subsection{Completed results and marginal diagnostics}
+Even when the two measures agree, this regularized cost can be positive.
+We therefore also compute the debiased Sinkhorn divergence:
+\begin{equation}
+ \boxed{S_\eta(\alpha,\nu)=\operatorname{EOT}_\eta(\alpha,\nu)
+ -\tfrac12\operatorname{EOT}_\eta(\alpha,\alpha)
+ -\tfrac12\operatorname{EOT}_\eta(\nu,\nu).}
+ \label{eq:new-divergence}
+\end{equation}
+The self terms remove each measure's regularization bias. The plots show
+$S_\eta$ itself, without taking a square root. This is a regularized
+comparison with squared Euclidean ground cost, rather than the exact
+unregularized Wasserstein distance.
 
-Both runs contain 120 finite EOT values, with 40 distinct parameter pairs
-per experiment and successful PF evaluation convergence for every row.
-The grids, fixed target size, checkpoint names, and source/target array
-lengths were checked. These checks establish completion of the numerical
-evaluations; they do not establish exact marginal feasibility of the
-underlying refractor transport.
+\subsection{Results of the three experiments}
 
-For the refractor plan
+The hard map has lower Sinkhorn divergence in 120 of the 120
+matched cases. All three EOT terms passed the evaluation stopping test
+for every published divergence. Figure~\ref{fig:new-divergence} shows
+the latest comparison.
+
+\paragraph{Experiment 1: Joint movement.}
+As $N_K$ increases from 100 to 20,000 and the refractor epsilon
+decreases, the hard-map divergence falls from
+$0.000977$ to $1.43\times10^{-5}$. The entropic-map divergence
+falls from $0.00113$ to $2.01\times10^{-5}$.
+Both improve substantially, although changing two parameters together
+does not isolate their effects.
+
+\paragraph{Experiment 2: Fixed refractor epsilon.}
+Increasing the source count alone gives little improvement after the
+initial changes. The hard-map divergence ranges from
+$0.000121$ to $0.000142$; the entropic map stays
+between $0.000155$ and $0.000158$.
+Refining the source at this fixed epsilon and target does not remove
+the observed error floor.
+
+\paragraph{Experiment 3: Fixed source count.}
+For the hard map, divergence increases from
+$9.14\times10^{-8}$ to $0.00213$ across the full epsilon grid.
+The 40 completed entropic cases cover
+$6.25\times10^{-5}\leq\varepsilon_{\mathrm{refr}}\leq 0.025$.
+Their endpoint divergences are $1.92\times10^{-7}$ and $0.0025$.
+
+Raw EOT can give a different ranking. At the final point of experiment 1
+it is $0.0060977$ for the hard map and $0.0058235$ for the entropic map.
+After self-term subtraction, the hard map has the smaller divergence.
+A lower cross-EOT value alone does not establish a closer target match.
+
+\begin{figure}[p]
+ \centering
+ \includegraphics[width=\textwidth]{latest_sinkhorn_comparison.png}
+ \caption{\large Debiased Sinkhorn divergence at $\eta=1/320$, with logarithmic
+ axes. Hard: 120 cases; entropic: 120 cases. Experiment 3 contains
+ 40 entropic values. Captured October 26, 2026 at 11:00 PM ET.}
+ \label{fig:new-divergence}
+\end{figure}
+
+\subsection{Mass errors in the hard push-forward}
+
+Several source rays can map to the same target direction. Let
 \[
- \gamma_{ij}=p_iq_j
- \exp\!\left(\frac{f_i^{\mathrm{raw}}+g_j^{\mathrm{raw}}
-                         -c_\kappa(x_i,y_j)}
-                        {\varepsilon_{\mathrm{refr}}}\right),
+ m_j=\#\{i:j^*(i)=j\},\qquad
+ \alpha(\{y_j\})=\frac{m_j}{N_K}.
 \]
-the reported source and target marginal residuals are
+The maximum absolute target-mass error is
+\begin{equation}
+ E_\infty=\max_{1\leq j\leq1600}
+ \left|\frac{m_j}{N_K}-\frac1{1600}\right|.
+\end{equation}
+Empty target locations have $m_j=0$ and are included. This measures a
+probability-mass discrepancy at individual target points; it does not
+account for the distance between those points.
+
+In experiment 1, $E_\infty$ decreases overall from $0.059375$ to
+$0.005575$, with intermediate fluctuations. In experiment 2 it changes
+from $0.019375$ to $0.018125$. In experiment 3 it increases from
+$0.00125$ to $0.109375$ as the refractor epsilon increases.
+
+We also count target locations whose mass differs from one source weight:
 \[
- r_s=\sum_i\left|\sum_j\gamma_{ij}-p_i\right|,
- \qquad
+ C=\#\{j:m_j/N_K\ne1/N_K\}
+  =\#\{j:m_j=0\}+\#\{j:m_j\geq2\}.
+\]
+This counts empty locations plus locations receiving multiple source
+rays. Its reference is $1/N_K$, whereas the prescribed target mass is
+$1/1600$. For example, at $N_K=20000$ a perfectly matched target would
+require $m_j=12.5$, which is impossible for integer multiplicities.
+Thus $C$ is an occupancy diagnostic, not a count of incorrect target
+masses. In experiment 1 the empty-location count falls from 1535 to zero,
+while $C$ changes from 1552 to 1597.
+
+\begin{figure}[p]
+ \centering
+ \includegraphics[width=\textwidth]{latest_hard_mass_error.png}
+ \caption{\large Maximum absolute target-mass error for all 120 hard-map
+ cases, relative to target mass $1/1600$. Empty target locations are included.}
+ \label{fig:new-mass-diagnostics}
+\end{figure}
+
+\subsection{Stopping conditions and interpretation}
+
+For the optical plan
+\[
+ \gamma_{ij}=p_iq_j\exp\!\left(
+ \frac{f_i^{\mathrm{raw}}+g_j^{\mathrm{raw}}-c_\kappa(x_i,y_j)}
+ {\varepsilon_{\mathrm{refr}}}\right),
+\]
+we check the source and target marginal residuals
+\[
+ r_s=\sum_i\left|\sum_j\gamma_{ij}-p_i\right|,\qquad
  r_t=\sum_j\left|\sum_i\gamma_{ij}-q_j\right|.
 \]
-Their ranges across all 120 solves in each run are:
-\begin{center}
-\small
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{lcc}
-\hline
-Transport / self cap & Source marginal $r_s$ & Target marginal $r_t$ \\
-\hline
-17 / 17 & $[2.5085\!\times\!10^{-7},\,0.17678]$
-        & $[1.7388\!\times\!10^{-4},\,0.54792]$ \\
-2000 / 2000 & $[5.2395\!\times\!10^{-9},\,0.014721]$
-            & $[1.7388\!\times\!10^{-4},\,0.014721]$ \\
-\hline
-\end{tabular}
-}
-\end{center}
-The maximum source residual decreases by about a factor of 12, and the
-maximum target residual by about a factor of 37. The larger limits improve
-the worst observed marginal errors but do not force them to zero.
+In the earlier 17-update hard-map run, their maximum values were
+$0.17678$ and $0.54792$. Raising both final-loop caps to 2000 reduces
+both maxima to approximately $0.014721$. All 120 hard-map transport
+solves and their self solves met the $10^{-5}$ potential-change tolerance
+before reaching these caps. The longest final loops used 659 transport,
+551 source-self, and 15 target-self updates.
 
-In the 2000-cap run, all final loops met the $10^{-5}$ potential-change
-tolerance before reaching their caps:
-\begin{center}
-\begin{tabular}{lrrr}
-\hline
-Final loop & Met tolerance & Hit cap & Most updates \\
-\hline
-Transport & 120 & 0 & 659 \\
-Source self solve & 120 & 0 & 551 \\
-Target self solve & 120 & 0 & 15 \\
-\hline
-\end{tabular}
-\end{center}
-Small potential changes, small marginal residuals, and convergence of the
-separate EOT evaluation are three different diagnostics and should be
-reported separately.
+The completed entropic run also has maximum source and target residuals of
+approximately $0.014721$. Across its 120 saved maps,
+$|x\cdot N_\kappa-1|<9.1\times10^{-13}$ and
+$|\|\widehat y\|-1|<7.8\times10^{-16}$ at all sampled rays.
 
-\subsection{Reading the three experiments}
-
-In experiment 1, the 2000-cap EOT objective decreases from approximately
-$0.0074033$ at $N_K=100$ to $0.0060977$ at $N_K=20000$.
-The baseline ends at approximately $0.0066790$ and has a nonmonotone tail.
-Experiment 2 varies only the source discretization and stays in the narrow
-range $0.0063749$--$0.0064001$ for both runs; raising the caps does not
-produce a large improvement in this objective.
-In experiment 3, the two curves are close: the largest pointwise
-difference in the saved EOT values is approximately $1.84\times10^{-5}$.
-Both run from approximately $0.0059669$ at the smallest refractor epsilon
-to $0.0084764$ at the largest. Similar hard-map objectives do not imply
-similar underlying potentials or marginal residuals. These observations describe the tested grids,
-rather than proving an asymptotic convergence rate.
-
-\clearpage
-\begin{figure}[p]
- \centering
- \includegraphics[width=0.88\textwidth]{baseline_experiment_1.png}
- \par\smallskip
- \includegraphics[width=0.88\textwidth]{high_iter_experiment_1.png}
- \caption{Experiment 1: joint movement of source count and refractor
- epsilon. Top: transport/self caps 17/17. Bottom: caps 2000/2000.
- Target fixed at 1600 points; evaluation epsilon fixed at 1/320.}
- \label{fig:new-experiment1}
-\end{figure}
-\begin{figure}[p]
- \centering
- \includegraphics[width=0.88\textwidth]{baseline_experiment_2.png}
- \par\smallskip
- \includegraphics[width=0.88\textwidth]{high_iter_experiment_2.png}
- \caption{Experiment 2: source count varies, with refractor epsilon
- fixed at 1/320. Top: caps 17/17. Bottom: caps 2000/2000.
- Target fixed at 1600 points; evaluation epsilon fixed at 1/320.}
- \label{fig:new-experiment2}
-\end{figure}
-\begin{figure}[p]
- \centering
- \includegraphics[width=0.88\textwidth]{baseline_experiment_3.png}
- \par\smallskip
- \includegraphics[width=0.88\textwidth]{high_iter_experiment_3.png}
- \caption{Experiment 3: refractor epsilon varies, with source count
- fixed at 1600. Top: caps 17/17. Bottom: caps 2000/2000.
- Target fixed at 1600 points; evaluation epsilon fixed at 1/320.}
- \label{fig:new-experiment3}
-\end{figure}
+Small potential changes do not guarantee exact marginal feasibility.
+The optical marginal residuals, convergence of the independent EOT
+calculations, and agreement of the pushed measure with the target are
+separate checks. The reported trends describe the tested grids and
+completed cases; they do not establish an asymptotic convergence rate.
 \clearpage

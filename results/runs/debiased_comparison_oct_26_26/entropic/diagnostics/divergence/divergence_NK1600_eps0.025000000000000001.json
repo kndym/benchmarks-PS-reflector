@@ -1,0 +1,46 @@
+{
+  "result": {
+    "experiment": 3,
+    "nk": 1600,
+    "refractor_epsilon": 0.025,
+    "pf_epsilon": 0.003125,
+    "eot": 0.006692178875224107,
+    "source_self": 0.0024201166068693056,
+    "target_self": 0.005960076549553604,
+    "divergence": 0.0025020822970126515,
+    "raw_divergence": 0.0025020822970126515,
+    "converged": true,
+    "cross_iterations": 40,
+    "source_self_iterations": 17,
+    "target_self_iterations": 69
+  },
+  "diagnostics": {
+    "cross": {
+      "iterations": 40,
+      "converged": true,
+      "potential_change": 8.196547468530824e-10,
+      "transport_mass": 1.0000000000000018
+    },
+    "source_self": {
+      "iterations": 17,
+      "converged": true,
+      "potential_change": 9.488484750512505e-10,
+      "transport_mass": 1.0
+    },
+    "target_self": {
+      "iterations": 69,
+      "converged": true,
+      "potential_change": 9.818242469039618e-10,
+      "transport_mass": 1.0
+    },
+    "cross_iterations": 40,
+    "source_self_iterations": 17,
+    "target_self_iterations": 69,
+    "all_converged": true,
+    "raw_divergence": 0.0025020822970126515
+  },
+  "cross_checkpoint": "results/runs/smooth_refraction_2000_updates_oct_26_26/checkpoints/pushforward/pf_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_entropic_v1_eps0.025000000000000001_eval0.0031250000000000002.json",
+  "cross_checkpoint_sha256": "1f2ac52ae72611a69c56ae135d6899571a19cd5ee4a7e3539d105a1075278143",
+  "saved_map": "results/runs/smooth_refraction_2000_updates_oct_26_26/checkpoints/solutions/solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_entropic_v1_eps0.025000000000000001.npz",
+  "saved_map_sha256": "9e197de1ab1b0c3486d8deb1f3bb3ec454bd31317b16139fe69ba291ccbb499a"
+}

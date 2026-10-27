@@ -3,7 +3,7 @@ generate_results.py — Refractor Sinkhorn benchmark, NK=1600
 
 Generates a 1600-point Halton quasi-Monte Carlo cloud on spherical patches,
 runs the repository's multi-scale Sinkhorn-divergence pipeline,
-and saves a comprehensive results bundle to results/results_refraction_NK{NK}.npz.
+and saves a comprehensive bundle under a dated results/examples/uniform_refraction run.
 
 Setup:
   * κ = 0.6  (refraction cost:  c(x,y) = -log(1 - 0.6·(x·y)))
@@ -16,6 +16,10 @@ Run:  python scripts/generate_results.py [NK]
       (default NK=1600)
 """
 
+try:
+    from result_paths import artifact_path, artifact_glob, resolve_path, dated_run_dir, ensure_readme, self_cost_dir
+except ModuleNotFoundError:
+    from scripts.result_paths import artifact_path, artifact_glob, resolve_path, dated_run_dir, ensure_readme, self_cost_dir
 import os, sys, time
 import numpy as np
 
@@ -195,9 +199,9 @@ def main(nk=None):
     # ---------------------------------------------------------------------------
     # Save
     # ---------------------------------------------------------------------------
-    results_dir = os.path.join(REPO_ROOT, "results")
+    results_dir = dated_run_dir("examples", "uniform_refraction")
     os.makedirs(results_dir, exist_ok=True)
-    out = os.path.join(results_dir, f"results_refraction_NK{NK}.npz")
+    out = artifact_path(results_dir, f"results_refraction_NK{NK}.npz", for_write=True)
     save_refraction_npz(
         out, x=x, y=y, p=p, q=q,
         f_raw=f_raw, g_raw=g_raw, f_id=f_id, g_id=g_id, f=f, g=g,
@@ -223,7 +227,7 @@ def main(nk=None):
     ax.set_title(f'Refractor Surface — Python  (κ=0.6, NK={NK}, k_final={k_final})')
     ax.set_xlabel('X');  ax.set_ylabel('Y');  ax.set_zlabel('Z')
     fig.tight_layout()
-    fig_path = os.path.join(REPO_ROOT, "figures", f"fig_refractor_3d_NK{NK}.png")
+    fig_path = artifact_path(results_dir, f"fig_refractor_3d_NK{NK}.png", for_write=True)
     os.makedirs(os.path.dirname(fig_path), exist_ok=True)
     fig.savefig(fig_path, dpi=150, bbox_inches='tight')
     print(f"Saved {fig_path}")

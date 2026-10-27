@@ -1,4 +1,8 @@
 """Plot saved cross-EOT objectives without self subtraction or new solves."""
+try:
+    from result_paths import artifact_path, artifact_glob, resolve_path, dated_run_dir, ensure_readme, self_cost_dir
+except ModuleNotFoundError:
+    from scripts.result_paths import artifact_path, artifact_glob, resolve_path, dated_run_dir, ensure_readme, self_cost_dir
 import argparse
 import csv
 import hashlib
@@ -11,12 +15,13 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_OUTPUT = ROOT / "results/snapshots/entropic_error_complete_20261027"
+DEFAULT_OUTPUT = ROOT / "results/published/regular_entropic_error_oct_27_26"
 FIELDS = ["map", "experiment", "nk", "refractor_epsilon", "pf_epsilon",
           "eot", "converged", "iterations"]
 
 
 def read(path):
+    path = artifact_path(Path(path).parent, Path(path).name)
     with path.open(newline="", encoding="utf-8") as stream:
         return list(csv.DictReader(stream))
 
@@ -73,9 +78,9 @@ def render(rows, output):
                 draw(ax, rows, exp, log_y)
                 single, panel = plt.subplots(figsize=(8, 5.5), layout="constrained")
                 draw(panel, rows, exp, log_y)
-                single.savefig(output/f"experiment_{exp}{suffix}.png", dpi=220)
+                single.savefig(artifact_path(output, f"experiment_{exp}{suffix}.png", for_write=True), dpi=220)
                 plt.close(single)
-            fig.savefig(output/f"experiments_1_2_3{suffix}.png", dpi=220)
+            fig.savefig(artifact_path(output, f"experiments_1_2_3{suffix}.png", for_write=True), dpi=220)
             plt.close(fig)
 
 
@@ -85,6 +90,11 @@ def main():
     parser.add_argument("--hard", type=Path, help="Saved cross-EOT or debiased-table CSV")
     parser.add_argument("--entropic", type=Path, help="Matching saved CSV")
     args = parser.parse_args()
+    args.output = resolve_path(args.output)
+    if args.hard:
+        args.hard = artifact_path(args.hard.parent, args.hard.name)
+    if args.entropic:
+        args.entropic = artifact_path(args.entropic.parent, args.entropic.name)
     if bool(args.hard) != bool(args.entropic):
         parser.error("Provide both source CSVs, or neither to replot the bundled table")
     args.output.mkdir(parents=True, exist_ok=True)
@@ -101,10 +111,10 @@ def main():
                     converged=row["converged"],
                     iterations=row["cross_iterations"] if "cross_iterations" in row else row["iterations"]))
     else:
-        rows = read(args.output/"costs.csv")
+        rows = read(artifact_path(args.output, "costs.csv"))
     validate(rows)
     if args.hard:
-        with (args.output/"costs.csv").open("w", newline="", encoding="utf-8") as stream:
+        with artifact_path(args.output, "costs.csv", for_write=True).open("w", newline="", encoding="utf-8") as stream:
             writer = csv.DictWriter(stream, fieldnames=FIELDS)
             writer.writeheader()
             writer.writerows(rows)
@@ -114,8 +124,8 @@ def main():
                   "ground_cost": "squared_euclidean_3d", "self_subtraction": False,
                   "square_root": False, "target_points": 1600, "cases_per_map": 120,
                   "sources": source_hashes, "all_evaluations_converged": True,
-                  "costs_sha256": hashlib.sha256((args.output/"costs.csv").read_bytes()).hexdigest()}
-        (args.output/"validation.json").write_text(json.dumps(report, indent=2)+"\n", encoding="utf-8")
+                  "costs_sha256": hashlib.sha256((artifact_path(args.output, "costs.csv")).read_bytes()).hexdigest()}
+        artifact_path(args.output, "validation.json", for_write=True).write_text(json.dumps(report, indent=2)+"\n", encoding="utf-8")
     print(f"Rendered 8 plots from 240 saved EOT objectives in {args.output}")
 
 

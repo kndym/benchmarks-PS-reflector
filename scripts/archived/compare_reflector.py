@@ -10,6 +10,10 @@ Loads:
 Prints a numerical comparison report and shows side-by-side 3-D scatter plots.
 """
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from scripts.result_paths import artifact_path, artifact_glob, resolve_path, dated_run_dir, ensure_readme, latest_reference_run
 import os
 import sys
 import numpy as np
@@ -51,8 +55,8 @@ def load_txt_mat(path: str, ncols: int = 3) -> np.ndarray:
 # Load C++ results
 # ---------------------------------------------------------------------------
 
-cpp_dir = "output_fast"
-py_dir  = "output_python"
+cpp_dir = latest_reference_run("cpp_fast_nk*", "R.txt") or resolve_path("output_fast")
+py_dir = latest_reference_run("python_fast_*", "R.npy") or resolve_path("output_python")
 
 missing = []
 for d in [cpp_dir, py_dir]:
@@ -65,24 +69,24 @@ if missing:
 
 print(f"Loading C++ results from {cpp_dir}/")
 try:
-    R_cpp   = load_txt_vec(f"{cpp_dir}/R.txt")
-    f_cpp   = load_txt_vec(f"{cpp_dir}/f.txt")
-    g_cpp   = load_txt_vec(f"{cpp_dir}/g.txt")
-    Ref_cpp = load_txt_mat(f"{cpp_dir}/Ref.txt", ncols=3)
-    f_id_cpp = load_txt_vec(f"{cpp_dir}/f_id.txt")
-    g_id_cpp = load_txt_vec(f"{cpp_dir}/g_id.txt")
+    R_cpp   = load_txt_vec(artifact_path(cpp_dir, "R.txt"))
+    f_cpp   = load_txt_vec(artifact_path(cpp_dir, "f.txt"))
+    g_cpp   = load_txt_vec(artifact_path(cpp_dir, "g.txt"))
+    Ref_cpp = load_txt_mat(artifact_path(cpp_dir, "Ref.txt"), ncols=3)
+    f_id_cpp = load_txt_vec(artifact_path(cpp_dir, "f_id.txt"))
+    g_id_cpp = load_txt_vec(artifact_path(cpp_dir, "g_id.txt"))
 except Exception as e:
     print(f"ERROR reading C++ output: {e}")
     sys.exit(1)
 
 print(f"Loading Python results from {py_dir}/")
 try:
-    R_py    = np.load(f"{py_dir}/R.npy")
-    f_py    = np.load(f"{py_dir}/f.npy")
-    g_py    = np.load(f"{py_dir}/g.npy")
-    Ref_py  = np.load(f"{py_dir}/Ref.npy")
-    f_id_py = np.load(f"{py_dir}/f_id.npy")
-    g_id_py = np.load(f"{py_dir}/g_id.npy")
+    R_py    = np.load(artifact_path(py_dir, "R.npy"))
+    f_py    = np.load(artifact_path(py_dir, "f.npy"))
+    g_py    = np.load(artifact_path(py_dir, "g.npy"))
+    Ref_py  = np.load(artifact_path(py_dir, "Ref.npy"))
+    f_id_py = np.load(artifact_path(py_dir, "f_id.npy"))
+    g_id_py = np.load(artifact_path(py_dir, "g_id.npy"))
 except Exception as e:
     print(f"ERROR reading Python output: {e}")
     sys.exit(1)

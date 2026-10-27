@@ -1,0 +1,606 @@
+[
+  {
+    "problem": "original",
+    "refractor_epsilon": 0.0125,
+    "support": "native",
+    "metric": "ot",
+    "rankings": {
+      "0.0125": [
+        100,
+        225,
+        400
+      ],
+      "0.003125": [
+        100,
+        225,
+        400
+      ],
+      "0.00078125": [
+        100,
+        225,
+        400
+      ],
+      "0.000125": []
+    }
+  },
+  {
+    "problem": "original",
+    "refractor_epsilon": 0.0125,
+    "support": "native",
+    "metric": "divergence",
+    "rankings": {
+      "0.0125": [
+        100,
+        225,
+        400
+      ],
+      "0.003125": [
+        225,
+        100,
+        400
+      ],
+      "0.00078125": [
+        225,
+        100,
+        400
+      ],
+      "0.000125": []
+    }
+  },
+  {
+    "problem": "original",
+    "refractor_epsilon": 0.0125,
+    "support": "common",
+    "metric": "ot",
+    "rankings": {
+      "0.0125": [
+        100,
+        225,
+        400
+      ],
+      "0.003125": [
+        100,
+        225,
+        400
+      ],
+      "0.00078125": [
+        100,
+        225,
+        400
+      ],
+      "0.000125": []
+    }
+  },
+  {
+    "problem": "original",
+    "refractor_epsilon": 0.0125,
+    "support": "common",
+    "metric": "divergence",
+    "rankings": {
+      "0.0125": [
+        100,
+        225,
+        400
+      ],
+      "0.003125": [
+        100,
+        225,
+        400
+      ],
+      "0.00078125": [
+        225,
+        100,
+        400
+      ],
+      "0.000125": []
+    }
+  },
+  {
+    "problem": "original",
+    "refractor_epsilon": 0.00125,
+    "support": "native",
+    "metric": "ot",
+    "rankings": {
+      "0.0125": [
+        100,
+        225,
+        400
+      ],
+      "0.003125": [
+        100,
+        225,
+        400
+      ],
+      "0.00078125": [
+        100,
+        225,
+        400
+      ],
+      "0.000125": [
+        225,
+        400
+      ]
+    }
+  },
+  {
+    "problem": "original",
+    "refractor_epsilon": 0.00125,
+    "support": "native",
+    "metric": "divergence",
+    "rankings": {
+      "0.0125": [
+        225,
+        100,
+        400
+      ],
+      "0.003125": [
+        225,
+        100,
+        400
+      ],
+      "0.00078125": [
+        225,
+        400,
+        100
+      ],
+      "0.000125": [
+        400,
+        225
+      ]
+    }
+  },
+  {
+    "problem": "original",
+    "refractor_epsilon": 0.00125,
+    "support": "common",
+    "metric": "ot",
+    "rankings": {
+      "0.0125": [
+        100,
+        225,
+        400
+      ],
+      "0.003125": [
+        100,
+        225,
+        400
+      ],
+      "0.00078125": [
+        100,
+        225,
+        400
+      ],
+      "0.000125": [
+        400,
+        225,
+        100
+      ]
+    }
+  },
+  {
+    "problem": "original",
+    "refractor_epsilon": 0.00125,
+    "support": "common",
+    "metric": "divergence",
+    "rankings": {
+      "0.0125": [
+        225,
+        100,
+        400
+      ],
+      "0.003125": [
+        100,
+        225,
+        400
+      ],
+      "0.00078125": [
+        400,
+        225,
+        100
+      ],
+      "0.000125": [
+        400,
+        225,
+        100
+      ]
+    }
+  },
+  {
+    "problem": "original",
+    "refractor_epsilon": 0.000125,
+    "support": "native",
+    "metric": "ot",
+    "rankings": {
+      "0.0125": [
+        400,
+        225,
+        100
+      ],
+      "0.003125": [
+        100,
+        400,
+        225
+      ],
+      "0.00078125": [
+        100,
+        225,
+        400
+      ],
+      "0.000125": [
+        225,
+        400
+      ]
+    }
+  },
+  {
+    "problem": "original",
+    "refractor_epsilon": 0.000125,
+    "support": "native",
+    "metric": "divergence",
+    "rankings": {
+      "0.0125": [
+        400,
+        225,
+        100
+      ],
+      "0.003125": [
+        400,
+        225,
+        100
+      ],
+      "0.00078125": [
+        400,
+        225,
+        100
+      ],
+      "0.000125": [
+        400,
+        225
+      ]
+    }
+  },
+  {
+    "problem": "original",
+    "refractor_epsilon": 0.000125,
+    "support": "common",
+    "metric": "ot",
+    "rankings": {
+      "0.0125": [
+        400,
+        225,
+        100
+      ],
+      "0.003125": [
+        400,
+        225,
+        100
+      ],
+      "0.00078125": [
+        400,
+        225,
+        100
+      ],
+      "0.000125": [
+        400,
+        225,
+        100
+      ]
+    }
+  },
+  {
+    "problem": "original",
+    "refractor_epsilon": 0.000125,
+    "support": "common",
+    "metric": "divergence",
+    "rankings": {
+      "0.0125": [
+        400,
+        225,
+        100
+      ],
+      "0.003125": [
+        400,
+        225,
+        100
+      ],
+      "0.00078125": [
+        400,
+        225,
+        100
+      ],
+      "0.000125": [
+        400,
+        225,
+        100
+      ]
+    }
+  },
+  {
+    "problem": "low_kappa",
+    "refractor_epsilon": 0.0125,
+    "support": "native",
+    "metric": "ot",
+    "rankings": {
+      "0.0125": [],
+      "0.003125": [],
+      "0.00078125": [],
+      "0.000125": []
+    }
+  },
+  {
+    "problem": "low_kappa",
+    "refractor_epsilon": 0.0125,
+    "support": "native",
+    "metric": "divergence",
+    "rankings": {
+      "0.0125": [],
+      "0.003125": [],
+      "0.00078125": [],
+      "0.000125": []
+    }
+  },
+  {
+    "problem": "low_kappa",
+    "refractor_epsilon": 0.0125,
+    "support": "common",
+    "metric": "ot",
+    "rankings": {
+      "0.0125": [],
+      "0.003125": [],
+      "0.00078125": [],
+      "0.000125": []
+    }
+  },
+  {
+    "problem": "low_kappa",
+    "refractor_epsilon": 0.0125,
+    "support": "common",
+    "metric": "divergence",
+    "rankings": {
+      "0.0125": [],
+      "0.003125": [],
+      "0.00078125": [],
+      "0.000125": []
+    }
+  },
+  {
+    "problem": "low_kappa",
+    "refractor_epsilon": 0.00125,
+    "support": "native",
+    "metric": "ot",
+    "rankings": {
+      "0.0125": [],
+      "0.003125": [],
+      "0.00078125": [],
+      "0.000125": []
+    }
+  },
+  {
+    "problem": "low_kappa",
+    "refractor_epsilon": 0.00125,
+    "support": "native",
+    "metric": "divergence",
+    "rankings": {
+      "0.0125": [],
+      "0.003125": [],
+      "0.00078125": [],
+      "0.000125": []
+    }
+  },
+  {
+    "problem": "low_kappa",
+    "refractor_epsilon": 0.00125,
+    "support": "common",
+    "metric": "ot",
+    "rankings": {
+      "0.0125": [],
+      "0.003125": [],
+      "0.00078125": [],
+      "0.000125": []
+    }
+  },
+  {
+    "problem": "low_kappa",
+    "refractor_epsilon": 0.00125,
+    "support": "common",
+    "metric": "divergence",
+    "rankings": {
+      "0.0125": [],
+      "0.003125": [],
+      "0.00078125": [],
+      "0.000125": []
+    }
+  },
+  {
+    "problem": "low_kappa",
+    "refractor_epsilon": 0.000125,
+    "support": "native",
+    "metric": "ot",
+    "rankings": {
+      "0.0125": [],
+      "0.003125": [],
+      "0.00078125": [],
+      "0.000125": []
+    }
+  },
+  {
+    "problem": "low_kappa",
+    "refractor_epsilon": 0.000125,
+    "support": "native",
+    "metric": "divergence",
+    "rankings": {
+      "0.0125": [],
+      "0.003125": [],
+      "0.00078125": [],
+      "0.000125": []
+    }
+  },
+  {
+    "problem": "low_kappa",
+    "refractor_epsilon": 0.000125,
+    "support": "common",
+    "metric": "ot",
+    "rankings": {
+      "0.0125": [],
+      "0.003125": [],
+      "0.00078125": [],
+      "0.000125": []
+    }
+  },
+  {
+    "problem": "low_kappa",
+    "refractor_epsilon": 0.000125,
+    "support": "common",
+    "metric": "divergence",
+    "rankings": {
+      "0.0125": [],
+      "0.003125": [],
+      "0.00078125": [],
+      "0.000125": []
+    }
+  },
+  {
+    "problem": "skew_density",
+    "refractor_epsilon": 0.0125,
+    "support": "native",
+    "metric": "ot",
+    "rankings": {
+      "0.0125": [],
+      "0.003125": [],
+      "0.00078125": [],
+      "0.000125": []
+    }
+  },
+  {
+    "problem": "skew_density",
+    "refractor_epsilon": 0.0125,
+    "support": "native",
+    "metric": "divergence",
+    "rankings": {
+      "0.0125": [],
+      "0.003125": [],
+      "0.00078125": [],
+      "0.000125": []
+    }
+  },
+  {
+    "problem": "skew_density",
+    "refractor_epsilon": 0.0125,
+    "support": "common",
+    "metric": "ot",
+    "rankings": {
+      "0.0125": [],
+      "0.003125": [],
+      "0.00078125": [],
+      "0.000125": []
+    }
+  },
+  {
+    "problem": "skew_density",
+    "refractor_epsilon": 0.0125,
+    "support": "common",
+    "metric": "divergence",
+    "rankings": {
+      "0.0125": [],
+      "0.003125": [],
+      "0.00078125": [],
+      "0.000125": []
+    }
+  },
+  {
+    "problem": "skew_density",
+    "refractor_epsilon": 0.00125,
+    "support": "native",
+    "metric": "ot",
+    "rankings": {
+      "0.0125": [],
+      "0.003125": [],
+      "0.00078125": [],
+      "0.000125": []
+    }
+  },
+  {
+    "problem": "skew_density",
+    "refractor_epsilon": 0.00125,
+    "support": "native",
+    "metric": "divergence",
+    "rankings": {
+      "0.0125": [],
+      "0.003125": [],
+      "0.00078125": [],
+      "0.000125": []
+    }
+  },
+  {
+    "problem": "skew_density",
+    "refractor_epsilon": 0.00125,
+    "support": "common",
+    "metric": "ot",
+    "rankings": {
+      "0.0125": [],
+      "0.003125": [],
+      "0.00078125": [],
+      "0.000125": []
+    }
+  },
+  {
+    "problem": "skew_density",
+    "refractor_epsilon": 0.00125,
+    "support": "common",
+    "metric": "divergence",
+    "rankings": {
+      "0.0125": [],
+      "0.003125": [],
+      "0.00078125": [],
+      "0.000125": []
+    }
+  },
+  {
+    "problem": "skew_density",
+    "refractor_epsilon": 0.000125,
+    "support": "native",
+    "metric": "ot",
+    "rankings": {
+      "0.0125": [],
+      "0.003125": [],
+      "0.00078125": [],
+      "0.000125": []
+    }
+  },
+  {
+    "problem": "skew_density",
+    "refractor_epsilon": 0.000125,
+    "support": "native",
+    "metric": "divergence",
+    "rankings": {
+      "0.0125": [],
+      "0.003125": [],
+      "0.00078125": [],
+      "0.000125": []
+    }
+  },
+  {
+    "problem": "skew_density",
+    "refractor_epsilon": 0.000125,
+    "support": "common",
+    "metric": "ot",
+    "rankings": {
+      "0.0125": [],
+      "0.003125": [],
+      "0.00078125": [],
+      "0.000125": []
+    }
+  },
+  {
+    "problem": "skew_density",
+    "refractor_epsilon": 0.000125,
+    "support": "common",
+    "metric": "divergence",
+    "rankings": {
+      "0.0125": [],
+      "0.003125": [],
+      "0.00078125": [],
+      "0.000125": []
+    }
+  }
+]

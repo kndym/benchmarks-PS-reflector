@@ -11,6 +11,10 @@ Outputs to output_python/: f.npy, g.npy, f_id.npy, g_id.npy, R.npy, Ref.npy
 Then shows a 3-D matplotlib scatter of the reflector surface.
 """
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from scripts.result_paths import artifact_path, artifact_glob, resolve_path, dated_run_dir, ensure_readme
 import os
 import sys
 import time
@@ -207,14 +211,14 @@ Ref = 2.0 * x * R[:, np.newaxis]
 # Save results
 # ---------------------------------------------------------------------------
 
-os.makedirs("output_python", exist_ok=True)
-np.save("output_python/f.npy",    f)
-np.save("output_python/g.npy",    g)
-np.save("output_python/f_id.npy", f_id)
-np.save("output_python/g_id.npy", g_id)
-np.save("output_python/R.npy",    R)
-np.save("output_python/Ref.npy",  Ref)
-print("\nSaved to output_python/")
+result_bundle = dated_run_dir("reference_runs", "python_fast")
+np.save(artifact_path(result_bundle, "f.npy", for_write=True),    f)
+np.save(artifact_path(result_bundle, "g.npy", for_write=True),    g)
+np.save(artifact_path(result_bundle, "f_id.npy", for_write=True), f_id)
+np.save(artifact_path(result_bundle, "g_id.npy", for_write=True), g_id)
+np.save(artifact_path(result_bundle, "R.npy", for_write=True),    R)
+np.save(artifact_path(result_bundle, "Ref.npy", for_write=True),  Ref)
+print(f"\nSaved numerical arrays to {result_bundle / 'data'}/")
 print(f"R: min={R.min():.4f}, max={R.max():.4f}, mean={R.mean():.4f}")
 
 # ---------------------------------------------------------------------------

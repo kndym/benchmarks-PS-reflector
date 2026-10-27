@@ -1,0 +1,46 @@
+{
+  "result": {
+    "experiment": 3,
+    "nk": 1600,
+    "refractor_epsilon": 0.0005369734768015385,
+    "pf_epsilon": 0.003125,
+    "eot": 0.006046124929246986,
+    "source_self": 0.006120496672416365,
+    "target_self": 0.005960076549553604,
+    "divergence": 5.838318262001152e-06,
+    "raw_divergence": 5.838318262001152e-06,
+    "converged": true,
+    "cross_iterations": 67,
+    "source_self_iterations": 71,
+    "target_self_iterations": 69
+  },
+  "diagnostics": {
+    "cross": {
+      "iterations": 67,
+      "converged": true,
+      "potential_change": 9.308060832519116e-10,
+      "transport_mass": 1.0
+    },
+    "source_self": {
+      "iterations": 71,
+      "converged": true,
+      "potential_change": 8.778752169646964e-10,
+      "transport_mass": 1.0
+    },
+    "target_self": {
+      "iterations": 69,
+      "converged": true,
+      "potential_change": 9.818242469039618e-10,
+      "transport_mass": 1.0
+    },
+    "cross_iterations": 67,
+    "source_self_iterations": 71,
+    "target_self_iterations": 69,
+    "all_converged": true,
+    "raw_divergence": 5.838318262001152e-06
+  },
+  "cross_checkpoint": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/pushforward/pf_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.00053697347680153852_eval0.0031250000000000002.json",
+  "cross_checkpoint_sha256": "4e08a309f4a04c87c871e1cca2d8aa621546d27f50e75c583857b3d37acc7e37",
+  "saved_map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.00053697347680153852.npz",
+  "saved_map_sha256": "281694156598422bee5b124bd5d5be0e85094e67b582886e4ad39ab4eecccbe4"
+}

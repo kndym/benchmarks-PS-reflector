@@ -1,4 +1,8 @@
 """Plot saved main-sweep costs without interrupting numerical workers."""
+try:
+    from result_paths import artifact_path, artifact_glob, resolve_path, dated_run_dir, ensure_readme, self_cost_dir
+except ModuleNotFoundError:
+    from scripts.result_paths import artifact_path, artifact_glob, resolve_path, dated_run_dir, ensure_readme, self_cost_dir
 import argparse
 import csv
 import json
@@ -11,8 +15,8 @@ import matplotlib.pyplot as plt
 
 
 def render(output):
-    parameters = json.loads((output / "parameters.json").read_text())
-    with (output / "costs.csv").open(newline="") as stream:
+    parameters = json.loads(artifact_path(output, "parameters.json").read_text())
+    with artifact_path(output, "costs.csv").open(newline="") as stream:
         rows = list(csv.DictReader(stream))
     complete = True
     for experiment in (1, 2, 3):
@@ -37,10 +41,10 @@ def render(output):
                ylabel=rf"$EOT_{{{parameters['cost_epsilon']:.6g}}}(PF,T)$ (squared Euclidean, 3D)" if "cost_epsilon" in parameters else "Original solver cost (approx.)", xscale="log")
         ax.grid(alpha=0.3)
         fig.tight_layout()
-        temporary = output / f"experiment_{experiment}.progress.png"
+        temporary = artifact_path(output, f"experiment_{experiment}.progress.png", for_write=True)
         fig.savefig(temporary, dpi=180)
         plt.close(fig)
-        temporary.replace(output / f"experiment_{experiment}.png")
+        temporary.replace(artifact_path(output, f"experiment_{experiment}.png", for_write=True))
     return complete
 
 
@@ -51,7 +55,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     deadline = time.monotonic() + 24 * 3600
     while True:
-        ready = all((args.output / name).exists() for name in ("parameters.json", "costs.csv"))
+        ready = all(artifact_path(args.output, name).exists() for name in ("parameters.json", "costs.csv"))
         complete = render(args.output) if ready else False
         if complete or not args.watch:
             break

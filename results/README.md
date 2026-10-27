@@ -1,211 +1,107 @@
 # Results catalog
 
-Start here to choose a dataset. **Internal optical solver cost, PF-to-target
-EOT, projected-plane Wasserstein distance, and marginal residuals are different
-quantities. Do not concatenate these families into a single unlabeled table.**
+Start with **published** for completed plots, **runs** for reusable numerical
+work, or **examples** for notebook NPZ bundles. Every collection has a README;
+tables, figures, settings, and checkpoints live in separate subfolders.
 
-## Current fixed-target experiments
+## Latest completed comparisons
 
-**[Latest debiased comparison and resource benchmark](snapshots/debiased_resources_20261026/):
-89/120 entropic cases, all 89 available maps processed.** Experiments 1 and 2
-are complete at 40 cases each; experiment 3 has 9 completed cases. Cross-EOT
-generation is paused, so the remaining 31 maps are not yet available. The
-debiased task remains active with four threads, normal CPU priority, and a
-32 MB cost cache. Persistent pause markers protect the user's cross-EOT pause.
+The extended fixed-target comparison completed October 26, 2026 at about
+11 p.m. ET. It contains **120 hard-map cases and 120 smooth-map cases**, with
+40 cases in each of three experiments. Target size is fixed at 1600 and
+evaluation epsilon at `1/320`; the ground cost is squared Euclidean distance
+between three-dimensional unit directions.
 
-**[Earlier comparison images: October 26, 18:39 ET](snapshots/comparison_images_20261026_1839/).**
-Entropic cross-EOT: 79/120 cases (40 experiment 1, 39 experiment 2).
-Debiased entropic: 78/120 (40 experiment 1, 38 experiment 2). Hard: 120/120.
-Experiment 3 entropic cases remain pending. The gallery includes both metrics,
-linear-y and log-log variants, individual experiments, and captured CSVs.
-The scheduler recovered memory-allocation interruptions in the largest cases;
-both compute workers were running again at this check, with one restart each.
-
-### Background workers independent of Codex
-
-Windows Task Scheduler runs `Reflector-EntropicSweep`,
-`Reflector-DebiasedEvaluation`, and `Reflector-ComparisonPlots` under the current
-Windows user. Their supervisors are children of the Windows scheduling service,
-so closing Codex or its SSH/CLI connection does not terminate them. Workers retry
-after 30 seconds if they exit before all expected cases are complete; Task
-Scheduler retries a failed supervisor after one minute. Tasks have no execution
-time limit and resume at the user's next Windows login after a reboot or logout.
-These are interactive-user tasks: they require the Windows user to be logged in.
-The computer must remain powered on and awake for computation to continue.
-
-Cross-EOT was paused at the user's request on October 26. The sweep and its
-comparison plot task were stopped, and persistent `sweep.pause.json` and
-`plots.pause.json` markers in the local supervision folder prevent relaunch
-after login or an automatic restart. Debiased evaluation remains active on
-already-saved cross results. Removing a pause marker is an explicit resume
-operation; starting or reinstalling tasks alone does not resume a paused role.
-
-The debiased supervisor now assigns four threads to independent SciPy
-logsumexp outputs, normal CPU priority, and up to four million cached cost
-entries (32 MB for a float64 cost matrix). The measured 1600-point self solve
-took 13.52 seconds with one thread and 8.19 seconds with four (1.65x faster),
-with exactly matching objective, iteration count, convergence, and diagnostics.
-That is a sample benchmark, not a guaranteed speedup for every case. Numerical
-settings and completed checkpoints are preserved. The thread pool does not
-parallelize separate large self-cost solves, limiting peak memory use.
-
-Local live state and append-only logs are in
-`results/refraction_worker_supervision/` (Git-ignored). Read `sweep.json`,
-`debiased.json`, and `plots.json` there for current worker PIDs, start times,
-restart counts, and completion state. Reinstall/start the tasks with
-`powershell -File scripts/install_refraction_worker_tasks.ps1`; inspect them with
-`Get-ScheduledTask -TaskName 'Reflector-*'`. Tasks stop doing work once their
-expected completed-case sets are present. Parameter JSON publication is atomic
-so the evaluator cannot observe a partially rewritten file during resumption.
-
-[Maximum absolute hard push-forward mass error](snapshots/hard_pushforward_max_error_20261026/)
-plots `max_j |mu_PF(y_j) - q_j|` for all 120 cases, including empty target
-locations. The target reference is the saved mass `q_j = 1/1600`; source
-weights are `1/NK`. Linear-y and log-log plots and per-case CSVs are included.
-
-[Hard push-forward atom counts](snapshots/hard_pushforward_atom_counts_20261026/)
-show how many target locations have aggregated mass different from
-`1/NK`, across all 120 hard-map cases. Linear-y and log-log plots are included.
-Coincident source weights are summed first; empty target locations have zero
-mass and are included in the total. Plots also show the empty and merged-weight
-components separately.
-
-### October 26 progress and numerical fixes
-
-[Debiased comparison and plots](snapshots/debiased_comparison_20261026_1559/):
-**hard 120/120, entropic 75/120**, with all three EOT terms converged for each
-published row. The metric is `EOT(PF,T) - (EOT(PF,PF) + EOT(T,T))/2` at epsilon
-1/320, using squared Euclidean 3D cost. Hard interpolation has lower divergence
-in all 75 currently paired cases. This is a partial comparison: experiment 1
-has 40 pairs, experiment 2 has 35, and experiment 3 has no entropic cases yet.
-At the October 26, 15:59 ET check, optical and debiased entropic evaluations
-had both reached 75/120. The workers were no longer running, with no failure
-reported in either error log; the cause of termination is unknown. The sweep,
-debiased evaluator, and linear/log plot worker were restarted from saved
-checkpoints. The next optical case is experiment 2, NK=11615.
-
-Earlier progress check:
-At the October 26, 13:48 ET progress check, the live entropic optical sweep
-had 72/120 completed cases (40 in experiment 1, 32 in experiment 2). The optical
-worker was solving experiment 2 at NK=7727; debiasing was evaluating the saved
-NK=6746 push-forward. Both workers were active with no new errors in their logs.
-
-[Entropic optical snapshot](snapshots/entropic_high_iter_20261026/) contains
-63 validated optical/PF checkpoints and the separate cross-EOT plots.
-The sweep had stopped on a Windows CSV sharing violation. CSV and plot
-publication now retry temporary sharing failures. Small-grid kernel smoothing
-and scaling updates now use logsumexp to avoid underflow and reciprocal
-overflow. Tests check agreement with the original updates at moderate
-regularization and finite outputs at inverse regularization 16000.
-Existing validated checkpoints are retained; the restarted optical worker
-uses log-domain warm starts. These changes preserve the experiment
-grids, objectives, caps and stopping tolerances. Potential-change stopping
-still does not guarantee marginal feasibility; the published residuals remain
-part of the interpretation of these results.
-
-The canonical local checkout is `C:\Users\Kevin\Github\benchmarks-PS-reflector`.
-The former `benchmarks-PS-reflector-v2` path is a Windows junction to the same
-directory. Both Git histories were combined, including the latest main-branch
-figure uploads. All 3353 copied files were verified byte-for-byte before the
-workers restarted from saved checkpoints in the canonical folder. A recovery
-copy is stored outside the GitHub directory at
-`C:\Users\Kevin\.codex\backups\reflector-consolidation-20261026`.
-
-### Cross-EOT datasets
-
-All three main sweeps use kappa=0.6, Halton source points, a target fixed at
-1600 points, and PF-to-target EOT with squared Euclidean 3D cost and evaluation
-epsilon 1/320. Exact grids and tolerances are in each `parameters.json`.
-
-| Dataset | Status | Maps / final-loop caps | Main outputs |
-| --- | --- | --- | --- |
-| [Standard sweep](refraction_sweeps/) | Complete: 114 evaluations across experiments 1–4 | Hard c-transform; 17/17 | [costs](refraction_sweeps/costs.csv), [main plots](refraction_sweeps/experiments_1_2_3.png), [PF-epsilon sweep](refraction_sweeps/experiment_4_pushforward.png) |
-| [Extended baseline](refraction_sweeps_extended/) | Complete: 120 evaluations, 40 per experiment 1/2/3 | Hard c-transform; 17/17 | [costs](refraction_sweeps_extended/costs.csv), [plots](refraction_sweeps_extended/experiments_1_2_3.png), [validation](refraction_sweeps_extended/validation_summary.json) |
-| [Extended higher iteration](refraction_sweeps_extended_high_iter/) | Complete: 120 evaluations, 40 per experiment 1/2/3 | Hard c-transform; 2000/2000 | [costs](refraction_sweeps_extended_high_iter/costs.csv), [plots](refraction_sweeps_extended_high_iter/experiments_1_2_3.png), [validation](refraction_sweeps_extended_high_iter/validation_summary.json) |
-| [Entropic-surface snapshot](snapshots/entropic_high_iter_20261022/) | Partial; exact capture count in snapshot manifest | Softmin normals + Snell refraction; 2000/2000 | [comparison](snapshots/entropic_high_iter_20261022/comparison_experiments_1_2_3.png), [costs](snapshots/entropic_high_iter_20261022/costs.csv), [manifest and hashes](snapshots/entropic_high_iter_20261022/snapshot.json) |
-
-Extended grids use 40 source counts from 100 to 20,000 and 40 refractor epsilons
-from 0.0000625 to 0.025. Experiment 1 couples source count and refractor epsilon;
-experiment 2 fixes refractor epsilon at 1/320; experiment 3 fixes source count at
-1600. The separate evaluation epsilon stays fixed. The baseline parameter file
-predates explicit cap fields and inherits 17 final updates per loop.
-
-PF evaluation convergence is checked independently from the optical transport's
-potential changes and marginal feasibility. All complete fixed-target cost rows
-pass the recorded PF stopping test. The 2000-cap hard run meets potential-change
-tolerance in all 120 transport and 240 self loops without hitting a cap; its
-worst source/target marginal L1 residuals are approximately 0.01472/0.01472.
-
-The live entropic worker remains in the Git-ignored local directory
-`refraction_sweeps_extended_entropic_high_iter/`. Published snapshots contain
-only completed CSV cases, their matching finite checkpoints, and comparison
-plots rendered from that exact captured CSV. This avoids committing a changing
-mix of plot and data versions. Workers resumed from checkpoints during the
-October 26 checkout consolidation described above.
-
-## Historical sweeps: different targets or metrics
-
-| Archive | Status | Interpretation |
+| Collection | What to inspect | Settings and validation |
 | --- | --- | --- |
-| [Laptop expanded master](archive/laptop_expanded/) | Complete: 460 rows | Experiments 1–3: 60 **internal solver cost** rows. Experiment 4: 400 PF EOT rows with **NK-dependent target sizes**, not target fixed at 1600. |
-| [Laptop pilot](archive/laptop_pilot/) | Complete: 114 rows | Older internal-cost experiments 1–3 and varying-target PF experiment 4. Distinct from the corrected fixed-target standard sweep. |
-| [Superseded extended attempt](archive/extended_varying_target_20261006/) | Incomplete: 39 experiment-1 rows | PF EOT with target varying alongside source; superseded before the corrected fixed-target sweep. Never use as a completed 120-case run. |
+| [Regular entropic error](published/regular_entropic_error_oct_27_26/) | [Large combined plot](published/regular_entropic_error_oct_27_26/plots/experiments_1_2_3.png), individual plots, and [240 saved objectives](published/regular_entropic_error_oct_27_26/data/costs.csv). Cross-EOT, without debiasing or a square root. | [Metric and source hashes](published/regular_entropic_error_oct_27_26/metadata/validation.json) |
+| [Debiased comparison](published/debiased_comparison_complete_oct_26_26/) | [Log-log comparison](published/debiased_comparison_complete_oct_26_26/entropic/plots/comparison_experiments_1_2_3_log.png); hard and smooth tables are in their own `data/` folders. | [Complete capture validation](published/debiased_comparison_complete_oct_26_26/metadata/snapshot.json) |
+| [Complete smooth-refraction capture](published/smooth_refraction_complete_oct_26_26/) | Optical solution NPZs, cross-EOT checkpoints, plots, and marginal diagnostics. | [Parameters](published/smooth_refraction_complete_oct_26_26/metadata/parameters.json) and [120-case validation](published/smooth_refraction_complete_oct_26_26/metadata/snapshot.json) |
+| [Hard-map mass error](published/hard_map_mass_error_oct_26_26/) | [Per-case maximum mass errors](published/hard_map_mass_error_oct_26_26/data/max_mass_error.csv), including empty target locations. | [Validation](published/hard_map_mass_error_oct_26_26/metadata/validation.json) |
+| [Hard-map occupancy](published/hard_map_occupancy_oct_26_26/) | [Empty, singleton, and merged-location counts](published/hard_map_occupancy_oct_26_26/data/atom_counts.csv). | [Validation](published/hard_map_occupancy_oct_26_26/metadata/validation.json) |
 
-The laptop expanded master incorporates the completed desktop experiment-3 and
-PF shards. Missing raw desktop checkpoints and the completed laptop NK=10000 PF
-checkpoint shard have been folded into the master. We retain one canonical
-`costs.csv` rather than publishing duplicate shard result directories.
-`desktop_consolidation.json` records the import commit and consolidation choices.
-The laptop's original per-shard CSV assembly inputs and manifests remain as
-provenance; they are not additional independent experiments.
+The hard map has lower **debiased divergence** in all 120 paired cases. All
+three EOT terms passed their recorded stopping tests. Optical marginal
+feasibility is a separate diagnostic; these results do not assert zero optical
+marginal residuals.
 
-## Other existing benchmark bundles
+## Choose a category
 
-The [laptop exploratory research archive](archive/laptop_research/) is now
-included, with a [GitHub-readable illustrated overview](archive/laptop_research/report/README.md)
-and the original [HTML report](archive/laptop_research/report/index.html).
-It contains density controls (192 PF evaluations), convergence probes (24),
-refinement controls (12), and PF bias/reference-grid evaluations (72, including
-eight that did not pass the existing tests). Failed evaluations and incomplete
-diagnostic probes are preserved and identified; they are not additional solved
-sweep cases. These exploratory studies differ from the fixed-target production
-sweeps and the currently running entropic-normal comparison.
+| Folder | Contents |
+| --- | --- |
+| [published/](published/) | Validated completed captures and plot galleries listed above. |
+| [runs/](runs/) | Canonical sweep outputs, reusable solve checkpoints, and the debiased evaluator's tables/caches. |
+| [examples/](examples/) | Uniform refraction, sixteen density pairs, random surface examples, and sensitivity controls. |
+| [reference_runs/](reference_runs/) | Dated default output from standalone C++/Python reflector benchmarks. |
+| [Notebook exports](../notebooks/README.md) | New saves create `results/notebook_outputs/` with dated plot and interactive-HTML folders. |
+| [archive/](archive/) | Historical varying-target studies, incomplete progress captures, desktop shards, smoke checks, and earlier reference arrays. |
+| [local_runtime/](local_runtime/) | Machine-local worker supervision state and logs, excluded from GitHub. |
 
-The remaining laptop transfer is complete: all 205 payload hashes, 34 local
-HTML links and the ten surface image mappings were checked. See the
-[desktop import validation](archive/laptop_research/desktop_import_validation.json)
-and the [original provenance manifest](archive/laptop_research/manifest.json).
+## Canonical working runs
 
-- [Uniform sensitivity](uniform_sensitivity/): ten kappa/source-angle controls;
-  [numeric summary and surface gallery](uniform_sensitivity/README.md). The current summary
-  uses debiased Sinkhorn divergence with squared Euclidean 3D cost and epsilon
-  0.005, its square root, and a separate target-atom mass L2 metric. These differ
-  from the non-debiased sweep EOT; the square root is not exact unregularized W2.
-- [Representative refractor examples](sinkhorn_refracter_examples/): saved
-  surfaces, metadata, figures and original LaTeX source.
-- `results_refraction_*_NK1600.npz`: the source/target density-pair examples
-  generated by `scripts/helper_all_pairs.py`, already tracked at this level.
-- `results_NK*.npz`, `output_cpp_*`, `output_py_*`, `output_fast`,
-  `output_python` and `output_refraction`: earlier C++/Python reference outputs.
-- [Figures](../figures/) and [portable LaTeX project](../geometric_optics_progress/):
-  visual outputs and the current research write-up, with supporting images.
+| Run | Numerical scope | Parameters |
+| --- | --- | --- |
+| [Standard fixed-target](runs/standard_fixed_target_oct_22_26/) | Smaller hard-map sweep; 114 evaluations across experiments 1–4. | [Settings](runs/standard_fixed_target_oct_22_26/metadata/parameters.json) |
+| [Hard map, 17 updates](runs/hard_map_17_updates_oct_08_26/) | Extended 120-case baseline with inherited final-loop limits. | [Settings](runs/hard_map_17_updates_oct_08_26/metadata/parameters.json) |
+| [Hard map, 2000 updates](runs/hard_map_2000_updates_oct_08_26/) | The matching extended hard-map run with higher transport/self caps. | [Settings](runs/hard_map_2000_updates_oct_08_26/metadata/parameters.json) |
+| [Smooth refraction, 2000 updates](runs/smooth_refraction_2000_updates_oct_26_26/) | Softmin normals and vector Snell refraction; full matching 120-case grid. | [Settings](runs/smooth_refraction_2000_updates_oct_26_26/metadata/parameters.json) |
+| [Debiased evaluator](runs/debiased_comparison_oct_26_26/) | Independent hard/smooth tables and content-hashed self-EOT cache. | [Evaluation settings](runs/debiased_comparison_oct_26_26/metadata/evaluation_settings.json) |
 
-## Reproduction and maintenance
+## Keep the metrics separate
 
-The numerical pipeline remains shared: `refracter/sinkhorn.py` performs the
-optical and PF solves, `scripts/generate_results.py` builds the existing hard-map
-artifacts, and `refracter/optics.py` supplies the entropic-surface normal and
-vector Snell functions. `scripts/run_refraction_sweeps.py` selects the map;
-all experiments use its one PF evaluation/cache path. Comparison plotting
-does not implement or rerun a solver.
+- **Cross-EOT** is the regularized transport objective from pushed points to the
+  target, including its entropy penalty. It can remain positive for equal measures.
+- **Sinkhorn divergence** subtracts half of each measure's self-EOT objective.
+  The completed comparison plots divergence itself, without a square root.
+- **Target-mass error and occupancy** compare masses/counts at target atoms;
+  they do not measure spatial transport distance.
+- **Optical solver cost and marginal residuals** diagnose the source solve.
+  They are not interchangeable with the independent push-forward evaluations.
 
-Run commands are in the [repository README](../README.md). To publish a later
-entropic snapshot without interrupting its worker:
+Older studies may use varying target sizes, different costs, evaluation epsilons,
+or internal solver metrics. Their archived READMEs retain those distinctions.
+
+## Names, locations, and regeneration
+
+Run/update folders end with a readable date such as `oct_27_26`. Recorded
+computation/capture dates are retained. If no original run date was recorded,
+the suffix identifies its saved/publication or organization date, as explained
+in that folder's README; it does not imply a rerun.
+
+Use [scripts/result_paths.py](../scripts/result_paths.py) for readers and writers.
+The [path catalog](path_catalog.json) maps old locations to their canonical
+destinations and records migration provenance. See the
+[layout guide](../docs/repository_layout.md) for typed run folders and the rule
+that a directory with subdirectories keeps at most five regular files beside them.
+
+From the repository root:
 
 ```bash
-python -B scripts/snapshot_refraction_sweep.py results/refraction_sweeps_extended_entropic_high_iter results/snapshots/NEW_CAPTURE_NAME --baseline results/refraction_sweeps_extended_high_iter
+# Replot the published regular-EOT gallery from its saved CSV
+python scripts/plot_saved_entropic_error.py
+
+# Capture new completed debiased rows and refresh the write-up and large figures
+python scripts/update_writeup_results.py
 ```
 
-Use a new destination name; existing snapshots are not overwritten. Disposable
-smoke tests, process logs/PIDs, compiler files, and duplicate ZIP previews are
-kept out of Git. Superseded results are preserved in archives rather than deleted.
+The active [LaTeX project](../geometric_optics_progress/) records its selected
+capture in [results_capture.json](../geometric_optics_progress/metadata/results_capture.json).
+The full previous catalog, including run history and old reproduction commands,
+is retained in [catalog history](archive/catalog_history_oct_27_26/source/results_catalog_before_cleanup.md).
+
+<!-- directory-index:start -->
+
+## Directory guide
+
+[Parent directory](../README.md)
+
+| Folder | Contents |
+| --- | --- |
+| [archive/](archive/README.md) | Supporting files grouped by purpose. Follow the directory links below and the parent README for context. |
+| [examples/](examples/README.md) | Supporting files grouped by purpose. Follow the directory links below and the parent README for context. |
+| [local_runtime/](local_runtime/README.md) | Supporting files grouped by purpose. Follow the directory links below and the parent README for context. |
+| [published/](published/README.md) | Supporting files grouped by purpose. Follow the directory links below and the parent README for context. |
+| [reference_runs/](reference_runs/README.md) | Supporting files grouped by purpose. Follow the directory links below and the parent README for context. |
+| [runs/](runs/README.md) | Supporting files grouped by purpose. Follow the directory links below and the parent README for context. |
+
+<!-- directory-index:end -->

@@ -3,7 +3,7 @@
  *
  * Generates NK_COMPARE Halton QMC points (same algorithm as Python gen_cloud),
  * runs the full Sinkhorn divergence pipeline (no warm-start, f=g=0 init),
- * and writes results to output_cpp_NK{N}/
+ * and writes results to results/reference_runs/cpp_comparison_nk<N>_<time>_<date>/data/.
  *
  * Compile for NK=300:
  *   g++ -O2 -DNK_COMPARE=300  -o main_compare_300  main_compare.cpp -lm
@@ -11,8 +11,8 @@
  *   g++ -O2 -DNK_COMPARE=1600 -o main_compare_1600 main_compare.cpp -lm
  *
  * Run:
- *   ./main_compare_300   -> output_cpp_NK300/
- *   ./main_compare_1600  -> output_cpp_NK1600/
+ *   ./main_compare_300   -> dated comparison_nk300 run
+ *   ./main_compare_1600  -> dated comparison_nk1600 run
  */
 
 #include <algorithm>
@@ -22,6 +22,7 @@
 #include <cstring>
 #include <ctime>
 #include <string>
+#include "Benchmarks/OutputPaths.h"
 using namespace std;
 
 #ifndef NK_COMPARE
@@ -393,13 +394,7 @@ void Printall() {
 int main() {
     clock_t t0=clock();
 
-    char buf[64];
-    snprintf(buf, sizeof(buf), "output_cpp_NK%d", NK);
-    outputname = buf;
-
-    char cmd[128];
-    snprintf(cmd, sizeof(cmd), "mkdir -p %s", outputname.c_str());
-    system(cmd);
+    outputname = reference_output_directory("comparison_nk" + to_string(NK));
 
     fillall();
 

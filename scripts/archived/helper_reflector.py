@@ -30,6 +30,10 @@ Saved arrays in results_NK1600.npz
   y_push_3d          (M, 3)     push-forward points on lower hemisphere (3D)
 """
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from scripts.result_paths import artifact_path, artifact_glob, resolve_path, dated_run_dir, ensure_readme
 import os, sys, math, time
 import numpy as np
 
@@ -275,7 +279,8 @@ print(f"  {len(y_push_3d)} pushed rays  ({time.time()-t0:.2f}s)")
 # ---------------------------------------------------------------------------
 # Save
 # ---------------------------------------------------------------------------
-out = f"results_NK{NK}.npz"
+result_bundle = dated_run_dir("archive", "legacy_reflector_examples")
+out = artifact_path(result_bundle, f"results_NK{NK}.npz", for_write=True)
 np.savez(
     out,
     # Clouds
@@ -320,6 +325,6 @@ plt.colorbar(sc, ax=ax, label='R (reflector radius)', shrink=0.65)
 ax.set_title(f'Reflector Surface — Python  (NK={NK}, k_final={k_final})')
 ax.set_xlabel('X');  ax.set_ylabel('Y');  ax.set_zlabel('Z')
 fig.tight_layout()
-fig_path = f"fig_reflector_3d_NK{NK}.png"
+fig_path = artifact_path(result_bundle, f"fig_reflector_3d_NK{NK}.png", for_write=True)
 fig.savefig(fig_path, dpi=150, bbox_inches='tight')
 print(f"Saved {fig_path}")

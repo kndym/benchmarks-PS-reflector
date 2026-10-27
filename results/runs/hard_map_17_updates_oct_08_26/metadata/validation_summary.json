@@ -1,0 +1,14 @@
+{
+  "validated_rows": 120,
+  "unique_solves": 120,
+  "residual_ranges": {
+    "source_marginal_l1": [
+      2.508489502042223e-07,
+      0.1767780952330485
+    ],
+    "target_marginal_l1": [
+      0.00017387900614770663,
+      0.5479186413476835
+    ]
+  }
+}

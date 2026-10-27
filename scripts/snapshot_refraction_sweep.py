@@ -1,8 +1,12 @@
 """Export only CSV-completed cases from a running fixed-target sweep.
 
-Example: python scripts/snapshot_refraction_sweep.py results/live results/snapshots/name
+Example: python scripts/snapshot_refraction_sweep.py results/live results/published/name
 The worker is never interrupted. No process logs, PIDs, or incomplete cases are copied.
 """
+try:
+    from result_paths import artifact_path, artifact_glob, resolve_path, dated_run_dir, ensure_readme, self_cost_dir
+except ModuleNotFoundError:
+    from scripts.result_paths import artifact_path, artifact_glob, resolve_path, dated_run_dir, ensure_readme, self_cost_dir
 import argparse
 import csv
 from datetime import datetime, timezone
@@ -14,15 +18,16 @@ import numpy as np
 
 
 def snapshot(source, destination, baseline=None):
+    source, destination = resolve_path(source), resolve_path(destination)
     if destination.exists():
         raise FileExistsError(f"Snapshot already exists: {destination}")
-    parameters = json.loads((source / 'parameters.json').read_text(encoding='utf-8-sig'))
-    with (source / 'costs.csv').open(newline='', encoding='utf-8-sig') as stream:
+    parameters = json.loads(artifact_path(source, 'parameters.json').read_text(encoding='utf-8-sig'))
+    with artifact_path(source, 'costs.csv').open(newline='', encoding='utf-8-sig') as stream:
         reader = csv.DictReader(stream)
         fields, rows = reader.fieldnames, list(reader)
     if not rows:
         raise ValueError('No completed evaluations to snapshot')
-    selected = {'parameters.json'}
+    selected = {artifact_path(source, 'parameters.json')}
     keys, residuals = set(), {}
     allowed = set()
     for experiment in parameters['experiments']:
@@ -41,13 +46,13 @@ def snapshot(source, destination, baseline=None):
         if key not in allowed or key in keys or row['converged'] != 'True' or not np.isfinite(float(row['cost'])):
             raise ValueError(f'Duplicate, nonfinite or unconverged evaluation: {key}')
         keys.add(key)
-        matches = list(source.glob(f'solve_NK{nk}_*eps{eps:.17g}.npz'))
+        matches = artifact_glob(source, f'solve_NK{nk}_*eps{eps:.17g}.npz')
         if len(matches) != 1:
             raise ValueError(f'Ambiguous/missing solve checkpoint: {key}')
         solve = matches[0]
         suffix = solve.stem.removeprefix('solve_')
-        pf = source / f'pf_{suffix}_eval{eta:.17g}.json'
-        residual = source / f'residual_{suffix}.json'
+        pf = artifact_path(source, f'pf_{suffix}_eval{eta:.17g}.json')
+        residual = artifact_path(source, f'residual_{suffix}.json')
         cost, info = json.loads(pf.read_text(encoding='utf-8'))
         if not info['converged'] or not np.isclose(cost, float(row['cost']), atol=1e-15, rtol=0):
             raise ValueError(f'PF checkpoint does not match CSV: {key}')
@@ -67,12 +72,12 @@ def snapshot(source, destination, baseline=None):
                     raise ValueError('Invalid entropic normals')
                 if not np.allclose(np.linalg.norm(data['y_push_3d'], axis=1), 1, atol=1e-10, rtol=0):
                     raise ValueError('Nonunit transmitted rays')
-        selected.update((solve.name, pf.name, residual.name))
+        selected.update((solve, pf, residual))
     expected = len(allowed)
     destination.mkdir(parents=True)
-    for name in selected:
-        shutil.copy2(source / name, destination / name)
-    with (destination / 'costs.csv').open('w', newline='', encoding='utf-8') as stream:
+    for path in selected:
+        shutil.copy2(path, artifact_path(destination, path.name, for_write=True))
+    with artifact_path(destination, 'costs.csv', for_write=True).open('w', newline='', encoding='utf-8') as stream:
         writer = csv.DictWriter(stream, fieldnames=fields)
         writer.writeheader()
         writer.writerows(rows)
@@ -86,13 +91,14 @@ def snapshot(source, destination, baseline=None):
                   all_pf_converged=True,
                   marginal_ranges={k:[min(r[k] for r in residuals.values()), max(r[k] for r in residuals.values())]
                                    for k in ('source_marginal_l1', 'target_marginal_l1')})
-    report['files_sha256'] = {p.name:hashlib.sha256(p.read_bytes()).hexdigest()
-                              for p in sorted(destination.iterdir()) if p.is_file()}
-    (destination / 'snapshot.json').write_text(json.dumps(report, indent=2)+'\n', encoding='utf-8')
+    report['hash_base'] = '..'
+    report['files_sha256'] = {p.relative_to(destination).as_posix():hashlib.sha256(p.read_bytes()).hexdigest()
+                              for p in sorted(destination.rglob('*')) if p.is_file() and p.name != 'README.md'}
+    artifact_path(destination, 'snapshot.json', for_write=True).write_text(json.dumps(report, indent=2)+'\n', encoding='utf-8')
     (destination / 'README.md').write_text(
         f"# Entropic-surface sweep snapshot\n\n**{report['status'].upper()}: {len(rows)}/{expected} evaluations.**\n\n"
         "This immutable snapshot contains only CSV-completed cases and their validated solve, "
-        "PF, and residual checkpoints. The live worker continues in the source directory named "
+        "PF, and residual checkpoints. The source directory is named "
         "in `snapshot.json`. Comparison images were rendered from this snapshot's CSV, not copied "
         "from the changing live output. Target fixed at 1600 points; transport/self caps 2000/2000; "
         "PF-to-target EOT uses squared Euclidean 3D cost and epsilon 1/320.\n\n"

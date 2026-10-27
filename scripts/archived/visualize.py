@@ -10,6 +10,10 @@ Called automatically by Benchmark.ipynb (Step 6) but can be re-run standalone
 at any time to regenerate the figures without re-running the full benchmark.
 """
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from scripts.result_paths import artifact_path, artifact_glob, resolve_path, dated_run_dir, ensure_readme
 import os
 import sys
 import argparse
@@ -88,11 +92,11 @@ def no_data(ax, msg):
 
 def main():
     args      = parse_args()
-    out_dir   = args.output_dir
+    out_dir   = resolve_path(args.output_dir)
     BENCHMARK = args.benchmark
     NK        = args.nk
 
-    j = lambda name: os.path.join(out_dir, name)
+    j = lambda name: artifact_path(out_dir, name, for_write=name.endswith(".png"))
 
     # Load all output files
     X_mesh = load_meshgrid(j("X_MeshGrid.txt"))

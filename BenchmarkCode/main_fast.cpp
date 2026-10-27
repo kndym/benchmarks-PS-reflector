@@ -7,7 +7,7 @@
  * Uses the small (381-point) QMC cloud as the sole problem grid.
  * Skips the UseSmall warm-start (NK == NK_small, so starts from f=g=0).
  * Skips the FinalGrid regular-grid computation.
- * Outputs to output_fast/  (f.txt, g.txt, f_id.txt, g_id.txt, R.txt, Ref.txt).
+ * Outputs to results/reference_runs/cpp_fast_nk381_<time>_<date>/data/.
  */
 
 #include <algorithm>
@@ -18,6 +18,7 @@
 #include <ctime>
 #include <iostream>
 #include <string>
+#include "Benchmarks/OutputPaths.h"
 
 using namespace std;
 
@@ -116,7 +117,7 @@ int IndId_begin[NK], IndId_end[NK];
 
 double maxdif = -1.0;
 double Reg_Param;
-string outputname = "output_fast";
+string outputname;
 
 const int    multiplier    = 8;
 const double cap_treshold  = 1.e-5;
@@ -447,7 +448,7 @@ void sink_to_Reflector(int k)
 }
 
 /* ------------------------------------------------------------------
- * Write results to output_fast/
+ * Write results into the dated reference run's data/ directory.
  * ------------------------------------------------------------------ */
 void Printall()
 {
@@ -478,8 +479,7 @@ int main()
 {
     clock_t total_time = clock();
 
-    /* Create output directory (POSIX mkdir; -p silences "already exists") */
-    system("mkdir -p output_fast");
+    outputname = reference_output_directory("fast_nk" + to_string(NK));
 
     fillall();
 

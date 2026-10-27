@@ -1,5 +1,9 @@
 
 
+try:
+    from result_paths import artifact_path, artifact_glob, resolve_path, dated_run_dir, ensure_readme, self_cost_dir
+except ModuleNotFoundError:
+    from scripts.result_paths import artifact_path, artifact_glob, resolve_path, dated_run_dir, ensure_readme, self_cost_dir
 import os, sys, time
 import numpy as np
 
@@ -56,7 +60,7 @@ MAKER_MAP = {
 }
 DENSITY_NAMES = ['uniform', 'gaussian', 'donut', 'cross']
 
-results_dir = os.path.join(REPO_ROOT, 'results')
+results_dir = dated_run_dir('examples', 'density_pairs')
 os.makedirs(results_dir, exist_ok=True)
 
 # ---------------------------------------------------------------------------
@@ -69,8 +73,7 @@ pair_idx    = 0
 for src_name in DENSITY_NAMES:
     for tgt_name in DENSITY_NAMES:
         pair_idx += 1
-        out_path = os.path.join(
-            results_dir, f'results_refraction_{src_name}_{tgt_name}_NK{NK}.npz')
+        out_path = artifact_path(results_dir, f'results_refraction_{src_name}_{tgt_name}_NK{NK}.npz', for_write=True)
         print(f"[{pair_idx:2d}/{total_pairs}] {src_name} -> {tgt_name}  "
               f"-> {os.path.basename(out_path)}")
         t_pair = time.time()

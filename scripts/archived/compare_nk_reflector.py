@@ -12,6 +12,10 @@ Loads:
 Prints a numerical comparison report and shows side-by-side 3-D scatter plots.
 """
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from scripts.result_paths import artifact_path, artifact_glob, resolve_path, dated_run_dir, ensure_readme, latest_reference_run
 import os, sys
 import numpy as np
 import matplotlib
@@ -23,8 +27,8 @@ import matplotlib.pyplot as plt
 # ---------------------------------------------------------------------------
 
 NK_arg = int(sys.argv[1]) if len(sys.argv) > 1 else 300
-cpp_dir = f"output_cpp_NK{NK_arg}"
-py_dir  = f"output_py_NK{NK_arg}"
+cpp_dir = latest_reference_run(f"cpp_comparison_nk{NK_arg}_*", "R.txt") or resolve_path(f"output_cpp_NK{NK_arg}")
+py_dir = latest_reference_run(f"python_comparison_nk{NK_arg}_*", "R.npy") or resolve_path(f"output_py_NK{NK_arg}")
 
 for d in [cpp_dir, py_dir]:
     if not os.path.isdir(d):
@@ -54,20 +58,20 @@ def load_mat(path, ncols=3):
 # ---------------------------------------------------------------------------
 
 print(f"Loading C++ from {cpp_dir}/")
-R_cpp    = load_vec(f"{cpp_dir}/R.txt")
-f_cpp    = load_vec(f"{cpp_dir}/f.txt")
-g_cpp    = load_vec(f"{cpp_dir}/g.txt")
-f_id_cpp = load_vec(f"{cpp_dir}/f_id.txt")
-g_id_cpp = load_vec(f"{cpp_dir}/g_id.txt")
-Ref_cpp  = load_mat(f"{cpp_dir}/Ref.txt")
+R_cpp    = load_vec(artifact_path(cpp_dir, "R.txt"))
+f_cpp    = load_vec(artifact_path(cpp_dir, "f.txt"))
+g_cpp    = load_vec(artifact_path(cpp_dir, "g.txt"))
+f_id_cpp = load_vec(artifact_path(cpp_dir, "f_id.txt"))
+g_id_cpp = load_vec(artifact_path(cpp_dir, "g_id.txt"))
+Ref_cpp  = load_mat(artifact_path(cpp_dir, "Ref.txt"))
 
 print(f"Loading Python from {py_dir}/")
-R_py     = np.load(f"{py_dir}/R.npy")
-f_py     = np.load(f"{py_dir}/f.npy")
-g_py     = np.load(f"{py_dir}/g.npy")
-f_id_py  = np.load(f"{py_dir}/f_id.npy")
-g_id_py  = np.load(f"{py_dir}/g_id.npy")
-Ref_py   = np.load(f"{py_dir}/Ref.npy")
+R_py     = np.load(artifact_path(py_dir, "R.npy"))
+f_py     = np.load(artifact_path(py_dir, "f.npy"))
+g_py     = np.load(artifact_path(py_dir, "g.npy"))
+f_id_py  = np.load(artifact_path(py_dir, "f_id.npy"))
+g_id_py  = np.load(artifact_path(py_dir, "g_id.npy"))
+Ref_py   = np.load(artifact_path(py_dir, "Ref.npy"))
 
 NK_cpp, NK_py = len(R_cpp), len(R_py)
 print(f"\n{'='*58}")
@@ -133,7 +137,7 @@ try:
 
     fig.suptitle(f"Reflector surface comparison — NK={NK}", fontsize=13)
     plt.tight_layout()
-    plt.savefig(f"fig_compare_NK{NK}.png", dpi=150, bbox_inches="tight")
+    plt.savefig(artifact_path(dated_run_dir("archive", "legacy_reflector_comparison"), f"fig_compare_NK{NK}.png", for_write=True), dpi=150, bbox_inches="tight")
     plt.show()
     print(f"\nSaved fig_compare_NK{NK}.png")
 except Exception as e:
