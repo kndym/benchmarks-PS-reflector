@@ -63,7 +63,7 @@ def cost_vec(x_vec: np.ndarray, y_vec: np.ndarray) -> float:
             "transport cost is undefined: require kappa*(x dot y) < 1 "
             f"(kappa={_KAPPA:g}, dot={dot:.17g})"
         )
-    return float(-np.log(arg))
+    return float(-np.log1p(-_KAPPA * dot))
 
 
 def cost_matrix_chunk(x_chunk: np.ndarray, y: np.ndarray) -> np.ndarray:
@@ -87,7 +87,7 @@ def cost_matrix_refraction_chunk(x_chunk: np.ndarray, y: np.ndarray,
             "transport cost is undefined: require kappa*(x dot y) < 1 "
             f"(kappa={kappa:g}, max dot={np.max(dots):.17g})"
         )
-    return -np.log(arg)
+    return -np.log1p(-kappa * dots)
 
 
 def cost_matrix_l2_chunk(x_chunk: np.ndarray, y: np.ndarray) -> np.ndarray:
@@ -96,11 +96,13 @@ def cost_matrix_l2_chunk(x_chunk: np.ndarray, y: np.ndarray) -> np.ndarray:
     y = np.asarray(y, dtype=np.float64)
     if x_chunk.ndim != 2 or y.ndim != 2 or x_chunk.shape[1] != y.shape[1]:
         raise ValueError("x_chunk and y must have shape (N, dim) with matching dimensions")
-    x_norm2 = np.einsum("ij,ij->i", x_chunk, x_chunk)
-    y_norm2 = np.einsum("ij,ij->i", y, y)
-    costs = x_norm2[:, None] + y_norm2[None, :] - 2.0 * (x_chunk @ y.T)
-    # Roundoff can make an exact zero distance slightly negative.
-    np.maximum(costs, 0.0, out=costs)
+    # Subtract coordinates before squaring: the norm/dot-product identity
+    # cancels nearby distances, even for unit vectors, and large offsets.
+    # Accumulate one coordinate at a time to avoid an (M,N,dim) temporary.
+    costs = np.zeros((len(x_chunk), len(y)), dtype=np.float64)
+    for axis in range(x_chunk.shape[1]):
+        delta = x_chunk[:, axis, None] - y[None, :, axis]
+        costs += delta * delta
     return costs
 
 

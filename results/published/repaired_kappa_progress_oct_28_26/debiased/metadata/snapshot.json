@@ -1,0 +1,54 @@
+{
+  "captured_at": "2026-10-28T12:59:38.365917+00:00",
+  "expected_per_map": 120,
+  "all_terms_converged": true,
+  "formula": "EOT(PF,T) - 0.5 * (EOT(PF,PF) + EOT(T,T))",
+  "counts": {
+    "hard": {
+      "1": 7,
+      "2": 0,
+      "3": 0
+    },
+    "entropic": {
+      "1": 7,
+      "2": 0,
+      "3": 0
+    }
+  },
+  "completed": {
+    "hard": 7,
+    "entropic": 7
+  },
+  "entropic_lower_divergence_pairs": 0,
+  "paired_cases": 7,
+  "hash_base": "..",
+  "files_sha256": {
+    "entropic/data/costs.csv": "cc2e02c85bc1188d90d9553f81e3d2ea94d457486eb06ebd105b81b0dcd82f30",
+    "entropic/diagnostics/divergence/divergence_NK100_eps0.012500000000000001.json": "0f4d5a8e91f83af57c35f9267f8492b9e649759a713eb640ab0e0326d59592e2",
+    "entropic/diagnostics/divergence/divergence_NK115_eps0.012500000000000001.json": "1414b5543f28798b3771af5a54d252b66f5228cfb668983ab6383e8c0912b90b",
+    "entropic/diagnostics/divergence/divergence_NK131_eps0.011363636363636364.json": "293345bb9adfb20780b87f466f649e2c2430decf354e0b62c3cd78aa2892f8e0",
+    "entropic/diagnostics/divergence/divergence_NK150_eps0.010416666666666666.json": "d9d2b3602e384b2eac5a11849641c3213308a997fb10d5c57526d20a5fb95f44",
+    "entropic/diagnostics/divergence/divergence_NK172_eps0.0096153846153846159.json": "ed568058f03557a27764b8f6fde5e53c2d0748006185e2c0fa36366056b85d2f",
+    "entropic/diagnostics/divergence/divergence_NK197_eps0.0089285714285714281.json": "534f960360fdebcffd0eacf474f7b4501721e9b49325d1bcabf411c048151367",
+    "entropic/diagnostics/divergence/divergence_NK226_eps0.0083333333333333332.json": "757cc0a05039cff4b6f069b641f6309bfd5334675e9b2e88e90aff0ec89125f7",
+    "entropic/metadata/parameters.json": "16762a4ea2931b0dce40405cb965a6751882ff1bdab04f8e05b9ed7d7f20663f",
+    "entropic/plots/comparison_experiment_1.png": "c774d8b15ce22463a7b0af2acdfd3dbe5f83d20d509648ba1ea65ecb54687e4d",
+    "entropic/plots/comparison_experiment_1_log.png": "5b11c949564485749042660e799a1f44624a1ee4fad002f830f066021f796abb",
+    "entropic/plots/comparison_experiment_2.png": "a87b285117520e5e1b198d580d87a28080aefb0f05414071dcc2e8ab9527e25c",
+    "entropic/plots/comparison_experiment_2_log.png": "04dc64c0cd4de6ebd626334c2f515793235d27db8b96576a938b9f139596c9ce",
+    "entropic/plots/comparison_experiment_3.png": "a7f0994be69a27d7a382807107e1c8c3de6e4cb8a5f9786a87b9d3e16fb17fda",
+    "entropic/plots/comparison_experiment_3_log.png": "80c6f148ddb9c2d232dbfe8a20894efff103a2b8282754bd2e10b298be12f2dd",
+    "entropic/plots/comparison_experiments_1_2_3.png": "7c47d17b407524b365d4b7afdcd4de61ef172a89c8b4535e60558e837603499e",
+    "entropic/plots/comparison_experiments_1_2_3_log.png": "56693010084b45230f6c8e2bd0cca10e2612aa01f0edc6df48f33d3efd0191f1",
+    "hard/data/costs.csv": "7e50705c499dd0c2fcf60dacbdad8813fcefd7575052f5e6d942e6bb43c56bda",
+    "hard/diagnostics/divergence/divergence_NK100_eps0.012500000000000001.json": "e9a5f96b1ab0e8d18d360c6376a675b00cc4a72df8605476fe8eda2601f6f929",
+    "hard/diagnostics/divergence/divergence_NK115_eps0.012500000000000001.json": "90b155658759c899846a26fb50f1d885e68b83fdce097fbad41871ed62827af7",
+    "hard/diagnostics/divergence/divergence_NK131_eps0.011363636363636364.json": "f82a273afe1df44cc4631dc03692141caf732618f280bbc6a02de6febfd06585",
+    "hard/diagnostics/divergence/divergence_NK150_eps0.010416666666666666.json": "35a265f243d511194b43201a662b739d5e09a9f5b515316ce128093a708f73c3",
+    "hard/diagnostics/divergence/divergence_NK172_eps0.0096153846153846159.json": "856ea4e8a0a8029673c6e110413b53c0ccd5ade8ba24ac1f5b659a9a62ae5c7c",
+    "hard/diagnostics/divergence/divergence_NK197_eps0.0089285714285714281.json": "3f9cf86a79c42271dd104d7a03a1c5c61e74b406ca3de7fec89895ff51c6b37e",
+    "hard/diagnostics/divergence/divergence_NK226_eps0.0083333333333333332.json": "15969ea98fed2b9c5f1b0a04bde4bea3a1528e3a431d20153507edf9df946d45",
+    "hard/metadata/parameters.json": "097a94d87e7dd9c2267a20a5b1d40841e8222d86cb6969ce9a0d03642c136301",
+    "metadata/evaluation_settings.json": "848f7e8195b1a429e43f51e8df075299b62abf5aa5a6631cde3b9f6208488358"
+  }
+}

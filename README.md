@@ -9,6 +9,7 @@ for the refractor and `kappa=1` for the reflector reference problem.
 
 | What you need | Open |
 | --- | --- |
+| Repaired kappa=0.8 rerun and numerical audit | [Fresh progress plots and audit findings](results/published/repaired_kappa_progress_oct_28_26/) |
 | Three new source/target/kappa variations (in progress) | [October 28 progress plots and counts](results/published/isolated_refractor_progress_oct_28_26_0819/) |
 | Regular entropic error, without debiasing | [Complete cross-EOT plots and numerics](results/published/regular_entropic_error_oct_27_26/) |
 | Debiased hard-versus-smooth comparison | [Complete Sinkhorn-divergence capture](results/published/debiased_comparison_complete_oct_26_26/) |

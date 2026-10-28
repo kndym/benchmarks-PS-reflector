@@ -1,0 +1,61 @@
+{
+  "source": "C:/Users/Kevin/Github/benchmarks-PS-reflector/results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/entropic",
+  "captured_at": "2026-10-28T12:59:35.504163+00:00",
+  "status": "partial",
+  "rows": 8,
+  "expected_rows": 120,
+  "unique_solves": 8,
+  "counts": {
+    "1": 8,
+    "2": 0,
+    "3": 0
+  },
+  "all_pf_converged": true,
+  "marginal_ranges": {
+    "source_marginal_l1": [
+      5.242334344401911e-15,
+      1.0221858082193336e-14
+    ],
+    "target_marginal_l1": [
+      4.644379765787656e-08,
+      7.461168784238595e-08
+    ]
+  },
+  "hash_base": "..",
+  "files_sha256": {
+    "checkpoints/pushforward/pf_NK100_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_entropic_v1_eps0.012500000000000001_eval0.0031250000000000002.json": "455c523a3ddcb5c0b1215c79a04b90b49b53951e8ebd294c1d8c7c03e77b1650",
+    "checkpoints/pushforward/pf_NK115_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_entropic_v1_eps0.012500000000000001_eval0.0031250000000000002.json": "e4ea751c6f76b8ef4fab6b3afe38a6768c69af0219cf292e55b002632b00e808",
+    "checkpoints/pushforward/pf_NK131_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_entropic_v1_eps0.011363636363636364_eval0.0031250000000000002.json": "b6c07183e40d83183218b9e50b41ad01e8a79fbb322e7f4d8746c53d4bd0b452",
+    "checkpoints/pushforward/pf_NK150_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_entropic_v1_eps0.010416666666666666_eval0.0031250000000000002.json": "b43fa351f012d9e3df37bc8d28a68a8e494e06902cfa4153f2323d537e71c892",
+    "checkpoints/pushforward/pf_NK172_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_entropic_v1_eps0.0096153846153846159_eval0.0031250000000000002.json": "01098d617b8e869db6d8e5f5a83c0b7d0d03c093da7d9fbeaf246eab1cde16e8",
+    "checkpoints/pushforward/pf_NK197_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_entropic_v1_eps0.0089285714285714281_eval0.0031250000000000002.json": "f870826d3045fc1c60d4c7a98af56b1866c9ba7285390bb1a8d07a174cf39d87",
+    "checkpoints/pushforward/pf_NK226_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_entropic_v1_eps0.0083333333333333332_eval0.0031250000000000002.json": "9e75bd86e56d0de505399d2cd20852b54043bb6121a6fa299b9d405f56ada60e",
+    "checkpoints/pushforward/pf_NK259_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_entropic_v1_eps0.0078125_eval0.0031250000000000002.json": "e17b990ef76da728df501f8d0462460dd903938436d3bada003e7db7ef6b9bf6",
+    "checkpoints/solutions/solve_NK100_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_entropic_v1_eps0.012500000000000001.npz": "5085305d23309a1047086d64ffe817adff78e50a7aff566b4a87a3c7d095f60c",
+    "checkpoints/solutions/solve_NK115_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_entropic_v1_eps0.012500000000000001.npz": "f32ad618052d4b39851f13a5898843752fac472a2e299f02f3fac0c995d8cc01",
+    "checkpoints/solutions/solve_NK131_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_entropic_v1_eps0.011363636363636364.npz": "d179807465f45454244550ba3e94509695ccdb7a822cb3004da1b2c767f8e1e4",
+    "checkpoints/solutions/solve_NK150_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_entropic_v1_eps0.010416666666666666.npz": "caed5262b7368eb2ccdd9c7d664c5f80fb0319a506c9c1699516b599e281680e",
+    "checkpoints/solutions/solve_NK172_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_entropic_v1_eps0.0096153846153846159.npz": "c8e3a171ed8ccc8ae40f05ef9428443a4e5b10cb42c50fe0bca224bfa44d0a6e",
+    "checkpoints/solutions/solve_NK197_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_entropic_v1_eps0.0089285714285714281.npz": "30bb44d7dfd720e7c8c1b33fb88d6ec43f7b42745d42ccaef95862b0cf71011d",
+    "checkpoints/solutions/solve_NK226_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_entropic_v1_eps0.0083333333333333332.npz": "07218e78e7e3f0269df137a86bc9a1954b58ed19e0f96a5baf2bee114ceedd8c",
+    "checkpoints/solutions/solve_NK259_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_entropic_v1_eps0.0078125.npz": "ae3fb153bf5a92800a5c804c01d1f7287a8a4746ee288401e48ace3bf3511cd8",
+    "data/costs.csv": "afcef10517edbf7404034097cf3787ac5a0271260f4c139e43c8dd96da0cc153",
+    "diagnostics/marginals/residual_NK100_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_entropic_v1_eps0.012500000000000001.json": "63138107fb06ea39639adc528a43dfabf70a90b6a4aaa69d76f1f85332cc406c",
+    "diagnostics/marginals/residual_NK115_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_entropic_v1_eps0.012500000000000001.json": "1419a471d21b5b970996fd3b0c9956482d412b55e6aa0f360b1ebce8ec298d5d",
+    "diagnostics/marginals/residual_NK131_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_entropic_v1_eps0.011363636363636364.json": "e50775b73727cd3c2027d1a7b702a55a8d4a155d1b61e3faf2a244bf1a77366e",
+    "diagnostics/marginals/residual_NK150_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_entropic_v1_eps0.010416666666666666.json": "8392bc5a7ea65b5f8c229029a4ee8a2672fc2d78f9cb930317ace7de636ef477",
+    "diagnostics/marginals/residual_NK172_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_entropic_v1_eps0.0096153846153846159.json": "244d47fbcc862e44d213f071e82e7f3709b599d11d2f2305020e4e81d85b8ce7",
+    "diagnostics/marginals/residual_NK197_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_entropic_v1_eps0.0089285714285714281.json": "128ae885047ba136c8724aa29a4bc24df6fef0aab9c2700506bd356821fa4061",
+    "diagnostics/marginals/residual_NK226_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_entropic_v1_eps0.0083333333333333332.json": "7a83223339af76737fef1d190a7d52a6e837f7e49a819a6a8c3f1806b109c380",
+    "diagnostics/marginals/residual_NK259_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_entropic_v1_eps0.0078125.json": "f3a80426b167dfb9040376461812a6154be46234bfc22895570763e205a342de",
+    "metadata/parameters.json": "d6f443471877cca5245ea30c3e67987692a0e907d8f26bf5cddfe78e084019b8",
+    "plots/comparison_experiment_1.png": "5644398af9fa2151283bfe132b2ed5e87d9484effb2459e7f8ad04c982c24408",
+    "plots/comparison_experiment_1_log.png": "83e0c68cdf78161b2290eb33792f747f95c65b70454d84cd3d87e259f613c8eb",
+    "plots/comparison_experiment_2.png": "d6aa04b33f41323604085a6541548633e627fd5a69395784d0fd3ec80dba86d8",
+    "plots/comparison_experiment_2_log.png": "193c0469dfafa3be6065e71a0fa865d01588aa60af1d5f00a205a819a6d89b2b",
+    "plots/comparison_experiment_3.png": "04376f44bce75e0d84b143659ec2c688b9ceb9c49d6f5de04108db437839bbaf",
+    "plots/comparison_experiment_3_log.png": "4bd2645ec43b1fda68c6b9280bccdeaefd3c461c0eb106e1e6a99ed5786c49bb",
+    "plots/comparison_experiments_1_2_3.png": "a3105e4316ab93cdeb1a4486c47e872caa63217aa7761b39cd5376bd2b21816d",
+    "plots/comparison_experiments_1_2_3_log.png": "97c44010a76a73054cd69548e3066095d85d3e8bf32ec964bfa73a825af55364"
+  }
+}

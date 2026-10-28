@@ -12,6 +12,7 @@ from pathlib import Path
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from plot_refraction_pushforward_comparison import comparison_experiments, comparison_case_keys
 
 
 def render(output):
@@ -19,10 +20,13 @@ def render(output):
     with artifact_path(output, "costs.csv").open(newline="") as stream:
         rows = list(csv.DictReader(stream))
     complete = True
-    for experiment in (1, 2, 3):
+    expected_keys = comparison_case_keys(parameters)
+    for experiment in comparison_experiments(parameters):
         values = [row for row in rows if row["experiment"] == str(experiment)]
-        expected = len(parameters["epsilon"] if experiment == 3 else parameters["nk"])
-        complete &= len(values) == expected
+        cases = {(experiment, int(row['nk']), float(row['refractor_epsilon'])) for row in values}
+        experiment_keys = {key for key in expected_keys if key[0] == experiment}
+        expected = len(experiment_keys)
+        complete &= experiment_keys <= cases
         if not values:
             continue
         field = "refractor_epsilon" if experiment == 3 else "nk"

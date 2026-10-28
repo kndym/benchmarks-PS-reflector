@@ -1,5 +1,7 @@
 # Three isolated refractor problems — October 27, 2026
 
+**Paused October 28 at the user's request.** All three original scheduled tasks are disabled. Only the [repaired kappa=0.8 rerun](../repaired_refractor_kappa_oct_28_26/) is active. The original results are retained for diagnosis.
+
 Three new problems change one physical parameter relative to the previous uniform-patch sweep. Angles below are degrees; theta is azimuth and phi is polar.
 
 | Problem | Source theta | Source phi | Target theta | Target phi | Kappa |

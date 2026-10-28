@@ -20,7 +20,10 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from refracter.sinkhorn import entropic_ot_cost, sinkhorn_divergence_from_terms
-from plot_refraction_pushforward_comparison import read_rows, render
+from plot_refraction_pushforward_comparison import (
+    read_rows, render, comparison_experiments, comparison_case_keys,
+    validate_comparison_settings,
+)
 from atomic_io import atomic_replace
 from sinkhorn_resources import enable_threaded_reductions
 
@@ -61,16 +64,10 @@ def main():
     enable_threaded_reductions(args.workers)
     params = json.loads(artifact_path(args.entropic, 'parameters.json').read_text(encoding='utf-8'))
     hard_params = json.loads(artifact_path(args.hard, 'parameters.json').read_text(encoding='utf-8'))
-    for name in ('kappa', 'source_theta', 'source_phi', 'target_theta', 'target_phi'):
-        if params.get(name) != hard_params.get(name):
-            raise ValueError(f'Unmatched hard/entropic problem: {name}')
-    for name in ('nk', 'epsilon', 'fixed_nk', 'fixed_epsilon', 'target_nk',
-                 'cost_epsilon', 'refractor_max_iter', 'identity_max_iter',
-                 'refractor_tolerance', 'pf_tolerance', 'self_cost_mode'):
-        if params[name] != hard_params[name]:
-            raise ValueError(f'Unmatched hard/entropic parameters: {name}')
+    validate_comparison_settings(params, hard_params)
+    experiments = comparison_experiments(params)
     eta, tolerance, max_iter = params['cost_epsilon'], params['pf_tolerance'], params['pf_max_iter']
-    if hard_params['pf_max_iter'] != max_iter or params['pushforward'] != 'entropic':
+    if params['pushforward'] != 'entropic' or hard_params['pushforward'] != 'hard':
         raise ValueError('Unmatched evaluation settings or map type')
     settings = dict(epsilon=eta, tolerance=tolerance, max_iter=max_iter,
                     ground_cost='squared_euclidean_3d', objective='KL_relative_to_product')
@@ -89,9 +86,13 @@ def main():
               'converged', 'cross_iterations', 'source_self_iterations', 'target_self_iterations']
     for mode in ('hard', 'entropic'):
         folder = args.output/mode; folder.mkdir(exist_ok=True)
+        existing_parameters = artifact_path(folder, 'parameters.json')
+        if existing_parameters.exists():
+            previous = json.loads(existing_parameters.read_text(encoding='utf-8'))
+            validate_comparison_settings(params, previous)
         metadata = dict(params, pushforward=mode,
                         cost_metric='debiased_sinkhorn_divergence_squared_euclidean_3d',
-                        experiments=[1, 2, 3])
+                        experiments=list(experiments))
         atomic_json(artifact_path(folder, 'parameters.json', for_write=True), metadata)
         tables[mode] = read_rows(folder)
         completed[mode] = {row_key(r) for r in tables[mode]}
@@ -167,10 +168,13 @@ def main():
 
     save_tables(); plot()
     deadline = time.monotonic()+7*24*3600
-    expected = sum(len(params['epsilon'] if e == 3 else params['nk']) for e in (1,2,3))
+    expected_keys = comparison_case_keys(params)
+    expected = len(expected_keys)
     while True:
-        hard_rows = [r for r in read_rows(args.hard) if int(r['experiment']) in (1, 2, 3)]
-        soft_rows = [r for r in read_rows(args.entropic) if int(r['experiment']) in (1, 2, 3)]
+        hard_rows = [r for r in read_rows(args.hard) if int(r['experiment']) in experiments]
+        soft_rows = [r for r in read_rows(args.entropic) if int(r['experiment']) in experiments]
+        if any(row_key(row) not in expected_keys for row in hard_rows + soft_rows):
+            raise ValueError('Saved evaluation row does not belong to the declared grid')
         hard_by_key = {row_key(r):r for r in hard_rows}
         # Compute paired points first, then remaining available hard-only cases.
         for soft in soft_rows:
@@ -192,7 +196,7 @@ def main():
         for row in hard_rows:
             if row_key(row) not in completed['hard']:
                 evaluate('hard', row); save_tables(); plot()
-        if len(completed['entropic']) == expected and len(completed['hard']) == expected:
+        if all(expected_keys <= completed[mode] for mode in ('hard', 'entropic')):
             print('Completed debiased comparison', flush=True); return
         if not args.watch:
             return

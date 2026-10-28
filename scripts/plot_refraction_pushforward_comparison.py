@@ -17,6 +17,43 @@ import matplotlib.pyplot as plt
 from atomic_io import atomic_replace
 
 
+COMPARISON_SETTINGS = (
+    'nk', 'epsilon', 'fixed_nk', 'fixed_epsilon', 'target_nk', 'cost_epsilon',
+    'pf_max_iter', 'refractor_max_iter', 'identity_max_iter',
+    'refractor_tolerance', 'pf_tolerance', 'self_cost_mode',
+    'kappa', 'source_theta', 'source_phi', 'target_theta', 'target_phi',
+    'solver_version', 'optical_marginal_tolerance',
+)
+
+
+def comparison_experiments(params):
+    experiments = tuple(sorted(set(params.get('experiments', [1, 2, 3])) & {1, 2, 3}))
+    if not experiments:
+        raise ValueError('Comparison requires at least one of experiments 1, 2, 3')
+    return experiments
+
+
+def comparison_case_keys(params):
+    """Expected cases for the selected plotted experiments, including coupled epsilon."""
+    expected = set()
+    for experiment in comparison_experiments(params):
+        if experiment == 1:
+            expected.update((1, n, 1/(8*math.isqrt(n))) for n in params['nk'])
+        elif experiment == 2:
+            expected.update((2, n, params['fixed_epsilon']) for n in params['nk'])
+        else:
+            expected.update((3, params['fixed_nk'], e) for e in params['epsilon'])
+    return expected
+
+
+def validate_comparison_settings(params, baseline):
+    for key in COMPARISON_SETTINGS:
+        if params.get(key) != baseline.get(key):
+            raise ValueError(f'Comparison parameter mismatch: {key}')
+    if comparison_experiments(params) != comparison_experiments(baseline):
+        raise ValueError('Comparison parameter mismatch: experiments')
+
+
 def read_rows(folder):
     path = artifact_path(folder, "costs.csv")
     if not path.exists():
@@ -30,22 +67,24 @@ def render(output, baseline, *, value_field="cost",
            progress_label="entropic evaluations", yscales=("linear", "log")):
     params = json.loads(artifact_path(output, "parameters.json").read_text(encoding="utf-8"))
     hard_params = json.loads(artifact_path(baseline, "parameters.json").read_text(encoding="utf-8"))
-    for key in ("nk", "epsilon", "fixed_nk", "fixed_epsilon", "target_nk", "cost_epsilon",
-                "refractor_max_iter", "identity_max_iter", "refractor_tolerance", "pf_tolerance",
-                "self_cost_mode"):
-        if params[key] != hard_params[key]:
-            raise ValueError(f"Comparison parameter mismatch: {key}")
-    if params["pushforward"] != "entropic":
-        raise ValueError("Expected entropic Snell output")
+    validate_comparison_settings(params, hard_params)
+    if params["pushforward"] != "entropic" or hard_params["pushforward"] != "hard":
+        raise ValueError("Expected entropic Snell output and hard baseline")
     hard, soft = read_rows(baseline), read_rows(output)
+    experiments = comparison_experiments(params)
+    hard = [r for r in hard if int(r['experiment']) in experiments]
+    soft = [r for r in soft if int(r['experiment']) in experiments]
     def key(r):
         return int(r["experiment"]), int(r["nk"]), float(r["refractor_epsilon"])
     hard_keys = {key(r) for r in hard}
     if any(r["converged"] != "True" or not math.isfinite(float(r[value_field]))
            or float(r["pf_epsilon"]) != params["cost_epsilon"] for r in hard + soft):
         raise ValueError("Unconverged or invalid comparison evaluation")
-    expected = sum(len(params['epsilon'] if e == 3 else params['nk']) for e in (1, 2, 3))
-    complete = len({key(r) for r in soft} & hard_keys) == expected
+    expected_keys = comparison_case_keys(params)
+    if any(key(r) not in expected_keys for r in hard + soft):
+        raise ValueError('Comparison row does not belong to its declared experiment grid')
+    expected = len(expected_keys)
+    complete = expected_keys <= ({key(r) for r in soft} & hard_keys)
     context = (f"Target fixed at {params['target_nk']} points; "
                f"transport/self caps {params['refractor_max_iter']}/{params['identity_max_iter']}\n"
                f"Evaluation epsilon {params['cost_epsilon']:.6g}; "
@@ -75,6 +114,10 @@ def render(output, baseline, *, value_field="cost",
     combined, axes = plt.subplots(1, 3, figsize=(17, 5.5))
     for e, ax in zip((1, 2, 3), axes):
         single, one = plt.subplots(figsize=(8, 6))
+        if e not in experiments:
+            ax.set_visible(False)
+            plt.close(single)
+            continue
         field = 'refractor_epsilon' if e == 3 else 'nk'
         title = {1:'1. Joint movement', 2:f"2. Fixed refractor epsilon = {params['fixed_epsilon']:.6g}",
                  3:f"3. Fixed source NK = {params['fixed_nk']}"}[e]

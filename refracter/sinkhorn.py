@@ -1,7 +1,7 @@
 """
 refracter/sinkhorn.py
 
-Log-domain Sinkhorn divergence matching C++ BenchmarkCode/main.cpp.
+Log-domain optical transport with untruncated numerical updates.
 
 SD_ε(μ,ν) = OT_ε(μ,ν) - ½(OT_ε(μ,μ') + OT_ε(ν',ν))
 
@@ -121,7 +121,7 @@ def _coalesce_weighted_points(points, weights):
 def entropic_ot_cost(x, y, p, q, epsilon, chunk_size=512, max_iter=2000,
                      tolerance=1e-9, return_info=False, cost_fn=None,
                      initial_potentials=None, return_potentials=False,
-                     max_cache_entries=4_000_000):
+                     max_cache_entries=4_000_000, marginal_tolerance=1e-7):
     """Compute the discrete entropic OT objective from equation (2.1).
 
     The dual objective is
@@ -135,8 +135,11 @@ def entropic_ot_cost(x, y, p, q, epsilon, chunk_size=512, max_iter=2000,
     ones. The marginals are normalized internally. Set ``return_info`` to also
     get convergence details for the iterations.
     Optional potentials use the coalesced point ordering and allow warm starts
-    across epsilon values. The objective and stopping rule are unchanged.
+    across epsilon values. Marginal feasibility is checked before convergence.
     ``max_cache_entries`` bounds optional cost-matrix caching by entry count.
+    Convergence requires both the potential-change threshold and source/target
+    marginal L1 errors below ``marginal_tolerance``. Total transport mass alone
+    does not establish that the prescribed marginals have been matched.
     """
     x = np.asarray(x, dtype=np.float64)
     y = np.asarray(y, dtype=np.float64)
@@ -150,20 +153,27 @@ def entropic_ot_cost(x, y, p, q, epsilon, chunk_size=512, max_iter=2000,
         raise ValueError("p and q must contain finite, non-negative weights")
     if epsilon <= 0 or not np.isfinite(epsilon):
         raise ValueError(f"epsilon must be finite and positive, got {epsilon}")
-    if chunk_size <= 0 or max_iter <= 0 or tolerance <= 0:
-        raise ValueError("chunk_size, max_iter, and tolerance must be positive")
+    if (not isinstance(chunk_size, (int, np.integer)) or chunk_size <= 0
+            or not isinstance(max_iter, (int, np.integer)) or max_iter <= 0
+            or not np.isfinite(tolerance) or tolerance <= 0
+            or not np.isfinite(marginal_tolerance) or marginal_tolerance <= 0):
+        raise ValueError("chunk_size and max_iter must be positive integers; tolerances must be finite and positive")
     if cost_fn is None:
         cost_fn = cost_matrix_l2_chunk
     if not callable(cost_fn):
         raise TypeError("cost_fn must be callable")
     validate_point_clouds(x, y, chunk_size)
 
-    p_sum = p.sum()
-    q_sum = q.sum()
-    if p_sum <= 0 or q_sum <= 0:
+    p_scale = p.max()
+    q_scale = q.max()
+    if p_scale <= 0 or q_scale <= 0:
         raise ValueError("p and q must each have positive total mass")
-    p = p / p_sum
-    q = q / q_sum
+    # Dividing before summing avoids overflow for valid finite masses such as
+    # [1e308, 1e308], and handles subnormal common weight scales as well.
+    p = p / p_scale
+    q = q / q_scale
+    p = p / p.sum()
+    q = q / q.sum()
     # Hard pushforwards commonly repeat target atoms. Coalescing those rows
     # preserves the exact discrete measure and shrinks all subsequent cost
     # blocks without adding a second transport implementation.
@@ -175,6 +185,8 @@ def entropic_ot_cost(x, y, p, q, epsilon, chunk_size=512, max_iter=2000,
     np.log(q, out=logq, where=q > 0)
 
     k = 1.0 / float(epsilon)
+    if not np.isfinite(k):
+        raise ValueError("epsilon is too small for a finite inverse regularization")
     full_cost = None
     if len(x) * len(y) <= max_cache_entries:
         full_cost = _checked_cost_block(cost_fn, x, y)
@@ -184,6 +196,30 @@ def entropic_ot_cost(x, y, p, q, epsilon, chunk_size=512, max_iter=2000,
         f, g = (np.asarray(v, dtype=np.float64).copy() for v in initial_potentials)
         if f.shape != (len(x),) or g.shape != (len(y),) or not np.isfinite(f).all() or not np.isfinite(g).all():
             raise ValueError("initial potentials must match the coalesced clouds and be finite")
+        # Remove an arbitrary warm-start gauge before multiplying by 1/epsilon.
+        # Otherwise a large +/- common offset can hide every later update in
+        # floating-point roundoff and falsely report zero potential change.
+        gauge = float(g[0])
+        with np.errstate(over='ignore', invalid='ignore'):
+            f = f + gauge
+            g = g - gauge
+        if not np.isfinite(f).all() or not np.isfinite(g).all():
+            raise ValueError("initial-potential gauge cannot be represented finitely")
+
+    def marginal_diagnostics():
+        source_error = 0.0
+        log_target_mass = np.full(len(y), -np.inf)
+        for start in range(0, len(x), chunk_size):
+            stop = min(start + chunk_size, len(x))
+            costs = (full_cost[start:stop] if full_cost is not None else
+                     _checked_cost_block(cost_fn, x[start:stop], y))
+            log_plan = (logp[start:stop, None] + logq[None, :]
+                        + (f[start:stop, None] + g[None, :] - costs) / epsilon)
+            source_error += float(np.abs(np.exp(logsumexp(log_plan, axis=1)) - p[start:stop]).sum())
+            log_target_mass = np.logaddexp(log_target_mass, logsumexp(log_plan, axis=0))
+        target_mass = np.exp(log_target_mass)
+        return source_error, float(np.abs(target_mass - q).sum()), float(target_mass.sum())
+
     converged = False
     change = np.inf
     iterations = 0
@@ -211,29 +247,14 @@ def entropic_ot_cost(x, y, p, q, epsilon, chunk_size=512, max_iter=2000,
         )
         f, g = f_new, g_new
         if change <= tolerance:
-            converged = True
-            break
+            source_error, target_error, _ = marginal_diagnostics()
+            if max(source_error, target_error) <= marginal_tolerance:
+                converged = True
+                break
 
     # Evaluate the exponential term in equation (2.1) without materializing
     # the full transport plan or the full cost matrix.
-    if full_cost is not None:
-        log_plan = (
-            logp[:, None] + logq[None, :] +
-            (f[:, None] + g[None, :] - full_cost) / epsilon
-        )
-        mass = float(np.exp(logsumexp(log_plan)))
-    else:
-        log_mass = -np.inf
-        for i_start in range(0, len(x), chunk_size):
-            i_end = min(i_start + chunk_size, len(x))
-            C_block = _checked_cost_block(cost_fn, x[i_start:i_end], y)
-            log_plan = (
-                logp[i_start:i_end, None] + logq[None, :] +
-                (f[i_start:i_end, None] + g[None, :] - C_block) / epsilon
-            )
-            block_log_mass = logsumexp(log_plan)
-            log_mass = np.logaddexp(log_mass, block_log_mass)
-        mass = float(np.exp(log_mass))
+    source_error, target_error, mass = marginal_diagnostics()
     value = float(np.dot(p, f) + np.dot(q, g) - epsilon * (mass - 1.0))
     if return_info:
         info = {
@@ -241,6 +262,9 @@ def entropic_ot_cost(x, y, p, q, epsilon, chunk_size=512, max_iter=2000,
             "converged": converged,
             "potential_change": change,
             "transport_mass": mass,
+            "source_marginal_l1": source_error,
+            "target_marginal_l1": target_error,
+            "marginal_tolerance": marginal_tolerance,
         }
         if return_potentials:
             info["potentials"] = (f, g)
@@ -315,7 +339,7 @@ def sinkhorn_divergence_from_terms(cross, source_self, target_self):
 # ---------------------------------------------------------------------------
 
 def sinkhorn_step(x, y, logp, logq, f, g, k, chunk_size=512):
-    """One log-domain Sinkhorn step matching C++ ``Sinkhorn_axb``.
+    """Untruncated log-domain step with the original damped update order.
 
     The C++ implementation updates ``G`` first, then ``F``, absorbs half of
     each log scaling factor into the potentials, and reports
@@ -324,13 +348,14 @@ def sinkhorn_step(x, y, logp, logq, f, g, k, chunk_size=512):
     """
     source_supported = np.isfinite(logp)
     target_supported = np.isfinite(logq)
-    threshold = np.log(1e-6 / len(x))
 
     # C++ G update: use the old f and g, then interpret G as an updated
     # target potential before computing the F update.
     lse_g = _logsumexp_g_update(
-        x, y, logp, f, g, k, chunk_size, threshold=threshold
+        x, y, logp, f, g, k, chunk_size
     )
+    if not np.isfinite(lse_g[target_supported]).all():
+        raise FloatingPointError('Nonfinite reduction on supported target atoms')
     log_G = np.where(
         target_supported & np.isfinite(lse_g), -k * g - lse_g, 0.0
     )
@@ -338,9 +363,10 @@ def sinkhorn_step(x, y, logp, logq, f, g, k, chunk_size=512):
 
     # C++ F update: use the updated G and the old f.
     lse_f = _logsumexp_f_update(
-        x, y, logq, f, g_star, k, chunk_size,
-        threshold=threshold, threshold_g=g
+        x, y, logq, f, g_star, k, chunk_size
     )
+    if not np.isfinite(lse_f[source_supported]).all():
+        raise FloatingPointError('Nonfinite reduction on supported source atoms')
     log_F = np.where(
         source_supported & np.isfinite(lse_f), -k * f - lse_f, 0.0
     )
@@ -350,11 +376,8 @@ def sinkhorn_step(x, y, logp, logq, f, g, k, chunk_size=512):
     g_new = g + log_G / (2.0 * k)
 
     # C++ computes maxdif from log(F)/k. There is no additional /k here.
-    maxdif = (
-        float(np.max(np.abs(log_F[source_supported] / k)))
-        if source_supported.any()
-        else 0.0
-    )
+    maxdif = max(float(np.max(np.abs(log_F[source_supported] / k))) if source_supported.any() else 0.0,
+                 float(np.max(np.abs(log_G[target_supported] / k))) if target_supported.any() else 0.0)
 
     return f_new, g_new, maxdif
 
@@ -485,7 +508,6 @@ def sinkhorn_identity_f_step(x, y, logp, f_id, k, chunk_size=512):
     Returns (f_id_new, maxdif).
     """
     N = len(x)
-    threshold = np.log(1e-6 / N)
 
     b = k * f_id + logp  # weights on y side (same as x for identity problem)
     lse = np.full(N, -np.inf, dtype=np.float64)
@@ -496,13 +518,11 @@ def sinkhorn_identity_f_step(x, y, logp, f_id, k, chunk_size=512):
 
         C_chunk = cost_matrix_chunk(x_chunk, y)  # (chunk, N)
         vals = b[None, :] - k * C_chunk          # (chunk, N)
-        keep = logp[None, :] + k * (
-            f_id[i_start:i_end, None] + f_id[None, :] - C_chunk
-        ) >= threshold
-        vals = np.where(keep, vals, -np.inf)
         chunk_lse = logsumexp(vals, axis=1)       # (chunk,)
         lse[i_start:i_end] = chunk_lse
 
+    if not np.isfinite(lse[np.isfinite(logp)]).all():
+        raise FloatingPointError('Nonfinite supported source self reduction')
     std = np.where(np.isfinite(lse), -lse / k, f_id)
     f_id_new = 0.5 * f_id + 0.5 * std
 
@@ -520,7 +540,6 @@ def sinkhorn_identity_g_step(x, y, logq, g_id, k, chunk_size=512):
     Returns (g_id_new, maxdif).
     """
     N = len(y)
-    threshold = np.log(1e-6 / N)
 
     a = k * g_id + logq  # weights on x side (same as y for identity problem)
     lse = np.full(N, -np.inf, dtype=np.float64)
@@ -532,13 +551,11 @@ def sinkhorn_identity_g_step(x, y, logq, g_id, k, chunk_size=512):
 
         C_chunk = cost_matrix_chunk(x_chunk, y)   # (chunk, N)
         vals = a_chunk[:, None] - k * C_chunk      # (chunk, N)
-        keep = logq[i_start:i_end, None] + k * (
-            g_id[i_start:i_end, None] + g_id[None, :] - C_chunk
-        ) >= threshold
-        vals = np.where(keep, vals, -np.inf)
         chunk_lse = logsumexp(vals, axis=0)        # (N,)
         lse = np.logaddexp(lse, chunk_lse)
 
+    if not np.isfinite(lse[np.isfinite(logq)]).all():
+        raise FloatingPointError('Nonfinite supported target self reduction')
     std = np.where(np.isfinite(lse), -lse / k, g_id)
     g_id_new = 0.5 * g_id + 0.5 * std
 
@@ -635,9 +652,28 @@ def warmstart_from_small(x_s, y_s, x, y, f_s, g_s, chunk_size=512):
 # Full Sinkhorn divergence
 # ---------------------------------------------------------------------------
 
+def optical_marginal_errors(x, y, p, q, f, g, epsilon, chunk_size=512):
+    """L1 errors of the full, untruncated optical coupling."""
+    logp, logq = np.full_like(p, -np.inf), np.full_like(q, -np.inf)
+    np.log(p, out=logp, where=p > 0)
+    np.log(q, out=logq, where=q > 0)
+    source_mass = np.empty(len(x))
+    target_logmass = np.full(len(y), -np.inf)
+    for start in range(0, len(x), chunk_size):
+        stop = min(start+chunk_size, len(x))
+        logplan = (logp[start:stop, None]+logq[None, :]
+                   +(f[start:stop, None]+g[None, :]-cost_matrix_chunk(x[start:stop], y))/epsilon)
+        source_mass[start:stop] = np.exp(logsumexp(logplan, axis=1))
+        target_logmass = np.logaddexp(target_logmass, logsumexp(logplan, axis=0))
+    errors = float(np.abs(source_mass-p).sum()), float(np.abs(np.exp(target_logmass)-q).sum())
+    if not np.isfinite(errors).all():
+        raise FloatingPointError('Nonfinite optical marginal errors')
+    return errors
+
+
 def run_sinkhorn_divergence(x, y, p, q, chunk_size=512, verbose=True, epsilon=None,
                             separate_marginals=False, max_iter=17,
-                            identity_max_iter=17, tolerance=1e-5):
+                            identity_max_iter=17, tolerance=1e-5, marginal_tolerance=None):
     """Run the full divergence when only main-grid weights are available.
 
     The C++ executable receives separate small-grid density evaluations from
@@ -650,7 +686,9 @@ def run_sinkhorn_divergence(x, y, p, q, chunk_size=512, verbose=True, epsilon=No
     identity corrections, consistently across equal and unequal grid sizes.
     ``max_iter`` and ``identity_max_iter`` cap final-loop updates (default 17);
     None disables the corresponding cap. ``tolerance`` is the potential-change
-    stopping threshold, not a marginal-feasibility guarantee. Returned numeric
+    stopping threshold. Optional ``marginal_tolerance`` additionally requires
+    feasibility of transport and both self solves, raising on a failed cap.
+    Returned numeric
     diagnostics record the final update count and change for all three solves.
     """
     x = np.asarray(x, dtype=np.float64)
@@ -666,13 +704,14 @@ def run_sinkhorn_divergence(x, y, p, q, chunk_size=512, verbose=True, epsilon=No
         epsilon=epsilon,
         separate_marginals=separate_marginals,
         max_iter=max_iter, identity_max_iter=identity_max_iter, tolerance=tolerance,
+        marginal_tolerance=marginal_tolerance,
     )
 
 
 def _run_sinkhorn_divergence_inner(x, y, p, q, x_s, y_s, p_s, q_s,
                                    chunk_size=512, verbose=True, epsilon=None,
                                    separate_marginals=False, max_iter=17,
-                                   identity_max_iter=17, tolerance=1e-5):
+                                   identity_max_iter=17, tolerance=1e-5, marginal_tolerance=None):
     """Full Sinkhorn divergence (C++ do_sinkhorn_subtracted_axb).
 
     Returns dict with keys: f, g, f_id, g_id, total_cost.
@@ -683,6 +722,8 @@ def _run_sinkhorn_divergence_inner(x, y, p, q, x_s, y_s, p_s, q_s,
         raise ValueError("Iteration limits must be positive integers or None (uncapped)")
     if not np.isfinite(tolerance) or tolerance <= 0:
         raise ValueError("tolerance must be finite and positive")
+    if marginal_tolerance is not None and (not np.isfinite(marginal_tolerance) or marginal_tolerance <= 0):
+        raise ValueError('marginal_tolerance must be finite and positive')
 
     # Check every source/target cloud combination used by main, small, and
     # warm-start transports in one chunked pass.
@@ -698,6 +739,12 @@ def _run_sinkhorn_divergence_inner(x, y, p, q, x_s, y_s, p_s, q_s,
     # --- Normalise weights ---
     p = np.array(p, dtype=np.float64)
     q = np.array(q, dtype=np.float64)
+    if (p.shape != (len(x),) or q.shape != (len(y),)
+            or not np.isfinite(p).all() or not np.isfinite(q).all()
+            or (p < 0).any() or (q < 0).any() or p.max() <= 0 or q.max() <= 0):
+        raise ValueError('Optical weights must be finite nonnegative vectors with positive mass')
+    p /= p.max()
+    q /= q.max()
     p = p / p.sum()
     q = q / q.sum()
 
@@ -708,6 +755,8 @@ def _run_sinkhorn_divergence_inner(x, y, p, q, x_s, y_s, p_s, q_s,
 
     p_s = np.array(p_s, dtype=np.float64)
     q_s = np.array(q_s, dtype=np.float64)
+    p_s /= p_s.max()
+    q_s /= q_s.max()
     p_s = p_s / p_s.sum()
     q_s = q_s / q_s.sum()
 
@@ -757,14 +806,26 @@ def _run_sinkhorn_divergence_inner(x, y, p, q, x_s, y_s, p_s, q_s,
         print(f"\nFinal Sinkhorn at k={k_final}:")
     i = 0
     maxdif = cap_thr + 1.0  # ensure at least one iteration
-    while maxdif > cap_thr:
+    marginal_errors = (np.inf, np.inf)
+    while True:
         f, g, maxdif = sinkhorn_step(x, y, logp, logq, f, g, k_final, chunk_size)
         i += 1
         if verbose:
             print(f"  iter {i:3d}, maxdif={maxdif:.4e}")
-        # The default preserves the original C++-compatible 17 updates.
+        if maxdif <= cap_thr:
+            if marginal_tolerance is None:
+                break
+            if i % 10 == 0 or i == 1:
+                marginal_errors = optical_marginal_errors(x,y,p,q,f,g,1/k_final,chunk_size)
+                if max(marginal_errors) <= marginal_tolerance:
+                    break
+        # A cap bounds work; it does not establish feasibility.
         if max_iter is not None and i >= max_iter:
             break
+    if marginal_tolerance is not None:
+        marginal_errors = optical_marginal_errors(x,y,p,q,f,g,1/k_final,chunk_size)
+        if max(marginal_errors) > marginal_tolerance:
+            raise RuntimeError(f'Optical transport failed marginal feasibility: {marginal_errors}')
     final_iterations, final_change = i, maxdif
     if verbose:
         print(f"Final loop: {i} iterations, last change={maxdif:.4e}")
@@ -795,7 +856,7 @@ def _run_sinkhorn_divergence_inner(x, y, p, q, x_s, y_s, p_s, q_s,
         print(f"  Final {cap_iter} iterations at k={k_final}:")
     i = 0
     maxdif = cap_thr + 1.0
-    while maxdif > cap_thr:
+    while True:
         f_id_new, maxdif = sinkhorn_identity_f_step(
             x, identity_y, logp, f_id, k_final, chunk_size
         )
@@ -803,9 +864,21 @@ def _run_sinkhorn_divergence_inner(x, y, p, q, x_s, y_s, p_s, q_s,
         i += 1
         if verbose:
             print(f"  iter {i:3d}, maxdif={maxdif:.4e}")
+        if maxdif <= cap_thr:
+            if marginal_tolerance is None:
+                break
+            if i % 10 == 0 or i == 1:
+                errors = optical_marginal_errors(x,identity_y,p,p,f_id,f_id,1/k_final,chunk_size)
+                if max(errors) <= marginal_tolerance:
+                    break
         if cap_iter is not None and i >= cap_iter:
             break
+    if marginal_tolerance is not None:
+        errors = optical_marginal_errors(x,identity_y,p,p,f_id,f_id,1/k_final,chunk_size)
+        if max(errors) > marginal_tolerance:
+            raise RuntimeError(f'Source self solve failed marginal feasibility: {errors}')
     source_identity_iterations, source_identity_change = i, maxdif
+    source_identity_error = max(errors) if marginal_tolerance is not None else 0.0
     if verbose:
         print(f"Identity F: {i} final iterations, last change={maxdif:.4e}")
 
@@ -829,7 +902,7 @@ def _run_sinkhorn_divergence_inner(x, y, p, q, x_s, y_s, p_s, q_s,
         print(f"  Final {cap_iter} iterations at k={k_final}:")
     i = 0
     maxdif = cap_thr + 1.0
-    while maxdif > cap_thr:
+    while True:
         g_id_new, maxdif = sinkhorn_identity_g_step(
             identity_x, y, logq, g_id, k_final, chunk_size
         )
@@ -837,9 +910,21 @@ def _run_sinkhorn_divergence_inner(x, y, p, q, x_s, y_s, p_s, q_s,
         i += 1
         if verbose:
             print(f"  iter {i:3d}, maxdif={maxdif:.4e}")
+        if maxdif <= cap_thr:
+            if marginal_tolerance is None:
+                break
+            if i % 10 == 0 or i == 1:
+                errors = optical_marginal_errors(identity_x,y,q,q,g_id,g_id,1/k_final,chunk_size)
+                if max(errors) <= marginal_tolerance:
+                    break
         if cap_iter is not None and i >= cap_iter:
             break
+    if marginal_tolerance is not None:
+        errors = optical_marginal_errors(identity_x,y,q,q,g_id,g_id,1/k_final,chunk_size)
+        if max(errors) > marginal_tolerance:
+            raise RuntimeError(f'Target self solve failed marginal feasibility: {errors}')
     target_identity_iterations, target_identity_change = i, maxdif
+    target_identity_error = max(errors) if marginal_tolerance is not None else 0.0
     if verbose:
         print(f"Identity G: {i} final iterations, last change={maxdif:.4e}")
 
@@ -883,4 +968,7 @@ def _run_sinkhorn_divergence_inner(x, y, p, q, x_s, y_s, p_s, q_s,
         "source_identity_change": source_identity_change,
         "target_identity_iterations": target_identity_iterations,
         "target_identity_change": target_identity_change,
+        **(dict(source_identity_marginal_l1=source_identity_error,
+                target_identity_marginal_l1=target_identity_error)
+           if marginal_tolerance is not None else {}),
     }

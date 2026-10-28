@@ -80,6 +80,8 @@ def main():
     parser.add_argument("--refractor-max-iter", type=int, default=17, help="Final transport updates; 0 disables cap")
     parser.add_argument("--identity-max-iter", type=int, default=17, help="Final updates per self solve; 0 disables cap")
     parser.add_argument("--refractor-tolerance", type=float, default=1e-5)
+    parser.add_argument("--optical-marginal-tolerance", type=float, default=1e-7,
+                        help="Required L1 feasibility of optical transport and both self solves")
     parser.add_argument("--pf-tolerance", type=float, default=1e-9)
     parser.add_argument("--chunk-size", type=int, default=512)
     parser.add_argument("--pf-cache-entries", type=int, default=4_000_000)
@@ -90,6 +92,7 @@ def main():
                         help="Reuse PF potentials from the preceding larger epsilon")
     parser.add_argument("--output", type=Path, default=Path(REPO_ROOT) / "results/runs/standard_fixed_target_oct_22_26")
     args = parser.parse_args()
+    args.solver_version = 'untruncated_marginal_v2'
     if not np.isfinite(args.kappa) or not 0 < args.kappa < 1:
         parser.error("Refractor kappa must be finite and in (0, 1)")
     for name in ("source_theta", "source_phi", "target_theta", "target_phi"):
@@ -101,7 +104,9 @@ def main():
         def density(points):
             theta = np.mod(np.rad2deg(np.arctan2(points[:, 1], points[:, 0])), 360)
             phi = np.rad2deg(np.arccos(np.clip(points[:, 2], -1, 1)))
-            return ((theta >= theta_bounds[0]-1e-10) & (theta <= theta_bounds[1]+1e-10)
+            theta_inside = ((theta >= theta_bounds[0]-1e-10) & (theta <= theta_bounds[1]+1e-10))
+            theta_inside |= np.hypot(points[:,0],points[:,1]) <= 1e-14
+            return (theta_inside
                     & (phi >= phi_bounds[0]-1e-10) & (phi <= phi_bounds[1]+1e-10)).astype(float)
         return density
     source_density = patch_density(args.source_theta, args.source_phi)
@@ -118,7 +123,7 @@ def main():
         args.import_costs = resolve_path(args.import_costs)
     if min(args.refractor_max_iter, args.identity_max_iter) < 0:
         parser.error("Iteration caps must be nonnegative (0 means uncapped)")
-    if args.chunk_size < 1 or not all(np.isfinite(v) and v > 0 for v in (args.refractor_tolerance, args.pf_tolerance)):
+    if args.chunk_size < 1 or not all(np.isfinite(v) and v > 0 for v in (args.refractor_tolerance, args.pf_tolerance, args.optical_marginal_tolerance)):
         parser.error("Chunk size and tolerances must be finite and positive")
     enable_threaded_reductions(args.workers)
     default_nk = np.rint(np.geomspace(100, 10000, 20)).astype(int).tolist() if args.expanded else [100, 225, 400, 900, 1600]
@@ -149,15 +154,21 @@ def main():
         for name, default in defaults.items():
             if not np.allclose(previous.get(name, default), getattr(args, name), rtol=0, atol=1e-12):
                 parser.error(f"Existing output has different {name}; use a separate output folder")
+        for name in ('solver_version','optical_marginal_tolerance','refractor_max_iter',
+                     'identity_max_iter','refractor_tolerance','pf_tolerance','pf_max_iter',
+                     'target_nk','fixed_nk','fixed_epsilon','cost_epsilon','pushforward',
+                     'nk','epsilon','pf_epsilon','experiments'):
+            if previous.get(name) != getattr(args,name):
+                parser.error(f'Existing output has different {name}; use a separate output folder')
     args.self_cost_mode = "separate_marginals_v1" if args.target_nk is not None else "legacy"
     args.cost_metric = "pushforward_target_eot_squared_euclidean"
     atomic_write_json(artifact_path(args.output, "parameters.json", for_write=True), vars(args))
     set_kappa(args.kappa)
     cache = {}
     pf_potentials = {}
-    solver_tag = ""
+    solver_tag = "_untruncated_v2"
     if (args.refractor_max_iter, args.identity_max_iter, args.refractor_tolerance) != (17, 17, 1e-5):
-        solver_tag = f"_iter{args.refractor_max_iter}_id{args.identity_max_iter}_tol{args.refractor_tolerance:.17g}"
+        solver_tag += f"_iter{args.refractor_max_iter}_id{args.identity_max_iter}_tol{args.refractor_tolerance:.17g}"
     if args.pushforward == "entropic":
         solver_tag += "_entropic_v1"
     rows = []
@@ -194,6 +205,12 @@ def main():
         if key not in cache:
             checkpoint = artifact_path(args.output, f"solve_NK{nk}{target_tag}_eps{epsilon:.17g}.npz")
             if checkpoint.exists():
+                residual = artifact_path(args.output, f"residual_NK{nk}{target_tag}_eps{epsilon:.17g}.json")
+                diagnostic = json.loads(residual.read_text(encoding='utf-8'))
+                errors = np.array([diagnostic[name] for name in ('source_marginal_l1','target_marginal_l1',
+                    'source_identity_marginal_l1','target_identity_marginal_l1')])
+                if not np.isfinite(errors).all() or errors.max() > args.optical_marginal_tolerance:
+                    raise RuntimeError('Saved optical checkpoint fails marginal feasibility')
                 with np.load(checkpoint) as data:
                     cache[key] = ({"total_cost": float(data["total_cost"])},
                                   {"y_push_3d": data["y_push_3d"]},
@@ -209,7 +226,8 @@ def main():
                                                chunk_size=args.chunk_size,
                                                max_iter=args.refractor_max_iter or None,
                                                identity_max_iter=args.identity_max_iter or None,
-                                               tolerance=args.refractor_tolerance)
+                                               tolerance=args.refractor_tolerance,
+                                               marginal_tolerance=args.optical_marginal_tolerance)
             if not all(np.isfinite(value).all() for value in solution.values()):
                 raise RuntimeError(f"Nonfinite refractor solution: NK={nk}, epsilon={epsilon}")
             # Diagnose feasibility without changing the original stopping rule.
@@ -229,6 +247,10 @@ def main():
             diagnostic.update({name: solution[name] for name in (
                 "final_iterations", "final_change", "source_identity_iterations",
                 "source_identity_change", "target_identity_iterations", "target_identity_change")})
+            diagnostic.update({name:solution[name] for name in (
+                'source_identity_marginal_l1','target_identity_marginal_l1')})
+            if max(diagnostic['source_marginal_l1'],diagnostic['target_marginal_l1']) > args.optical_marginal_tolerance:
+                raise RuntimeError(f'Optical marginal feasibility failed: {diagnostic}')
             artifacts = build_refraction_artifacts(
                 x, y, p, q, solution["f_raw"], solution["g_raw"],
                 solution["f"], solution["g"], source_density, target_density,

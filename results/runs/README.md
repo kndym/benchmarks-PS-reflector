@@ -6,6 +6,7 @@ figures, and `metadata/` for settings and validation.
 
 | Run | Purpose |
 | --- | --- |
+| [Repaired kappa=0.8 and numerical audit](repaired_refractor_kappa_oct_28_26/) | Only active isolated rerun; original three sweeps paused. Includes reproducible randomized tests and repaired convergence requirements. |
 | [Standard fixed-target sweep](standard_fixed_target_oct_22_26/) | Smaller hard-map parameter sweep, including the independent evaluation-epsilon experiment. October 22 is its publication date. |
 | [Hard map, 17 updates](hard_map_17_updates_oct_08_26/) | Extended 120-case baseline with inherited final-loop limits. |
 | [Hard map, 2000 updates](hard_map_2000_updates_oct_08_26/) | Matching extended hard-map sweep with higher final-loop limits. |

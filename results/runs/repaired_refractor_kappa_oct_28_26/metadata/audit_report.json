@@ -1,0 +1,39 @@
+{
+  "created_at": "2026-10-28T12:59:31.372642+00:00",
+  "solver_version": "untruncated_marginal_v2",
+  "regression": {
+    "command": "python -B -m pytest -q",
+    "passed": 79,
+    "failed": 0
+  },
+  "randomized": {
+    "seed": 628,
+    "evaluations": 72,
+    "converged_and_feasible": 68,
+    "correct_nonconvergences": 4,
+    "false_successes": 0
+  },
+  "fixes": [
+    "Untruncated optical transport and source/target self updates",
+    "Mandatory optical and EOT marginal feasibility before acceptance",
+    "Finite-weight normalization and potential gauge stability",
+    "Squared-distance and refraction-cost cancellation",
+    "Normal scaling and near-zero/near-one kappa optics stability",
+    "Numerical provenance guards and selected-experiment completion",
+    "Pole sample classification and sibling cleanup on worker failure"
+  ],
+  "optical_marginal_tolerance": 1e-07,
+  "optical_iteration_caps": 10000,
+  "paused_original_cases": [
+    "source_only",
+    "target_only",
+    "kappa_only"
+  ],
+  "active_cases": [
+    "kappa_only"
+  ],
+  "limitations": [
+    "Ill-conditioned small-epsilon problems may reach iteration limits; rejected results are not treated as converged.",
+    "Finite-cost checks do not by themselves impose the same-side Snell reachability constraint x dot y >= kappa. The current kappa=0.8 patch geometry satisfies that constraint."
+  ]
+}

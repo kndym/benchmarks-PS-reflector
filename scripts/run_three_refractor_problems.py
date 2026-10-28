@@ -24,16 +24,23 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--case", choices=CASES, required=True)
     parser.add_argument("--smoke", action="store_true")
+    parser.add_argument('--output-root', type=Path, default=OUTPUT)
+    parser.add_argument('--experiments', nargs='+', type=int, choices=[1,2,3], default=[1,2,3])
+    parser.add_argument('--nk', nargs='+', type=int)
+    parser.add_argument('--refractor-max-iter', type=int, default=10000)
+    parser.add_argument('--identity-max-iter', type=int, default=10000)
     parser.add_argument("--diagnostics-only", action="store_true",
                         help="Recover diagnostics while existing optical workers continue")
     args = parser.parse_args()
-    folder = (ROOT / "results/archive/smoke_checks/three_problems_oct_27_26" if args.smoke else OUTPUT) / args.case
+    folder = (ROOT / "results/archive/smoke_checks/repaired_problems_oct_28_26" if args.smoke else args.output_root.resolve()) / args.case
     ensure_readme(folder)
     logs = folder / "logs"
     ensure_readme(logs)
-    common = ["--extended", "--experiments", "1", "2", "3", "--target-nk", "1600",
-              "--refractor-max-iter", "2000", "--identity-max-iter", "2000",
+    common = ["--extended", "--experiments", *map(str,args.experiments), "--target-nk", "1600",
+              "--refractor-max-iter", str(args.refractor_max_iter), "--identity-max-iter", str(args.identity_max_iter),
               "--workers", "1", "--chunk-size", "256", *CASES[args.case]]
+    if args.nk:
+        common += ['--nk', *map(str,args.nk)]
     if args.smoke:
         common += ["--nk", "16", "--fixed-nk", "16", "--target-nk", "16", "--epsilon", "0.01"]
     children, streams = {}, []
@@ -59,13 +66,28 @@ def main():
             creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0)
         status("running")
 
+    def fail(message):
+        # Stop this supervisor's own children, preserving their checkpoints.
+        for child in children.values():
+            if child.poll() is None:
+                child.terminate()
+        for child in children.values():
+            try:
+                child.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                child.kill()
+                child.wait()
+        status('failed')
+        for stream in streams:
+            stream.close()
+        raise RuntimeError(message)
+
     for mode in (() if args.diagnostics_only else ("hard", "entropic")):
         start(mode, ["scripts/run_refraction_sweeps.py", *common, "--pushforward", mode,
                      "--output", str(folder / mode)])
     while not all(artifact_path(folder / mode, "parameters.json").exists() for mode in ("hard", "entropic")):
         if any(child.poll() is not None and child.returncode != 0 for child in children.values()):
-            status("failed")
-            raise RuntimeError("Sweep failed before writing parameters; inspect logs")
+            fail("Sweep failed before writing parameters; inspect logs")
         time.sleep(1)
     start("debiased", ["scripts/evaluate_saved_refraction_divergence.py", "--hard", str(folder / "hard"),
         "--entropic", str(folder / "entropic"), "--output", str(folder / "debiased"),
@@ -75,12 +97,12 @@ def main():
     # The evaluator refreshes comparison plots after every completed pair.
     while any(child.poll() is None for child in children.values()):
         if any(child.poll() is not None and child.returncode != 0 for child in children.values()):
-            status("failed")
-            # Preserve the other workers' progress; report the failure explicitly.
-            raise RuntimeError("Worker failed; inspect logs and resume this case")
+            fail("Worker failed; checkpoints preserved; inspect logs and resume this case")
         status("running")
         time.sleep(2 if args.smoke else 30)
-    status("complete" if all(child.returncode == 0 for child in children.values()) else "failed")
+    if any(child.returncode != 0 for child in children.values()):
+        fail('Worker failed; inspect logs before resuming')
+    status('complete')
     for stream in streams:
         stream.close()
 

@@ -11,7 +11,7 @@ import json
 from pathlib import Path
 import shutil
 import numpy as np
-from plot_refraction_pushforward_comparison import read_rows, render
+from plot_refraction_pushforward_comparison import read_rows, render, comparison_case_keys
 
 
 def snapshot(source, destination):
@@ -62,7 +62,7 @@ def snapshot(source, destination):
            ylabel=r'$S_{1/320}(PF,T)$ (squared Euclidean, 3D)',
            progress_label='debiased entropic cases')
     params = json.loads(artifact_path(source/'entropic', 'parameters.json').read_text())
-    expected = 2*len(params['nk'])+len(params['epsilon'])
+    expected = len(comparison_case_keys(params))
     report = dict(captured_at=datetime.now(timezone.utc).isoformat(),
                   expected_per_map=expected, all_terms_converged=True,
                   formula='EOT(PF,T) - 0.5 * (EOT(PF,PF) + EOT(T,T))',

@@ -6,6 +6,7 @@ starting point for the completed hard-versus-smooth comparison.
 
 | Capture | What it shows |
 | --- | --- |
+| [Repaired kappa=0.8 progress](repaired_kappa_progress_oct_28_26/) | Partial rerun after removing the optical cutoff and requiring marginal feasibility; links to the numerical audit. |
 | [Regular entropic error](regular_entropic_error_oct_27_26/) | All 120 cases per map using cross-EOT, with no self-term subtraction or square root. Includes large combined and individual plots. |
 | [Debiased comparison](debiased_comparison_complete_oct_26_26/) | The same 120 pairs after subtracting both self-EOT terms. |
 | [Complete smooth-refraction run](smooth_refraction_complete_oct_26_26/) | Optical/PF checkpoints, normal and unit-ray checks, settings, and cross-EOT comparisons. |

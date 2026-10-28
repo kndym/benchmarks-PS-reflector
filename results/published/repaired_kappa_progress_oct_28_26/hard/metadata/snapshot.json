@@ -1,0 +1,53 @@
+{
+  "source": "C:/Users/Kevin/Github/benchmarks-PS-reflector/results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/hard",
+  "captured_at": "2026-10-28T12:59:32.774818+00:00",
+  "status": "partial",
+  "rows": 8,
+  "expected_rows": 120,
+  "unique_solves": 8,
+  "counts": {
+    "1": 8,
+    "2": 0,
+    "3": 0
+  },
+  "all_pf_converged": true,
+  "marginal_ranges": {
+    "source_marginal_l1": [
+      5.242334344401911e-15,
+      1.0221858082193336e-14
+    ],
+    "target_marginal_l1": [
+      4.644379765787656e-08,
+      7.461168784238595e-08
+    ]
+  },
+  "hash_base": "..",
+  "files_sha256": {
+    "checkpoints/pushforward/pf_NK100_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.012500000000000001_eval0.0031250000000000002.json": "b585881c299d49e55866e770eba4469584f46d4dccb825d7983e838c1b1d3e1e",
+    "checkpoints/pushforward/pf_NK115_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.012500000000000001_eval0.0031250000000000002.json": "600697aac9374e21564a7e8e508facd94c0f0d6ae4eeb4af1ada364a4e4a6c71",
+    "checkpoints/pushforward/pf_NK131_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.011363636363636364_eval0.0031250000000000002.json": "a75b91fdab0f0e2810ebdb26b60a2f36b2214aa66f2221689d14b956874ac122",
+    "checkpoints/pushforward/pf_NK150_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.010416666666666666_eval0.0031250000000000002.json": "b264d72e25fc3c57248455bf46403221d7c50f756686f62888ee5b5819d595c9",
+    "checkpoints/pushforward/pf_NK172_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0096153846153846159_eval0.0031250000000000002.json": "9a9a3c375265a566e49b2b55e3ad1eb29f1e0692eaba97604ecb3a50f956b8f3",
+    "checkpoints/pushforward/pf_NK197_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0089285714285714281_eval0.0031250000000000002.json": "7b2b70ca51bb913a0e92a29592b169a1113a218268489d85eaf88f624fa79fcf",
+    "checkpoints/pushforward/pf_NK226_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0083333333333333332_eval0.0031250000000000002.json": "25ef6713a58a18642765c3874c625e516e9dcb4bc81277d54451ffb0c399e325",
+    "checkpoints/pushforward/pf_NK259_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0078125_eval0.0031250000000000002.json": "2a00a2ea4c6f0f8dea8d96cb8b4e8288e5aa7391a34c569f25fd6fadfa34a51e",
+    "checkpoints/solutions/solve_NK100_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.012500000000000001.npz": "6fda5f9429ad2f50d822ef2a6a0f58221b73056a95218f6db716f93b76530ffa",
+    "checkpoints/solutions/solve_NK115_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.012500000000000001.npz": "c275737835e0cb3ee44dc13e610cf9dc967a2fdbb51d07da7f313320eb5b05fa",
+    "checkpoints/solutions/solve_NK131_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.011363636363636364.npz": "38543e036643be28e2a38e3e3e4b991e8359f1f490a41bc2e35b65e781a08d61",
+    "checkpoints/solutions/solve_NK150_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.010416666666666666.npz": "156318c02d352d465ab4c3c7bc2866ae390da2187c137dc8e15fff768d1f352d",
+    "checkpoints/solutions/solve_NK172_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0096153846153846159.npz": "e16a0999573cccdefbe57cf48ce0af3a26db045b6d100feb89853e3c70d34623",
+    "checkpoints/solutions/solve_NK197_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0089285714285714281.npz": "70c62194b518f5662a8411bb64a058281199757d2bc38cd949dfdc0e1a9e5fb8",
+    "checkpoints/solutions/solve_NK226_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0083333333333333332.npz": "018881606eac5e300c5e1ce18a5d1f60ee23227f55ff7df8908aed9d2d260efe",
+    "checkpoints/solutions/solve_NK259_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0078125.npz": "1375e13daa92d61a81b0ae6f65e88143fbe8a53ceeaab2ea95d5612e40a0f085",
+    "data/costs.csv": "49a6baa8713b6ea57920f92ae61504e2a5ba8fea3e106008248f5933dd8bdc7e",
+    "diagnostics/marginals/residual_NK100_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.012500000000000001.json": "d5110bc9719d13ab16f40464a1ef5235334b543c677603df2428786a94861df3",
+    "diagnostics/marginals/residual_NK115_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.012500000000000001.json": "cb776ba802e89ad4f6f8174948d3107ecdd26f89080bd4b696fcb76b0dcc8212",
+    "diagnostics/marginals/residual_NK131_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.011363636363636364.json": "95f3bc6a9e37c5c4433a0f83b2bd37679d5e61eed2296bd191721897e8141ad6",
+    "diagnostics/marginals/residual_NK150_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.010416666666666666.json": "09928a4997b0bdb2baa817b22129823acb5a751cc13cc22afb5597f026660e87",
+    "diagnostics/marginals/residual_NK172_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0096153846153846159.json": "9d9049deec4e9b43cdda5b6af46a3c3a2d2217c4432a827ba7a4d06335f9da5c",
+    "diagnostics/marginals/residual_NK197_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0089285714285714281.json": "9707505ed8b0bf6141778ab4c61226aaedcc13e2552322f716dabdf608e99d21",
+    "diagnostics/marginals/residual_NK226_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0083333333333333332.json": "0efd15210eef35fe5a5fd2d73478227879b4c1b72123f980c379983b6589e8b1",
+    "diagnostics/marginals/residual_NK259_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0078125.json": "1a79dcc490febf8d94f8d425a3babac52739ca546cc8619f9050084a0937030f",
+    "metadata/parameters.json": "6b1ffb5772ada531982806af98f8d2768ff79668fdfc83970c77c35cfd5252c0"
+  }
+}
