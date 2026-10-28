@@ -1,5 +1,7 @@
 # Repaired kappa=0.8 progress
 
+**Latest capture: [10:28 AM ET](../repaired_kappa_progress_oct_28_26_1028/).**
+
 Captured October 28, 2026 at 08:59 AM Eastern Daylight Time. Original source and target runs are paused. Only the repaired kappa run is active.
 
 Hard optical: **8/120**. Entropic optical: **8/120**. Debiased hard/entropic: **7/7**. Missing panels and points are pending work.
