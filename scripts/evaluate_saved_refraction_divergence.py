@@ -61,6 +61,9 @@ def main():
     enable_threaded_reductions(args.workers)
     params = json.loads(artifact_path(args.entropic, 'parameters.json').read_text(encoding='utf-8'))
     hard_params = json.loads(artifact_path(args.hard, 'parameters.json').read_text(encoding='utf-8'))
+    for name in ('kappa', 'source_theta', 'source_phi', 'target_theta', 'target_phi'):
+        if params.get(name) != hard_params.get(name):
+            raise ValueError(f'Unmatched hard/entropic problem: {name}')
     for name in ('nk', 'epsilon', 'fixed_nk', 'fixed_epsilon', 'target_nk',
                  'cost_epsilon', 'refractor_max_iter', 'identity_max_iter',
                  'refractor_tolerance', 'pf_tolerance', 'self_cost_mode'):
@@ -172,6 +175,10 @@ def main():
         # Compute paired points first, then remaining available hard-only cases.
         for soft in soft_rows:
             key = row_key(soft)
+            if key not in hard_by_key:
+                # Independent workers can publish the entropic case first.
+                # Leave it pending until the matching hard row is available.
+                continue
             changed = False
             for mode, row in (('hard', hard_by_key[key]), ('entropic', soft)):
                 if key not in completed[mode]:

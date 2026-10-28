@@ -54,6 +54,12 @@ def enable_threaded_reductions(workers):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--kappa", type=float, default=0.6)
+    for name, bounds in (("source-theta", SRC_THETA), ("source-phi", SRC_PHI),
+                         ("target-theta", TGT_THETA), ("target-phi", TGT_PHI)):
+        parser.add_argument("--" + name, nargs=2, type=float,
+                            default=np.rad2deg(bounds).tolist(), metavar=("MIN", "MAX"),
+                            help="Patch bounds in degrees; theta is azimuth, phi is polar")
     grids = parser.add_mutually_exclusive_group()
     grids.add_argument("--expanded", action="store_true", help="20 logarithmic values per axis, spanning 100x")
     grids.add_argument("--extended", action="store_true", help="40 values: NK 100-20000, epsilon 0.0000625-0.025")
@@ -84,6 +90,22 @@ def main():
                         help="Reuse PF potentials from the preceding larger epsilon")
     parser.add_argument("--output", type=Path, default=Path(REPO_ROOT) / "results/runs/standard_fixed_target_oct_22_26")
     args = parser.parse_args()
+    if not np.isfinite(args.kappa) or not 0 < args.kappa < 1:
+        parser.error("Refractor kappa must be finite and in (0, 1)")
+    for name in ("source_theta", "source_phi", "target_theta", "target_phi"):
+        lo, hi = getattr(args, name)
+        limit = 180 if name.endswith("phi") else 360
+        if not np.isfinite([lo, hi]).all() or not 0 <= lo < hi <= limit:
+            parser.error(f"{name} must satisfy 0 <= MIN < MAX <= {limit}")
+    def patch_density(theta_bounds, phi_bounds):
+        def density(points):
+            theta = np.mod(np.rad2deg(np.arctan2(points[:, 1], points[:, 0])), 360)
+            phi = np.rad2deg(np.arccos(np.clip(points[:, 2], -1, 1)))
+            return ((theta >= theta_bounds[0]-1e-10) & (theta <= theta_bounds[1]+1e-10)
+                    & (phi >= phi_bounds[0]-1e-10) & (phi <= phi_bounds[1]+1e-10)).astype(float)
+        return density
+    source_density = patch_density(args.source_theta, args.source_phi)
+    target_density = patch_density(args.target_theta, args.target_phi)
     args.output = resolve_path(args.output)
     if not any(value == "--output" or value.startswith("--output=") for value in sys.argv[1:]):
         label = "uniform_refraction_hard_map" if args.pushforward == "hard" else "smooth_refraction"
@@ -117,10 +139,20 @@ def main():
     if any(not 0 < e <= 1 for e in args.epsilon + args.pf_epsilon + [args.fixed_epsilon, args.cost_epsilon]):
         parser.error("epsilon values must be in (0, 1]")
     args.output.mkdir(parents=True, exist_ok=True)
+    parameter_path = artifact_path(args.output, "parameters.json")
+    if parameter_path.exists():
+        previous = json.loads(parameter_path.read_text(encoding="utf-8"))
+        defaults = dict(kappa=0.6, source_theta=np.rad2deg(SRC_THETA).tolist(),
+                        source_phi=np.rad2deg(SRC_PHI).tolist(),
+                        target_theta=np.rad2deg(TGT_THETA).tolist(),
+                        target_phi=np.rad2deg(TGT_PHI).tolist())
+        for name, default in defaults.items():
+            if not np.allclose(previous.get(name, default), getattr(args, name), rtol=0, atol=1e-12):
+                parser.error(f"Existing output has different {name}; use a separate output folder")
     args.self_cost_mode = "separate_marginals_v1" if args.target_nk is not None else "legacy"
     args.cost_metric = "pushforward_target_eot_squared_euclidean"
     atomic_write_json(artifact_path(args.output, "parameters.json", for_write=True), vars(args))
-    set_kappa(0.6)
+    set_kappa(args.kappa)
     cache = {}
     pf_potentials = {}
     solver_tag = ""
@@ -168,9 +200,9 @@ def main():
                                   data["y"], data["p"], data["q"])
                 return cache[key]
             print(f"Refractor NK={nk}, epsilon={epsilon:.8g}", flush=True)
-            x = gen_spherical_patch(nk, *SRC_THETA, *SRC_PHI, skip=0)
-            y = gen_spherical_patch(target_nk, *TGT_THETA, *TGT_PHI, skip=0)
-            p, q = P_refraction_patch(x), Q_refraction_patch(y)
+            x = gen_spherical_patch(nk, *np.deg2rad(args.source_theta), *np.deg2rad(args.source_phi), skip=0)
+            y = gen_spherical_patch(target_nk, *np.deg2rad(args.target_theta), *np.deg2rad(args.target_phi), skip=0)
+            p, q = source_density(x), target_density(y)
             p, q = p/p.sum(), q/q.sum()
             solution = run_sinkhorn_divergence(x, y, p, q, verbose=False, epsilon=epsilon,
                                                separate_marginals=args.target_nk is not None,
@@ -199,14 +231,14 @@ def main():
                 "source_identity_change", "target_identity_iterations", "target_identity_change")})
             artifacts = build_refraction_artifacts(
                 x, y, p, q, solution["f_raw"], solution["g_raw"],
-                solution["f"], solution["g"], P_refraction_patch, Q_refraction_patch,
-                grid_res=16,
+                solution["f"], solution["g"], source_density, target_density,
+                grid_res=16, kappa=args.kappa,
             )
             entropic_arrays = {}
             if args.pushforward == "entropic":
                 normals, log_radius = entropic_surface_normals(
-                    x, y, q, solution["g_raw"], epsilon, .6, args.chunk_size)
-                transmitted = refract_using_normals(x[p > 0], normals[p > 0], .6)
+                    x, y, q, solution["g_raw"], epsilon, args.kappa, args.chunk_size)
+                transmitted = refract_using_normals(x[p > 0], normals[p > 0], args.kappa)
                 if not np.isfinite(transmitted).all() or not np.allclose(
                         np.linalg.norm(transmitted, axis=1), 1, atol=1e-10, rtol=0):
                     raise RuntimeError("Nonfinite or nonunit entropic transmitted directions")

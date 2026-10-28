@@ -41,11 +41,11 @@ def render(output, baseline, *, value_field="cost",
     def key(r):
         return int(r["experiment"]), int(r["nk"]), float(r["refractor_epsilon"])
     hard_keys = {key(r) for r in hard}
-    if any(key(r) not in hard_keys or r["converged"] != "True" or not math.isfinite(float(r[value_field]))
-           or float(r["pf_epsilon"]) != params["cost_epsilon"] for r in soft):
-        raise ValueError("Unmatched or unconverged entropic evaluation")
+    if any(r["converged"] != "True" or not math.isfinite(float(r[value_field]))
+           or float(r["pf_epsilon"]) != params["cost_epsilon"] for r in hard + soft):
+        raise ValueError("Unconverged or invalid comparison evaluation")
     expected = sum(len(params['epsilon'] if e == 3 else params['nk']) for e in (1, 2, 3))
-    complete = len({key(r) for r in soft}) == expected
+    complete = len({key(r) for r in soft} & hard_keys) == expected
     context = (f"Target fixed at {params['target_nk']} points; "
                f"transport/self caps {params['refractor_max_iter']}/{params['identity_max_iter']}\n"
                f"Evaluation epsilon {params['cost_epsilon']:.6g}; "

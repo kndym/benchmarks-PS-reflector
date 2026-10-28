@@ -1,0 +1,46 @@
+{
+  "result": {
+    "experiment": 1,
+    "nk": 879,
+    "refractor_epsilon": 0.004310344827586207,
+    "pf_epsilon": 0.003125,
+    "eot": 0.0075026262372391295,
+    "source_self": 0.007579773497201577,
+    "target_self": 0.006928393473008045,
+    "divergence": 0.0002485427521343184,
+    "raw_divergence": 0.0002485427521343184,
+    "converged": true,
+    "cross_iterations": 82,
+    "source_self_iterations": 83,
+    "target_self_iterations": 70
+  },
+  "diagnostics": {
+    "cross": {
+      "iterations": 82,
+      "converged": true,
+      "potential_change": 8.767018725569509e-10,
+      "transport_mass": 1.0
+    },
+    "source_self": {
+      "iterations": 83,
+      "converged": true,
+      "potential_change": 8.977947083682603e-10,
+      "transport_mass": 1.0
+    },
+    "target_self": {
+      "iterations": 70,
+      "converged": true,
+      "potential_change": 9.698232703025944e-10,
+      "transport_mass": 1.0
+    },
+    "cross_iterations": 82,
+    "source_self_iterations": 83,
+    "target_self_iterations": 70,
+    "all_converged": true,
+    "raw_divergence": 0.0002485427521343184
+  },
+  "cross_checkpoint": "C:\\Users\\Kevin\\Github\\benchmarks-PS-reflector\\results\\runs\\isolated_refractor_problems_oct_27_26\\target_only\\hard\\checkpoints\\pushforward\\pf_NK879_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0043103448275862068_eval0.0031250000000000002.json",
+  "cross_checkpoint_sha256": "7d3a4e88a11cd60206e899c13e41f09b5a05d0923a0927b4aeb8c763c0f1fd17",
+  "saved_map": "C:\\Users\\Kevin\\Github\\benchmarks-PS-reflector\\results\\runs\\isolated_refractor_problems_oct_27_26\\target_only\\hard\\checkpoints\\solutions\\solve_NK879_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0043103448275862068.npz",
+  "saved_map_sha256": "09a241b5599b761330e464f420ddc78ec02db5bcb9898cde56eaecd037e65845"
+}
