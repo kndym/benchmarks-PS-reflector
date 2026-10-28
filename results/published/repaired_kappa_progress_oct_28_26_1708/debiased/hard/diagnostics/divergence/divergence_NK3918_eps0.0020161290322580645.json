@@ -1,0 +1,55 @@
+{
+  "result": {
+    "experiment": 1,
+    "nk": 3918,
+    "refractor_epsilon": 0.0020161290322580645,
+    "pf_epsilon": 0.003125,
+    "eot": 0.0061335715566265174,
+    "source_self": 0.006260994038151805,
+    "target_self": 0.005960076549553893,
+    "divergence": 2.303626277366886e-05,
+    "raw_divergence": 2.303626277366886e-05,
+    "converged": true,
+    "cross_iterations": 66,
+    "source_self_iterations": 75,
+    "target_self_iterations": 73
+  },
+  "diagnostics": {
+    "cross": {
+      "iterations": 66,
+      "converged": true,
+      "potential_change": 5.172987142809671e-10,
+      "transport_mass": 1.0,
+      "source_marginal_l1": 8.868600250228412e-08,
+      "target_marginal_l1": 9.817450671856243e-16,
+      "marginal_tolerance": 1e-07
+    },
+    "source_self": {
+      "iterations": 75,
+      "converged": true,
+      "potential_change": 5.51557298097971e-10,
+      "transport_mass": 1.0,
+      "source_marginal_l1": 9.222107890966696e-08,
+      "target_marginal_l1": 9.96869687491797e-16,
+      "marginal_tolerance": 1e-07
+    },
+    "target_self": {
+      "iterations": 73,
+      "converged": true,
+      "potential_change": 5.2213738888085e-10,
+      "transport_mass": 1.0,
+      "source_marginal_l1": 8.992190594827448e-08,
+      "target_marginal_l1": 1.0364972768961422e-15,
+      "marginal_tolerance": 1e-07
+    },
+    "cross_iterations": 66,
+    "source_self_iterations": 75,
+    "target_self_iterations": 73,
+    "all_converged": true,
+    "raw_divergence": 2.303626277366886e-05
+  },
+  "cross_checkpoint": "C:\\Users\\Kevin\\Github\\benchmarks-PS-reflector\\results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\hard\\checkpoints\\pushforward\\pf_NK3918_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0020161290322580645_eval0.0031250000000000002.json",
+  "cross_checkpoint_sha256": "b76249d6fe5c75f6e3de8901720a4817a26c1bb0b9a089fd25a96f250a43b903",
+  "saved_map": "C:\\Users\\Kevin\\Github\\benchmarks-PS-reflector\\results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\hard\\checkpoints\\solutions\\solve_NK3918_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0020161290322580645.npz",
+  "saved_map_sha256": "9c8a161ec3becbd05c86cbc8dee9266c8bb442c47afc21b2535ac64230271f11"
+}

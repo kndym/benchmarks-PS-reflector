@@ -1,6 +1,6 @@
 # Repaired kappa=0.8 progress
 
-**Latest capture: [01:56 PM ET](../repaired_kappa_progress_oct_28_26_1356/).**
+**Latest capture: [05:08 PM ET](../repaired_kappa_progress_oct_28_26_1708/).**
 
 Captured October 28, 2026 at 08:59 AM Eastern Daylight Time. Original source and target runs are paused. Only the repaired kappa run is active.
 
