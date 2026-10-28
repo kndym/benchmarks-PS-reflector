@@ -1,0 +1,82 @@
+{
+  "original_entropic": {
+    "cross_eot": 0.00613362195636357,
+    "source_self": 0.005116226248870408,
+    "target_self": 0.005960076549553979,
+    "divergence": 0.0005954705571513761,
+    "cross_info": {
+      "iterations": 100,
+      "converged": true,
+      "source_l1": 4.586428282895693e-09,
+      "kernel_exponent_min": -32.44103410273951,
+      "method": "untruncated_kernel_scaling"
+    },
+    "self_info": {
+      "iterations": 600,
+      "converged": true,
+      "source_l1": 9.031340878927138e-09,
+      "kernel_exponent_min": -27.55747015736702,
+      "method": "untruncated_kernel_scaling"
+    }
+  },
+  "original_hard": {
+    "cross_eot": 0.006289576354247447,
+    "source_self": 0.005662958906784075,
+    "target_self": 0.005960076549553979,
+    "divergence": 0.00047805862607841997,
+    "cross_info": {
+      "iterations": 110,
+      "converged": true,
+      "source_l1": 3.8295253510986765e-09,
+      "kernel_exponent_min": -36.097560129427464,
+      "method": "untruncated_kernel_scaling"
+    },
+    "self_info": {
+      "iterations": 1060,
+      "converged": true,
+      "source_l1": 9.277042225348461e-09,
+      "kernel_exponent_min": -36.097560129427464,
+      "method": "untruncated_kernel_scaling"
+    }
+  },
+  "corrected_entropic": {
+    "cross_eot": 0.005832462713717167,
+    "source_self": 0.005669483222537675,
+    "target_self": 0.005960076549553979,
+    "divergence": 1.7682827671340086e-05,
+    "cross_info": {
+      "iterations": 90,
+      "converged": true,
+      "source_l1": 6.05509800185775e-09,
+      "kernel_exponent_min": -32.58388420501987,
+      "method": "untruncated_kernel_scaling"
+    },
+    "self_info": {
+      "iterations": 90,
+      "converged": true,
+      "source_l1": 4.7891741880026154e-09,
+      "kernel_exponent_min": -27.71676932314776,
+      "method": "untruncated_kernel_scaling"
+    }
+  },
+  "corrected_hard": {
+    "cross_eot": 0.006096087311846311,
+    "source_self": 0.006203064743016651,
+    "target_self": 0.005960076549553979,
+    "divergence": 1.4516665560996081e-05,
+    "cross_info": {
+      "iterations": 90,
+      "converged": true,
+      "source_l1": 3.099164832263187e-09,
+      "kernel_exponent_min": -36.097560129427464,
+      "method": "untruncated_kernel_scaling"
+    },
+    "self_info": {
+      "iterations": 90,
+      "converged": true,
+      "source_l1": 8.2350213872161e-09,
+      "kernel_exponent_min": -36.097560129427464,
+      "method": "untruncated_kernel_scaling"
+    }
+  }
+}

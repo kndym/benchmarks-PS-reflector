@@ -1,0 +1,45 @@
+{
+  "nk": 6746,
+  "epsilon": 0.001524390243902439,
+  "kappa": 0.8,
+  "original": {
+    "mass": 0.5410608939805057,
+    "source_l1": 0.4589391064536822,
+    "target_l1": 0.462310893369662
+  },
+  "corrected": {
+    "mass": 0.9999999999999987,
+    "source_l1": 7.610996920811436e-09,
+    "target_l1": 3.493115085378973e-14
+  },
+  "solver": {
+    "iterations": 490,
+    "converged": true,
+    "source_l1": 7.610996842233883e-09,
+    "kernel_exponent_min": -325.0603533974885,
+    "method": "untruncated_kernel_scaling"
+  },
+  "metrics": {
+    "original": {
+      "cross_eot": 0.00613362195636357,
+      "diagnostics": {
+        "iterations": 100,
+        "converged": true,
+        "source_l1": 4.586428282895693e-09,
+        "kernel_exponent_min": -32.44103410273951,
+        "method": "untruncated_kernel_scaling"
+      }
+    },
+    "untruncated": {
+      "cross_eot": 0.005832462713717167,
+      "diagnostics": {
+        "iterations": 90,
+        "converged": true,
+        "source_l1": 6.05509800185775e-09,
+        "kernel_exponent_min": -32.58388420501987,
+        "method": "untruncated_kernel_scaling"
+      }
+    }
+  },
+  "elapsed_seconds": 49.59488020000572
+}

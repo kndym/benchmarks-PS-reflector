@@ -2,6 +2,8 @@
 
 Updated **October 28, 2026 at 08:19 AM Eastern Daylight Time**.
 
+**October 28 diagnostic correction:** the kappa=0.8 joint-movement curve contains infeasible optical solves caused by the legacy transport cutoff. At 6,746 points, the saved optical plan has total mass 0.541 rather than 1. An untruncated control restores mass to 1 and reduces entropic cross-EOT from 0.0061336 to 0.0058325. Treat the original kappa curve as provisional. See the [controlled numerical investigation](../../runs/kappa_cutoff_diagnostic_oct_28_26/).
+
 Partial results from the extended hard-versus-entropic sweeps. Each problem has 120 cases per map. Empty panels are pending experiments. Optical solves continue in the background.
 
 | Problem | Hard optical | Entropic optical | Hard divergence | Entropic divergence |
