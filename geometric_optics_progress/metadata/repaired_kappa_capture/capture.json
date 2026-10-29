@@ -1,0 +1,1483 @@
+{
+  "captured_at": "2026-10-29T16:09:51.868967+00:00",
+  "settings": {
+    "kappa": 0.8,
+    "source_theta": [
+      14.999999999999998,
+      59.99999999999999
+    ],
+    "source_phi": [
+      14.999999999999998,
+      45.0
+    ],
+    "target_theta": [
+      18.0,
+      36.0
+    ],
+    "target_phi": [
+      18.0,
+      36.0
+    ],
+    "fixed_nk": 1600,
+    "target_nk": 1600,
+    "fixed_epsilon": 0.003125,
+    "cost_epsilon": 0.003125,
+    "solver_version": "untruncated_marginal_v2",
+    "self_cost_mode": "separate_marginals_v1",
+    "optical_marginal_tolerance": 1e-07
+  },
+  "counts": [
+    34,
+    0,
+    26
+  ],
+  "paired_completed": 60,
+  "expected_per_map": 120,
+  "provenance": [
+    {
+      "group": "kappa_only",
+      "mode": "hard",
+      "case": [
+        1,
+        100,
+        0.0125
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK100_eps0.012500000000000001.json",
+      "record_sha256": "e9a5f96b1ab0e8d18d360c6376a675b00cc4a72df8605476fe8eda2601f6f929",
+      "saved_map_sha256": "6fda5f9429ad2f50d822ef2a6a0f58221b73056a95218f6db716f93b76530ffa"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "hard",
+      "case": [
+        1,
+        115,
+        0.0125
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK115_eps0.012500000000000001.json",
+      "record_sha256": "90b155658759c899846a26fb50f1d885e68b83fdce097fbad41871ed62827af7",
+      "saved_map_sha256": "c275737835e0cb3ee44dc13e610cf9dc967a2fdbb51d07da7f313320eb5b05fa"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "hard",
+      "case": [
+        1,
+        131,
+        0.011363636363636364
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK131_eps0.011363636363636364.json",
+      "record_sha256": "f82a273afe1df44cc4631dc03692141caf732618f280bbc6a02de6febfd06585",
+      "saved_map_sha256": "38543e036643be28e2a38e3e3e4b991e8359f1f490a41bc2e35b65e781a08d61"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "hard",
+      "case": [
+        1,
+        150,
+        0.010416666666666666
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK150_eps0.010416666666666666.json",
+      "record_sha256": "35a265f243d511194b43201a662b739d5e09a9f5b515316ce128093a708f73c3",
+      "saved_map_sha256": "156318c02d352d465ab4c3c7bc2866ae390da2187c137dc8e15fff768d1f352d"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "hard",
+      "case": [
+        1,
+        172,
+        0.009615384615384616
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK172_eps0.0096153846153846159.json",
+      "record_sha256": "856ea4e8a0a8029673c6e110413b53c0ccd5ade8ba24ac1f5b659a9a62ae5c7c",
+      "saved_map_sha256": "e16a0999573cccdefbe57cf48ce0af3a26db045b6d100feb89853e3c70d34623"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "hard",
+      "case": [
+        1,
+        197,
+        0.008928571428571428
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK197_eps0.0089285714285714281.json",
+      "record_sha256": "3f9cf86a79c42271dd104d7a03a1c5c61e74b406ca3de7fec89895ff51c6b37e",
+      "saved_map_sha256": "70c62194b518f5662a8411bb64a058281199757d2bc38cd949dfdc0e1a9e5fb8"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "hard",
+      "case": [
+        1,
+        226,
+        0.008333333333333333
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK226_eps0.0083333333333333332.json",
+      "record_sha256": "15969ea98fed2b9c5f1b0a04bde4bea3a1528e3a431d20153507edf9df946d45",
+      "saved_map_sha256": "018881606eac5e300c5e1ce18a5d1f60ee23227f55ff7df8908aed9d2d260efe"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "hard",
+      "case": [
+        1,
+        259,
+        0.0078125
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK259_eps0.0078125.json",
+      "record_sha256": "d1b2da1342026716486b515d516c0fa91cb486e725ed8271e542bf24422067b1",
+      "saved_map_sha256": "1375e13daa92d61a81b0ae6f65e88143fbe8a53ceeaab2ea95d5612e40a0f085"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "hard",
+      "case": [
+        1,
+        296,
+        0.007352941176470588
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK296_eps0.0073529411764705881.json",
+      "record_sha256": "5e18abaf1512c280e62f1eebc73f989f8dc0f468e808c00fb9a21f782521aff8",
+      "saved_map_sha256": "acfb0f8fa9a4a2481b9ff37956cdd8d8806c2c358e92e89e011deda93fcb1dd1"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "hard",
+      "case": [
+        1,
+        340,
+        0.006944444444444444
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK340_eps0.0069444444444444441.json",
+      "record_sha256": "f3f736eb4e98cfae89422a4164d4267d0a2cab79552d58826ad57bb93a9e9aaa",
+      "saved_map_sha256": "66cee05407c11ef67d185899f4073e10419ae2473562ad97597c363a8c7912ee"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "hard",
+      "case": [
+        1,
+        389,
+        0.006578947368421052
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK389_eps0.0065789473684210523.json",
+      "record_sha256": "d1fa3f16466b38ddcd00ba04a13ad35861cfdcf8c534af1052865d25a3269daa",
+      "saved_map_sha256": "35f1b2746ea6226a7e72a867dd3136b2455113564e2e7fada9936989a2579cac"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "hard",
+      "case": [
+        1,
+        446,
+        0.005952380952380952
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK446_eps0.0059523809523809521.json",
+      "record_sha256": "b4308337bc7c30dcbe83972736f9ecd62a4e1ad738e35d145d071ca41c21e084",
+      "saved_map_sha256": "6ec0db45f4fffb66998d7e06a3b54e872bc128412ff67e951e2f5add19c44d85"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "hard",
+      "case": [
+        1,
+        511,
+        0.005681818181818182
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK511_eps0.005681818181818182.json",
+      "record_sha256": "2c66a0b6cc287a728c1d2b7bfa8a5d7076d00fd98ae6c8bea564ed908949844e",
+      "saved_map_sha256": "ed6797a94eaa37795ccbee817b28a1cdfa45253099450144c01d8cf51dfef145"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "hard",
+      "case": [
+        1,
+        585,
+        0.005208333333333333
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK585_eps0.005208333333333333.json",
+      "record_sha256": "e19670d6328601951a051f43330d59d38b90ed0403953d354fdeb150b61dc1e5",
+      "saved_map_sha256": "17e0ec02c64534450d1fce234d1d699ae2a9a1a3f4a01425c35b80e61b89e0bc"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "hard",
+      "case": [
+        1,
+        670,
+        0.005
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK670_eps0.0050000000000000001.json",
+      "record_sha256": "ae52ccfac7c2ec8686e63df0b9a0f7cf400459d389805217e6af2eb131252774",
+      "saved_map_sha256": "0d47b4a20512b561dea62420e134f2aa43131803087dd4eba533ad76c6703ec8"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "hard",
+      "case": [
+        1,
+        767,
+        0.004629629629629629
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK767_eps0.0046296296296296294.json",
+      "record_sha256": "c9d804d47de85281a57e78aeac4e49af120a5c66e14d22b89d9ee9b501fc9940",
+      "saved_map_sha256": "7a68ebf90e93624b5c628aafb83498865ba6a22c5051ba661077966b5dead822"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "hard",
+      "case": [
+        1,
+        879,
+        0.004310344827586207
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK879_eps0.0043103448275862068.json",
+      "record_sha256": "57f5b07fdd4f18eb5bf05f34494a19b38719eef1a2fa83e4d2ad542b33d9d97e",
+      "saved_map_sha256": "b314559a69dcd6dbd8aa54512b57eda942c2b8656f7eed77eefb41fc0681d118"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "hard",
+      "case": [
+        1,
+        1007,
+        0.004032258064516129
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK1007_eps0.0040322580645161289.json",
+      "record_sha256": "27ac7a2515b014a1e1f54979acd8184509740f1a9039c9b50291c48db87a59fc",
+      "saved_map_sha256": "539570e37dea38e27c708d2c29331a7653d131487dae34b3af4f749b6400bdef"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "hard",
+      "case": [
+        1,
+        1153,
+        0.003787878787878788
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK1153_eps0.003787878787878788.json",
+      "record_sha256": "08c8eefa24186136710f5a781d73dd37d8eb018ceba3c3ecd46fd971d5dbc50c",
+      "saved_map_sha256": "d9a75caa8b4893f86e9eb130a0b713d24ded69884a989a13d92c10d8735128d4"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "hard",
+      "case": [
+        1,
+        1321,
+        0.003472222222222222
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK1321_eps0.003472222222222222.json",
+      "record_sha256": "7499475db64fc86bb707dc4a6760764e482351ce0f0c704542d16e8dc945563b",
+      "saved_map_sha256": "53124328a2489ffa78fe39c4205ee9985f6addecbe3b4db78220ab0444e528fc"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "hard",
+      "case": [
+        1,
+        1514,
+        0.003289473684210526
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK1514_eps0.0032894736842105261.json",
+      "record_sha256": "b604448680596577d50b73e8e0036b094415456c866fd66de8075535a01fcb17",
+      "saved_map_sha256": "1e79af92774c57c121ec6f610e5fac9e766fd180980b7184285d8d86509b5896"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "hard",
+      "case": [
+        1,
+        1734,
+        0.003048780487804878
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK1734_eps0.0030487804878048782.json",
+      "record_sha256": "132e6037117b5f00f0951017ffab5f201501bf1b9fbd255a4d5bc3b2f128c91a",
+      "saved_map_sha256": "deb5dd5afbe73d58be6d03b6958eba6e270cfe965e3d2bd68c08a452c13c5cf2"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "hard",
+      "case": [
+        1,
+        1986,
+        0.002840909090909091
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK1986_eps0.002840909090909091.json",
+      "record_sha256": "89f8e50fc650e78c30fa236cc04c81ce57d4f1ae1c3928c15263484910c69de4",
+      "saved_map_sha256": "d6defdaa05bbaf347c9737b37631ecdeabae43c538e8ffcbbbc61bea13e9a14d"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "hard",
+      "case": [
+        1,
+        2275,
+        0.0026595744680851063
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK2275_eps0.0026595744680851063.json",
+      "record_sha256": "275d386e3b6fd4bbfb6196d5fc305bb45bd10e1704236f44c13204e11cb94c5f",
+      "saved_map_sha256": "5aa2ebab9e2d7609ee793d5616462969b4357c655bf4878a462dca44a5f1ac2d"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "hard",
+      "case": [
+        1,
+        2606,
+        0.0024509803921568627
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK2606_eps0.0024509803921568627.json",
+      "record_sha256": "fe9cade9f1023d3ef210734038b5de7dd70ee9da8eebee9d0e7cdfddaad04ec8",
+      "saved_map_sha256": "fd5557c601de5e810a23dcb69bed0978909220273c8b84f3e5ba5b9ff3657d98"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "hard",
+      "case": [
+        1,
+        2986,
+        0.0023148148148148147
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK2986_eps0.0023148148148148147.json",
+      "record_sha256": "80b07db36f91b240effcbc51251ce705484a65412832d7cc60772ed47e43edfa",
+      "saved_map_sha256": "5d29922e8f2dd984031d2cab6bdde98eadb47bea879605cccb2446de5a12dbc6"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "hard",
+      "case": [
+        1,
+        3420,
+        0.0021551724137931034
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK3420_eps0.0021551724137931034.json",
+      "record_sha256": "de35959ffe13f8a8ba4e48b1286f06ed18ebb5e1191fc0a4b9b356faf6084410",
+      "saved_map_sha256": "a834316f42d83fbae98ff5fb8a3b4c66fb10e9e9c07a410ee10b04fdd50fd041"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "hard",
+      "case": [
+        1,
+        3918,
+        0.0020161290322580645
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK3918_eps0.0020161290322580645.json",
+      "record_sha256": "df621178c170b6fde9aca510110493a55940773f357532fd9a01d6a7fe2226b0",
+      "saved_map_sha256": "9c8a161ec3becbd05c86cbc8dee9266c8bb442c47afc21b2535ac64230271f11"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "hard",
+      "case": [
+        1,
+        4488,
+        0.001893939393939394
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK4488_eps0.001893939393939394.json",
+      "record_sha256": "5936b8cff4a2a46ce176dd902a1b1528984846b982c7292db28d428c2c3aa76c",
+      "saved_map_sha256": "441c8010f43ec7cb3b432a526ddc708fe33ecac0710d9bd59011a58aaf72750b"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "hard",
+      "case": [
+        1,
+        5141,
+        0.0017605633802816902
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK5141_eps0.0017605633802816902.json",
+      "record_sha256": "bb05da28f3e2128582500a2c92edea843192ac6d0dbcbfc038b3cb80b9a2251f",
+      "saved_map_sha256": "9d09ea8f6e29fd9b42deb617d2cac8beeefdd8528cbe51c1f1b6dbc748f86b0c"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "hard",
+      "case": [
+        1,
+        5889,
+        0.001644736842105263
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK5889_eps0.0016447368421052631.json",
+      "record_sha256": "e823b0cfd06932098921e95a4dfd45a621293d0839b7ee47121bc0c21e24bcb6",
+      "saved_map_sha256": "2c93820f90538b58d9fa5ce5b49e56b77a247e445f676ffd9dca0d6767875e06"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "hard",
+      "case": [
+        1,
+        6746,
+        0.001524390243902439
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK6746_eps0.0015243902439024391.json",
+      "record_sha256": "b4e4fd072c50a3236662611b32ecdb0bbae1f75caf7661a826adca5eb465d6f7",
+      "saved_map_sha256": "14afbdcb7dbddbb84af7900971f5ab0acb11378fca866f7dcc66fc3b54e5f296"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "hard",
+      "case": [
+        1,
+        7727,
+        0.0014367816091954023
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK7727_eps0.0014367816091954023.json",
+      "record_sha256": "7bdb7601f4fdf97051fdd436b76b556dc930b319a15cfe12f911a3d01f3203a3",
+      "saved_map_sha256": "1d829be297abb7ee520ec68b29bd2961f32156d60c8e7f17d113e5a2976274bc"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "hard",
+      "case": [
+        1,
+        8852,
+        0.0013297872340425532
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK8852_eps0.0013297872340425532.json",
+      "record_sha256": "029fdd9f557ca21e1851f2ac5416555dbfdad999231a1a279993a648e90002b4",
+      "saved_map_sha256": "569a9d73eb0a8caf95ba1145da06ada355069965714e2f4132fcbaca5b367b4d"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "entropic",
+      "case": [
+        1,
+        100,
+        0.0125
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK100_eps0.012500000000000001.json",
+      "record_sha256": "0f4d5a8e91f83af57c35f9267f8492b9e649759a713eb640ab0e0326d59592e2",
+      "saved_map_sha256": "5085305d23309a1047086d64ffe817adff78e50a7aff566b4a87a3c7d095f60c"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "entropic",
+      "case": [
+        1,
+        115,
+        0.0125
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK115_eps0.012500000000000001.json",
+      "record_sha256": "1414b5543f28798b3771af5a54d252b66f5228cfb668983ab6383e8c0912b90b",
+      "saved_map_sha256": "f32ad618052d4b39851f13a5898843752fac472a2e299f02f3fac0c995d8cc01"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "entropic",
+      "case": [
+        1,
+        131,
+        0.011363636363636364
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK131_eps0.011363636363636364.json",
+      "record_sha256": "293345bb9adfb20780b87f466f649e2c2430decf354e0b62c3cd78aa2892f8e0",
+      "saved_map_sha256": "d179807465f45454244550ba3e94509695ccdb7a822cb3004da1b2c767f8e1e4"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "entropic",
+      "case": [
+        1,
+        150,
+        0.010416666666666666
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK150_eps0.010416666666666666.json",
+      "record_sha256": "d9d2b3602e384b2eac5a11849641c3213308a997fb10d5c57526d20a5fb95f44",
+      "saved_map_sha256": "caed5262b7368eb2ccdd9c7d664c5f80fb0319a506c9c1699516b599e281680e"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "entropic",
+      "case": [
+        1,
+        172,
+        0.009615384615384616
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK172_eps0.0096153846153846159.json",
+      "record_sha256": "ed568058f03557a27764b8f6fde5e53c2d0748006185e2c0fa36366056b85d2f",
+      "saved_map_sha256": "c8e3a171ed8ccc8ae40f05ef9428443a4e5b10cb42c50fe0bca224bfa44d0a6e"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "entropic",
+      "case": [
+        1,
+        197,
+        0.008928571428571428
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK197_eps0.0089285714285714281.json",
+      "record_sha256": "534f960360fdebcffd0eacf474f7b4501721e9b49325d1bcabf411c048151367",
+      "saved_map_sha256": "30bb44d7dfd720e7c8c1b33fb88d6ec43f7b42745d42ccaef95862b0cf71011d"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "entropic",
+      "case": [
+        1,
+        226,
+        0.008333333333333333
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK226_eps0.0083333333333333332.json",
+      "record_sha256": "757cc0a05039cff4b6f069b641f6309bfd5334675e9b2e88e90aff0ec89125f7",
+      "saved_map_sha256": "07218e78e7e3f0269df137a86bc9a1954b58ed19e0f96a5baf2bee114ceedd8c"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "entropic",
+      "case": [
+        1,
+        259,
+        0.0078125
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK259_eps0.0078125.json",
+      "record_sha256": "2fecd2fa6fbedbc7b99f5e8a0a9b8b94fd9506a1e838079f727da372aa52ac30",
+      "saved_map_sha256": "ae3fb153bf5a92800a5c804c01d1f7287a8a4746ee288401e48ace3bf3511cd8"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "entropic",
+      "case": [
+        1,
+        296,
+        0.007352941176470588
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK296_eps0.0073529411764705881.json",
+      "record_sha256": "1015f4f3665d162b4a6f94146d12062d4cdeb484668da608204cc49fbbb15e89",
+      "saved_map_sha256": "68bab567c82227cff66b9d1d1947cfd4da599ef932f75b135bea73f8ed8ed3f3"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "entropic",
+      "case": [
+        1,
+        340,
+        0.006944444444444444
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK340_eps0.0069444444444444441.json",
+      "record_sha256": "ffde2fd7279db23f47f980288216e74a784ab54d6d14c2d6138138a602fc1de0",
+      "saved_map_sha256": "a0c3f18addf029455411e5254571bcf8bd29ed1f10be3ba88ca3b34479b3a4e9"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "entropic",
+      "case": [
+        1,
+        389,
+        0.006578947368421052
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK389_eps0.0065789473684210523.json",
+      "record_sha256": "459afc5613069700633427762515da7e029aa6be3e44b3d575000110b4526626",
+      "saved_map_sha256": "3c79de9152d3521436dc5b0d60989c5486d180da450da6c52fe7aa58721216b1"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "entropic",
+      "case": [
+        1,
+        446,
+        0.005952380952380952
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK446_eps0.0059523809523809521.json",
+      "record_sha256": "b38ec001dcd3dbe448ebc3f151d4f1ec9a243b13ad7d765b9933924cf621f449",
+      "saved_map_sha256": "a38dd4478dc0be4439595901c20965a5b57ee086216833d892d46f374a472439"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "entropic",
+      "case": [
+        1,
+        511,
+        0.005681818181818182
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK511_eps0.005681818181818182.json",
+      "record_sha256": "0c2d516d090bdf3afdcc17dc98e22d271d16603d3747c760b1164ca10a711653",
+      "saved_map_sha256": "103285c94217463a8f5d7d7ac3193de65d8e250978a12b0e48a8b335ced29944"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "entropic",
+      "case": [
+        1,
+        585,
+        0.005208333333333333
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK585_eps0.005208333333333333.json",
+      "record_sha256": "cb1c225cb1ba4c43388cadb03dd6d24f3387369c799f5e5554fc61e9526cdfb9",
+      "saved_map_sha256": "2c96e364d60813517f74406342e79b3d89cfc666466826233fef3c4c4f52b6b6"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "entropic",
+      "case": [
+        1,
+        670,
+        0.005
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK670_eps0.0050000000000000001.json",
+      "record_sha256": "f9c245d641a50c99fb1cab919e10172815f1ce9bb225b38d78f2551de607955e",
+      "saved_map_sha256": "77912d04ca2acb64c734add798e97c5eb99890cd85eae482de775359184cc450"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "entropic",
+      "case": [
+        1,
+        767,
+        0.004629629629629629
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK767_eps0.0046296296296296294.json",
+      "record_sha256": "0b01e30414ae58a98a11cad0ceaa4cb24a3a1dd1ce5424e50ba247f28f89152e",
+      "saved_map_sha256": "5b9e722246d71184886101c26c414bf243b2b85a1724ef9eccbfdd8ea983c963"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "entropic",
+      "case": [
+        1,
+        879,
+        0.004310344827586207
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK879_eps0.0043103448275862068.json",
+      "record_sha256": "df76894f6f96530e6d5c9fc51ac33bdb8af730bcd4a084b58f586a6e4f926c70",
+      "saved_map_sha256": "47f80aedcf0b9626f0fd5849133cbfa4f5b14959278853bc563a7bdc3aaf7952"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "entropic",
+      "case": [
+        1,
+        1007,
+        0.004032258064516129
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK1007_eps0.0040322580645161289.json",
+      "record_sha256": "09a92e633c05f0fbdcdbc22d568d05a82b393d1cd6c5fae0fc35024a14db1a6b",
+      "saved_map_sha256": "33c72c26529145ccc07d4ad06d1291548bc99d5dc93c78940bf8bb52a498f1c6"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "entropic",
+      "case": [
+        1,
+        1153,
+        0.003787878787878788
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK1153_eps0.003787878787878788.json",
+      "record_sha256": "2fee58f2ec9b695f27a8d2d8cdcbe1aaa7229fe8a5010ce1f2ad934bf9cdfc21",
+      "saved_map_sha256": "792bb13a36b26160aebe996e297dce22fbd72088d40de6f77219900db05c4e97"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "entropic",
+      "case": [
+        1,
+        1321,
+        0.003472222222222222
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK1321_eps0.003472222222222222.json",
+      "record_sha256": "b506cbaa3aedd721fe0665cbf7f2681bb023c020c050a4e1d9f10b2b04fb5851",
+      "saved_map_sha256": "0ff43920ce299c91bb5557ff2256284c64d3b5903f6b0806d8b46eb235f914c3"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "entropic",
+      "case": [
+        1,
+        1514,
+        0.003289473684210526
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK1514_eps0.0032894736842105261.json",
+      "record_sha256": "f2f97e2acf6ef62c6563c5b20ce6bca149e1c24991c5b220445561eee5b7618e",
+      "saved_map_sha256": "466f8f7d096bbd7329188b38c29fc2ca870c22e0a69219aab228853bb8dbaa79"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "entropic",
+      "case": [
+        1,
+        1734,
+        0.003048780487804878
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK1734_eps0.0030487804878048782.json",
+      "record_sha256": "1941f1bfa67bb108a063956c4d460a20ebaf4af2f7b406b7420cb48d68226064",
+      "saved_map_sha256": "bfb7fb5f74020d3cbc2db8c5708215b90cad6ab20f83a4410cafec545664fbee"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "entropic",
+      "case": [
+        1,
+        1986,
+        0.002840909090909091
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK1986_eps0.002840909090909091.json",
+      "record_sha256": "bab4f70fe86b613e2e6acb9209b195312b7a9c5d58f43f1d7130e799e54b672b",
+      "saved_map_sha256": "9c13197cf35b1c7c47b0ce50a3eaede16f60798a5573735c920f3bcd5e48389c"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "entropic",
+      "case": [
+        1,
+        2275,
+        0.0026595744680851063
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK2275_eps0.0026595744680851063.json",
+      "record_sha256": "a55e0c2bd4486beb14709225e3d270327b3a946cd4996c4f7d2e6e98225a2036",
+      "saved_map_sha256": "2e75eee17b295f153cf9000d38bc3cbe00a28a37ecb708f4f676c9b49bded17e"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "entropic",
+      "case": [
+        1,
+        2606,
+        0.0024509803921568627
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK2606_eps0.0024509803921568627.json",
+      "record_sha256": "56cacc914dbd3e24245bcc4056942dca814fbb174bc7184c9c4bbb95069b7c26",
+      "saved_map_sha256": "ab50b88e9ae42c69bc599bf66b270f93f89311021de8bd301e3dcc27863a3379"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "entropic",
+      "case": [
+        1,
+        2986,
+        0.0023148148148148147
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK2986_eps0.0023148148148148147.json",
+      "record_sha256": "7204f8a6fe038fdadf2122066bbf8d2523a344e57b09f9c5728b3aa297b26f7a",
+      "saved_map_sha256": "d4eff4fb61eebbd1e5e74d0486473eb335bf2b0f65f602f128196743c9f262ec"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "entropic",
+      "case": [
+        1,
+        3420,
+        0.0021551724137931034
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK3420_eps0.0021551724137931034.json",
+      "record_sha256": "42671beb581056c8e8ae9a2b44269c82f63ac6d74b1aa7630697be89d09eae7c",
+      "saved_map_sha256": "27ae08d48cf51184c23179c97de6aed2566fb87faeb17c5177e1b3fcf92d06df"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "entropic",
+      "case": [
+        1,
+        3918,
+        0.0020161290322580645
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK3918_eps0.0020161290322580645.json",
+      "record_sha256": "ca8e5499b683be5c4f2b86174e0dbef296dd6060aec7f87647bce224400e78ef",
+      "saved_map_sha256": "6c038d6a68b2c73858628eb1eee5232f76600320601dacad15f01dab8d690522"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "entropic",
+      "case": [
+        1,
+        4488,
+        0.001893939393939394
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK4488_eps0.001893939393939394.json",
+      "record_sha256": "7d18a32c79228ea238243e53538e45ab99e6a4c37c753e338c2903cfacb4330e",
+      "saved_map_sha256": "44462d171ac8bc979a71b155e64eb7be7ef1cfadc4a3e7068d5bc1a8fa20cd63"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "entropic",
+      "case": [
+        1,
+        5141,
+        0.0017605633802816902
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK5141_eps0.0017605633802816902.json",
+      "record_sha256": "875b9748ad50d61b54383837f4e468ccd54ef5cb9866d57688033533c38a7339",
+      "saved_map_sha256": "0c7c6e29ef30c62cff0df7fc719b87e5b584d56707c0d67ede7c5a8188d92e16"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "entropic",
+      "case": [
+        1,
+        5889,
+        0.001644736842105263
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK5889_eps0.0016447368421052631.json",
+      "record_sha256": "aed063a133968442f5d5204f42684ead2df560b0401519a0f4534373bb0d234c",
+      "saved_map_sha256": "8b5b5a3d69165ad52853930acda909fbc0ce6f0c0f4a219ed4aebc21609b6ab5"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "entropic",
+      "case": [
+        1,
+        6746,
+        0.001524390243902439
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK6746_eps0.0015243902439024391.json",
+      "record_sha256": "26dda890832dc5e364d1f7fc5861c84a21588fe568b72ea3dfd9acfe29023a31",
+      "saved_map_sha256": "291318bb6b971a388127f959322e7dc45e08696e7049d80e681fb2f182f33c32"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "entropic",
+      "case": [
+        1,
+        7727,
+        0.0014367816091954023
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK7727_eps0.0014367816091954023.json",
+      "record_sha256": "04ff770fd1e91a88e72e50e6eaab8606907fb1b132ff10d20aa2c3d83631ea0b",
+      "saved_map_sha256": "2ecfd398efa78b708d4ef0a626298722b47b9e62144473b83aa6b107591dd5ed"
+    },
+    {
+      "group": "kappa_only",
+      "mode": "entropic",
+      "case": [
+        1,
+        8852,
+        0.0013297872340425532
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK8852_eps0.0013297872340425532.json",
+      "record_sha256": "7a144803a155741d512a1bfff7a5634110b95d98ec79e0ce0ad1ad72c78bae10",
+      "saved_map_sha256": "aaa89890fc1a02faab89432306e5ef5cebc4ea6fc0a192fe798ed5e91b388f97"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "hard",
+      "case": [
+        3,
+        1600,
+        0.025
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK1600_eps0.025000000000000001.json",
+      "record_sha256": "dd9493cd694ae1e249336ae978e6ac6278432f06fddb64481e3bfad05ceec667",
+      "saved_map_sha256": "381ddcd63b1e960abdf02a0bec8d5d9db7f9eadde4fec637842da18cdfefe7e9"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "hard",
+      "case": [
+        3,
+        1600,
+        0.021439789730072968
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK1600_eps0.021439789730072968.json",
+      "record_sha256": "89e5f26b6d07fe9fd19ad46d7570239de5dde16787e0b8835cfc2507c129d2d6",
+      "saved_map_sha256": "8cf643432e221c0a681fbc1581eba87c20be2df93ee597ba1eeabad6eb66131c"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "hard",
+      "case": [
+        3,
+        1600,
+        0.01838658334678968
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK1600_eps0.018386583346789678.json",
+      "record_sha256": "c6eb64092d32103f7e42c138a7a051923a8545d935051a3658e7d7cd40b4cd3c",
+      "saved_map_sha256": "1488d21430969366b38db873b50b8a56195239a153e52f8345d479e590ceb300"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "hard",
+      "case": [
+        3,
+        1600,
+        0.015768179232385285
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK1600_eps0.015768179232385285.json",
+      "record_sha256": "24363ccc7ccfc69ec049b296cbfe89bdac8080f7d8d4c1f9827b9ea3d667237c",
+      "saved_map_sha256": "9770b57436c28b8ddd41c13e399d2a5424e4d415cf1697ba431953a8bf2f88d3"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "hard",
+      "case": [
+        3,
+        1600,
+        0.013522657886737746
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK1600_eps0.013522657886737746.json",
+      "record_sha256": "3d696cecdfa105b3806c0ee234199f2c90aaafa2a4180fff55e7e2b6320b3d93",
+      "saved_map_sha256": "32b094f81fc039a6d2e1fe6bb509b1d5eee308e439255f1e9d4ef598027f533d"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "hard",
+      "case": [
+        3,
+        1600,
+        0.011596917667334809
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK1600_eps0.011596917667334809.json",
+      "record_sha256": "b09b51cf11cd8c03987d0c985d5237eb57c15ebaea4e2a012344aa8d7fabd66f",
+      "saved_map_sha256": "e5aae8b77c430e31c241ee0aba8ba4752778178aed32de7cc192c5230c9fa5aa"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "hard",
+      "case": [
+        3,
+        1600,
+        0.009945419052185057
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK1600_eps0.0099454190521850571.json",
+      "record_sha256": "97ebcdbab816901c7733c556adc2e190c2e1c8244a3d75563357180d6ea3f246",
+      "saved_map_sha256": "d3dd552257843d7efde44be14fda5d1b5a7f8c8f5fc86d8e2b5fc2826c0e4614"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "hard",
+      "case": [
+        3,
+        1600,
+        0.008529107730252372
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK1600_eps0.0085291077302523718.json",
+      "record_sha256": "7e9f9cf212378af7f459d6b1cb6585faf6ed54e28499087bf4399d4ca39ced97",
+      "saved_map_sha256": "b4138b796242d65e422206f2d97b054ae5701c584e31a27e145d7f2f4ac1f418"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "hard",
+      "case": [
+        3,
+        1600,
+        0.0073144910528700315
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK1600_eps0.0073144910528700315.json",
+      "record_sha256": "ebd797bf79e0d9b4a8b0d56dc025622d91f6b924301ff244915d89522dbd8443",
+      "saved_map_sha256": "9e11edfb220e86788337f56b0d378412185b1d6203805ccfc495fee3fa4a49f3"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "hard",
+      "case": [
+        3,
+        1600,
+        0.006272846006241336
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK1600_eps0.0062728460062413359.json",
+      "record_sha256": "bdfa4d310327fe90872f24027cbb86a33fea086297d150a3a9def8110724672f",
+      "saved_map_sha256": "ec69fffbc6f1b19c4e8173e59b2af3a8baf1ec9ed0af2bb119f24fb3d4fd37e6"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "hard",
+      "case": [
+        3,
+        1600,
+        0.005379539975317691
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK1600_eps0.0053795399753176912.json",
+      "record_sha256": "74d175c80e42be63e735388e77b84aa7282704796531b7c7d41295e9eb31682f",
+      "saved_map_sha256": "b632d763dd6a44951b0e3326da242362ad231cb09519ad3c1fb8755c8ede9e1b"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "hard",
+      "case": [
+        3,
+        1600,
+        0.004613448236613325
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK1600_eps0.0046134482366133253.json",
+      "record_sha256": "c48dc20354ed33f843632b857043d08e9bb7e93ddd53571a8ca48b40b9774f5a",
+      "saved_map_sha256": "15647c7775da071e5331374d56415735749f18a28aa710b89db99a2c55f65347"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "hard",
+      "case": [
+        3,
+        1600,
+        0.003956454404942622
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK1600_eps0.0039564544049426218.json",
+      "record_sha256": "02332f629e30b330b7dbe07cc41bdef32f4235f98d3830fbaac376a7c6856fda",
+      "saved_map_sha256": "5a74bbf80a86e7bde8d40ab9ffbac9a3ebc9e8c7265d169c39c8c86b1191d86a"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "hard",
+      "case": [
+        3,
+        1600,
+        0.003393022020743632
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK1600_eps0.003393022020743632.json",
+      "record_sha256": "a29518624a804a8e89a51ed8120536549fa0c966c6eea0b0002b6d2e9bec3a32",
+      "saved_map_sha256": "16415e30e5ba05e5fb62ea5543d98f565764dc31a9ba08890ef6a349152dfb39"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "hard",
+      "case": [
+        3,
+        1600,
+        0.002909827146970031
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK1600_eps0.002909827146970031.json",
+      "record_sha256": "9bca516915610838b6b4303ac8df8028731bfbd23d84034eb28627eb0bf3ed89",
+      "saved_map_sha256": "3421050e58f71a8f9f6e733a76676c6a9f34d8fd91a3ec699d352dbf8b93dc34"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "hard",
+      "case": [
+        3,
+        1600,
+        0.002495443287275822
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK1600_eps0.002495443287275822.json",
+      "record_sha256": "a23a8cdd992b76b0fb372c25ba731119f881bb6c638b1163324bd1b8acb66527",
+      "saved_map_sha256": "596a1a868f6f92b23de8297ddb19698d434b1a43f1e74640d07ac3907c5a2799"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "hard",
+      "case": [
+        3,
+        1600,
+        0.0021400711745006283
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK1600_eps0.0021400711745006283.json",
+      "record_sha256": "fd351c663107fcee4a17751814c4f43d2c8fb400b6f10ada831f9e456b88b182",
+      "saved_map_sha256": "94875d03c5407ff22d1c2f2551bcc2e63548469989706252125ef74b1009155e"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "hard",
+      "case": [
+        3,
+        1600,
+        0.0018353070395473493
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK1600_eps0.0018353070395473493.json",
+      "record_sha256": "14252abfb821c88a7634c43d1624da6a13dd96061e554be12440b381336c478d",
+      "saved_map_sha256": "15be67a5b954054decbaab4cda29a57dc53e5c07ea999b3b7d4acb83cc95121d"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "hard",
+      "case": [
+        3,
+        1600,
+        0.0015739438807207157
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK1600_eps0.0015739438807207157.json",
+      "record_sha256": "2bd2326fad4d0dd8aa681d2fbce78b1a931cc9160a145b9ae7eac9246e2a96ee",
+      "saved_map_sha256": "eec4c3c0847a4b12d2ec41f6cd773eb1d617e60845fb389adcabf07431e71ef2"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "hard",
+      "case": [
+        3,
+        1600,
+        0.0013498010339834882
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK1600_eps0.0013498010339834882.json",
+      "record_sha256": "d40a66b5f7999efa102c93da20f6fc0550fa16568c2698df925929455e1964be",
+      "saved_map_sha256": "3692d1d45614ba5212b2f39d00f8389509d595c9aab4149276519c5ecc37e21f"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "hard",
+      "case": [
+        3,
+        1600,
+        0.0011575780138416416
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK1600_eps0.0011575780138416416.json",
+      "record_sha256": "d90f8c3718238e61e72969a4187cd348d703a5025e842a6c21d619e750d6d0bf",
+      "saved_map_sha256": "1cd972c82364db244ece40c39b5adceba89a2011c86b8c8df6add8560f64745b"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "hard",
+      "case": [
+        3,
+        1600,
+        0.0009927291685168109
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK1600_eps0.00099272916851681089.json",
+      "record_sha256": "c9e35b3ce38442d20c20e4b9313d1a2913ee7150bc4e27c3e0d1b6c51a8e6316",
+      "saved_map_sha256": "39ba30a9586d607e5168e812f867c327285c2937666a1cf40d93614a07eba39f"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "hard",
+      "case": [
+        3,
+        1600,
+        0.0008513561852764242
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK1600_eps0.00085135618527642425.json",
+      "record_sha256": "f1a15799873fcbe624359d1c064f8680f5acb535cee809b36ae26dea82044406",
+      "saved_map_sha256": "28434da35906670156d25d91b029dc170ea8116446eeea1fb569d33730482f91"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "hard",
+      "case": [
+        3,
+        1600,
+        0.0007301159039089434
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK1600_eps0.00073011590390894339.json",
+      "record_sha256": "e9b4416ab061efd23a89725fde1a07aaf7662e5a2c2080fcd5310decfadc3e96",
+      "saved_map_sha256": "31974c2026eb4b2c18a16e2af8768a86c6ebefa26b19f8dc7c444460b7dc9fa2"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "hard",
+      "case": [
+        3,
+        1600,
+        0.0006261412583355958
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK1600_eps0.00062614125833559584.json",
+      "record_sha256": "c7281d6d5bd6e3b2eeece8cae5050bed6a032b80d7ceb7d472cdb140d8592238",
+      "saved_map_sha256": "6159990b2362569a26685a33fc7238590ece3a9df8c4d5c0f7b76a1576b2d118"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "hard",
+      "case": [
+        3,
+        1600,
+        0.0005369734768015385
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\hard\\diagnostics\\divergence\\divergence_NK1600_eps0.00053697347680153852.json",
+      "record_sha256": "21ec975c6a059a10cf5d780ece27358da4306c763bf8b306f0dec1bae610b97b",
+      "saved_map_sha256": "8e6dfd81d29289b07cf021b1d9ad1584fff475a7bfad5789be4592bd0c877ce2"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "entropic",
+      "case": [
+        3,
+        1600,
+        0.025
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK1600_eps0.025000000000000001.json",
+      "record_sha256": "1e576a12f28ddec939293924deef5ac654873731d5ae5fdbf2ad31bf69ae429d",
+      "saved_map_sha256": "1ff0152b7b1b66d70f5a8283df5dd18d1bf03d86124e9d67631cdf6e0401d46c"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "entropic",
+      "case": [
+        3,
+        1600,
+        0.021439789730072968
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK1600_eps0.021439789730072968.json",
+      "record_sha256": "b59b24a0b75e2b551e09635cb0f8351e4fff65cec2dac66a4e07e2bbd22988c4",
+      "saved_map_sha256": "a605d0a88893a88fbdc667f4bb09d1ef862aa472708819e165b8b4bee5c9796b"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "entropic",
+      "case": [
+        3,
+        1600,
+        0.01838658334678968
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK1600_eps0.018386583346789678.json",
+      "record_sha256": "1f632892fbfcb196f979e1052dddd50e81fb5aeb812af553513240834df3ef5b",
+      "saved_map_sha256": "0bf0780cff18d9777f795e9a2e8d45d96298007852a651a0674849f8ca83caba"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "entropic",
+      "case": [
+        3,
+        1600,
+        0.015768179232385285
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK1600_eps0.015768179232385285.json",
+      "record_sha256": "94d8f479fbc2051e6ac13d34ae545dc2eae839cd98f06d9d4978029112af33d6",
+      "saved_map_sha256": "d8894d0f762d8a7ba057b18356e9e87387ad0bfd8876fda3fffba27405a13955"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "entropic",
+      "case": [
+        3,
+        1600,
+        0.013522657886737746
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK1600_eps0.013522657886737746.json",
+      "record_sha256": "27f57bbac7931ba48b30175edac189b829b6006c379c026ee75879a2d1514fef",
+      "saved_map_sha256": "791a55ada6973948ced38f7d9666d1ac104bf469ed504ad9734c4e775f1a994d"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "entropic",
+      "case": [
+        3,
+        1600,
+        0.011596917667334809
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK1600_eps0.011596917667334809.json",
+      "record_sha256": "338c4a3151fa95e0a57a92873b0bc0e0a5ed7d4e1ae73764736df9665896ea38",
+      "saved_map_sha256": "1f3b749557285ee17af7d11cbd62b8f239de4d8e0b7f04cba21c80e153ea8bf6"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "entropic",
+      "case": [
+        3,
+        1600,
+        0.009945419052185057
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK1600_eps0.0099454190521850571.json",
+      "record_sha256": "ec62bc06be9a80b1a68737d7111a70df4324de0f4aa1a11ba131d41bf0253f28",
+      "saved_map_sha256": "a8fe08fe96e6b2213f3ce1de12638a13b91e72e1ed89cdae35fd8d928c0ecd01"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "entropic",
+      "case": [
+        3,
+        1600,
+        0.008529107730252372
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK1600_eps0.0085291077302523718.json",
+      "record_sha256": "a39ccc0c6f61ad169bbe8e12b03a69b9dd611af8d0eff5ecb33b40f2e6f41f45",
+      "saved_map_sha256": "654cc1979ba2481a2f517b111bdefa80b259b9c6a6f0cc22b428144ac8fa8175"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "entropic",
+      "case": [
+        3,
+        1600,
+        0.0073144910528700315
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK1600_eps0.0073144910528700315.json",
+      "record_sha256": "8afd00995d1539074fdbaadd1072b37545a5fb0191164444fbb4109098f90533",
+      "saved_map_sha256": "5ce729fcf29f33471a101cde7a6a6d55bd3ba84639e1c6e476adc7aa0520f2f7"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "entropic",
+      "case": [
+        3,
+        1600,
+        0.006272846006241336
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK1600_eps0.0062728460062413359.json",
+      "record_sha256": "3d95eb8e462fb379ade4e3c9374bd44441371d9d847732ba613a73b6258dca26",
+      "saved_map_sha256": "c7c83dcea3780988d5543bf96078e1a9eae08eb52141292ef27865669cba310d"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "entropic",
+      "case": [
+        3,
+        1600,
+        0.005379539975317691
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK1600_eps0.0053795399753176912.json",
+      "record_sha256": "8708527f744ac21ecf6edf39bd4d7b32be37cb3996d5ec10938cc6a00c2dbd15",
+      "saved_map_sha256": "f9c68b7d2f50423df89ec7ab01ae97ab8052eab0b1999a31184ba3c2709356cd"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "entropic",
+      "case": [
+        3,
+        1600,
+        0.004613448236613325
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK1600_eps0.0046134482366133253.json",
+      "record_sha256": "2dae6d37c1e97206e98978cb54edac77c01832ca1466958439d5023de3cd5b0d",
+      "saved_map_sha256": "b2d4793d04e361cf87e9f4921a5bc958675acdd7e1032b38150027839f262d14"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "entropic",
+      "case": [
+        3,
+        1600,
+        0.003956454404942622
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK1600_eps0.0039564544049426218.json",
+      "record_sha256": "4a24a1d2c424e4872e84a9587a5b903424a6804e40e20b4387f2b20c49936d06",
+      "saved_map_sha256": "7fccd857baaed413cb1c63da0beac74694094b4d119954538b079290777d1df5"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "entropic",
+      "case": [
+        3,
+        1600,
+        0.003393022020743632
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK1600_eps0.003393022020743632.json",
+      "record_sha256": "58989beb2b4bd1df0b0d8b99dd35b9aaf95c535dff6d28b231317ab868de2147",
+      "saved_map_sha256": "c53d2e0ed15aae2d416ad72bd9d28734fdaa43f76bcf694c637079b80eba50d4"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "entropic",
+      "case": [
+        3,
+        1600,
+        0.002909827146970031
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK1600_eps0.002909827146970031.json",
+      "record_sha256": "97406a74c34dcdcc751c1dec540e34d223c603d91e472f7955a6c110e28e54b8",
+      "saved_map_sha256": "956f79e735a143108fa4236e85ee37ad2bac7167de0e51ef06114a561441b529"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "entropic",
+      "case": [
+        3,
+        1600,
+        0.002495443287275822
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK1600_eps0.002495443287275822.json",
+      "record_sha256": "0f8b8e23f554a5495796693149f6eed626599de4d85f3bda574a4685deb1a790",
+      "saved_map_sha256": "0c7cc0688e05feec4dd01bdf1a0a8641a8bbeb1636662893c3b6d55e60f5f4d3"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "entropic",
+      "case": [
+        3,
+        1600,
+        0.0021400711745006283
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK1600_eps0.0021400711745006283.json",
+      "record_sha256": "4ff8494677e4b1d88b40356b29bed765d431ec9135a7a06872e41721da532c2f",
+      "saved_map_sha256": "f09138189f3fa4da80c82f6b15a006d7869cbe4b0cbb6bacfd54f6bc41459887"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "entropic",
+      "case": [
+        3,
+        1600,
+        0.0018353070395473493
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK1600_eps0.0018353070395473493.json",
+      "record_sha256": "5a757a5b1dd2ce5e73a2cc01000a01e66f0145e2a34923dac08eb6275709bcf7",
+      "saved_map_sha256": "d0985f56db6b940cd0b4f15e26deb743a0e165aaff444119e81f5432c8e15646"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "entropic",
+      "case": [
+        3,
+        1600,
+        0.0015739438807207157
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK1600_eps0.0015739438807207157.json",
+      "record_sha256": "9626e36d52205564f780533320091c9e4725c7826c8e536f4886dea4c98aa741",
+      "saved_map_sha256": "69df789c64c3918e14fbe01329c043d508e0bf655cbe81cd05f53a1e76abe5cf"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "entropic",
+      "case": [
+        3,
+        1600,
+        0.0013498010339834882
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK1600_eps0.0013498010339834882.json",
+      "record_sha256": "324308136d6599faa8539f746bfe8925b60693442e1fbca52c9952bf5e04ec5c",
+      "saved_map_sha256": "a6e977f28043f8d34d31c85969e54cf3663247dc52c90512ebc08ee7e382c1b3"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "entropic",
+      "case": [
+        3,
+        1600,
+        0.0011575780138416416
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK1600_eps0.0011575780138416416.json",
+      "record_sha256": "b0a0eeeb863307d17177c3fdecd9d5a725c44ea8db42ef35fe248083d3ec6791",
+      "saved_map_sha256": "963b84c114f0d819c320b233792f5cee91f258940a3db2fce0042e11c42e56de"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "entropic",
+      "case": [
+        3,
+        1600,
+        0.0009927291685168109
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK1600_eps0.00099272916851681089.json",
+      "record_sha256": "8589ec8b2e22edbadfc81fa417f5eb596dbddb7fcdc1a30927c78efd53684713",
+      "saved_map_sha256": "c3bca6529126424565843ec632dc33208bb43504d821cee42a306d8334a676d3"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "entropic",
+      "case": [
+        3,
+        1600,
+        0.0008513561852764242
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK1600_eps0.00085135618527642425.json",
+      "record_sha256": "de4f4bcdbd74d8e3fd2671bae92674f1c199d5d8f0a43d1e57baf802f2773ae6",
+      "saved_map_sha256": "5d579a5746d83d5eb00969d866d549e8e97f382e18f0cd76a884182b0e077597"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "entropic",
+      "case": [
+        3,
+        1600,
+        0.0007301159039089434
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK1600_eps0.00073011590390894339.json",
+      "record_sha256": "ebfe53e7c4bfc6f4d0d1adfadab302b0a48a3d8f201d448079cbeb1d2a487377",
+      "saved_map_sha256": "a0a5440a56cd6cff84ddc50a5aabc03d49ce73e174fb18eef42d9a8598d2524c"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "entropic",
+      "case": [
+        3,
+        1600,
+        0.0006261412583355958
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK1600_eps0.00062614125833559584.json",
+      "record_sha256": "fd41e44e65e260ae4d5494bf3cf63b47e2ecb775c2bda9070c035954d12867a9",
+      "saved_map_sha256": "6ed66dacf2898cfd9226c315df6cb89c73baee24d48accf6066d5911aa4c2c29"
+    },
+    {
+      "group": "parallel_epsilon/kappa_only",
+      "mode": "entropic",
+      "case": [
+        3,
+        1600,
+        0.0005369734768015385
+      ],
+      "record": "results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\debiased\\entropic\\diagnostics\\divergence\\divergence_NK1600_eps0.00053697347680153852.json",
+      "record_sha256": "491ad8b68e86b7bb2098d609b9e6c9e6dc9c9b6f9359c3a2f8ee4c9165782a07",
+      "saved_map_sha256": "d8fdf29748182692682e53e310c46daf433b730e73f03a9fe343b27b00b76bef"
+    }
+  ],
+  "data_sha256": {
+    "entropic.csv": "dc6e9e9acb331199f13906acdcd2dc5d21aa3ef1a2005144ce247e143278e8ce",
+    "hard.csv": "ed1f6844ebdf8ec0b1c9aacf231fc635df5b3b78e766bd5e68ca81bf729bad1e",
+    "hard_mass_error.csv": "40e63e421d00d7346031c3fe3225100c8f17ecbe67fc88bf7c3d149f81758065"
+  }
+}

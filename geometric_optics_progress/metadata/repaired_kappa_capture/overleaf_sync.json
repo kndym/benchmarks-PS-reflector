@@ -1,0 +1,24 @@
+{
+  "overleaf_verified_at": "2026-10-29T16:12:53.441316+00:00",
+  "project_url": "https://www.overleaf.com/project/69695773fcd59c00e6008659",
+  "pages": [
+    31,
+    32,
+    33
+  ],
+  "local_compile": "success",
+  "overleaf_compile": "success; both new figures visibly verified",
+  "paired_cases": 60,
+  "counts": [
+    34,
+    0,
+    26
+  ],
+  "artifact_hash_base": "../..",
+  "artifact_sha256": {
+    "repaired_kappa_results.tex": "d5cc20dd87549f131c15681f6b43e77bb264c7f9f2cd3e44ba5fd1fa5346d8d6",
+    "images/repaired_kappa_sinkhorn_comparison.png": "e81f2338cd04c790e2f7c0cca6ce04d3e54d900b27e5c6bef6f024a34b90c3c3",
+    "images/repaired_kappa_hard_mass_error.png": "ec01a75760a6928e291acf3fae089bbe6d06d7884ae71ba0a323748fb36ea241"
+  },
+  "overleaf_edit": "Appended input to existing new_developments.tex; preserved existing Overleaf edits."
+}

@@ -1,0 +1,34 @@
+\clearpage
+\subsection{Repaired kappa run: current progress}
+\label{sec:repaired-kappa-progress}
+The following figures use the repaired solver with $\kappa=0.8$ and the
+same source and target geometry as the original $\kappa=0.6$ sweep above.
+They are a separate, partial run. Captured October 29, 2026 at 16:09 (UTC), there are
+60 paired completed cases per map out of 120: 34, 0, 26 in experiments
+1, 2, and 3, respectively (40 planned per experiment).
+The independent epsilon worker contributes completed experiment-3 cases;
+matching case keys are counted once. Pending cases are omitted.
+The optical marginal tolerance is $10^{-7}$. Each plotted divergence has
+three converged independent EOT terms, evaluated at $\varepsilon=1/320$.
+The target contains 1600 atoms. These partial curves do not establish a
+convergence rate.
+
+\begin{figure}[p]
+ \centering
+ \includegraphics[width=\textwidth]{repaired_kappa_sinkhorn_comparison.png}
+ \caption{\large Repaired $\kappa=0.8$ run: debiased Sinkhorn divergence,
+ with logarithmic axes and the same three-panel layout as the original run.
+ Panel titles show paired completed cases out of 40. Experiment 2 is pending.}
+ \label{fig:repaired-kappa-divergence}
+\end{figure}
+
+\begin{figure}[p]
+ \centering
+ \includegraphics[width=\textwidth]{repaired_kappa_hard_mass_error.png}
+ \caption{\large Repaired $\kappa=0.8$ run: maximum absolute hard-map
+ target-mass error $E_\infty=\max_j|(T_\#p)_j-q_j|$, computed directly
+ from the saved hard-ray assignments and source weights. All target atoms,
+ including empty locations, are included. No original-run mass errors are reused.}
+ \label{fig:repaired-kappa-mass}
+\end{figure}
+\clearpage

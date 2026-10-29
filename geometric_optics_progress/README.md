@@ -32,6 +32,22 @@ The source and supporting images are canonical. The earlier ZIP download is
 not tracked because it predates subsequent editor revisions. Generated PDF,
 compiler intermediates, and editor state are not required to build the project.
 
+The repaired kappa=0.8 progress figures are appended through
+[`repaired_kappa_results.tex`](repaired_kappa_results.tex). Refresh this separate
+capture with `python scripts/update_repaired_kappa_writeup.py`; it validates and
+merges completed main and independent epsilon-worker cases, checks saved-map
+hashes, and recomputes hard mass errors from the saved ray assignments. The
+original kappa=0.6 figures above are retained.
+
+![Repaired kappa divergence](images/repaired_kappa_sinkhorn_comparison.png)
+
+![Repaired kappa hard mass error](images/repaired_kappa_hard_mass_error.png)
+
+[Completed-case data and provenance](metadata/repaired_kappa_capture/README.md).
+Overleaf includes `repaired_kappa_results.tex` at the end of
+`new_developments.tex`; its two new PNG files are stored in the Overleaf project
+root. Upload these three files on subsequent repaired-run refreshes.
+
 <!-- directory-index:start -->
 
 ## Directory guide
