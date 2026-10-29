@@ -14,26 +14,27 @@
     },
     "repaired_kappa/hard": {
       "path": "geometric_optics_progress/metadata/repaired_kappa_capture/hard.csv",
-      "sha256": "ed1f6844ebdf8ec0b1c9aacf231fc635df5b3b78e766bd5e68ca81bf729bad1e",
-      "cases": 60
+      "sha256": "028c10968703da1872fdf26c53ac2818145ffb3d13b3fc84e2a3eb8de768a697",
+      "cases": 62
     },
     "repaired_kappa/entropic": {
       "path": "geometric_optics_progress/metadata/repaired_kappa_capture/entropic.csv",
-      "sha256": "dc6e9e9acb331199f13906acdcd2dc5d21aa3ef1a2005144ce247e143278e8ce",
-      "cases": 60
+      "sha256": "c996556080ee018853a2f404ba654ead1d30b5b22c6de725ab88108f93bde621",
+      "cases": 62
     }
   },
-  "overleaf_verified_at": "2026-10-29T16:20:00.902554+00:00",
-  "overleaf_project": "https://www.overleaf.com/project/69695773fcd59c00e6008659",
-  "overleaf_pages": [
+  "overleaf_verified_at": "2026-10-29T22:49:43.853649+00:00",
+  "paired_cases": 62,
+  "counts": [
     35,
-    36
+    0,
+    27
   ],
   "local_compile": "success",
-  "overleaf_compile": "success; both raw EOT figures visually verified",
+  "overleaf_compile": "success; updated counts and figures visually verified",
   "artifact_sha256": {
-    "raw_eot_results.tex": "7175828d93d2c9cacf0e5864f5ebed346de3080d21466b2235a7daf341da3210",
+    "raw_eot_results.tex": "31c6f76e2235855ba3b88500615232ef9d42299f99201e64e9e39212dac85966",
     "images/original_raw_eot_comparison.png": "611a24315dc0755588b674faf37d773308c1a6d3868a269e291fa181aeef80fe",
-    "images/repaired_kappa_raw_eot_comparison.png": "2802b012fe307c9b37526e0ebdb5e076d3cd82c8171c30f9128bfa6a6ddee477"
+    "images/repaired_kappa_raw_eot_comparison.png": "e30ac4cf9408316f13845566c1ed62df705037f51d2e409d97ae92deffdda655"
   }
 }

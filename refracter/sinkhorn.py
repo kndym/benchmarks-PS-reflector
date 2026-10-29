@@ -687,7 +687,8 @@ def optical_marginal_errors(x, y, p, q, f, g, epsilon, chunk_size=512):
 
 def run_sinkhorn_divergence(x, y, p, q, chunk_size=512, verbose=True, epsilon=None,
                             separate_marginals=False, max_iter=17,
-                            identity_max_iter=17, tolerance=1e-5, marginal_tolerance=None):
+                            identity_max_iter=17, tolerance=1e-5, marginal_tolerance=None,
+                            identity_refinement_budget=0):
     """Run the full divergence when only main-grid weights are available.
 
     The C++ executable receives separate small-grid density evaluations from
@@ -702,6 +703,9 @@ def run_sinkhorn_divergence(x, y, p, q, chunk_size=512, verbose=True, epsilon=No
     None disables the corresponding cap. ``tolerance`` is the potential-change
     stopping threshold. Optional ``marginal_tolerance`` additionally requires
     feasibility of transport and both self solves, raising on a failed cap.
+    ``identity_refinement_budget`` permits additional identical self updates
+    when strict marginal feasibility is requested. It changes only the work
+    budget; the stopping tolerances and update equations remain unchanged.
     Returned numeric
     diagnostics record the final update count and change for all three solves.
     """
@@ -719,18 +723,23 @@ def run_sinkhorn_divergence(x, y, p, q, chunk_size=512, verbose=True, epsilon=No
         separate_marginals=separate_marginals,
         max_iter=max_iter, identity_max_iter=identity_max_iter, tolerance=tolerance,
         marginal_tolerance=marginal_tolerance,
+        identity_refinement_budget=identity_refinement_budget,
     )
 
 
 def _run_sinkhorn_divergence_inner(x, y, p, q, x_s, y_s, p_s, q_s,
                                    chunk_size=512, verbose=True, epsilon=None,
                                    separate_marginals=False, max_iter=17,
-                                   identity_max_iter=17, tolerance=1e-5, marginal_tolerance=None):
+                                   identity_max_iter=17, tolerance=1e-5, marginal_tolerance=None,
+                                   identity_refinement_budget=0):
     """Full Sinkhorn divergence (C++ do_sinkhorn_subtracted_axb).
 
     Returns dict with keys: f, g, f_id, g_id, total_cost.
     """
     NK = len(x)
+    if (not isinstance(identity_refinement_budget, (int, np.integer))
+            or identity_refinement_budget < 0):
+        raise ValueError('identity_refinement_budget must be a nonnegative integer')
     if any(limit is not None and (not isinstance(limit, (int, np.integer)) or limit < 1)
            for limit in (max_iter, identity_max_iter)):
         raise ValueError("Iteration limits must be positive integers or None (uncapped)")
@@ -785,6 +794,8 @@ def _run_sinkhorn_divergence_inner(x, y, p, q, x_s, y_s, p_s, q_s,
     # C++ stores each fractional increment back into an int (truncation).
     step = int(np.floor(k_final ** (1.0 / 3.0)))               # 10
     cap_iter = identity_max_iter
+    if cap_iter is not None and marginal_tolerance is not None:
+        cap_iter += identity_refinement_budget
     cap_thr = tolerance
 
     if verbose:

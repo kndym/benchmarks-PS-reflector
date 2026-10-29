@@ -81,6 +81,8 @@ def main():
     parser.add_argument("--pf-max-iter", type=int, default=2000)
     parser.add_argument("--refractor-max-iter", type=int, default=17, help="Final transport updates; 0 disables cap")
     parser.add_argument("--identity-max-iter", type=int, default=17, help="Final updates per self solve; 0 disables cap")
+    parser.add_argument('--identity-refinement-budget', type=int, default=0,
+                        help='Additional self updates under the same strict feasibility tolerance')
     parser.add_argument("--refractor-tolerance", type=float, default=1e-5)
     parser.add_argument("--optical-marginal-tolerance", type=float, default=1e-7,
                         help="Required L1 feasibility of optical transport and both self solves")
@@ -131,6 +133,8 @@ def main():
         args.import_costs = resolve_path(args.import_costs)
     if min(args.refractor_max_iter, args.identity_max_iter) < 0:
         parser.error("Iteration caps must be nonnegative (0 means uncapped)")
+    if args.identity_refinement_budget < 0:
+        parser.error('Identity refinement budget must be nonnegative')
     if args.chunk_size < 1 or not all(np.isfinite(v) and v > 0 for v in (args.refractor_tolerance, args.pf_tolerance, args.optical_marginal_tolerance)):
         parser.error("Chunk size and tolerances must be finite and positive")
     enable_threaded_reductions(args.workers)
@@ -235,6 +239,7 @@ def main():
                                                chunk_size=args.chunk_size,
                                                max_iter=args.refractor_max_iter or None,
                                                identity_max_iter=args.identity_max_iter or None,
+                                               identity_refinement_budget=args.identity_refinement_budget,
                                                tolerance=args.refractor_tolerance,
                                                marginal_tolerance=args.optical_marginal_tolerance)
             def optical_solve():
@@ -251,6 +256,8 @@ def main():
                     separate_marginals=args.target_nk is not None,chunk_size=args.chunk_size,
                     max_iter=args.refractor_max_iter,identity_max_iter=args.identity_max_iter,
                     tolerance=args.refractor_tolerance,marginal_tolerance=args.optical_marginal_tolerance)
+                if args.identity_refinement_budget:
+                    settings['identity_refinement_budget'] = args.identity_refinement_budget
                 identity=problem_key((x,y,p,q),settings)
                 solution=get_or_solve(args.shared_optical_cache,identity,optical_solve)
             else:

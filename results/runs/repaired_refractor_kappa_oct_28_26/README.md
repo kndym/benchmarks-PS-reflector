@@ -66,3 +66,22 @@ Warm-start self-smoothing now computes the same full row reductions in tiles. At
 The larger matrix only partly fits the cache. Measured output differences were zero and retained blocks stayed within budget. These are timings under production load, not whole-sweep speedup claims. The full suite passed **97 tests**, including dense-versus-tiled warm-start equivalence, cached/uncached optical solves and CLI outputs, memory bounds, input immutability, kappa changes and cleanup after exceptions.
 
 [Cache rollout settings](metadata/cost_cache_plan.json) | [Raw cache benchmark](metadata/cost_cache_benchmark.json) | [Cache benchmark script](../../../scripts/benchmark_cost_cache.py)
+
+## Epsilon worker recovery, October 29
+
+The epsilon worker exhausted its 10,000-update source-self budget at optical
+epsilon 0.0003949243034490774, with marginal L1 residual 4.069610924e-7.
+It was restarted from the 27 completed epsilon cases using
+`--identity-refinement-budget 190000`: up to 200,000 identical final self
+updates per case. The optical tolerance remains **1e-7**, and the potential
+change tolerance remains **1e-5**. No truncation, equations, grid, geometry,
+or accepted saved maps were changed. Failed cases are still rejected at the
+extended cap. The shared solve cache distinguishes the added work budget.
+The old failed adoption task is disabled; the resumed supervisor owns the
+optical workers, divergence evaluator, and plot watcher.
+
+[Restart details](metadata/epsilon_recovery.json) |
+[Latest validated figures and data](../../../geometric_optics_progress/README.md).
+The refreshed write-up capture contains 62 paired cases per map (35 joint,
+zero fixed-epsilon, 27 fixed-source). The restarted case is not included
+until it meets the original feasibility checks. All 101 tests pass.
