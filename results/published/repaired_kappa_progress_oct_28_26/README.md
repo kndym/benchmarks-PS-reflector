@@ -1,6 +1,8 @@
 # Repaired kappa=0.8 progress
 
-**October 29 execution upgrade:** [Additional parallel epsilon results](../parallel_kappa_epsilon_oct_29_26_0657/). The large-N workers switch to four threads after their current saved case; optical solutions are now shared. [Settings and benchmarks](../../runs/repaired_refractor_kappa_oct_28_26/#execution-acceleration--october-29).
+**Bounded cost caching is implemented:** [256 MiB budget, benchmarks and rollout](../../runs/repaired_refractor_kappa_oct_28_26/#bounded-cost-cache). Existing cases finish before cached workers take over.
+
+**October 29 execution upgrade:** [Additional parallel epsilon results](../parallel_kappa_epsilon_oct_29_26_0657/). The large-N workers switch to four threads after their current saved case; optical solutions are now shared. [Settings and benchmarks](../../runs/repaired_refractor_kappa_oct_28_26/#execution-acceleration).
 
 **Latest capture: [October 29, 06:32 AM ET](../repaired_kappa_progress_oct_29_26_0632/).**
 

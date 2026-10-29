@@ -1,6 +1,7 @@
 """Cost functions used by the reflector and refraction OT routines."""
 
 import numpy as np
+from .cost_cache import ACTIVE_COST_CACHE
 
 # ---------------------------------------------------------------------------
 # Module-level refraction parameter
@@ -79,6 +80,12 @@ def cost_matrix_refraction_chunk(x_chunk: np.ndarray, y: np.ndarray,
     kappa = _KAPPA if kappa is None else float(kappa)
     if not (0.0 < kappa <= 1.0):
         raise ValueError(f"kappa must be in (0, 1], got {kappa}")
+    cache=ACTIVE_COST_CACHE.get()
+    cache_key=cache.key(x_chunk,y,kappa) if cache is not None else None
+    if cache_key is not None:
+        saved=cache.get(cache_key)
+        if saved is not None:
+            return saved
     # Dot products: (M, N)
     dots = x_chunk @ y.T
     arg = 1.0 - kappa * dots
@@ -87,7 +94,10 @@ def cost_matrix_refraction_chunk(x_chunk: np.ndarray, y: np.ndarray,
             "transport cost is undefined: require kappa*(x dot y) < 1 "
             f"(kappa={kappa:g}, max dot={np.max(dots):.17g})"
         )
-    return -np.log1p(-kappa * dots)
+    result=-np.log1p(-kappa * dots)
+    if cache_key is not None:
+        cache.put(cache_key,result)
+    return result
 
 
 def cost_matrix_l2_chunk(x_chunk: np.ndarray, y: np.ndarray) -> np.ndarray:

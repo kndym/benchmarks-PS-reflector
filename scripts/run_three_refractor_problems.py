@@ -31,6 +31,7 @@ def main():
     parser.add_argument('--workers',type=int,default=1)
     parser.add_argument('--chunk-size',type=int,default=256)
     parser.add_argument('--shared-optical-cache',type=Path)
+    parser.add_argument('--cost-cache-mib',type=int,default=0)
     parser.add_argument('--refractor-max-iter', type=int, default=10000)
     parser.add_argument('--identity-max-iter', type=int, default=10000)
     parser.add_argument("--diagnostics-only", action="store_true",
@@ -43,6 +44,7 @@ def main():
     common = ["--extended", "--experiments", *map(str,args.experiments), "--target-nk", "1600",
               "--refractor-max-iter", str(args.refractor_max_iter), "--identity-max-iter", str(args.identity_max_iter),
               "--workers", str(args.workers), "--chunk-size", str(args.chunk_size), *CASES[args.case]]
+    common += ['--cost-cache-mib',str(args.cost_cache_mib)]
     if args.nk:
         common += ['--nk', *map(str,args.nk)]
     if args.epsilon:

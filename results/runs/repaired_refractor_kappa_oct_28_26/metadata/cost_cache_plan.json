@@ -1,0 +1,16 @@
+{
+  "created_at": "2026-10-29T12:50:34.279801+00:00",
+  "cache_mib_per_optical": 256,
+  "budget_scope": "Retained cost blocks, excluding ordinary solver working arrays and private coordinate snapshots",
+  "admission": "Fixed-prefix scan cache; source-self 80%, target-self 10%, cross 10%; no LRU scan thrashing",
+  "method": "unchanged: untruncated_marginal_v2",
+  "marginal_tolerance": 1e-07,
+  "tests_passed": 97,
+  "cached_update_max_output_error": 0.0,
+  "handoff": "Both active worker groups switch after their current case is saved; no in-flight solve is discarded",
+  "warmstart": "Source and target self-smoothing row reductions tiled at the existing chunk size; same weights and equations",
+  "memory_at_n20000": {
+    "old_source_self_cost_bytes": 3200000000,
+    "new_256_row_cost_bytes": 40960000
+  }
+}

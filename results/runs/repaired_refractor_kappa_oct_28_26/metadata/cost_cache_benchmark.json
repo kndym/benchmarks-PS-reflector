@@ -1,0 +1,87 @@
+{
+  "created_at": "2026-10-29T12:36:41.777881+00:00",
+  "workers": 4,
+  "note": "Same four-thread optical update; only retained cost blocks differ. Production work active.",
+  "results": [
+    {
+      "n": 4096,
+      "cache_mib": 0,
+      "cold_seconds": 1.1897728000039933,
+      "warm_median_seconds": 1.2168527000030736,
+      "max_output_error": 0.0,
+      "cache": {
+        "budget_bytes": 0,
+        "peak_retained_bytes": 0,
+        "hits": 0,
+        "misses": 0,
+        "admission_rejections": 0,
+        "retained_bytes_by_kind": {
+          "source_self": 0,
+          "target_self": 0,
+          "cross": 0
+        },
+        "block_rows": 256
+      }
+    },
+    {
+      "n": 4096,
+      "cache_mib": 256,
+      "cold_seconds": 1.1984572000073968,
+      "warm_median_seconds": 0.5615872000053059,
+      "max_output_error": 0.0,
+      "cache": {
+        "budget_bytes": 268435456,
+        "peak_retained_bytes": 134217728,
+        "hits": 48,
+        "misses": 16,
+        "admission_rejections": 0,
+        "retained_bytes_by_kind": {
+          "source_self": 134217728,
+          "target_self": 0,
+          "cross": 0
+        },
+        "block_rows": 256
+      }
+    },
+    {
+      "n": 8192,
+      "cache_mib": 0,
+      "cold_seconds": 5.002088300010655,
+      "warm_median_seconds": 4.737829599995166,
+      "max_output_error": 0.0,
+      "cache": {
+        "budget_bytes": 0,
+        "peak_retained_bytes": 0,
+        "hits": 0,
+        "misses": 0,
+        "admission_rejections": 0,
+        "retained_bytes_by_kind": {
+          "source_self": 0,
+          "target_self": 0,
+          "cross": 0
+        },
+        "block_rows": 256
+      }
+    },
+    {
+      "n": 8192,
+      "cache_mib": 256,
+      "cold_seconds": 4.7603619000001345,
+      "warm_median_seconds": 3.902992200004519,
+      "max_output_error": 0.0,
+      "cache": {
+        "budget_bytes": 268435456,
+        "peak_retained_bytes": 201326592,
+        "hits": 36,
+        "misses": 92,
+        "admission_rejections": 80,
+        "retained_bytes_by_kind": {
+          "source_self": 201326592,
+          "target_self": 0,
+          "cross": 0
+        },
+        "block_rows": 256
+      }
+    }
+  ]
+}

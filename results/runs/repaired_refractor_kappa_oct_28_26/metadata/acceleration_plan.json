@@ -11,7 +11,8 @@
     "parallel_chunk_size": 1024,
     "parallel_epsilon_order": "Largest epsilon first; same original 40 epsilon values",
     "shared_optical_solutions": true,
-    "cost_matrix_RAM_cache": false
+    "cost_matrix_RAM_cache": true,
+    "cost_cache_mib": 256
   },
   "hardware": {
     "physical_cores": 6,
@@ -31,5 +32,6 @@
     "hard": 3,
     "entropic": 3
   },
-  "full_test_suite_passed": 87
+  "full_test_suite_passed": 97,
+  "cache_rollout": "At next completed-case boundary in both worker groups"
 }

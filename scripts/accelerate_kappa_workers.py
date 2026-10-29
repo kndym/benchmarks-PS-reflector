@@ -31,12 +31,27 @@ def case_saved(folder, case):
         and r['converged']=='True' for r in read_rows(folder))
 
 
-def worker_command(original, workers, shared_cache):
+def worker_command(original, workers, shared_cache, cost_cache_mib=None):
     command=list(original)
     command[command.index('--workers')+1]=str(workers)
     if '--shared-optical-cache' not in command:
         command += ['--shared-optical-cache',str(shared_cache)]
+    if cost_cache_mib is not None:
+        if '--cost-cache-mib' in command:
+            command[command.index('--cost-cache-mib')+1]=str(cost_cache_mib)
+        else:
+            command += ['--cost-cache-mib',str(cost_cache_mib)]
     return command
+
+
+def matching_supervisor(command,folder):
+    if any(Path(part).name=='run_three_refractor_problems.py' for part in command):
+        return ('--output-root' in command and '--case' in command
+            and Path(command[command.index('--output-root')+1]).resolve()
+                /command[command.index('--case')+1]==folder)
+    if any(Path(part).name=='accelerate_kappa_workers.py' for part in command):
+        return '--case-root' in command and Path(command[command.index('--case-root')+1]).resolve()==folder
+    return False
 
 
 def mirror_completed(source, destination):
@@ -93,8 +108,10 @@ def main():
     parser.add_argument('--workers',type=int,default=4)
     parser.add_argument('--shared-cache',type=Path,required=True)
     parser.add_argument('--prefetch-case-root',type=Path)
+    parser.add_argument('--cost-cache-mib',type=int,default=0)
     args=parser.parse_args()
     if args.workers<1: parser.error('workers must be positive')
+    if args.cost_cache_mib<0: parser.error('cost-cache-mib must be nonnegative')
     folder=args.case_root.resolve();state_path=artifact_path(folder,'worker_status.json')
     logs=folder/'logs'
     log=(logs/'acceleration.log').open('a',encoding='utf-8',buffering=1)
@@ -109,7 +126,7 @@ def main():
             raise RuntimeError('Refusing to adopt unrelated optical worker')
         commands[mode]=command;targets[mode]=current_case(logs/f'{mode}.log')
     supervisor=psutil.Process(old['supervisor_pid'])
-    if not any('run_three_refractor_problems.py' in part for part in supervisor.cmdline()):
+    if not matching_supervisor(supervisor.cmdline(),folder):
         raise RuntimeError('Refusing to replace an unrelated supervisor')
     supervisor.terminate();supervisor.wait(timeout=10)
     upgraded=set();streams=[];prefetched=0
@@ -120,6 +137,7 @@ def main():
             updated_at=datetime.now(timezone.utc).isoformat(),case='kappa_only',
             handoff_targets=targets,upgraded_workers=sorted(upgraded),
             workers_per_upgraded_optical=args.workers,prefetched_cases=prefetched,
+            cost_cache_mib_per_optical=args.cost_cache_mib,
             children={role:dict(pid=proc.pid,exit_code=None if alive(proc) else 0)
                       for role,proc in children.items()}))
     print('Adopted live workers; checkpoint-boundary targets',targets,flush=True)
@@ -130,7 +148,7 @@ def main():
                 proc=children[mode]
                 if alive(proc): proc.terminate();proc.wait(timeout=10)
                 stream=(logs/f'{mode}.log').open('a',encoding='utf-8');streams.append(stream)
-                command=worker_command(commands[mode],args.workers,args.shared_cache.resolve())
+                command=worker_command(commands[mode],args.workers,args.shared_cache.resolve(),args.cost_cache_mib)
                 children[mode]=subprocess.Popen(command,cwd=ROOT,stdin=subprocess.DEVNULL,
                     stdout=stream,stderr=subprocess.STDOUT,
                     env=dict(os.environ,OPENBLAS_NUM_THREADS='1',OMP_NUM_THREADS='1',MKL_NUM_THREADS='1'),

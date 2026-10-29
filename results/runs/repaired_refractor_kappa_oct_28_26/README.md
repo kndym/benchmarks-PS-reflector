@@ -1,10 +1,10 @@
-# Repaired kappa-only rerun and numerical audit â€” October 28, 2026
+# Repaired kappa-only rerun and numerical audit — October 28, 2026
 
 [Published progress plots](../../published/repaired_kappa_progress_oct_28_26/)
 
 All three original isolated sweeps are paused and their scheduled tasks disabled. Only kappa=0.8 is being rerun, in `kappa_only/`, using solver version `untruncated_marginal_v2`. The original data remains separate.
 
-The rerun repeats the original 40-size and 40-epsilon grids for experiments 1â€“3, with 1,600 target points, hard and entropic maps, cross-EOT and debiased divergence diagnostics. It has 120 cases per map. Optical transport and both optical self solves require marginal L1 error <=1e-7. Iteration caps are 10,000 instead of 2,000; reaching the cap without feasibility raises an error. Pushforward EOT also requires marginal feasibility, independently of its potential-change threshold. Old solver checkpoints are rejected by provenance guards and versioned names.
+The rerun repeats the original 40-size and 40-epsilon grids for experiments 1–3, with 1,600 target points, hard and entropic maps, cross-EOT and debiased divergence diagnostics. It has 120 cases per map. Optical transport and both optical self solves require marginal L1 error <=1e-7. Iteration caps are 10,000 instead of 2,000; reaching the cap without feasibility raises an error. Pushforward EOT also requires marginal feasibility, independently of its potential-change threshold. Old solver checkpoints are rejected by provenance guards and versioned names.
 
 ## Verification
 
@@ -32,20 +32,37 @@ Finite cost is also weaker than physical same-side Snell reachability: the latte
 
 [Audit summary](metadata/audit_report.json) | [Reproducible randomized cases](metadata/randomized_eot_audit.json) | [Randomized audit script](../../../scripts/audit_eot_randomized.py) | [Cutoff diagnosis and large-case controls](../kappa_cutoff_diagnostic_oct_28_26/)
 
-## Execution acceleration — October 29
+<a id="execution-acceleration"></a>
+## Execution acceleration - October 29
 
-Two additional optical processes now compute the original epsilon sweep (experiment 3) in `parallel_epsilon/kappa_only/`, with two reduction threads each and 1,024-row chunks. The epsilon values, physics, iteration caps and tolerances are unchanged; larger epsilon values execute first. Source and target parameter variations remain paused.
+Two additional optical processes compute the original epsilon sweep (experiment 3) in `parallel_epsilon/kappa_only/`, with two reduction threads each and 1,024-row chunks. The epsilon values, physics, iteration caps and tolerances are unchanged; larger epsilon values execute first. Source and target parameter variations remain paused.
 
-The original large-N workers are adopted by `accelerate_kappa_workers.py`. Each finishes its current N=10,140, epsilon=.00125 case before restarting with four reduction threads and identical numerical settings. This preserves the in-flight case. Handoff state and targets are recorded in `kappa_only/metadata/worker_status.json` and `kappa_only/logs/acceleration.log`.
+The large-N workers are adopted by `accelerate_kappa_workers.py`. Each saves its current case before restarting with four reduction threads and identical numerical settings. Handoff state and targets are recorded in `kappa_only/metadata/worker_status.json` and `kappa_only/logs/acceleration.log`.
 
-Hard and entropic consumers now reuse a shared optical solution instead of repeating the same optical transport and self solves. The cache key hashes point clouds, weights, kappa, epsilon, method version, iteration caps, chunk size and tolerances. Only complete finite solutions are atomically published; consumers derive their own maps. Failed solves are never cached.
+Hard and entropic consumers reuse a shared optical solution instead of repeating the same optical transport and self solves. The key hashes point clouds, weights, kappa, epsilon, method version, iteration caps, chunk size and tolerances. Only complete finite solutions are atomically published; consumers derive their own maps. Failed solves are never cached.
 
-Validated epsilon-case optical/map checkpoints and cross-EOT evaluations are prefetched into the main output without modifying its live CSV. When the main loop reaches those cases it reuses the completed work. The parallel sweep has its own CSV and plots until then; count the union of case keys, rather than adding rows that already overlap.
+Validated epsilon-case optical/map checkpoints and cross-EOT evaluations are prefetched into the main output without modifying its live CSV. The main loop reuses that work when it reaches those cases. The parallel sweep has its own CSV and plots until then; count the union of case keys instead of adding overlapping rows.
 
-An actual 4,096-point identity update measured 1.557 s with one thread, 1.071 s with two, and 0.921 s with four (about 1.69x faster). Output differences were zero in this benchmark. Pure reduction benchmarks were about 2.4x faster at four threads; that is not an end-to-end speedup claim. The acceleration code and numerical regression suite pass 87 tests.
+A 4,096-point identity update measured 1.557 s with one thread, 1.071 s with two, and 0.921 s with four (about 1.69x faster), with zero measured output difference. These are update timings rather than whole-sweep ETA claims.
 
-Full cost-matrix caching is not enabled: one 20,000-by-20,000 float64 matrix needs 3.2 GB, comparable to currently free RAM. A bounded cache or SSD-backed cache would need its own measurements before enabling it.
+[Execution settings](metadata/acceleration_plan.json) | [Thread benchmark](metadata/parallel_benchmark.json) | [Benchmark script](../../../scripts/benchmark_refraction_resources.py)
 
-[Execution settings](metadata/acceleration_plan.json) | [Full-update benchmark](metadata/parallel_benchmark.json) | [Benchmark script](../../../scripts/benchmark_refraction_resources.py)
+The operational supervisor and resource benchmark use psutil, installed on this run machine. The numerical solver, shared-solution cache and cost-block cache do not require it.
 
-The execution supervisor and resource benchmark use `psutil`, already installed on this run machine. The numerical solver and shared-solution cache do not require it.
+<a id="bounded-cost-cache"></a>
+## Bounded cost cache - October 29
+
+The optical cost cache is implemented and configured at **256 MiB of retained blocks per active optical solve**. Both worker groups switch each worker after its current case is saved, preserving in-flight work. Status includes `cost_cache_mib_per_optical`; producing workers emit `Cost cache NK=...` and save per-case `cost_cache_NK*.json` statistics when a fresh optical solve finishes.
+
+The cache owns private read-only point-cloud snapshots. Keys distinguish kappa, source-self, target-self and cross blocks, and row ranges. Cached costs are read-only. Fixed-prefix retention prevents sequential-scan cache thrashing. Budgets allocate 80% to source-self costs and 10% each to target-self and cross costs; these bound retained blocks, not every solver working array. Allocations are demand-driven and released after each solve.
+
+Warm-start self-smoothing now computes the same full row reductions in tiles. At N=20,000, one 256-row source-self cost block needs about 41 MB instead of the full 3.2 GB source-self cost matrix. The cross warm-start matrix and usual reduction buffers still exist. Point counts, equations, iteration schedules, caps and tolerances are unchanged.
+
+| Four-thread source-self update | Cache off | 256 MiB cache | Speedup |
+| --- | ---: | ---: | ---: |
+| 4,096 points, warm median | 1.217 s | 0.562 s | 2.17x |
+| 8,192 points, warm median | 4.738 s | 3.903 s | 1.21x |
+
+The larger matrix only partly fits the cache. Measured output differences were zero and retained blocks stayed within budget. These are timings under production load, not whole-sweep speedup claims. The full suite passed **97 tests**, including dense-versus-tiled warm-start equivalence, cached/uncached optical solves and CLI outputs, memory bounds, input immutability, kappa changes and cleanup after exceptions.
+
+[Cache rollout settings](metadata/cost_cache_plan.json) | [Raw cache benchmark](metadata/cost_cache_benchmark.json) | [Cache benchmark script](../../../scripts/benchmark_cost_cache.py)

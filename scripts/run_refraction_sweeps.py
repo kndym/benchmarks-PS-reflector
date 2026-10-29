@@ -30,6 +30,7 @@ from refracter.optics import entropic_surface_normals, refract_using_normals
 import refracter.sinkhorn as sinkhorn_module
 from atomic_io import atomic_replace, atomic_write_json
 from shared_optical import problem_key, get_or_solve
+from refracter.cost_cache import bounded_cost_cache
 
 
 def joint_epsilon(nk):
@@ -89,12 +90,16 @@ def main():
     parser.add_argument("--workers", type=int, default=1, help="Threads for independent SciPy reductions")
     parser.add_argument('--shared-optical-cache',type=Path,
                         help='Reuse identical optical potentials between hard and entropic consumers')
+    parser.add_argument('--cost-cache-mib',type=int,default=0,
+                        help='Maximum retained optical cost blocks per solve (execution setting)')
     parser.add_argument("--pushforward", choices=["hard", "entropic"], default="hard",
                         help="Hard c-transform or entropic-surface normals with Snell refraction")
     parser.add_argument("--pf-warm-start", action="store_true",
                         help="Reuse PF potentials from the preceding larger epsilon")
     parser.add_argument("--output", type=Path, default=Path(REPO_ROOT) / "results/runs/standard_fixed_target_oct_22_26")
     args = parser.parse_args()
+    if args.cost_cache_mib<0:
+        parser.error('cost-cache-mib must be nonnegative')
     args.solver_version = 'untruncated_marginal_v2'
     if not np.isfinite(args.kappa) or not 0 < args.kappa < 1:
         parser.error("Refractor kappa must be finite and in (0, 1)")
@@ -224,14 +229,23 @@ def main():
             y = gen_spherical_patch(target_nk, *np.deg2rad(args.target_theta), *np.deg2rad(args.target_phi), skip=0)
             p, q = source_density(x), target_density(y)
             p, q = p/p.sum(), q/q.sum()
-            def optical_solve():
-                return run_sinkhorn_divergence(x, y, p, q, verbose=False, epsilon=epsilon,
+            def calculate_optics(xx,yy):
+                return run_sinkhorn_divergence(xx, yy, p, q, verbose=False, epsilon=epsilon,
                                                separate_marginals=args.target_nk is not None,
                                                chunk_size=args.chunk_size,
                                                max_iter=args.refractor_max_iter or None,
                                                identity_max_iter=args.identity_max_iter or None,
                                                tolerance=args.refractor_tolerance,
                                                marginal_tolerance=args.optical_marginal_tolerance)
+            def optical_solve():
+                if not args.cost_cache_mib:
+                    return calculate_optics(x,y)
+                with bounded_cost_cache(x,y,args.cost_cache_mib*1024**2,args.chunk_size) as costs:
+                    result=calculate_optics(costs.x,costs.y)
+                    execution=artifact_path(args.output,f'cost_cache_NK{nk}_eps{epsilon:.17g}.json',for_write=True)
+                    atomic_write_json(execution,costs.stats())
+                    print(f'Cost cache NK={nk}: {costs.stats()}',flush=True)
+                    return result
             if args.shared_optical_cache:
                 settings=dict(solver_version=args.solver_version,kappa=args.kappa,epsilon=epsilon,
                     separate_marginals=args.target_nk is not None,chunk_size=args.chunk_size,

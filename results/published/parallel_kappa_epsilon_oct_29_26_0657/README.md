@@ -6,7 +6,7 @@ Hard: **5/40**. Entropic: **5/40**. Debiased hard/entropic: **5/5**. These are e
 
 The algorithm, kappa, geometry, epsilon values, iteration caps and tolerances are unchanged. Two optical processes use two reduction threads each; identical optical solutions are shared. Completed optical checkpoints and cross evaluations are prefetched for reuse by the main sweep.
 
-[Acceleration settings and benchmark](../../runs/repaired_refractor_kappa_oct_28_26/#execution-acceleration--october-29) | [Main joint-movement progress](../repaired_kappa_progress_oct_28_26/)
+[Acceleration settings and benchmark](../../runs/repaired_refractor_kappa_oct_28_26/#execution-acceleration) | [Main joint-movement progress](../repaired_kappa_progress_oct_28_26/)
 
 ![Cross-EOT](entropic/plots/comparison_experiments_1_2_3_log.png)
 

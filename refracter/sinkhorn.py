@@ -570,7 +570,7 @@ def sinkhorn_identity_g_step(x, y, logq, g_id, k, chunk_size=512):
 # Small-grid Sinkhorn (with kernel pre-conditioning)
 # ---------------------------------------------------------------------------
 
-def run_small_sinkhorn(x_s, y_s, p_s, q_s, k_reg, separate_marginals=False):
+def run_small_sinkhorn(x_s, y_s, p_s, q_s, k_reg, separate_marginals=False, chunk_size=512):
     """Small-grid (381-pt) Sinkhorn with kernel pre-conditioning (matches C++ smallsinkhorn).
 
     Pre-conditions marginals via K = exp(-k_reg*C), then runs multi-scale loop.
@@ -584,20 +584,34 @@ def run_small_sinkhorn(x_s, y_s, p_s, q_s, k_reg, separate_marginals=False):
     # even when the normalized smoothed marginal is well defined.
     def smooth_log_weights(cost, weights):
         weights = np.asarray(weights, dtype=np.float64)
-        if not np.isfinite(weights).all() or np.any(weights < 0) or weights.sum() <= 0:
+        if not np.isfinite(weights).all() or np.any(weights < 0) or not (weights>0).any():
             raise ValueError("Small-grid weights must be finite, nonnegative and have positive mass")
         log_weights = np.full_like(weights, -np.inf)
         np.log(weights, out=log_weights, where=weights > 0)
         smoothed = logsumexp(-k_reg * cost + log_weights[None, :], axis=1)
         return smoothed - logsumexp(smoothed)
 
+    def smooth_cloud_weights(points,weights):
+        # Same full row reductions as above, without an N-by-N allocation.
+        weights=np.asarray(weights,dtype=np.float64)
+        if not np.isfinite(weights).all() or (weights<0).any() or not (weights>0).any():
+            raise ValueError('Small-grid weights must be finite, nonnegative and have positive mass')
+        log_weights=np.full_like(weights,-np.inf)
+        np.log(weights,out=log_weights,where=weights>0)
+        smoothed=np.empty(len(points))
+        for start in range(0,len(points),chunk_size):
+            stop=min(start+chunk_size,len(points))
+            costs=cost_matrix_chunk(points[start:stop],points)
+            smoothed[start:stop]=logsumexp(-k_reg*costs+log_weights[None,:],axis=1)
+        return smoothed-logsumexp(smoothed)
+
     if len(x_s) == len(y_s) and not separate_marginals:
         logp_s = smooth_log_weights(C, p_s)
         logq_s = smooth_log_weights(C, q_s)
     else:
         # Smooth each marginal on its own support for rectangular transports.
-        logp_s = smooth_log_weights(cost_matrix_chunk(x_s, x_s), p_s)
-        logq_s = smooth_log_weights(cost_matrix_chunk(y_s, y_s), q_s)
+        logp_s = smooth_cloud_weights(x_s,p_s)
+        logq_s = smooth_cloud_weights(y_s,q_s)
     f_s = np.zeros(NK_s)
     g_s = np.zeros(len(y_s))
 
@@ -781,7 +795,7 @@ def _run_sinkhorn_divergence_inner(x, y, p, q, x_s, y_s, p_s, q_s,
     if verbose:
         print("\nRunning small Sinkhorn (warm-start)...")
     f_s, g_s = run_small_sinkhorn(x_s, y_s, p_s.copy(), q_s.copy(), k_small,
-                                 separate_marginals=separate_marginals)
+                                 separate_marginals=separate_marginals,chunk_size=chunk_size)
 
     # --- 2. Warm-start main grid ---
     if verbose:
