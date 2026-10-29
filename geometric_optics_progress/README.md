@@ -48,6 +48,19 @@ Overleaf includes `repaired_kappa_results.tex` at the end of
 `new_developments.tex`; its two new PNG files are stored in the Overleaf project
 root. Upload these three files on subsequent repaired-run refreshes.
 
+Raw EOT figures without self-term subtraction are included for both runs in
+[`raw_eot_results.tex`](raw_eot_results.tex). Regenerate them after refreshing
+the captures with `python scripts/plot_writeup_raw_eot.py`. This checks the
+source CSV hashes and uses the same captured cases as the debiased figures.
+The hard-map mass-error diagnostic has no debiasing step.
+
+![Original raw EOT](images/original_raw_eot_comparison.png)
+
+![Repaired kappa raw EOT](images/repaired_kappa_raw_eot_comparison.png)
+
+[Raw-EOT provenance](metadata/raw_eot_capture.json). Overleaf includes this
+additional source and both raw-EOT images in its project root.
+
 <!-- directory-index:start -->
 
 ## Directory guide

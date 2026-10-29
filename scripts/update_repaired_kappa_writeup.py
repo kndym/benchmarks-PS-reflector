@@ -126,6 +126,7 @@ def main():
     now = datetime.now(timezone.utc)
     report = dict(captured_at=now.isoformat(), settings=reference, counts=counts,
                   paired_completed=len(common), expected_per_map=120, provenance=provenance)
+    report['data_sha256'] = {p.name: digest(p) for p in output.glob('*.csv')}
     (output/'capture.json').write_text(json.dumps(report, indent=2)+'\n', encoding='utf-8')
     render('repaired_kappa_sinkhorn_comparison.png', [
         (tables['hard'], 'divergence', 'Hard map', 'o-'),

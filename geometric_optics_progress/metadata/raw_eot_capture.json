@@ -1,0 +1,39 @@
+{
+  "metric": "Raw cross EOT; no self-term subtraction",
+  "evaluation_epsilon": 0.003125,
+  "sources": {
+    "original/hard": {
+      "path": "results/published/debiased_comparison_complete_oct_26_26/hard/data/costs.csv",
+      "sha256": "a82d98318efad4651328bd7b4dde2c3bd50a3b5a84da2551befad1a3eff031d5",
+      "cases": 120
+    },
+    "original/entropic": {
+      "path": "results/published/debiased_comparison_complete_oct_26_26/entropic/data/costs.csv",
+      "sha256": "fdd456e2e144c4164fe19fa3478fcc0102d14775ae5ae22971604084a86ef1c2",
+      "cases": 120
+    },
+    "repaired_kappa/hard": {
+      "path": "geometric_optics_progress/metadata/repaired_kappa_capture/hard.csv",
+      "sha256": "ed1f6844ebdf8ec0b1c9aacf231fc635df5b3b78e766bd5e68ca81bf729bad1e",
+      "cases": 60
+    },
+    "repaired_kappa/entropic": {
+      "path": "geometric_optics_progress/metadata/repaired_kappa_capture/entropic.csv",
+      "sha256": "dc6e9e9acb331199f13906acdcd2dc5d21aa3ef1a2005144ce247e143278e8ce",
+      "cases": 60
+    }
+  },
+  "overleaf_verified_at": "2026-10-29T16:20:00.902554+00:00",
+  "overleaf_project": "https://www.overleaf.com/project/69695773fcd59c00e6008659",
+  "overleaf_pages": [
+    35,
+    36
+  ],
+  "local_compile": "success",
+  "overleaf_compile": "success; both raw EOT figures visually verified",
+  "artifact_sha256": {
+    "raw_eot_results.tex": "7175828d93d2c9cacf0e5864f5ebed346de3080d21466b2235a7daf341da3210",
+    "images/original_raw_eot_comparison.png": "611a24315dc0755588b674faf37d773308c1a6d3868a269e291fa181aeef80fe",
+    "images/repaired_kappa_raw_eot_comparison.png": "2802b012fe307c9b37526e0ebdb5e076d3cd82c8171c30f9128bfa6a6ddee477"
+  }
+}

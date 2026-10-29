@@ -1,0 +1,32 @@
+\clearpage
+\subsection{Comparison without debiasing: raw EOT}
+\label{sec:raw-eot-comparison}
+For both runs we also plot the uncorrected cross-EOT objective
+$\mathrm{EOT}_{1/320}(T_\#p,q)$, using squared Euclidean distance in 3D
+and the KL-relative-to-product convention. No source-self or target-self
+term is subtracted. Thus these are raw regularized costs; their ordering
+can differ from the debiased Sinkhorn divergences. The hard and entropic
+curves use exactly the corresponding captured cases in the figures above.
+Hard-map mass error is a separate diagnostic and has no debiasing step.
+
+\begin{figure}[p]
+ \centering
+ \includegraphics[width=\textwidth]{original_raw_eot_comparison.png}
+ \caption{\large Original $\kappa=0.6$ run without debiasing:
+ raw cross-EOT at evaluation $\varepsilon=1/320$ for the hard and entropic
+ maps, with logarithmic axes. All 120 cases per map are included, using
+ the same completed October 26 capture as the original divergence figure.}
+ \label{fig:original-raw-eot}
+\end{figure}
+
+\begin{figure}[p]
+ \centering
+ \includegraphics[width=\textwidth]{repaired_kappa_raw_eot_comparison.png}
+ \caption{\large Repaired $\kappa=0.8$ run without debiasing:
+ raw cross-EOT at evaluation $\varepsilon=1/320$ for the hard and entropic
+ maps, with logarithmic axes. This uses the same 60 paired cases as
+ the repaired divergence figure: 34, 0, 26 in experiments 1, 2, and 3.
+ Pending cases are omitted.}
+ \label{fig:repaired-kappa-raw-eot}
+\end{figure}
+\clearpage
