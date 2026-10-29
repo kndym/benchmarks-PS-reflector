@@ -1,0 +1,27 @@
+{
+  "created_at": "2026-10-29T10:52:20.270056+00:00",
+  "physical_cores": 6,
+  "logical_processors": 12,
+  "free_memory_bytes": 3224260608,
+  "note": "Measured with production work active; same inputs, algorithm and reductions.",
+  "results": [
+    {
+      "workers": 1,
+      "seconds": 1.5566858999955002,
+      "max_output_error": 0.0,
+      "operation": "one_4096_point_source_identity_update"
+    },
+    {
+      "workers": 2,
+      "seconds": 1.07067939999979,
+      "max_output_error": 0.0,
+      "operation": "one_4096_point_source_identity_update"
+    },
+    {
+      "workers": 4,
+      "seconds": 0.9210373999958392,
+      "max_output_error": 0.0,
+      "operation": "one_4096_point_source_identity_update"
+    }
+  ]
+}

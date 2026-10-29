@@ -1,0 +1,35 @@
+{
+  "created_at": "2026-10-29T10:54:24.688090+00:00",
+  "method": "unchanged: untruncated_marginal_v2",
+  "optical_marginal_tolerance": 1e-07,
+  "resource_changes": {
+    "main_workers_before": 1,
+    "main_workers_after": 4,
+    "main_handoff": "After saving current N=10140, epsilon=.00125 case, independently per map",
+    "parallel_experiment": 3,
+    "parallel_workers": 2,
+    "parallel_chunk_size": 1024,
+    "parallel_epsilon_order": "Largest epsilon first; same original 40 epsilon values",
+    "shared_optical_solutions": true,
+    "cost_matrix_RAM_cache": false
+  },
+  "hardware": {
+    "physical_cores": 6,
+    "logical_processors": 12,
+    "total_memory_GB": 16
+  },
+  "heavy_update_seconds": {
+    "one_worker": 1.5566858999955002,
+    "two_workers": 1.07067939999979,
+    "four_workers": 0.9210373999958392
+  },
+  "benchmark_max_output_error": 0.0,
+  "acceleration_tests_passed": 8,
+  "already_upgraded_modes": [],
+  "prefetched_cases": 6,
+  "parallel_completed": {
+    "hard": 3,
+    "entropic": 3
+  },
+  "full_test_suite_passed": 87
+}

@@ -1,0 +1,44 @@
+{
+  "source": "C:/Users/Kevin/Github/benchmarks-PS-reflector/results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/hard",
+  "captured_at": "2026-10-29T10:57:36.546828+00:00",
+  "status": "partial",
+  "rows": 5,
+  "expected_rows": 40,
+  "unique_solves": 5,
+  "counts": {
+    "1": 0,
+    "2": 0,
+    "3": 5
+  },
+  "all_pf_converged": true,
+  "marginal_ranges": {
+    "source_marginal_l1": [
+      3.659507592790323e-15,
+      5.238973317667206e-15
+    ],
+    "target_marginal_l1": [
+      2.0715239829917353e-08,
+      8.741798327967579e-08
+    ]
+  },
+  "hash_base": "..",
+  "files_sha256": {
+    "checkpoints/pushforward/pf_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.013522657886737746_eval0.0031250000000000002.json": "11fa9d2af19959dc1dbaf3f4c1c238ee24789995104351b67c4e9536a60f1273",
+    "checkpoints/pushforward/pf_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.015768179232385285_eval0.0031250000000000002.json": "fbf449aa5e17ed354da94f35cba9e29ad4e92354caff7d5d37464aede9870a29",
+    "checkpoints/pushforward/pf_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.018386583346789678_eval0.0031250000000000002.json": "a6f8a150de724f95b1542a4b94d1fa1d09ba8dd6ef122f3de808ab982e9e6601",
+    "checkpoints/pushforward/pf_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.021439789730072968_eval0.0031250000000000002.json": "84865601645137be73753e23737c0a5e6029d6cf78d32875e6cfa16d6f403e61",
+    "checkpoints/pushforward/pf_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.025000000000000001_eval0.0031250000000000002.json": "b54229621abb3bacd31d12d252f885a435f9764adb0498d270e09eaff19c9803",
+    "checkpoints/solutions/solve_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.013522657886737746.npz": "32b094f81fc039a6d2e1fe6bb509b1d5eee308e439255f1e9d4ef598027f533d",
+    "checkpoints/solutions/solve_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.015768179232385285.npz": "9770b57436c28b8ddd41c13e399d2a5424e4d415cf1697ba431953a8bf2f88d3",
+    "checkpoints/solutions/solve_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.018386583346789678.npz": "1488d21430969366b38db873b50b8a56195239a153e52f8345d479e590ceb300",
+    "checkpoints/solutions/solve_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.021439789730072968.npz": "8cf643432e221c0a681fbc1581eba87c20be2df93ee597ba1eeabad6eb66131c",
+    "checkpoints/solutions/solve_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.025000000000000001.npz": "381ddcd63b1e960abdf02a0bec8d5d9db7f9eadde4fec637842da18cdfefe7e9",
+    "data/costs.csv": "0dcc289e9ca18ed8a35c0dda74d0b749d97fd2ace3980dd03fb850acd59200e1",
+    "diagnostics/marginals/residual_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.013522657886737746.json": "a2bde9b45991dc6c78cc7498bb0067ea6fe3783deb33a544d208801967f9c35f",
+    "diagnostics/marginals/residual_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.015768179232385285.json": "ccc3bd4e85223a8540158a4f53956feb1d21dc1f6a725a2c3a662716e0026d8c",
+    "diagnostics/marginals/residual_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.018386583346789678.json": "7e9c9507073629e7e42c4ff15dcbc32c62c7df201a7008b0e35e07fdf63d5c54",
+    "diagnostics/marginals/residual_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.021439789730072968.json": "ec4689d5a4c2bc3ee0f934dda1797613e323c70123a9904b5b1b097e38313a4e",
+    "diagnostics/marginals/residual_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.025000000000000001.json": "2f7c3e5f352cc24cfd7012dad80276870053a2f9127cedefb320a54c204f0810",
+    "metadata/parameters.json": "e6079fd0d6288ebb6e7d8c6106b41c8355bbcc8b5085819ef98dee4360abe8c8"
+  }
+}

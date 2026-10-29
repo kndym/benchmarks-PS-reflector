@@ -1,0 +1,46 @@
+{
+  "captured_at": "2026-10-29T10:57:39.797938+00:00",
+  "expected_per_map": 40,
+  "all_terms_converged": true,
+  "formula": "EOT(PF,T) - 0.5 * (EOT(PF,PF) + EOT(T,T))",
+  "counts": {
+    "hard": {
+      "1": 0,
+      "2": 0,
+      "3": 5
+    },
+    "entropic": {
+      "1": 0,
+      "2": 0,
+      "3": 5
+    }
+  },
+  "completed": {
+    "hard": 5,
+    "entropic": 5
+  },
+  "entropic_lower_divergence_pairs": 0,
+  "paired_cases": 5,
+  "hash_base": "..",
+  "files_sha256": {
+    "entropic/data/costs.csv": "7b4e694213a5de6bb13e06fe18bd2af6504950301760db0ecd3dae76e960be15",
+    "entropic/diagnostics/divergence/divergence_NK1600_eps0.013522657886737746.json": "27f57bbac7931ba48b30175edac189b829b6006c379c026ee75879a2d1514fef",
+    "entropic/diagnostics/divergence/divergence_NK1600_eps0.015768179232385285.json": "94d8f479fbc2051e6ac13d34ae545dc2eae839cd98f06d9d4978029112af33d6",
+    "entropic/diagnostics/divergence/divergence_NK1600_eps0.018386583346789678.json": "1f632892fbfcb196f979e1052dddd50e81fb5aeb812af553513240834df3ef5b",
+    "entropic/diagnostics/divergence/divergence_NK1600_eps0.021439789730072968.json": "b59b24a0b75e2b551e09635cb0f8351e4fff65cec2dac66a4e07e2bbd22988c4",
+    "entropic/diagnostics/divergence/divergence_NK1600_eps0.025000000000000001.json": "1e576a12f28ddec939293924deef5ac654873731d5ae5fdbf2ad31bf69ae429d",
+    "entropic/metadata/parameters.json": "322a3476e4bb92f4c6c570a5990f3ca02d619306e324b2df582b2f033b23c73a",
+    "entropic/plots/comparison_experiment_3.png": "4f62a476716ce310014a1564998e91810b0544f2c9b6d767760b50ad1881e790",
+    "entropic/plots/comparison_experiment_3_log.png": "c6b4427737b95fea25912a53e8f345ea5710e651a4c7ae32adb8b5f45772f012",
+    "entropic/plots/comparison_experiments_1_2_3.png": "4021e07d2c0d9c7838090c8cbb319a2386044544fd8c560d24ea306e004438b9",
+    "entropic/plots/comparison_experiments_1_2_3_log.png": "fcfc85e7021cb1f03336373c660bd6b9e776075c325d2c95d1ba0d5fd43785b8",
+    "hard/data/costs.csv": "0801cb2417239a3ceaa8db99e85381cfa844ae014f2a07b4cd2b793cdac392b2",
+    "hard/diagnostics/divergence/divergence_NK1600_eps0.013522657886737746.json": "3d696cecdfa105b3806c0ee234199f2c90aaafa2a4180fff55e7e2b6320b3d93",
+    "hard/diagnostics/divergence/divergence_NK1600_eps0.015768179232385285.json": "24363ccc7ccfc69ec049b296cbfe89bdac8080f7d8d4c1f9827b9ea3d667237c",
+    "hard/diagnostics/divergence/divergence_NK1600_eps0.018386583346789678.json": "c6eb64092d32103f7e42c138a7a051923a8545d935051a3658e7d7cd40b4cd3c",
+    "hard/diagnostics/divergence/divergence_NK1600_eps0.021439789730072968.json": "89e5f26b6d07fe9fd19ad46d7570239de5dde16787e0b8835cfc2507c129d2d6",
+    "hard/diagnostics/divergence/divergence_NK1600_eps0.025000000000000001.json": "dd9493cd694ae1e249336ae978e6ac6278432f06fddb64481e3bfad05ceec667",
+    "hard/metadata/parameters.json": "299a95f1ac8a6d6a2a75aebe275683073f33cf727c188181458cd815d5fb937c",
+    "metadata/evaluation_settings.json": "848f7e8195b1a429e43f51e8df075299b62abf5aa5a6631cde3b9f6208488358"
+  }
+}

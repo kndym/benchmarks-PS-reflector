@@ -29,6 +29,7 @@ from refracter.sinkhorn import run_sinkhorn_divergence, entropic_ot_cost
 from refracter.optics import entropic_surface_normals, refract_using_normals
 import refracter.sinkhorn as sinkhorn_module
 from atomic_io import atomic_replace, atomic_write_json
+from shared_optical import problem_key, get_or_solve
 
 
 def joint_epsilon(nk):
@@ -86,6 +87,8 @@ def main():
     parser.add_argument("--chunk-size", type=int, default=512)
     parser.add_argument("--pf-cache-entries", type=int, default=4_000_000)
     parser.add_argument("--workers", type=int, default=1, help="Threads for independent SciPy reductions")
+    parser.add_argument('--shared-optical-cache',type=Path,
+                        help='Reuse identical optical potentials between hard and entropic consumers')
     parser.add_argument("--pushforward", choices=["hard", "entropic"], default="hard",
                         help="Hard c-transform or entropic-surface normals with Snell refraction")
     parser.add_argument("--pf-warm-start", action="store_true",
@@ -221,13 +224,23 @@ def main():
             y = gen_spherical_patch(target_nk, *np.deg2rad(args.target_theta), *np.deg2rad(args.target_phi), skip=0)
             p, q = source_density(x), target_density(y)
             p, q = p/p.sum(), q/q.sum()
-            solution = run_sinkhorn_divergence(x, y, p, q, verbose=False, epsilon=epsilon,
+            def optical_solve():
+                return run_sinkhorn_divergence(x, y, p, q, verbose=False, epsilon=epsilon,
                                                separate_marginals=args.target_nk is not None,
                                                chunk_size=args.chunk_size,
                                                max_iter=args.refractor_max_iter or None,
                                                identity_max_iter=args.identity_max_iter or None,
                                                tolerance=args.refractor_tolerance,
                                                marginal_tolerance=args.optical_marginal_tolerance)
+            if args.shared_optical_cache:
+                settings=dict(solver_version=args.solver_version,kappa=args.kappa,epsilon=epsilon,
+                    separate_marginals=args.target_nk is not None,chunk_size=args.chunk_size,
+                    max_iter=args.refractor_max_iter,identity_max_iter=args.identity_max_iter,
+                    tolerance=args.refractor_tolerance,marginal_tolerance=args.optical_marginal_tolerance)
+                identity=problem_key((x,y,p,q),settings)
+                solution=get_or_solve(args.shared_optical_cache,identity,optical_solve)
+            else:
+                solution=optical_solve()
             if not all(np.isfinite(value).all() for value in solution.values()):
                 raise RuntimeError(f"Nonfinite refractor solution: NK={nk}, epsilon={epsilon}")
             # Diagnose feasibility without changing the original stopping rule.

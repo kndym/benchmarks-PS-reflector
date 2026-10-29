@@ -27,6 +27,10 @@ def main():
     parser.add_argument('--output-root', type=Path, default=OUTPUT)
     parser.add_argument('--experiments', nargs='+', type=int, choices=[1,2,3], default=[1,2,3])
     parser.add_argument('--nk', nargs='+', type=int)
+    parser.add_argument('--epsilon',nargs='+',type=float)
+    parser.add_argument('--workers',type=int,default=1)
+    parser.add_argument('--chunk-size',type=int,default=256)
+    parser.add_argument('--shared-optical-cache',type=Path)
     parser.add_argument('--refractor-max-iter', type=int, default=10000)
     parser.add_argument('--identity-max-iter', type=int, default=10000)
     parser.add_argument("--diagnostics-only", action="store_true",
@@ -38,9 +42,13 @@ def main():
     ensure_readme(logs)
     common = ["--extended", "--experiments", *map(str,args.experiments), "--target-nk", "1600",
               "--refractor-max-iter", str(args.refractor_max_iter), "--identity-max-iter", str(args.identity_max_iter),
-              "--workers", "1", "--chunk-size", "256", *CASES[args.case]]
+              "--workers", str(args.workers), "--chunk-size", str(args.chunk_size), *CASES[args.case]]
     if args.nk:
         common += ['--nk', *map(str,args.nk)]
+    if args.epsilon:
+        common += ['--epsilon',*map(str,args.epsilon)]
+    if args.shared_optical_cache:
+        common += ['--shared-optical-cache',str(args.shared_optical_cache.resolve())]
     if args.smoke:
         common += ["--nk", "16", "--fixed-nk", "16", "--target-nk", "16", "--epsilon", "0.01"]
     children, streams = {}, []

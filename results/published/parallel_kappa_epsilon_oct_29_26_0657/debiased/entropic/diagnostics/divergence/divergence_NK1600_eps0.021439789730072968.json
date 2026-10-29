@@ -1,0 +1,55 @@
+{
+  "result": {
+    "experiment": 3,
+    "nk": 1600,
+    "refractor_epsilon": 0.021439789730072968,
+    "pf_epsilon": 0.003125,
+    "eot": 0.00573719299548261,
+    "source_self": 0.003742951853907489,
+    "target_self": 0.005960076549553893,
+    "divergence": 0.0008856787937519192,
+    "raw_divergence": 0.0008856787937519192,
+    "converged": true,
+    "cross_iterations": 63,
+    "source_self_iterations": 49,
+    "target_self_iterations": 73
+  },
+  "diagnostics": {
+    "cross": {
+      "iterations": 63,
+      "converged": true,
+      "potential_change": 5.049357702791024e-10,
+      "transport_mass": 1.0,
+      "source_marginal_l1": 9.273627615098094e-08,
+      "target_marginal_l1": 9.031404096804252e-16,
+      "marginal_tolerance": 1e-07
+    },
+    "source_self": {
+      "iterations": 49,
+      "converged": true,
+      "potential_change": 5.254124496589796e-10,
+      "transport_mass": 1.0,
+      "source_marginal_l1": 9.791666562297425e-08,
+      "target_marginal_l1": 9.97249158252167e-16,
+      "marginal_tolerance": 1e-07
+    },
+    "target_self": {
+      "iterations": 73,
+      "converged": true,
+      "potential_change": 5.2213738888085e-10,
+      "transport_mass": 1.0,
+      "source_marginal_l1": 8.992190594827448e-08,
+      "target_marginal_l1": 1.0364972768961422e-15,
+      "marginal_tolerance": 1e-07
+    },
+    "cross_iterations": 63,
+    "source_self_iterations": 49,
+    "target_self_iterations": 73,
+    "all_converged": true,
+    "raw_divergence": 0.0008856787937519192
+  },
+  "cross_checkpoint": "C:\\Users\\Kevin\\Github\\benchmarks-PS-reflector\\results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\entropic\\checkpoints\\pushforward\\pf_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_entropic_v1_eps0.021439789730072968_eval0.0031250000000000002.json",
+  "cross_checkpoint_sha256": "2b1c65cf3d12bb7af4b1ef6de8da470dba22fed53eb51ba5d4b1abf4ffb6e95e",
+  "saved_map": "C:\\Users\\Kevin\\Github\\benchmarks-PS-reflector\\results\\runs\\repaired_refractor_kappa_oct_28_26\\parallel_epsilon\\kappa_only\\entropic\\checkpoints\\solutions\\solve_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_entropic_v1_eps0.021439789730072968.npz",
+  "saved_map_sha256": "a605d0a88893a88fbdc667f4bb09d1ef862aa472708819e165b8b4bee5c9796b"
+}
