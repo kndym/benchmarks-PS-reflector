@@ -125,13 +125,12 @@ def main():
                 a, b, cross = (float(row[k]) for k in ('source_self', 'target_self', 'eot'))
                 assert row['converged'] == 'True' and np.isfinite([a,b,cross]).all()
                 assert abs(cross-.5*(a+b)-float(row['raw_divergence'])) < 1e-15
-                row['self_sum'], row['half_self_sum'] = a+b, .5*(a+b)
+                row['average_self'] = .5*(a+b)
             filename = f'{run}_{mode}_cost_terms.png'
             render(filename, rows, [('eot', 'Raw cross EOT', 'o-'),
                 ('source_self', 'Push-forward self EOT', 's-'),
                 ('target_self', 'Target self EOT', '^-'),
-                ('self_sum', 'Sum of self EOTs', 'd-'),
-                ('half_self_sum', 'Half-sum (debiasing term)', '--')], 'Regularized cost')
+                ('average_self', 'Average self EOT', 'd--')], 'Regularized cost')
             write_csv(f'{run}_{mode}_cost_terms.csv', rows)
             manifest['figures'].append(filename)
             if mode != 'hard':
@@ -170,9 +169,9 @@ def main():
 \label{sec:cost-terms-and-bounds}
 For each run, map type, and parameter experiment, we plot the raw cross-EOT,
 $A=\mathrm{EOT}_{1/320}(T_\#p,T_\#p)$, $B=\mathrm{EOT}_{1/320}(q,q)$,
-their full sum $A+B$, and the debiasing term $(A+B)/2$.
-Thus the divergence plotted earlier is the raw cross-EOT minus the half-sum,
-not minus the full sum. ``Push-forward self'' refers to the mapped measure,
+and their average $(A+B)/2$, the debiasing term.
+Thus the divergence plotted earlier is the raw cross-EOT minus the average
+self EOT. ``Push-forward self'' refers to the mapped measure,
 not the optical source-self correction. These EOT terms use squared
 Euclidean distance and KL relative to the product measure. The component
 plots use a linear cost axis and the same completed-case captures as above.
@@ -209,8 +208,8 @@ hard maps; we do not apply this construction to the smooth Snell maps.
  \centering
  \includegraphics[width=\textwidth]{{{run}_{mode}_cost_terms.png}}
  \caption{{\large $\kappa={kappa}$, {mode} map: raw EOT and self-EOT
- components for all three experiments. The full self sum and its half-sum
- are shown separately. Panel titles give completed cases out of 40.}}
+ components for all three experiments, including the average of the two
+ self-EOT terms. Panel titles give completed cases out of 40.}}
  \label{{fig:{run}-{mode}-cost-terms}}
 \end{{figure}}
 '''

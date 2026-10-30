@@ -3,9 +3,9 @@
 \label{sec:cost-terms-and-bounds}
 For each run, map type, and parameter experiment, we plot the raw cross-EOT,
 $A=\mathrm{EOT}_{1/320}(T_\#p,T_\#p)$, $B=\mathrm{EOT}_{1/320}(q,q)$,
-their full sum $A+B$, and the debiasing term $(A+B)/2$.
-Thus the divergence plotted earlier is the raw cross-EOT minus the half-sum,
-not minus the full sum. ``Push-forward self'' refers to the mapped measure,
+and their average $(A+B)/2$, the debiasing term.
+Thus the divergence plotted earlier is the raw cross-EOT minus the average
+self EOT. ``Push-forward self'' refers to the mapped measure,
 not the optical source-self correction. These EOT terms use squared
 Euclidean distance and KL relative to the product measure. The component
 plots use a linear cost axis and the same completed-case captures as above.
@@ -40,8 +40,8 @@ hard maps; we do not apply this construction to the smooth Snell maps.
  \centering
  \includegraphics[width=\textwidth]{original_hard_cost_terms.png}
  \caption{\large $\kappa=0.6$, hard map: raw EOT and self-EOT
- components for all three experiments. The full self sum and its half-sum
- are shown separately. Panel titles give completed cases out of 40.}
+ components for all three experiments, including the average of the two
+ self-EOT terms. Panel titles give completed cases out of 40.}
  \label{fig:original-hard-cost-terms}
 \end{figure}
 
@@ -49,8 +49,8 @@ hard maps; we do not apply this construction to the smooth Snell maps.
  \centering
  \includegraphics[width=\textwidth]{original_entropic_cost_terms.png}
  \caption{\large $\kappa=0.6$, entropic map: raw EOT and self-EOT
- components for all three experiments. The full self sum and its half-sum
- are shown separately. Panel titles give completed cases out of 40.}
+ components for all three experiments, including the average of the two
+ self-EOT terms. Panel titles give completed cases out of 40.}
  \label{fig:original-entropic-cost-terms}
 \end{figure}
 
@@ -68,8 +68,8 @@ hard maps; we do not apply this construction to the smooth Snell maps.
  \centering
  \includegraphics[width=\textwidth]{repaired_kappa_hard_cost_terms.png}
  \caption{\large $\kappa=0.8$, hard map: raw EOT and self-EOT
- components for all three experiments. The full self sum and its half-sum
- are shown separately. Panel titles give completed cases out of 40.}
+ components for all three experiments, including the average of the two
+ self-EOT terms. Panel titles give completed cases out of 40.}
  \label{fig:repaired_kappa-hard-cost-terms}
 \end{figure}
 
@@ -77,8 +77,8 @@ hard maps; we do not apply this construction to the smooth Snell maps.
  \centering
  \includegraphics[width=\textwidth]{repaired_kappa_entropic_cost_terms.png}
  \caption{\large $\kappa=0.8$, entropic map: raw EOT and self-EOT
- components for all three experiments. The full self sum and its half-sum
- are shown separately. Panel titles give completed cases out of 40.}
+ components for all three experiments, including the average of the two
+ self-EOT terms. Panel titles give completed cases out of 40.}
  \label{fig:repaired_kappa-entropic-cost-terms}
 \end{figure}
 

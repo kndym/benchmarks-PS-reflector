@@ -13,7 +13,7 @@ raw EOT and debiased divergence figures. Pending cases are marked.
 | Repaired kappa=0.8 | Entropic + Snell | [Plot](../../images/repaired_kappa_entropic_cost_terms.png) | Not applicable |
 
 Each component figure includes raw cross-EOT, push-forward self-EOT A, target
-self-EOT B, their sum A+B, and the half-sum actually subtracted in Sinkhorn
+self-EOT B, and their average (A+B)/2, which is subtracted in Sinkhorn
 divergence. This is the independent squared Euclidean EOT evaluation at
 regularization 1/320 with KL relative to the product measure. The self terms
 are distinct from the optical source/target corrections used to build the map.
