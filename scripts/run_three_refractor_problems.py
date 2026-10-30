@@ -35,6 +35,7 @@ def main():
     parser.add_argument('--refractor-max-iter', type=int, default=10000)
     parser.add_argument('--identity-max-iter', type=int, default=10000)
     parser.add_argument('--identity-refinement-budget', type=int, default=0)
+    parser.add_argument('--transport-refinement-budget', type=int, default=0)
     parser.add_argument("--diagnostics-only", action="store_true",
                         help="Recover diagnostics while existing optical workers continue")
     args = parser.parse_args()
@@ -47,6 +48,7 @@ def main():
               "--workers", str(args.workers), "--chunk-size", str(args.chunk_size), *CASES[args.case]]
     common += ['--cost-cache-mib',str(args.cost_cache_mib)]
     common += ['--identity-refinement-budget',str(args.identity_refinement_budget)]
+    common += ['--transport-refinement-budget',str(args.transport_refinement_budget)]
     if args.nk:
         common += ['--nk', *map(str,args.nk)]
     if args.epsilon:

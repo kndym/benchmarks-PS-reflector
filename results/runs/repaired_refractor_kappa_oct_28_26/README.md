@@ -85,3 +85,25 @@ optical workers, divergence evaluator, and plot watcher.
 The refreshed write-up capture contains 62 paired cases per map (35 joint,
 zero fixed-epsilon, 27 fixed-source). The restarted case is not included
 until it meets the original feasibility checks. All 101 tests pass.
+
+## Transport refinement and direct failure alerts, October 30
+
+The epsilon sweep completed 35/40 cases before the cross-transport solve at
+`epsilon=0.00011554681136556815` reached its 10,000-update cap. Its target
+marginal L1 residual was `2.3207091937049468e-7`; the source residual was
+`6.902240281062011e-13`. This was a new transport cap failure, distinct from
+the earlier source-self cap failure.
+
+The sweep has resumed from its 35 accepted cases with
+`--transport-refinement-budget 190000`, giving up to 200,000 final transport
+updates. The existing identity refinement budget is retained. Equations,
+grids, geometry, potential-change tolerance, and the **1e-7 marginal tolerance**
+are unchanged. Cases still fail if they do not meet tolerance at the new cap.
+The shared solve cache records the extra transport budget in its identity.
+[Restart record](metadata/transport_recovery.json).
+
+The thread automation `refractor-run-failure-alerts` checks both running kappa
+groups every 10 minutes and reports new failures directly in the original
+conversation. It distinguishes new worker generations from historical log
+tracebacks and avoids repeating already reported failures. It does not alter
+or restart workers. Runtime failure-monitor state is local operational data.
