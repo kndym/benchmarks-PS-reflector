@@ -1,0 +1,95 @@
+\clearpage
+\subsection{EOT components and hard-map OT upper bounds}
+\label{sec:cost-terms-and-bounds}
+For each run, map type, and parameter experiment, we plot the raw cross-EOT,
+$A=\mathrm{EOT}_{1/320}(T_\#p,T_\#p)$, $B=\mathrm{EOT}_{1/320}(q,q)$,
+their full sum $A+B$, and the debiasing term $(A+B)/2$.
+Thus the divergence plotted earlier is the raw cross-EOT minus the half-sum,
+not minus the full sum. ``Push-forward self'' refers to the mapped measure,
+not the optical source-self correction. These EOT terms use squared
+Euclidean distance and KL relative to the product measure. The component
+plots use a linear cost axis and the same completed-case captures as above.
+
+For a hard map, all pushed points are target atoms $y_j$. Aggregate their
+source weights into $m_j=(T_\#p)(\{y_j\})$. Put
+\[
+ s_j=\min(m_j,q_j),\qquad e_j=(m_j-q_j)_+,\qquad
+ d_j=(q_j-m_j)_+,\qquad M=\sum_j e_j=\sum_j d_j.
+\]
+Retain $s_j$ at $y_j$ at zero cost. For $M>0$, the residual coupling
+\[
+ \pi_{ij}=s_i\delta_{ij}+\frac{e_i d_j}{M}
+\]
+has row masses $m_i$ and column masses $q_j$. With
+$c_{ij}=\|y_i-y_j\|^2$, this gives
+\[
+ \mathrm{OT}(T_\#p,q)
+ \le C_\pi=\frac1M\sum_{i,j}e_i d_jc_{ij}
+ \le U_D=\sum_i e_i\max_{j:d_j>0}c_{ij}
+ \le U=\sum_i e_i\max_jc_{ij}.
+\]
+The last expression is the requested per-pushed-point worst-cost bound.
+The deficit-only maximum is a tighter valid variant. If $M=0$, all three
+upper bounds are zero. We verify the witness marginals and bound ordering
+numerically for every plotted case. These bounds apply to unregularized
+OT, not to regularized EOT; EOT need not lie below these bounds.
+Keeping common mass on target atoms at zero cost is specific here to the
+hard maps; we do not apply this construction to the smooth Snell maps.
+
+\begin{figure}[p]
+ \centering
+ \includegraphics[width=\textwidth]{original_hard_cost_terms.png}
+ \caption{\large $\kappa=0.6$, hard map: raw EOT and self-EOT
+ components for all three experiments. The full self sum and its half-sum
+ are shown separately. Panel titles give completed cases out of 40.}
+ \label{fig:original-hard-cost-terms}
+\end{figure}
+
+\begin{figure}[p]
+ \centering
+ \includegraphics[width=\textwidth]{original_entropic_cost_terms.png}
+ \caption{\large $\kappa=0.6$, entropic map: raw EOT and self-EOT
+ components for all three experiments. The full self sum and its half-sum
+ are shown separately. Panel titles give completed cases out of 40.}
+ \label{fig:original-entropic-cost-terms}
+\end{figure}
+
+\begin{figure}[p]
+ \centering
+ \includegraphics[width=\textwidth]{original_hard_ot_bounds.png}
+ \caption{\large $\kappa=0.6$ hard map: worst-cost OT upper bounds
+ after retaining common mass, together with the cost of an explicit
+ feasible residual coupling. All three curves bound unregularized OT.
+ Pending cases are omitted.}
+ \label{fig:original-hard-ot-bounds}
+\end{figure}
+
+\begin{figure}[p]
+ \centering
+ \includegraphics[width=\textwidth]{repaired_kappa_hard_cost_terms.png}
+ \caption{\large $\kappa=0.8$, hard map: raw EOT and self-EOT
+ components for all three experiments. The full self sum and its half-sum
+ are shown separately. Panel titles give completed cases out of 40.}
+ \label{fig:repaired_kappa-hard-cost-terms}
+\end{figure}
+
+\begin{figure}[p]
+ \centering
+ \includegraphics[width=\textwidth]{repaired_kappa_entropic_cost_terms.png}
+ \caption{\large $\kappa=0.8$, entropic map: raw EOT and self-EOT
+ components for all three experiments. The full self sum and its half-sum
+ are shown separately. Panel titles give completed cases out of 40.}
+ \label{fig:repaired_kappa-entropic-cost-terms}
+\end{figure}
+
+\begin{figure}[p]
+ \centering
+ \includegraphics[width=\textwidth]{repaired_kappa_hard_ot_bounds.png}
+ \caption{\large $\kappa=0.8$ hard map: worst-cost OT upper bounds
+ after retaining common mass, together with the cost of an explicit
+ feasible residual coupling. All three curves bound unregularized OT.
+ Pending cases are omitted.}
+ \label{fig:repaired_kappa-hard-ot-bounds}
+\end{figure}
+
+\clearpage

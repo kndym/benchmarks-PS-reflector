@@ -1,0 +1,2370 @@
+{
+  "cost": "squared Euclidean distance in 3D",
+  "original_capture": "2026-10-26T23:00:48.362320-04:00",
+  "repaired_capture": "2026-10-30T15:57:39.305815+00:00",
+  "sources": [
+    {
+      "path": "results/published/debiased_comparison_complete_oct_26_26/hard/data/costs.csv",
+      "sha256": "a82d98318efad4651328bd7b4dde2c3bd50a3b5a84da2551befad1a3eff031d5"
+    },
+    {
+      "path": "results/published/debiased_comparison_complete_oct_26_26/entropic/data/costs.csv",
+      "sha256": "fdd456e2e144c4164fe19fa3478fcc0102d14775ae5ae22971604084a86ef1c2"
+    },
+    {
+      "path": "geometric_optics_progress/metadata/repaired_kappa_capture/hard.csv",
+      "sha256": "73aeecb2870e83e8cd0317d446226f31b5601ebdc3971f79379d6c46525d3248"
+    },
+    {
+      "path": "geometric_optics_progress/metadata/repaired_kappa_capture/entropic.csv",
+      "sha256": "65c8343549d3b203a15069676d5a49553cb8d3fd8c20d2b29f7168b9fdcbfd4f"
+    }
+  ],
+  "maps": [
+    {
+      "run": "original",
+      "case": [
+        1,
+        100,
+        0.0125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK100_eps0.012500000000000001.json",
+      "record_sha256": "6a665bc47107b40f6051bda0a70044026700b51215dc4e543e78d97c3f97caa2",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK100_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.012500000000000001.npz",
+      "map_sha256": "9233785e629644cddddf2db7f40e5fb3f12e8c88e74c437f1fac37dd376822ca"
+    },
+    {
+      "run": "original",
+      "case": [
+        1,
+        115,
+        0.0125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK115_eps0.012500000000000001.json",
+      "record_sha256": "dcf4fc268d532043b773504ae601ac59ba8739fff544c24f0c7092a718a16344",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK115_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.012500000000000001.npz",
+      "map_sha256": "a14a9f728d86e3de16696d923cadbbcf9bafed7bf2b895ef8044c9c5ba93f15c"
+    },
+    {
+      "run": "original",
+      "case": [
+        1,
+        131,
+        0.011363636363636364
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK131_eps0.011363636363636364.json",
+      "record_sha256": "d97558fb1503e96c0b2f187bc577699e3af97e8c7d5069d4b2d0396261bb1d26",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK131_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.011363636363636364.npz",
+      "map_sha256": "d51378d70e8e576aa07db33a5a58e1a205c249505c55b9db395ab6a7ca60d688"
+    },
+    {
+      "run": "original",
+      "case": [
+        1,
+        150,
+        0.010416666666666666
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK150_eps0.010416666666666666.json",
+      "record_sha256": "05eb7a2639d31238ffa6b17a83f5a611197ca30d86320e255bff461d5c1a1da6",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK150_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.010416666666666666.npz",
+      "map_sha256": "7a8bdf0ceaf16809c193c54e887f5d9d841c50baef495639b1beb1ec1e591fad"
+    },
+    {
+      "run": "original",
+      "case": [
+        1,
+        172,
+        0.009615384615384616
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK172_eps0.0096153846153846159.json",
+      "record_sha256": "662485a8ef944d4aac8b4b1180899faaf2f0699562f90391aeef64ea0abb9f52",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK172_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0096153846153846159.npz",
+      "map_sha256": "d0c0c5ff87b8a6a7c72ec1561e3b10ede5cbc15446ef18114371b0815a2f0179"
+    },
+    {
+      "run": "original",
+      "case": [
+        1,
+        197,
+        0.008928571428571428
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK197_eps0.0089285714285714281.json",
+      "record_sha256": "661511eb430b02bf173c210afb870e74abaebc376d7a974bc2efde7c017e3b8a",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK197_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0089285714285714281.npz",
+      "map_sha256": "5b2d490ddf53644cfa98f4c8f6d498053750d4d0a18780ea84e25f6366667250"
+    },
+    {
+      "run": "original",
+      "case": [
+        1,
+        226,
+        0.008333333333333333
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK226_eps0.0083333333333333332.json",
+      "record_sha256": "31126809debf36e6bc53e81261c8c8e45f3fb2405f818c24cb6b9bc33117650a",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK226_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0083333333333333332.npz",
+      "map_sha256": "fbe5ceb7561826e6b8e7925ae982c018424a7eaeae15557de6862d2de0170af8"
+    },
+    {
+      "run": "original",
+      "case": [
+        1,
+        259,
+        0.0078125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK259_eps0.0078125.json",
+      "record_sha256": "0362a9589da2a0af80270e5443ab0dc217f9959636d134b86baa5e9913ba79b3",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK259_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0078125.npz",
+      "map_sha256": "ffb6209df01cbff2b01b01adee5dc7e91a7cd378ba15be53a80f31cb7f908971"
+    },
+    {
+      "run": "original",
+      "case": [
+        1,
+        296,
+        0.007352941176470588
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK296_eps0.0073529411764705881.json",
+      "record_sha256": "71188b724d9635470c0cd23231be37dc58b39aa5b2fd729ef339df4adc737ff9",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK296_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0073529411764705881.npz",
+      "map_sha256": "7d84c779588b6a57d0c10082c169dc66dd3f4c1a7aaa34b80e44a59df8e26733"
+    },
+    {
+      "run": "original",
+      "case": [
+        1,
+        340,
+        0.006944444444444444
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK340_eps0.0069444444444444441.json",
+      "record_sha256": "b362d80809a08965c0a33fc9601539648abb6cd1ea6a07413500ff97ab042cd0",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK340_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0069444444444444441.npz",
+      "map_sha256": "3968c05a4ad00c43a64df52af8c3b9ef0d8ebfff524f8baabf6e68e567a47356"
+    },
+    {
+      "run": "original",
+      "case": [
+        1,
+        389,
+        0.006578947368421052
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK389_eps0.0065789473684210523.json",
+      "record_sha256": "2ed077d9ddcd1360e64817eacbbb816c5e3b72b62e30eef5f86c1d469d525774",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK389_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0065789473684210523.npz",
+      "map_sha256": "2133a5755df0606677ddeda11e6da8747bc0172872e0668542ee4e73b97c5215"
+    },
+    {
+      "run": "original",
+      "case": [
+        1,
+        446,
+        0.005952380952380952
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK446_eps0.0059523809523809521.json",
+      "record_sha256": "9874dd33f8dd92c97f595ab77c97aba01a1b1df8ec4ad859065a1b1820b3756e",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK446_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0059523809523809521.npz",
+      "map_sha256": "8d22fb0bfb5b3ca13c6968fdf31661b6e87eb2a9d1ec929c3c4d8f8fd5879ef5"
+    },
+    {
+      "run": "original",
+      "case": [
+        1,
+        511,
+        0.005681818181818182
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK511_eps0.005681818181818182.json",
+      "record_sha256": "06e0b0c77c827e754e48b77d886f0622b0059140bc36689af7fa3791a8bfce62",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK511_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.005681818181818182.npz",
+      "map_sha256": "2d87029e1c54e5168975a6f9c61c8ac41df0dd24b988777b850c2a12c6852a80"
+    },
+    {
+      "run": "original",
+      "case": [
+        1,
+        585,
+        0.005208333333333333
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK585_eps0.005208333333333333.json",
+      "record_sha256": "da0f47e58b8cd500d9461a8137279db0c762a27be68e5f781a303f22f84c812c",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK585_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.005208333333333333.npz",
+      "map_sha256": "b7fa8c97d4f9b7ffde17aa03fd70f2d1a412d84a3f3f61be2f663d138a1941f2"
+    },
+    {
+      "run": "original",
+      "case": [
+        1,
+        670,
+        0.005
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK670_eps0.0050000000000000001.json",
+      "record_sha256": "79b37e862a16f69dd995a7a96c5d9d5e239a2ca958b0501d8f95e009b8fdb834",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK670_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0050000000000000001.npz",
+      "map_sha256": "c4ca35a48d8c8ccde8c8559a34fe2104bc2cfbeb9a5cc463c468bf017a07cf79"
+    },
+    {
+      "run": "original",
+      "case": [
+        1,
+        767,
+        0.004629629629629629
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK767_eps0.0046296296296296294.json",
+      "record_sha256": "89a2d682f5a20349aec794ca97c91d36cbd6403fc848d2a3429435f86043021a",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK767_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0046296296296296294.npz",
+      "map_sha256": "b2a864439e2a540ce6f0c3ce271e8000ce10268b3638a5b46b78e468ac8bc9ef"
+    },
+    {
+      "run": "original",
+      "case": [
+        1,
+        879,
+        0.004310344827586207
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK879_eps0.0043103448275862068.json",
+      "record_sha256": "a209a274c406419ab04b271a14656e74b388e22b9d098cd9b0ea6c8288a23e5d",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK879_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0043103448275862068.npz",
+      "map_sha256": "a625ce104ad91d8d874b35796d764014d332d46f2a1fe474bb94dab26854ea28"
+    },
+    {
+      "run": "original",
+      "case": [
+        1,
+        1007,
+        0.004032258064516129
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1007_eps0.0040322580645161289.json",
+      "record_sha256": "9e9a33ceded963828349763a0278c2ed0021503e3bc2ee2dc87e2afa8cabcdbb",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1007_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0040322580645161289.npz",
+      "map_sha256": "ba939d9af9bd195d768f7a11e5c5da1dff68b19900d203be77e9beaab446a9ef"
+    },
+    {
+      "run": "original",
+      "case": [
+        1,
+        1153,
+        0.003787878787878788
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1153_eps0.003787878787878788.json",
+      "record_sha256": "14898cc2e3affc147870304095a30a0e9e63dc1685cc22db5e0bf2a346922650",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1153_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.003787878787878788.npz",
+      "map_sha256": "6cf85b264935d5ed57262b882cb64d56021ccec50fbec1e7cd9c07c14cbab126"
+    },
+    {
+      "run": "original",
+      "case": [
+        1,
+        1321,
+        0.003472222222222222
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1321_eps0.003472222222222222.json",
+      "record_sha256": "cc2672914fbaeb10faa47093b2a6f118891336df6bf315c9649be8a5c8310f36",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1321_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.003472222222222222.npz",
+      "map_sha256": "c362278fdeea117fdaf42d02d611f2e51ff55c9e965e13e831a68af60de4ddaa"
+    },
+    {
+      "run": "original",
+      "case": [
+        1,
+        1514,
+        0.003289473684210526
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1514_eps0.0032894736842105261.json",
+      "record_sha256": "05687af9a490c4eddc31ffb6613e60e85bd4fb904cd064c93bee121b1655ccae",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1514_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0032894736842105261.npz",
+      "map_sha256": "b482ef081828b7f494a1e71ae3912646fe1c876a950a4a510d41f96da5f5411c"
+    },
+    {
+      "run": "original",
+      "case": [
+        1,
+        1734,
+        0.003048780487804878
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1734_eps0.0030487804878048782.json",
+      "record_sha256": "4f2663cf483571d2efc69586784f591f43b33aa2cf0cf3d78bb0eb6f90890ce9",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1734_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0030487804878048782.npz",
+      "map_sha256": "c733513a2738fde7c4bfdf792ec294c23d73cfd4436076310f784890f5f22d04"
+    },
+    {
+      "run": "original",
+      "case": [
+        1,
+        1986,
+        0.002840909090909091
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1986_eps0.002840909090909091.json",
+      "record_sha256": "7df53c317fac83363ac9110452cafb485fe69c0a5dabf1ab784539e862e99a7d",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1986_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.002840909090909091.npz",
+      "map_sha256": "0332de178c1bc249f10c82d9f418bc0b97c083649f715c76a8126db45f3c5ad2"
+    },
+    {
+      "run": "original",
+      "case": [
+        1,
+        2275,
+        0.0026595744680851063
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK2275_eps0.0026595744680851063.json",
+      "record_sha256": "9b8b44e0146b776b5e5b34e166d572af2f321bd9f9676f97b64bfde4b0d1566c",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK2275_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0026595744680851063.npz",
+      "map_sha256": "d1136d195c7372fc96c1b862b9d6d00dc9fefd5059846da75210c18617876076"
+    },
+    {
+      "run": "original",
+      "case": [
+        1,
+        2606,
+        0.0024509803921568627
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK2606_eps0.0024509803921568627.json",
+      "record_sha256": "53f5ada47e9a3339aa4ad09affd38e3a7721b90f11b66887975a43f0f8f593b9",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK2606_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0024509803921568627.npz",
+      "map_sha256": "662605c6a1e89e13e8b8a02a17fa309d58d82165e08f29806bf6240743bee95b"
+    },
+    {
+      "run": "original",
+      "case": [
+        1,
+        2986,
+        0.0023148148148148147
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK2986_eps0.0023148148148148147.json",
+      "record_sha256": "00da85b5636c2b737f6970c4e5bd672e750b028e951afc618c136d7bcc53e917",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK2986_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0023148148148148147.npz",
+      "map_sha256": "75beebe37b92248fc4d858771755a6ee96f1797012ac8df443ab65a13f70caed"
+    },
+    {
+      "run": "original",
+      "case": [
+        1,
+        3420,
+        0.0021551724137931034
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK3420_eps0.0021551724137931034.json",
+      "record_sha256": "7e614f60f827b2e0aad58a5907013797fe7aadbb66188b8fb242cb5003c9b70a",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK3420_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0021551724137931034.npz",
+      "map_sha256": "a93a33776e6a4c2471c2b24d03d8991f28c5cb9df19932cc15f0aca3d6aab4e4"
+    },
+    {
+      "run": "original",
+      "case": [
+        1,
+        3918,
+        0.0020161290322580645
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK3918_eps0.0020161290322580645.json",
+      "record_sha256": "1d98a510096d4f0602141d8560b8c60819ff68048e817714f4f2cfea2904c393",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK3918_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0020161290322580645.npz",
+      "map_sha256": "318cea0dc5f0bd8c11a36518ea6b447a21506133ef900020988b6b23152f5557"
+    },
+    {
+      "run": "original",
+      "case": [
+        1,
+        4488,
+        0.001893939393939394
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK4488_eps0.001893939393939394.json",
+      "record_sha256": "74dddd7c1e520311ca6291df24577b40c43f35387e487122099852e1e0562111",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK4488_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.001893939393939394.npz",
+      "map_sha256": "b7708337778afc442498c4cab84503587887b15cc1d09f555f1386deea9db3e4"
+    },
+    {
+      "run": "original",
+      "case": [
+        1,
+        5141,
+        0.0017605633802816902
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK5141_eps0.0017605633802816902.json",
+      "record_sha256": "c2d2e48ab3aa86be6c99e9717a6a4b1b31dd58b5b4b13fc8da17545ce4f222aa",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK5141_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0017605633802816902.npz",
+      "map_sha256": "a73c463d7915af2968b6fe92ee1fd7af2cd138cad98ed637fb2e488b87b239df"
+    },
+    {
+      "run": "original",
+      "case": [
+        1,
+        5889,
+        0.001644736842105263
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK5889_eps0.0016447368421052631.json",
+      "record_sha256": "792f7c0b2c8ffaf8ad867f87df673f84e5ae409db24f6abc9a2df60549c09940",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK5889_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0016447368421052631.npz",
+      "map_sha256": "bd58a4ce5ff4158cc31b407674926f4a72e9530ad4a3006526c1cb69a0d9424d"
+    },
+    {
+      "run": "original",
+      "case": [
+        1,
+        6746,
+        0.001524390243902439
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK6746_eps0.0015243902439024391.json",
+      "record_sha256": "290dc2bfe29b9bbdf68c821322b551ba0fa604fb3c25cf8c94df715a96ad4a77",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK6746_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0015243902439024391.npz",
+      "map_sha256": "626b8cde7772c668df336e670a2d88c487b6a9d43c49657967dd14ad92209691"
+    },
+    {
+      "run": "original",
+      "case": [
+        1,
+        7727,
+        0.0014367816091954023
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK7727_eps0.0014367816091954023.json",
+      "record_sha256": "0373543565a0e3caaf11bc3494e70b1b035bb47dcc5ceaa85432ff133de27063",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK7727_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0014367816091954023.npz",
+      "map_sha256": "33e8867a305a0c174064635e3e0a01e24743c460cceea264d86a68db9418fc00"
+    },
+    {
+      "run": "original",
+      "case": [
+        1,
+        8852,
+        0.0013297872340425532
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK8852_eps0.0013297872340425532.json",
+      "record_sha256": "cf8112828fd1645262b1037e185161375f119599c973d486dba6c73dba709cad",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK8852_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0013297872340425532.npz",
+      "map_sha256": "24ca4ea25eb7e72f498050fb825fbc7f6231f38e5cefc0c7546b02965bd06f6d"
+    },
+    {
+      "run": "original",
+      "case": [
+        1,
+        10140,
+        0.00125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK10140_eps0.00125.json",
+      "record_sha256": "794d28643de3c27b199e504b70480fd5dcb7132fc080dd6bb7efe49f05eb70d5",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK10140_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.00125.npz",
+      "map_sha256": "b3d75a2eebd55df417e7f97af38c11c3dd146a2f67d9b0eb4074034b06a32670"
+    },
+    {
+      "run": "original",
+      "case": [
+        1,
+        11615,
+        0.0011682242990654205
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK11615_eps0.0011682242990654205.json",
+      "record_sha256": "6ee8aa50a2ca8430d02b3cbd661aa277223813b30be4b9d8a59a0a868f515898",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK11615_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0011682242990654205.npz",
+      "map_sha256": "fa22f718cba1def9df727182120ec033e173d9dc4c475623491f87e2ba2a037d"
+    },
+    {
+      "run": "original",
+      "case": [
+        1,
+        13305,
+        0.0010869565217391304
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK13305_eps0.0010869565217391304.json",
+      "record_sha256": "82385897e660806d2fbf1d95c7f5af9b3bf08b6c123c358f6a5e4a1fb1f22321",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK13305_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0010869565217391304.npz",
+      "map_sha256": "654279b74826f1c5d9b020c912a4800a766ca949d622a506525200f1a53f9bae"
+    },
+    {
+      "run": "original",
+      "case": [
+        1,
+        15242,
+        0.0010162601626016261
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK15242_eps0.0010162601626016261.json",
+      "record_sha256": "443e3da319504f7b889d4fe6fc3eef782b5eb8f717514ee86b13c595d08f696d",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK15242_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0010162601626016261.npz",
+      "map_sha256": "ea8ff57cc3d14fec892e52c9e7b390c5510de82c97a129439f2dbd0ff6a4556f"
+    },
+    {
+      "run": "original",
+      "case": [
+        1,
+        17459,
+        0.000946969696969697
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK17459_eps0.000946969696969697.json",
+      "record_sha256": "68c1b641b886d147027e856c906792b6679a099bedc6058a2f5270f1957d019a",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK17459_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.000946969696969697.npz",
+      "map_sha256": "fd71751507d7ecfd214038a407af003823ff36af484de91d548bb77d475fbb21"
+    },
+    {
+      "run": "original",
+      "case": [
+        1,
+        20000,
+        0.0008865248226950354
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK20000_eps0.00088652482269503544.json",
+      "record_sha256": "eb85d6ba10682edb92f088a326217fd115ba7f0b7615b235fe6157329b297358",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK20000_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.00088652482269503544.npz",
+      "map_sha256": "1a946f31ddd208e9dfe690be5dad5653893dfaed620375347b35a439ca3748ab"
+    },
+    {
+      "run": "original",
+      "case": [
+        2,
+        100,
+        0.003125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK100_eps0.0031250000000000002.json",
+      "record_sha256": "f2d53c7b5787dfedbc043ee239a3d58b4159f01384c31fe7cba518d7859184f4",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK100_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0031250000000000002.npz",
+      "map_sha256": "89d7f262cf9da8f3177576b0e1bc63c01beb4a56a32010cec9a827637c41e640"
+    },
+    {
+      "run": "original",
+      "case": [
+        2,
+        115,
+        0.003125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK115_eps0.0031250000000000002.json",
+      "record_sha256": "860c7ac8721a3e7412078f5204ea0b480bec1a6e5121797043b914deedb833be",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK115_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0031250000000000002.npz",
+      "map_sha256": "7fa89993af80650440407c66f65b89c94ad882482a9e9e76c516fb848fdf4bc7"
+    },
+    {
+      "run": "original",
+      "case": [
+        2,
+        131,
+        0.003125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK131_eps0.0031250000000000002.json",
+      "record_sha256": "7b303f356c77c5810d27e8856a397d3cd46f3e6022f708b9c685c06025695836",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK131_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0031250000000000002.npz",
+      "map_sha256": "29ad4d202ac3aa91d6c8bcc20025d4a9e9709e299bf597c91f851fd451b4a983"
+    },
+    {
+      "run": "original",
+      "case": [
+        2,
+        150,
+        0.003125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK150_eps0.0031250000000000002.json",
+      "record_sha256": "eb7195fe8ffb60d5301eba33d0834e7d7c6780d8e7767c95b9498ee964009d96",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK150_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0031250000000000002.npz",
+      "map_sha256": "e561e9a18d046740f38c3f627ee7547cd9f68050a7015b5682ad3a244a5857e4"
+    },
+    {
+      "run": "original",
+      "case": [
+        2,
+        172,
+        0.003125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK172_eps0.0031250000000000002.json",
+      "record_sha256": "dccaf2894e2ab8b4c765a3773d42f60f7e72d62be823f65a0631bb81c4badfae",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK172_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0031250000000000002.npz",
+      "map_sha256": "7982b27b39a58ab5f254125290e1e337d9811b50a60045afae421bc23bb9723b"
+    },
+    {
+      "run": "original",
+      "case": [
+        2,
+        197,
+        0.003125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK197_eps0.0031250000000000002.json",
+      "record_sha256": "839ec79d589f26bedad76030b368a5a13baf9e3c38811e4b8aee227c91e6f5f2",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK197_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0031250000000000002.npz",
+      "map_sha256": "835b3d4fa99d46782b79ca90e61c9e326832b2c2bc4aa3f3db44f5cf0a92bb35"
+    },
+    {
+      "run": "original",
+      "case": [
+        2,
+        226,
+        0.003125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK226_eps0.0031250000000000002.json",
+      "record_sha256": "85a596800f11d73d15bd249a6197bc85f24591a6d4abe2cba6c61bc3ae3168b9",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK226_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0031250000000000002.npz",
+      "map_sha256": "5ef21f14bac7a9b677696f35e1bfb7d29a90e6a4c1c44056240432d8b3d88c32"
+    },
+    {
+      "run": "original",
+      "case": [
+        2,
+        259,
+        0.003125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK259_eps0.0031250000000000002.json",
+      "record_sha256": "0e665b7728f5de7fccc5a6dbe09234994370b5d558c84a96e5b6f4ec48f32a55",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK259_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0031250000000000002.npz",
+      "map_sha256": "168eef69ae3a626dfa9ef53d01f35fc8c1c744fe2f8a2fb449c90619b8024107"
+    },
+    {
+      "run": "original",
+      "case": [
+        2,
+        296,
+        0.003125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK296_eps0.0031250000000000002.json",
+      "record_sha256": "e0632a751ad106ab0fb95f6489337f5a8a6fbeddfe9fc0d4bc230d1cf3bac6c6",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK296_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0031250000000000002.npz",
+      "map_sha256": "f04c442f74e59d7de90f624adc8d5acc66879c41eec3abc82c9f74eeab03c5a2"
+    },
+    {
+      "run": "original",
+      "case": [
+        2,
+        340,
+        0.003125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK340_eps0.0031250000000000002.json",
+      "record_sha256": "4baba7e58ecd69ea6db019299a85a6bce10a76ef121adcd7ae8162783a0059b1",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK340_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0031250000000000002.npz",
+      "map_sha256": "dab2454394ea4eba58c1764c07c6b766e94b753e8d1ca480dfe2dcaf534c73a8"
+    },
+    {
+      "run": "original",
+      "case": [
+        2,
+        389,
+        0.003125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK389_eps0.0031250000000000002.json",
+      "record_sha256": "2d5193bcab20215741c46995d4fb5e503003e5479f597da6902aae2ef8c4d388",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK389_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0031250000000000002.npz",
+      "map_sha256": "77061b6eae894bd3b99030684b617a598030ac8922a8046795776a8e3a69058c"
+    },
+    {
+      "run": "original",
+      "case": [
+        2,
+        446,
+        0.003125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK446_eps0.0031250000000000002.json",
+      "record_sha256": "d6118c3fd469d58cda42202f60da4ed69ede6d4b5186696c78fff134f73946c6",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK446_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0031250000000000002.npz",
+      "map_sha256": "b246d0f329e1616c677fd967412e659520e00825168c03e8680c594986da5566"
+    },
+    {
+      "run": "original",
+      "case": [
+        2,
+        511,
+        0.003125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK511_eps0.0031250000000000002.json",
+      "record_sha256": "d690085ffa8272a264bc2050c461a56246aae96a39d568cb38758312f543f510",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK511_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0031250000000000002.npz",
+      "map_sha256": "4368d0e4dad90177384b779a1982339c93000df1348d6b54c92d48fc8fe519f8"
+    },
+    {
+      "run": "original",
+      "case": [
+        2,
+        585,
+        0.003125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK585_eps0.0031250000000000002.json",
+      "record_sha256": "5c6ad09f6cb3985f59b15e30502f9647971e1f3e2f14c90207d9f5dc83226180",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK585_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0031250000000000002.npz",
+      "map_sha256": "6cde8578537dac9e26f2580fe56c9b0efa5781328525bd0f84e5150b9fa86c84"
+    },
+    {
+      "run": "original",
+      "case": [
+        2,
+        670,
+        0.003125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK670_eps0.0031250000000000002.json",
+      "record_sha256": "79082b050c6004d12b37439e5814606887dc049594e247829295d54d448f1fa3",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK670_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0031250000000000002.npz",
+      "map_sha256": "dcf50b1b364677a7e7a9021c68c0c6f1e0d3281e11689e57c5d1692fc43c096a"
+    },
+    {
+      "run": "original",
+      "case": [
+        2,
+        767,
+        0.003125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK767_eps0.0031250000000000002.json",
+      "record_sha256": "a9a0ff5341f8f3af56c27602d56b147b91b85fff06b42b77656dc9c484598c9d",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK767_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0031250000000000002.npz",
+      "map_sha256": "2f4022bd08b102de086e6198ac6b214c29fa412a55352a87510e30d654edb914"
+    },
+    {
+      "run": "original",
+      "case": [
+        2,
+        879,
+        0.003125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK879_eps0.0031250000000000002.json",
+      "record_sha256": "98172a04471dd483619205f27369e53e9895cfc649c9f2aada3226d221f3753c",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK879_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0031250000000000002.npz",
+      "map_sha256": "42e54d73a47a159148d3a2d37438c5c0051e4e55f49bad7610e5ee9c20e7f1ea"
+    },
+    {
+      "run": "original",
+      "case": [
+        2,
+        1007,
+        0.003125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1007_eps0.0031250000000000002.json",
+      "record_sha256": "8ef19abf3b215499d7d071c3d5a8453c8c96f23d0ad72305cfec6a8577ef989f",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1007_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0031250000000000002.npz",
+      "map_sha256": "53f9255f3470ceda768c544fa6a182e4232681cd25bef38e4f799f4b2969ba5b"
+    },
+    {
+      "run": "original",
+      "case": [
+        2,
+        1153,
+        0.003125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1153_eps0.0031250000000000002.json",
+      "record_sha256": "23c04160829b44b9248d01e7edbc1c74fd148500bf565579b86697efad5aac8e",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1153_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0031250000000000002.npz",
+      "map_sha256": "eacf28297ba8ce51e7d3ae4410711c53af28595e755ffcb14dd44ff4f765577a"
+    },
+    {
+      "run": "original",
+      "case": [
+        2,
+        1321,
+        0.003125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1321_eps0.0031250000000000002.json",
+      "record_sha256": "c32f213c94f325e3398a4ddd57f9215c74281cd14b1a7c61b01f56890d7aa1d3",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1321_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0031250000000000002.npz",
+      "map_sha256": "0aa1832f927aecd54b13350fb89c532ec1fcbeadd574b0944de7c44c61c1537f"
+    },
+    {
+      "run": "original",
+      "case": [
+        2,
+        1514,
+        0.003125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1514_eps0.0031250000000000002.json",
+      "record_sha256": "0dc06ca509389a304eb7e0e9d29c76e10a3d4b0c803aa412778259684619907a",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1514_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0031250000000000002.npz",
+      "map_sha256": "c6d016a509878273a57a023bdd167c86f0b9200ff9704ecc10d9fccfe30e015b"
+    },
+    {
+      "run": "original",
+      "case": [
+        2,
+        1734,
+        0.003125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1734_eps0.0031250000000000002.json",
+      "record_sha256": "c24878d8473bf4adb3c86849b414a45e70663bf7bdac9df2d5b3836d4c5bf35a",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1734_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0031250000000000002.npz",
+      "map_sha256": "16de8d15d3f131c15ad0bc8dc207b0466d918712dbc20439d871d5789ab0eeb8"
+    },
+    {
+      "run": "original",
+      "case": [
+        2,
+        1986,
+        0.003125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1986_eps0.0031250000000000002.json",
+      "record_sha256": "3bb7040fd016ad3e33b9bb259288da9fc0a0292c6d2ff47a2fc8a45415152162",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1986_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0031250000000000002.npz",
+      "map_sha256": "c3487d5c7ce80bc7cffe163c78b736c01bb87569a05a5a0e357e7f4a828c4a86"
+    },
+    {
+      "run": "original",
+      "case": [
+        2,
+        2275,
+        0.003125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK2275_eps0.0031250000000000002.json",
+      "record_sha256": "4d6d3761d639cad551696da9c4597e2bc8bd5feada32774d8febea04ddf6de89",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK2275_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0031250000000000002.npz",
+      "map_sha256": "bdc672a26deaa9453befaf38f0705a36ab7883e825dc0d8ba08dbbd7adb2a2a9"
+    },
+    {
+      "run": "original",
+      "case": [
+        2,
+        2606,
+        0.003125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK2606_eps0.0031250000000000002.json",
+      "record_sha256": "6338548f1ebbed39b656a1675c06387c05c80fc0985fd99385b0481faa5cd6f1",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK2606_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0031250000000000002.npz",
+      "map_sha256": "9b11a278f6e9d846c770e571ab6947acb21b1b8bf4bb9797dd62cec3a4af7d48"
+    },
+    {
+      "run": "original",
+      "case": [
+        2,
+        2986,
+        0.003125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK2986_eps0.0031250000000000002.json",
+      "record_sha256": "588aa1c7990b725dd13b025b81907d77b1d7c064f53d7647d1344cd29f232b00",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK2986_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0031250000000000002.npz",
+      "map_sha256": "9bf89f46af6d1c1149551c637aa080d2707ecaced93a781647c9bd28163fecdd"
+    },
+    {
+      "run": "original",
+      "case": [
+        2,
+        3420,
+        0.003125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK3420_eps0.0031250000000000002.json",
+      "record_sha256": "5e8f335caabf40af13d20f6c5f285d8f5cc99f01cd51190f7bfca441f12c6ebb",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK3420_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0031250000000000002.npz",
+      "map_sha256": "9ed033ca67cdfd5809b3e05f3526cae90a66a757916b3438f49ef853f048b2ce"
+    },
+    {
+      "run": "original",
+      "case": [
+        2,
+        3918,
+        0.003125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK3918_eps0.0031250000000000002.json",
+      "record_sha256": "26ce28f734dc8f618685fb0ef99ae728193530c19d39c8bc44e8561d4ca599a6",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK3918_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0031250000000000002.npz",
+      "map_sha256": "a1f41aad93e627d5d4970e588e4f634745667472382b4b597be83113c266de28"
+    },
+    {
+      "run": "original",
+      "case": [
+        2,
+        4488,
+        0.003125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK4488_eps0.0031250000000000002.json",
+      "record_sha256": "cbfee564b6f3d738d43fd76fe5faf0f3a3e3ba07e4fbf651a8d13909d78ed417",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK4488_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0031250000000000002.npz",
+      "map_sha256": "55058eb6ea757f22f2ab643050cabe146a1cf44112ef6212377b57643efa5b97"
+    },
+    {
+      "run": "original",
+      "case": [
+        2,
+        5141,
+        0.003125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK5141_eps0.0031250000000000002.json",
+      "record_sha256": "51d278ad1809924010dd9043635e2695c6442936d8ad0b181c462e1194789442",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK5141_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0031250000000000002.npz",
+      "map_sha256": "72254d3b5b9b9f1757210c788f539e6fb8f3be4b2b51b562bcfa5b8d430e1dd1"
+    },
+    {
+      "run": "original",
+      "case": [
+        2,
+        5889,
+        0.003125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK5889_eps0.0031250000000000002.json",
+      "record_sha256": "0bb343383496c08349c24f3e6a80229bf5f9ffb61b1548ce58b0b07a897540bd",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK5889_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0031250000000000002.npz",
+      "map_sha256": "92a0849023b8675f996041db0f2dc8fb7ddf99065a78c6b42c323264c3a5b641"
+    },
+    {
+      "run": "original",
+      "case": [
+        2,
+        6746,
+        0.003125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK6746_eps0.0031250000000000002.json",
+      "record_sha256": "ce3a7e777412b053ef906f49e0e22e645e8bd0098d4978bd340951352519b8aa",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK6746_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0031250000000000002.npz",
+      "map_sha256": "ef3de56615efcaf8c1f156dc6154b282f2504eeb21b9c0cdc5938547488381c2"
+    },
+    {
+      "run": "original",
+      "case": [
+        2,
+        7727,
+        0.003125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK7727_eps0.0031250000000000002.json",
+      "record_sha256": "f8a9690f3c22cc04ea199af4f5f7be03f3b891039b0861f7b6df1bb6f670f119",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK7727_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0031250000000000002.npz",
+      "map_sha256": "f954d412856f99626330af14eb4342bbda780c87d20c4614b85c690bbddbe2d0"
+    },
+    {
+      "run": "original",
+      "case": [
+        2,
+        8852,
+        0.003125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK8852_eps0.0031250000000000002.json",
+      "record_sha256": "429f547add0c9d94fa22665bf17b2647e1bc8a146ad33e765aa433ad83fa41cc",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK8852_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0031250000000000002.npz",
+      "map_sha256": "fc80185f9fa52c47ccc98313e35676a310de2e26e7b435abfa1a313431e81605"
+    },
+    {
+      "run": "original",
+      "case": [
+        2,
+        10140,
+        0.003125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK10140_eps0.0031250000000000002.json",
+      "record_sha256": "a24c47d42dacb00b6a9984bd62adca9e273a76d59c61f73b780f4b40476a44af",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK10140_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0031250000000000002.npz",
+      "map_sha256": "5794b75efe4689a117522aa463084944311ae7ecd74d8d2e0c5523ca05a5eb30"
+    },
+    {
+      "run": "original",
+      "case": [
+        2,
+        11615,
+        0.003125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK11615_eps0.0031250000000000002.json",
+      "record_sha256": "77d9ff35b56f37927178729b7a5df1ee777da1ce831edb81cf4716bb9ad59c6b",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK11615_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0031250000000000002.npz",
+      "map_sha256": "3eebf53a0d854a35bd1ad3e935f4f79f7909ced39e017c3779c9e881c8dd7386"
+    },
+    {
+      "run": "original",
+      "case": [
+        2,
+        13305,
+        0.003125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK13305_eps0.0031250000000000002.json",
+      "record_sha256": "c36530b6c6916a3e24342aabc0273d55489c2f677f78afb1db1ba148a21102c5",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK13305_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0031250000000000002.npz",
+      "map_sha256": "9c249e2beb21cc2d730bc399a26fb1b20a168880e1fb507607b8682258d22b0e"
+    },
+    {
+      "run": "original",
+      "case": [
+        2,
+        15242,
+        0.003125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK15242_eps0.0031250000000000002.json",
+      "record_sha256": "30bc3aa239a4f9b233c9780b46fc333985eb2757dd147ab479a9c3362ba4bdc0",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK15242_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0031250000000000002.npz",
+      "map_sha256": "089d65ee41138ab078e294d8bd2ba0b8550364dfbc86261810105a86d6ec0522"
+    },
+    {
+      "run": "original",
+      "case": [
+        2,
+        17459,
+        0.003125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK17459_eps0.0031250000000000002.json",
+      "record_sha256": "7cab04832b564322b1c1e1b785229b9c7d55b2a961173df85889ab09963a7c6f",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK17459_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0031250000000000002.npz",
+      "map_sha256": "76bec5dd7ddf092db6558adba1cbbf546d61998653f1e880758fb71c6193b8c1"
+    },
+    {
+      "run": "original",
+      "case": [
+        2,
+        20000,
+        0.003125
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK20000_eps0.0031250000000000002.json",
+      "record_sha256": "7a0599de367c60b85fcef914a6b1bc0e4dc77262fe84182ed0036707cdd43310",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK20000_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0031250000000000002.npz",
+      "map_sha256": "375fd9704c2bd7c09a2adb19baea014239e95ac171afff52ac1972aebd085b79"
+    },
+    {
+      "run": "original",
+      "case": [
+        3,
+        1600,
+        6.25e-05
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1600_eps6.2500000000000001e-05.json",
+      "record_sha256": "e767b07834d2c0258ab877c8316b47b7fdca8cedc96a64c35201979e1e277e93",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps6.2500000000000001e-05.npz",
+      "map_sha256": "f005562198de093a4f1d28286a161a551674da689f525ee96ed61232fbbad206"
+    },
+    {
+      "run": "original",
+      "case": [
+        3,
+        1600,
+        7.287851325371561e-05
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1600_eps7.2878513253715613e-05.json",
+      "record_sha256": "e88988adb02cdd19f65bb79115d327a7a47bcd48d848b769b681c3f638eb5ceb",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps7.2878513253715613e-05.npz",
+      "map_sha256": "f947704cf03802760511be2a0b35b1a3700aa806f2bc43c76ff17cf76dc53481"
+    },
+    {
+      "run": "original",
+      "case": [
+        3,
+        1600,
+        8.498044310515209e-05
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1600_eps8.4980443105152088e-05.json",
+      "record_sha256": "5493d9d670792b17f38dec63791af282effa91e364f56d850c0610e297fc1546",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps8.4980443105152088e-05.npz",
+      "map_sha256": "1fa96695c4710822b497499d9477634bf1469c221413e2968eaaf98e8d6cafc2"
+    },
+    {
+      "run": "original",
+      "case": [
+        3,
+        1600,
+        9.909197358632749e-05
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1600_eps9.9091973586327487e-05.json",
+      "record_sha256": "a3bea5b44844c4a7a6435db3da84e604ae0ddc84055fdf4c4e21e671d11271f5",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps9.9091973586327487e-05.npz",
+      "map_sha256": "ca09fd676680cbad59fcac0f0d2790cdc2a313db3b61eba13df45b49bb0c9ab0"
+    },
+    {
+      "run": "original",
+      "case": [
+        3,
+        1600,
+        0.00011554681136556815
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1600_eps0.00011554681136556815.json",
+      "record_sha256": "f6799fb64b42de583473987a4f56e37294ebb73cf435aae535e9ba2052c90ccf",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.00011554681136556815.npz",
+      "map_sha256": "a8ae20f75092d41403e3f7fbdf24d727ed9ef373e18f348ec00bad9d92e456dd"
+    },
+    {
+      "run": "original",
+      "case": [
+        3,
+        1600,
+        0.00013473407717648226
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1600_eps0.00013473407717648226.json",
+      "record_sha256": "7b5e1d926078752917e41d5d4bc02ecd1407771ceedeeeda42f020ee59b1b0a7",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.00013473407717648226.npz",
+      "map_sha256": "c85d9595405a323d0f9aa25f4c54bf79e499b0face9eba2aa6b5c0263ab90026"
+    },
+    {
+      "run": "original",
+      "case": [
+        3,
+        1600,
+        0.00015710750766773473
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1600_eps0.00015710750766773473.json",
+      "record_sha256": "6723d17b08cfea0d4158432f829fb37c6a247aa36ecbf81d03e78973432d6afd",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.00015710750766773473.npz",
+      "map_sha256": "412fe3a530b363006f2c58a38202704e9e6ea480ed1386c5fa005f21a0530fb2"
+    },
+    {
+      "run": "original",
+      "case": [
+        3,
+        1600,
+        0.00018319618527713982
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1600_eps0.00018319618527713982.json",
+      "record_sha256": "7d5ee354aac2f802309c2651a9655135c334396f6f6e2a8e214635c50d1a5884",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.00018319618527713982.npz",
+      "map_sha256": "ae907083ec1d769d641bd774d026ddab8d0a49d126d552d44407b16b3772d886"
+    },
+    {
+      "run": "original",
+      "case": [
+        3,
+        1600,
+        0.00021361704986800313
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1600_eps0.00021361704986800313.json",
+      "record_sha256": "a0893877bcfc7b9fc2631344bb3db2f4b26c5f8e5abb1db7b21a73b1e1b4dd14",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.00021361704986800313.npz",
+      "map_sha256": "56960a49aadedb57befbba8e9dfe64ca2555767b80daaf526731e99dc97f5fbe"
+    },
+    {
+      "run": "original",
+      "case": [
+        3,
+        1600,
+        0.00024908948800039847
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1600_eps0.00024908948800039847.json",
+      "record_sha256": "a3701a391ff30631c0af8c35061eb134a1b765ba9ee1ae32f5c67463a3bf7e64",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.00024908948800039847.npz",
+      "map_sha256": "ee385debcf4a7502701e86e5e102b7c58af74c348036f17278c620cb0c43d9fe"
+    },
+    {
+      "run": "original",
+      "case": [
+        3,
+        1600,
+        0.00029045234484157285
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1600_eps0.00029045234484157285.json",
+      "record_sha256": "384fb2549436c368e86214d32c1a2df301d77c3ff0b0c6bb49cf9766cd0e7366",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.00029045234484157285.npz",
+      "map_sha256": "354cc60ba0ccdc7ee3976da83e94610b811cd80465bbb2dafef44fe41ce1c1df"
+    },
+    {
+      "run": "original",
+      "case": [
+        3,
+        1600,
+        0.00033868376100974973
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1600_eps0.00033868376100974973.json",
+      "record_sha256": "71023e32084311065ed469cd1b8c5418f706f6273c404507ff68fa065f551d2c",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.00033868376100974973.npz",
+      "map_sha256": "69eff31b30bea006a46456e8b6f28bf08584520245ab978e538523dec30c571b"
+    },
+    {
+      "run": "original",
+      "case": [
+        3,
+        1600,
+        0.0003949243034490774
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1600_eps0.00039492430344907739.json",
+      "record_sha256": "610e30ec613e0f09ac19aedd86fb72c5253a96bc15f6edb07808ff47787899ab",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.00039492430344907739.npz",
+      "map_sha256": "6b4b55b130431b98f991178c712ba7e6ec23ea59226d40779c42efc8624a51d2"
+    },
+    {
+      "run": "original",
+      "case": [
+        3,
+        1600,
+        0.0004605039373300481
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1600_eps0.00046050393733004812.json",
+      "record_sha256": "39b438dc4b29f473a7c886836b0139e5c3d4428f719cb401a5b1c33bd0b80577",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.00046050393733004812.npz",
+      "map_sha256": "3bc5854fc20f9cd1889d424e68333716199ff28d31c5c137608421abafa1dc21"
+    },
+    {
+      "run": "original",
+      "case": [
+        3,
+        1600,
+        0.0005369734768015385
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1600_eps0.00053697347680153852.json",
+      "record_sha256": "6c1c61576084c18e5e6f8dff0821bf92cf5cdfe505eddd5213e9f60189214ce2",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.00053697347680153852.npz",
+      "map_sha256": "281694156598422bee5b124bd5d5be0e85094e67b582886e4ad39ab4eecccbe4"
+    },
+    {
+      "run": "original",
+      "case": [
+        3,
+        1600,
+        0.0006261412583355958
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1600_eps0.00062614125833559584.json",
+      "record_sha256": "d1f92e7c0081747065d5dcd68c7e2d2897bd685ade7241628c516da7645875d1",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.00062614125833559584.npz",
+      "map_sha256": "41894a75b59e9154378383c89115db1647ec8555e09d5b6af6591787e39b9c46"
+    },
+    {
+      "run": "original",
+      "case": [
+        3,
+        1600,
+        0.0007301159039089434
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1600_eps0.00073011590390894339.json",
+      "record_sha256": "67c0f1c7e41df43da4745e1ead41a73e43420177c0f306b5afa34681b9cb0878",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.00073011590390894339.npz",
+      "map_sha256": "93127354b9c2a60dbde6fea2dc5e38a4629c957ed1f53ac88e3aba622327731a"
+    },
+    {
+      "run": "original",
+      "case": [
+        3,
+        1600,
+        0.0008513561852764242
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1600_eps0.00085135618527642425.json",
+      "record_sha256": "ddf56eed1b20d3948511b7f8bae63e5e252d0385c3c4d075231b581505178aee",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.00085135618527642425.npz",
+      "map_sha256": "172e3ff19577e452936a078266db3d6c80f004a1f0a5ffae987fb4022ba99631"
+    },
+    {
+      "run": "original",
+      "case": [
+        3,
+        1600,
+        0.0009927291685168109
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1600_eps0.00099272916851681089.json",
+      "record_sha256": "c32e2270d65e8d94f4c62789ae7e461517c4b5c45af2687fb11fb36bdc4e1051",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.00099272916851681089.npz",
+      "map_sha256": "b850110dd6b5e6ac1da23478b4d1cb209c8deb2f9d049dbf732710a159c55e6e"
+    },
+    {
+      "run": "original",
+      "case": [
+        3,
+        1600,
+        0.0011575780138416416
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1600_eps0.0011575780138416416.json",
+      "record_sha256": "6cbc99b3bb441796549d8e123cb38b62a0373f4c53d867ef8c51eedce218c8fd",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0011575780138416416.npz",
+      "map_sha256": "02b73daf8887f8d8cb5227bb2dbf248806e91c0e4eda196b18b5a0479c369a3c"
+    },
+    {
+      "run": "original",
+      "case": [
+        3,
+        1600,
+        0.0013498010339834882
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1600_eps0.0013498010339834882.json",
+      "record_sha256": "0060d8a27ca1168933861e9e2e864f5fba414d2d99e339e4785f048289c5a36d",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0013498010339834882.npz",
+      "map_sha256": "02d0725f4ad7a03cc127a2492a996967a357f4ac0f63cbdb47ab31d42469b36d"
+    },
+    {
+      "run": "original",
+      "case": [
+        3,
+        1600,
+        0.0015739438807207157
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1600_eps0.0015739438807207157.json",
+      "record_sha256": "393baee7b7463ee60fde830395606ba824dbd87b87bdfb955eeba35b46e2469c",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0015739438807207157.npz",
+      "map_sha256": "89d9eeed41bb80d5add807d2efeda4a87d58e29b08e6a7715873361c49e17221"
+    },
+    {
+      "run": "original",
+      "case": [
+        3,
+        1600,
+        0.0018353070395473493
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1600_eps0.0018353070395473493.json",
+      "record_sha256": "6da4e041a86bad21f2917b516d62de1ff2d28c3738b6a2d4e44db385433dc7a2",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0018353070395473493.npz",
+      "map_sha256": "7c2d808e791b65d3214044abdc47b40d60b26f98e45a6c2505b49c7b4483a8e2"
+    },
+    {
+      "run": "original",
+      "case": [
+        3,
+        1600,
+        0.0021400711745006283
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1600_eps0.0021400711745006283.json",
+      "record_sha256": "478afe19ebc93bdf68aacc0575b17e3bd126486ad4c6cbc4e435445e2cf9f54e",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0021400711745006283.npz",
+      "map_sha256": "47bc3892c2542bd2218503014e73b3a2f21418a6231bd2c623e0a27e20972405"
+    },
+    {
+      "run": "original",
+      "case": [
+        3,
+        1600,
+        0.002495443287275822
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1600_eps0.002495443287275822.json",
+      "record_sha256": "440f110b0f59019e73bf495f88308eb1d1222db0b6a6550c034d87e2cbbdddde",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.002495443287275822.npz",
+      "map_sha256": "6a450825d44477629f4f4c584b18af8aa0c0bdc77f78949281a76257efcaa6cd"
+    },
+    {
+      "run": "original",
+      "case": [
+        3,
+        1600,
+        0.002909827146970031
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1600_eps0.002909827146970031.json",
+      "record_sha256": "2bb628700751282fa8e265790887621796837ee5500736fdd72633cc686e1b76",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.002909827146970031.npz",
+      "map_sha256": "9fa12b7d3fd0bbf102edece4fbd594fb787dde22975c84c903341260fd098312"
+    },
+    {
+      "run": "original",
+      "case": [
+        3,
+        1600,
+        0.003393022020743632
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1600_eps0.003393022020743632.json",
+      "record_sha256": "4d420f020ff6fd36f22fb3bd610fa95d5a3a090a97db757d6b4c2853b965af11",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.003393022020743632.npz",
+      "map_sha256": "07a7b8e73c128990c18ca471a846ecb463c2ad69d4d04c7cf09947ffd8ab77fe"
+    },
+    {
+      "run": "original",
+      "case": [
+        3,
+        1600,
+        0.003956454404942622
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1600_eps0.0039564544049426218.json",
+      "record_sha256": "f8485a845b74875da77b7f81b2d26a210c32ae33e7cdfcca88fa8920325db14b",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0039564544049426218.npz",
+      "map_sha256": "277f06b104694b4b219c2c7f52ad7ab64ce020b18ef72cec5ba36596cbb7d106"
+    },
+    {
+      "run": "original",
+      "case": [
+        3,
+        1600,
+        0.004613448236613325
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1600_eps0.0046134482366133253.json",
+      "record_sha256": "6cb5403acb16f76fae79a3bc962bca87fd54c05cdf602ea9a5d279133e5d93a1",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0046134482366133253.npz",
+      "map_sha256": "6d287d0554d5bf30a926f7797fbe723b0e85990eb61f45b3972a4700e7a0d72e"
+    },
+    {
+      "run": "original",
+      "case": [
+        3,
+        1600,
+        0.005379539975317691
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1600_eps0.0053795399753176912.json",
+      "record_sha256": "daba67e128a2c1e045db524da6c4235e0f8f4c5bc71adc8946d69191895c6ff0",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0053795399753176912.npz",
+      "map_sha256": "9139a6afdbc71afd6cb0309c9b23c9d053636f57843b6c4f9e99aa25743f97c1"
+    },
+    {
+      "run": "original",
+      "case": [
+        3,
+        1600,
+        0.006272846006241336
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1600_eps0.0062728460062413359.json",
+      "record_sha256": "bd0102debe87053aa52ce10ed038fc44c10ad20b3a833260c540a2a4630c1758",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0062728460062413359.npz",
+      "map_sha256": "6b158f4cb9fe04cd85c28179beb25a2cb0faf8ac40d393318f386fceb9d3c7ce"
+    },
+    {
+      "run": "original",
+      "case": [
+        3,
+        1600,
+        0.0073144910528700315
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1600_eps0.0073144910528700315.json",
+      "record_sha256": "f75af9890515c749ff3e92fc9708b416360e199a79c6bd7762679d5d7aa90e8d",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0073144910528700315.npz",
+      "map_sha256": "5abb51bac9040c72d7d27fc02c06327204305eac49a353da154473e8f62290ad"
+    },
+    {
+      "run": "original",
+      "case": [
+        3,
+        1600,
+        0.008529107730252372
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1600_eps0.0085291077302523718.json",
+      "record_sha256": "05250ab0facf96ba8311ae6ed256b9bbc1b5bc61f995f4bbe9f5515cacf092e6",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0085291077302523718.npz",
+      "map_sha256": "c12683d709f0c61f93657be156e1f0905aa5697e0fec9eda9917946cb1090a58"
+    },
+    {
+      "run": "original",
+      "case": [
+        3,
+        1600,
+        0.009945419052185057
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1600_eps0.0099454190521850571.json",
+      "record_sha256": "85feb297559784a66287c0dd0a63401c549e895d1b8a4582da073592970671b4",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.0099454190521850571.npz",
+      "map_sha256": "e70938d255b9de3f04a1487903bf90281a994df3e58d9a8c6af5c135232b6a53"
+    },
+    {
+      "run": "original",
+      "case": [
+        3,
+        1600,
+        0.011596917667334809
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1600_eps0.011596917667334809.json",
+      "record_sha256": "290ed68ee2def0932cd64b393f0091c1f0c9f09ea0eef5e3bb306988a4492fe9",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.011596917667334809.npz",
+      "map_sha256": "dc9a22877db9d9c0f8476cecacf3788f81a825eca5d5b38b22562e79e7cbc462"
+    },
+    {
+      "run": "original",
+      "case": [
+        3,
+        1600,
+        0.013522657886737746
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1600_eps0.013522657886737746.json",
+      "record_sha256": "9f78f739c9dff6b38cf93ac27792fe6ffb19e80650c476acd2d6be730e2204a2",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.013522657886737746.npz",
+      "map_sha256": "69bfdd52c19169e2d629825d61914490637b3e505b3cff5ecfa2498881fd1d24"
+    },
+    {
+      "run": "original",
+      "case": [
+        3,
+        1600,
+        0.015768179232385285
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1600_eps0.015768179232385285.json",
+      "record_sha256": "6e7c7cd8f260a5aaa28dcaafb4a8abf1dd0cd5eaaac5586cf9be37286e25bf55",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.015768179232385285.npz",
+      "map_sha256": "4c226e4c5bc067a7c06128ad7f48dbafbc4f134dc827a3c6f46578085593220d"
+    },
+    {
+      "run": "original",
+      "case": [
+        3,
+        1600,
+        0.01838658334678968
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1600_eps0.018386583346789678.json",
+      "record_sha256": "8a2f8dc7ed0ed99161318a62cc78aa53e43952c58ac87c3024acbe46d142a19e",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.018386583346789678.npz",
+      "map_sha256": "cd638035d8432788ddf59e59c2f7c1b492c82606569b6117167fc73ea732e8de"
+    },
+    {
+      "run": "original",
+      "case": [
+        3,
+        1600,
+        0.021439789730072968
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1600_eps0.021439789730072968.json",
+      "record_sha256": "f648f0de7224ae525838f3753bf002448b4283c708dd6bcb8cc7e0b4ac5e3890",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.021439789730072968.npz",
+      "map_sha256": "7b8f231d4f7cec433ca09c710dcb4e6e74acb3a3ac606d191ee8f954d5dab646"
+    },
+    {
+      "run": "original",
+      "case": [
+        3,
+        1600,
+        0.025
+      ],
+      "record": "results/published/debiased_comparison_complete_oct_26_26/hard/diagnostics/divergence/divergence_NK1600_eps0.025000000000000001.json",
+      "record_sha256": "8d9beae12e02da0744d79f4b82a0bda14207556be306dba921774db4840e21fa",
+      "map": "results/runs/hard_map_2000_updates_oct_08_26/checkpoints/solutions/solve_NK1600_targetNK1600_self_iter2000_id2000_tol1.0000000000000001e-05_eps0.025000000000000001.npz",
+      "map_sha256": "2d51802910414f735d5f840e30b002a17c81e3e759e00aea9830eeb7cd75844c"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        1,
+        100,
+        0.0125
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK100_eps0.012500000000000001.json",
+      "record_sha256": "e9a5f96b1ab0e8d18d360c6376a675b00cc4a72df8605476fe8eda2601f6f929",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/hard/checkpoints/solutions/solve_NK100_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.012500000000000001.npz",
+      "map_sha256": "6fda5f9429ad2f50d822ef2a6a0f58221b73056a95218f6db716f93b76530ffa"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        1,
+        115,
+        0.0125
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK115_eps0.012500000000000001.json",
+      "record_sha256": "90b155658759c899846a26fb50f1d885e68b83fdce097fbad41871ed62827af7",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/hard/checkpoints/solutions/solve_NK115_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.012500000000000001.npz",
+      "map_sha256": "c275737835e0cb3ee44dc13e610cf9dc967a2fdbb51d07da7f313320eb5b05fa"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        1,
+        131,
+        0.011363636363636364
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK131_eps0.011363636363636364.json",
+      "record_sha256": "f82a273afe1df44cc4631dc03692141caf732618f280bbc6a02de6febfd06585",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/hard/checkpoints/solutions/solve_NK131_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.011363636363636364.npz",
+      "map_sha256": "38543e036643be28e2a38e3e3e4b991e8359f1f490a41bc2e35b65e781a08d61"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        1,
+        150,
+        0.010416666666666666
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK150_eps0.010416666666666666.json",
+      "record_sha256": "35a265f243d511194b43201a662b739d5e09a9f5b515316ce128093a708f73c3",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/hard/checkpoints/solutions/solve_NK150_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.010416666666666666.npz",
+      "map_sha256": "156318c02d352d465ab4c3c7bc2866ae390da2187c137dc8e15fff768d1f352d"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        1,
+        172,
+        0.009615384615384616
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK172_eps0.0096153846153846159.json",
+      "record_sha256": "856ea4e8a0a8029673c6e110413b53c0ccd5ade8ba24ac1f5b659a9a62ae5c7c",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/hard/checkpoints/solutions/solve_NK172_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0096153846153846159.npz",
+      "map_sha256": "e16a0999573cccdefbe57cf48ce0af3a26db045b6d100feb89853e3c70d34623"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        1,
+        197,
+        0.008928571428571428
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK197_eps0.0089285714285714281.json",
+      "record_sha256": "3f9cf86a79c42271dd104d7a03a1c5c61e74b406ca3de7fec89895ff51c6b37e",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/hard/checkpoints/solutions/solve_NK197_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0089285714285714281.npz",
+      "map_sha256": "70c62194b518f5662a8411bb64a058281199757d2bc38cd949dfdc0e1a9e5fb8"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        1,
+        226,
+        0.008333333333333333
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK226_eps0.0083333333333333332.json",
+      "record_sha256": "15969ea98fed2b9c5f1b0a04bde4bea3a1528e3a431d20153507edf9df946d45",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/hard/checkpoints/solutions/solve_NK226_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0083333333333333332.npz",
+      "map_sha256": "018881606eac5e300c5e1ce18a5d1f60ee23227f55ff7df8908aed9d2d260efe"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        1,
+        259,
+        0.0078125
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK259_eps0.0078125.json",
+      "record_sha256": "d1b2da1342026716486b515d516c0fa91cb486e725ed8271e542bf24422067b1",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/hard/checkpoints/solutions/solve_NK259_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0078125.npz",
+      "map_sha256": "1375e13daa92d61a81b0ae6f65e88143fbe8a53ceeaab2ea95d5612e40a0f085"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        1,
+        296,
+        0.007352941176470588
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK296_eps0.0073529411764705881.json",
+      "record_sha256": "5e18abaf1512c280e62f1eebc73f989f8dc0f468e808c00fb9a21f782521aff8",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/hard/checkpoints/solutions/solve_NK296_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0073529411764705881.npz",
+      "map_sha256": "acfb0f8fa9a4a2481b9ff37956cdd8d8806c2c358e92e89e011deda93fcb1dd1"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        1,
+        340,
+        0.006944444444444444
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK340_eps0.0069444444444444441.json",
+      "record_sha256": "f3f736eb4e98cfae89422a4164d4267d0a2cab79552d58826ad57bb93a9e9aaa",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/hard/checkpoints/solutions/solve_NK340_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0069444444444444441.npz",
+      "map_sha256": "66cee05407c11ef67d185899f4073e10419ae2473562ad97597c363a8c7912ee"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        1,
+        389,
+        0.006578947368421052
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK389_eps0.0065789473684210523.json",
+      "record_sha256": "d1fa3f16466b38ddcd00ba04a13ad35861cfdcf8c534af1052865d25a3269daa",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/hard/checkpoints/solutions/solve_NK389_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0065789473684210523.npz",
+      "map_sha256": "35f1b2746ea6226a7e72a867dd3136b2455113564e2e7fada9936989a2579cac"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        1,
+        446,
+        0.005952380952380952
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK446_eps0.0059523809523809521.json",
+      "record_sha256": "b4308337bc7c30dcbe83972736f9ecd62a4e1ad738e35d145d071ca41c21e084",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/hard/checkpoints/solutions/solve_NK446_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0059523809523809521.npz",
+      "map_sha256": "6ec0db45f4fffb66998d7e06a3b54e872bc128412ff67e951e2f5add19c44d85"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        1,
+        511,
+        0.005681818181818182
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK511_eps0.005681818181818182.json",
+      "record_sha256": "2c66a0b6cc287a728c1d2b7bfa8a5d7076d00fd98ae6c8bea564ed908949844e",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/hard/checkpoints/solutions/solve_NK511_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.005681818181818182.npz",
+      "map_sha256": "ed6797a94eaa37795ccbee817b28a1cdfa45253099450144c01d8cf51dfef145"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        1,
+        585,
+        0.005208333333333333
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK585_eps0.005208333333333333.json",
+      "record_sha256": "e19670d6328601951a051f43330d59d38b90ed0403953d354fdeb150b61dc1e5",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/hard/checkpoints/solutions/solve_NK585_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.005208333333333333.npz",
+      "map_sha256": "17e0ec02c64534450d1fce234d1d699ae2a9a1a3f4a01425c35b80e61b89e0bc"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        1,
+        670,
+        0.005
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK670_eps0.0050000000000000001.json",
+      "record_sha256": "ae52ccfac7c2ec8686e63df0b9a0f7cf400459d389805217e6af2eb131252774",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/hard/checkpoints/solutions/solve_NK670_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0050000000000000001.npz",
+      "map_sha256": "0d47b4a20512b561dea62420e134f2aa43131803087dd4eba533ad76c6703ec8"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        1,
+        767,
+        0.004629629629629629
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK767_eps0.0046296296296296294.json",
+      "record_sha256": "c9d804d47de85281a57e78aeac4e49af120a5c66e14d22b89d9ee9b501fc9940",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/hard/checkpoints/solutions/solve_NK767_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0046296296296296294.npz",
+      "map_sha256": "7a68ebf90e93624b5c628aafb83498865ba6a22c5051ba661077966b5dead822"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        1,
+        879,
+        0.004310344827586207
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK879_eps0.0043103448275862068.json",
+      "record_sha256": "57f5b07fdd4f18eb5bf05f34494a19b38719eef1a2fa83e4d2ad542b33d9d97e",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/hard/checkpoints/solutions/solve_NK879_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0043103448275862068.npz",
+      "map_sha256": "b314559a69dcd6dbd8aa54512b57eda942c2b8656f7eed77eefb41fc0681d118"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        1,
+        1007,
+        0.004032258064516129
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK1007_eps0.0040322580645161289.json",
+      "record_sha256": "27ac7a2515b014a1e1f54979acd8184509740f1a9039c9b50291c48db87a59fc",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/hard/checkpoints/solutions/solve_NK1007_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0040322580645161289.npz",
+      "map_sha256": "539570e37dea38e27c708d2c29331a7653d131487dae34b3af4f749b6400bdef"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        1,
+        1153,
+        0.003787878787878788
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK1153_eps0.003787878787878788.json",
+      "record_sha256": "08c8eefa24186136710f5a781d73dd37d8eb018ceba3c3ecd46fd971d5dbc50c",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/hard/checkpoints/solutions/solve_NK1153_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.003787878787878788.npz",
+      "map_sha256": "d9a75caa8b4893f86e9eb130a0b713d24ded69884a989a13d92c10d8735128d4"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        1,
+        1321,
+        0.003472222222222222
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK1321_eps0.003472222222222222.json",
+      "record_sha256": "7499475db64fc86bb707dc4a6760764e482351ce0f0c704542d16e8dc945563b",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/hard/checkpoints/solutions/solve_NK1321_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.003472222222222222.npz",
+      "map_sha256": "53124328a2489ffa78fe39c4205ee9985f6addecbe3b4db78220ab0444e528fc"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        1,
+        1514,
+        0.003289473684210526
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK1514_eps0.0032894736842105261.json",
+      "record_sha256": "b604448680596577d50b73e8e0036b094415456c866fd66de8075535a01fcb17",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/hard/checkpoints/solutions/solve_NK1514_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0032894736842105261.npz",
+      "map_sha256": "1e79af92774c57c121ec6f610e5fac9e766fd180980b7184285d8d86509b5896"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        1,
+        1734,
+        0.003048780487804878
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK1734_eps0.0030487804878048782.json",
+      "record_sha256": "132e6037117b5f00f0951017ffab5f201501bf1b9fbd255a4d5bc3b2f128c91a",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/hard/checkpoints/solutions/solve_NK1734_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0030487804878048782.npz",
+      "map_sha256": "deb5dd5afbe73d58be6d03b6958eba6e270cfe965e3d2bd68c08a452c13c5cf2"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        1,
+        1986,
+        0.002840909090909091
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK1986_eps0.002840909090909091.json",
+      "record_sha256": "89f8e50fc650e78c30fa236cc04c81ce57d4f1ae1c3928c15263484910c69de4",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/hard/checkpoints/solutions/solve_NK1986_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.002840909090909091.npz",
+      "map_sha256": "d6defdaa05bbaf347c9737b37631ecdeabae43c538e8ffcbbbc61bea13e9a14d"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        1,
+        2275,
+        0.0026595744680851063
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK2275_eps0.0026595744680851063.json",
+      "record_sha256": "275d386e3b6fd4bbfb6196d5fc305bb45bd10e1704236f44c13204e11cb94c5f",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/hard/checkpoints/solutions/solve_NK2275_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0026595744680851063.npz",
+      "map_sha256": "5aa2ebab9e2d7609ee793d5616462969b4357c655bf4878a462dca44a5f1ac2d"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        1,
+        2606,
+        0.0024509803921568627
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK2606_eps0.0024509803921568627.json",
+      "record_sha256": "fe9cade9f1023d3ef210734038b5de7dd70ee9da8eebee9d0e7cdfddaad04ec8",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/hard/checkpoints/solutions/solve_NK2606_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0024509803921568627.npz",
+      "map_sha256": "fd5557c601de5e810a23dcb69bed0978909220273c8b84f3e5ba5b9ff3657d98"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        1,
+        2986,
+        0.0023148148148148147
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK2986_eps0.0023148148148148147.json",
+      "record_sha256": "80b07db36f91b240effcbc51251ce705484a65412832d7cc60772ed47e43edfa",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/hard/checkpoints/solutions/solve_NK2986_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0023148148148148147.npz",
+      "map_sha256": "5d29922e8f2dd984031d2cab6bdde98eadb47bea879605cccb2446de5a12dbc6"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        1,
+        3420,
+        0.0021551724137931034
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK3420_eps0.0021551724137931034.json",
+      "record_sha256": "de35959ffe13f8a8ba4e48b1286f06ed18ebb5e1191fc0a4b9b356faf6084410",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/hard/checkpoints/solutions/solve_NK3420_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0021551724137931034.npz",
+      "map_sha256": "a834316f42d83fbae98ff5fb8a3b4c66fb10e9e9c07a410ee10b04fdd50fd041"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        1,
+        3918,
+        0.0020161290322580645
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK3918_eps0.0020161290322580645.json",
+      "record_sha256": "df621178c170b6fde9aca510110493a55940773f357532fd9a01d6a7fe2226b0",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/hard/checkpoints/solutions/solve_NK3918_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0020161290322580645.npz",
+      "map_sha256": "9c8a161ec3becbd05c86cbc8dee9266c8bb442c47afc21b2535ac64230271f11"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        1,
+        4488,
+        0.001893939393939394
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK4488_eps0.001893939393939394.json",
+      "record_sha256": "5936b8cff4a2a46ce176dd902a1b1528984846b982c7292db28d428c2c3aa76c",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/hard/checkpoints/solutions/solve_NK4488_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.001893939393939394.npz",
+      "map_sha256": "441c8010f43ec7cb3b432a526ddc708fe33ecac0710d9bd59011a58aaf72750b"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        1,
+        5141,
+        0.0017605633802816902
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK5141_eps0.0017605633802816902.json",
+      "record_sha256": "bb05da28f3e2128582500a2c92edea843192ac6d0dbcbfc038b3cb80b9a2251f",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/hard/checkpoints/solutions/solve_NK5141_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0017605633802816902.npz",
+      "map_sha256": "9d09ea8f6e29fd9b42deb617d2cac8beeefdd8528cbe51c1f1b6dbc748f86b0c"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        1,
+        5889,
+        0.001644736842105263
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK5889_eps0.0016447368421052631.json",
+      "record_sha256": "e823b0cfd06932098921e95a4dfd45a621293d0839b7ee47121bc0c21e24bcb6",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/hard/checkpoints/solutions/solve_NK5889_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0016447368421052631.npz",
+      "map_sha256": "2c93820f90538b58d9fa5ce5b49e56b77a247e445f676ffd9dca0d6767875e06"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        1,
+        6746,
+        0.001524390243902439
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK6746_eps0.0015243902439024391.json",
+      "record_sha256": "b4e4fd072c50a3236662611b32ecdb0bbae1f75caf7661a826adca5eb465d6f7",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/hard/checkpoints/solutions/solve_NK6746_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0015243902439024391.npz",
+      "map_sha256": "14afbdcb7dbddbb84af7900971f5ab0acb11378fca866f7dcc66fc3b54e5f296"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        1,
+        7727,
+        0.0014367816091954023
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK7727_eps0.0014367816091954023.json",
+      "record_sha256": "7bdb7601f4fdf97051fdd436b76b556dc930b319a15cfe12f911a3d01f3203a3",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/hard/checkpoints/solutions/solve_NK7727_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0014367816091954023.npz",
+      "map_sha256": "1d829be297abb7ee520ec68b29bd2961f32156d60c8e7f17d113e5a2976274bc"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        1,
+        8852,
+        0.0013297872340425532
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK8852_eps0.0013297872340425532.json",
+      "record_sha256": "029fdd9f557ca21e1851f2ac5416555dbfdad999231a1a279993a648e90002b4",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/hard/checkpoints/solutions/solve_NK8852_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0013297872340425532.npz",
+      "map_sha256": "569a9d73eb0a8caf95ba1145da06ada355069965714e2f4132fcbaca5b367b4d"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        1,
+        10140,
+        0.00125
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK10140_eps0.00125.json",
+      "record_sha256": "1c851bedd0c15d7ba498b8681d3d89d493a1460dcae8d40758a526bccbbdcc01",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/hard/checkpoints/solutions/solve_NK10140_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.00125.npz",
+      "map_sha256": "a70e5462362ca87475274137eb17c37264d0288df059b1fdbc7e99f822001613"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        1,
+        11615,
+        0.0011682242990654205
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK11615_eps0.0011682242990654205.json",
+      "record_sha256": "10f858c79e42fcfa399e0495327e3a5cdeb97bd47ca26067a779f51e822dfba1",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/hard/checkpoints/solutions/solve_NK11615_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0011682242990654205.npz",
+      "map_sha256": "72774523bb425b008f9fa9bb27431f3aa4c2fbf2d44ed508f6e447054cd450d6"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        1,
+        13305,
+        0.0010869565217391304
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK13305_eps0.0010869565217391304.json",
+      "record_sha256": "be2221d916d115ed697d0019fc74c7c58e21988b58b1d8591be05689ef27dcf9",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/kappa_only/hard/checkpoints/solutions/solve_NK13305_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0010869565217391304.npz",
+      "map_sha256": "082686025087ed916cce0bdd107b243f2847a1abbc7920db940ab3093cba0e91"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        3,
+        1600,
+        0.00013473407717648226
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK1600_eps0.00013473407717648226.json",
+      "record_sha256": "0c2481055d729d36262c78cad4bd4e04d3f5cd0221bf2d9cbb409a20fe4084eb",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/hard/checkpoints/solutions/solve_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.00013473407717648226.npz",
+      "map_sha256": "7bdcd515f95162136309662ec5d976a6e23b0b4c6b955e05ab76a0381971e32f"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        3,
+        1600,
+        0.00015710750766773473
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK1600_eps0.00015710750766773473.json",
+      "record_sha256": "d27923fa4e5390e98ba0c32f4968d16dcd73174e3e6a8bbac9f07c00f0a0aa56",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/hard/checkpoints/solutions/solve_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.00015710750766773473.npz",
+      "map_sha256": "82f23a7149e5b5db6a40338de2e6ec566b8cde4614802d55644164593d9a5966"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        3,
+        1600,
+        0.00018319618527713982
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK1600_eps0.00018319618527713982.json",
+      "record_sha256": "3d4717640d801ea79dc9c5b01f3e1475d45a4cfe2efd2a26cef11d5df6ab2db5",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/hard/checkpoints/solutions/solve_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.00018319618527713982.npz",
+      "map_sha256": "e37da9e9e7371be510c13a864f4b9dbcf1935904da6d51f173295a7c2e60ea8c"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        3,
+        1600,
+        0.00021361704986800313
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK1600_eps0.00021361704986800313.json",
+      "record_sha256": "a53e18b8c41ff9b170a07908cfa603aafdebdc36f64f82566011fd8f727f588f",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/hard/checkpoints/solutions/solve_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.00021361704986800313.npz",
+      "map_sha256": "ae396ed61e47aae1bad8c75a20a05ca18d88141a91367d5e136c267269fd13a5"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        3,
+        1600,
+        0.00024908948800039847
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK1600_eps0.00024908948800039847.json",
+      "record_sha256": "b523bc0e50b6a373eba2132369fa27b544d7d241eedce80c46ce91dbc063be5d",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/hard/checkpoints/solutions/solve_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.00024908948800039847.npz",
+      "map_sha256": "a4c9a8ab32e56b1fac5000952d3e0a09544589293d346e682488eb8883fb83e4"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        3,
+        1600,
+        0.00029045234484157285
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK1600_eps0.00029045234484157285.json",
+      "record_sha256": "f6e07c2c3e80c9398d56c89e806b43991fbfa858bebc3ce2ce84e632e4024b02",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/hard/checkpoints/solutions/solve_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.00029045234484157285.npz",
+      "map_sha256": "38963e66b26d283b939d055c0b5c1a406d6cb0bc2a24cc6fb1f36097429998e8"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        3,
+        1600,
+        0.00033868376100974973
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK1600_eps0.00033868376100974973.json",
+      "record_sha256": "cb2a145fef390a376f930cdd6e3ec2a649e7548cb06176d2f026229c3a6efc32",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/hard/checkpoints/solutions/solve_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.00033868376100974973.npz",
+      "map_sha256": "6389a735d9bad7cb48bd23a29f51fece8746983ca8c84380dc14438d804f340f"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        3,
+        1600,
+        0.0003949243034490774
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK1600_eps0.00039492430344907739.json",
+      "record_sha256": "3cf9f923098b28e09d15fbf6b67d7de30533d4bd8c01890a097d4cfcf126c010",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/hard/checkpoints/solutions/solve_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.00039492430344907739.npz",
+      "map_sha256": "8b7a74df9ea61a3bbe3e9db68b6bd3bab28ac4893d2caad789b1a20634d35408"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        3,
+        1600,
+        0.0004605039373300481
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK1600_eps0.00046050393733004812.json",
+      "record_sha256": "919f4dd7d7d5a5e05c1bf760ea7f0982ad4c68f5ff5670ef93b4112a4aaeceb0",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/hard/checkpoints/solutions/solve_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.00046050393733004812.npz",
+      "map_sha256": "85fb6e483e869397850058909c6086a7013541200b7361a78b8c84ffea6e8dc0"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        3,
+        1600,
+        0.0005369734768015385
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK1600_eps0.00053697347680153852.json",
+      "record_sha256": "21ec975c6a059a10cf5d780ece27358da4306c763bf8b306f0dec1bae610b97b",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/hard/checkpoints/solutions/solve_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.00053697347680153852.npz",
+      "map_sha256": "8e6dfd81d29289b07cf021b1d9ad1584fff475a7bfad5789be4592bd0c877ce2"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        3,
+        1600,
+        0.0006261412583355958
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK1600_eps0.00062614125833559584.json",
+      "record_sha256": "c7281d6d5bd6e3b2eeece8cae5050bed6a032b80d7ceb7d472cdb140d8592238",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/hard/checkpoints/solutions/solve_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.00062614125833559584.npz",
+      "map_sha256": "6159990b2362569a26685a33fc7238590ece3a9df8c4d5c0f7b76a1576b2d118"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        3,
+        1600,
+        0.0007301159039089434
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK1600_eps0.00073011590390894339.json",
+      "record_sha256": "e9b4416ab061efd23a89725fde1a07aaf7662e5a2c2080fcd5310decfadc3e96",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/hard/checkpoints/solutions/solve_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.00073011590390894339.npz",
+      "map_sha256": "31974c2026eb4b2c18a16e2af8768a86c6ebefa26b19f8dc7c444460b7dc9fa2"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        3,
+        1600,
+        0.0008513561852764242
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK1600_eps0.00085135618527642425.json",
+      "record_sha256": "f1a15799873fcbe624359d1c064f8680f5acb535cee809b36ae26dea82044406",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/hard/checkpoints/solutions/solve_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.00085135618527642425.npz",
+      "map_sha256": "28434da35906670156d25d91b029dc170ea8116446eeea1fb569d33730482f91"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        3,
+        1600,
+        0.0009927291685168109
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK1600_eps0.00099272916851681089.json",
+      "record_sha256": "c9e35b3ce38442d20c20e4b9313d1a2913ee7150bc4e27c3e0d1b6c51a8e6316",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/hard/checkpoints/solutions/solve_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.00099272916851681089.npz",
+      "map_sha256": "39ba30a9586d607e5168e812f867c327285c2937666a1cf40d93614a07eba39f"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        3,
+        1600,
+        0.0011575780138416416
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK1600_eps0.0011575780138416416.json",
+      "record_sha256": "d90f8c3718238e61e72969a4187cd348d703a5025e842a6c21d619e750d6d0bf",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/hard/checkpoints/solutions/solve_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0011575780138416416.npz",
+      "map_sha256": "1cd972c82364db244ece40c39b5adceba89a2011c86b8c8df6add8560f64745b"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        3,
+        1600,
+        0.0013498010339834882
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK1600_eps0.0013498010339834882.json",
+      "record_sha256": "d40a66b5f7999efa102c93da20f6fc0550fa16568c2698df925929455e1964be",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/hard/checkpoints/solutions/solve_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0013498010339834882.npz",
+      "map_sha256": "3692d1d45614ba5212b2f39d00f8389509d595c9aab4149276519c5ecc37e21f"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        3,
+        1600,
+        0.0015739438807207157
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK1600_eps0.0015739438807207157.json",
+      "record_sha256": "2bd2326fad4d0dd8aa681d2fbce78b1a931cc9160a145b9ae7eac9246e2a96ee",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/hard/checkpoints/solutions/solve_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0015739438807207157.npz",
+      "map_sha256": "eec4c3c0847a4b12d2ec41f6cd773eb1d617e60845fb389adcabf07431e71ef2"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        3,
+        1600,
+        0.0018353070395473493
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK1600_eps0.0018353070395473493.json",
+      "record_sha256": "14252abfb821c88a7634c43d1624da6a13dd96061e554be12440b381336c478d",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/hard/checkpoints/solutions/solve_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0018353070395473493.npz",
+      "map_sha256": "15be67a5b954054decbaab4cda29a57dc53e5c07ea999b3b7d4acb83cc95121d"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        3,
+        1600,
+        0.0021400711745006283
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK1600_eps0.0021400711745006283.json",
+      "record_sha256": "fd351c663107fcee4a17751814c4f43d2c8fb400b6f10ada831f9e456b88b182",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/hard/checkpoints/solutions/solve_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0021400711745006283.npz",
+      "map_sha256": "94875d03c5407ff22d1c2f2551bcc2e63548469989706252125ef74b1009155e"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        3,
+        1600,
+        0.002495443287275822
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK1600_eps0.002495443287275822.json",
+      "record_sha256": "a23a8cdd992b76b0fb372c25ba731119f881bb6c638b1163324bd1b8acb66527",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/hard/checkpoints/solutions/solve_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.002495443287275822.npz",
+      "map_sha256": "596a1a868f6f92b23de8297ddb19698d434b1a43f1e74640d07ac3907c5a2799"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        3,
+        1600,
+        0.002909827146970031
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK1600_eps0.002909827146970031.json",
+      "record_sha256": "9bca516915610838b6b4303ac8df8028731bfbd23d84034eb28627eb0bf3ed89",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/hard/checkpoints/solutions/solve_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.002909827146970031.npz",
+      "map_sha256": "3421050e58f71a8f9f6e733a76676c6a9f34d8fd91a3ec699d352dbf8b93dc34"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        3,
+        1600,
+        0.003393022020743632
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK1600_eps0.003393022020743632.json",
+      "record_sha256": "a29518624a804a8e89a51ed8120536549fa0c966c6eea0b0002b6d2e9bec3a32",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/hard/checkpoints/solutions/solve_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.003393022020743632.npz",
+      "map_sha256": "16415e30e5ba05e5fb62ea5543d98f565764dc31a9ba08890ef6a349152dfb39"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        3,
+        1600,
+        0.003956454404942622
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK1600_eps0.0039564544049426218.json",
+      "record_sha256": "02332f629e30b330b7dbe07cc41bdef32f4235f98d3830fbaac376a7c6856fda",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/hard/checkpoints/solutions/solve_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0039564544049426218.npz",
+      "map_sha256": "5a74bbf80a86e7bde8d40ab9ffbac9a3ebc9e8c7265d169c39c8c86b1191d86a"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        3,
+        1600,
+        0.004613448236613325
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK1600_eps0.0046134482366133253.json",
+      "record_sha256": "c48dc20354ed33f843632b857043d08e9bb7e93ddd53571a8ca48b40b9774f5a",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/hard/checkpoints/solutions/solve_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0046134482366133253.npz",
+      "map_sha256": "15647c7775da071e5331374d56415735749f18a28aa710b89db99a2c55f65347"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        3,
+        1600,
+        0.005379539975317691
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK1600_eps0.0053795399753176912.json",
+      "record_sha256": "74d175c80e42be63e735388e77b84aa7282704796531b7c7d41295e9eb31682f",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/hard/checkpoints/solutions/solve_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0053795399753176912.npz",
+      "map_sha256": "b632d763dd6a44951b0e3326da242362ad231cb09519ad3c1fb8755c8ede9e1b"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        3,
+        1600,
+        0.006272846006241336
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK1600_eps0.0062728460062413359.json",
+      "record_sha256": "bdfa4d310327fe90872f24027cbb86a33fea086297d150a3a9def8110724672f",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/hard/checkpoints/solutions/solve_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0062728460062413359.npz",
+      "map_sha256": "ec69fffbc6f1b19c4e8173e59b2af3a8baf1ec9ed0af2bb119f24fb3d4fd37e6"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        3,
+        1600,
+        0.0073144910528700315
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK1600_eps0.0073144910528700315.json",
+      "record_sha256": "ebd797bf79e0d9b4a8b0d56dc025622d91f6b924301ff244915d89522dbd8443",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/hard/checkpoints/solutions/solve_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0073144910528700315.npz",
+      "map_sha256": "9e11edfb220e86788337f56b0d378412185b1d6203805ccfc495fee3fa4a49f3"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        3,
+        1600,
+        0.008529107730252372
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK1600_eps0.0085291077302523718.json",
+      "record_sha256": "7e9f9cf212378af7f459d6b1cb6585faf6ed54e28499087bf4399d4ca39ced97",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/hard/checkpoints/solutions/solve_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0085291077302523718.npz",
+      "map_sha256": "b4138b796242d65e422206f2d97b054ae5701c584e31a27e145d7f2f4ac1f418"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        3,
+        1600,
+        0.009945419052185057
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK1600_eps0.0099454190521850571.json",
+      "record_sha256": "97ebcdbab816901c7733c556adc2e190c2e1c8244a3d75563357180d6ea3f246",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/hard/checkpoints/solutions/solve_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.0099454190521850571.npz",
+      "map_sha256": "d3dd552257843d7efde44be14fda5d1b5a7f8c8f5fc86d8e2b5fc2826c0e4614"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        3,
+        1600,
+        0.011596917667334809
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK1600_eps0.011596917667334809.json",
+      "record_sha256": "b09b51cf11cd8c03987d0c985d5237eb57c15ebaea4e2a012344aa8d7fabd66f",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/hard/checkpoints/solutions/solve_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.011596917667334809.npz",
+      "map_sha256": "e5aae8b77c430e31c241ee0aba8ba4752778178aed32de7cc192c5230c9fa5aa"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        3,
+        1600,
+        0.013522657886737746
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK1600_eps0.013522657886737746.json",
+      "record_sha256": "3d696cecdfa105b3806c0ee234199f2c90aaafa2a4180fff55e7e2b6320b3d93",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/hard/checkpoints/solutions/solve_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.013522657886737746.npz",
+      "map_sha256": "32b094f81fc039a6d2e1fe6bb509b1d5eee308e439255f1e9d4ef598027f533d"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        3,
+        1600,
+        0.015768179232385285
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK1600_eps0.015768179232385285.json",
+      "record_sha256": "24363ccc7ccfc69ec049b296cbfe89bdac8080f7d8d4c1f9827b9ea3d667237c",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/hard/checkpoints/solutions/solve_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.015768179232385285.npz",
+      "map_sha256": "9770b57436c28b8ddd41c13e399d2a5424e4d415cf1697ba431953a8bf2f88d3"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        3,
+        1600,
+        0.01838658334678968
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK1600_eps0.018386583346789678.json",
+      "record_sha256": "c6eb64092d32103f7e42c138a7a051923a8545d935051a3658e7d7cd40b4cd3c",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/hard/checkpoints/solutions/solve_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.018386583346789678.npz",
+      "map_sha256": "1488d21430969366b38db873b50b8a56195239a153e52f8345d479e590ceb300"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        3,
+        1600,
+        0.021439789730072968
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK1600_eps0.021439789730072968.json",
+      "record_sha256": "89e5f26b6d07fe9fd19ad46d7570239de5dde16787e0b8835cfc2507c129d2d6",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/hard/checkpoints/solutions/solve_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.021439789730072968.npz",
+      "map_sha256": "8cf643432e221c0a681fbc1581eba87c20be2df93ee597ba1eeabad6eb66131c"
+    },
+    {
+      "run": "repaired_kappa",
+      "case": [
+        3,
+        1600,
+        0.025
+      ],
+      "record": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/debiased/hard/diagnostics/divergence/divergence_NK1600_eps0.025000000000000001.json",
+      "record_sha256": "dd9493cd694ae1e249336ae978e6ac6278432f06fddb64481e3bfad05ceec667",
+      "map": "results/runs/repaired_refractor_kappa_oct_28_26/parallel_epsilon/kappa_only/hard/checkpoints/solutions/solve_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.025000000000000001.npz",
+      "map_sha256": "381ddcd63b1e960abdf02a0bec8d5d9db7f9eadde4fec637842da18cdfefe7e9"
+    }
+  ],
+  "figures": [
+    "original_hard_cost_terms.png",
+    "original_hard_ot_bounds.png",
+    "original_entropic_cost_terms.png",
+    "repaired_kappa_hard_cost_terms.png",
+    "repaired_kappa_hard_ot_bounds.png",
+    "repaired_kappa_entropic_cost_terms.png"
+  ],
+  "outputs_sha256": {
+    "original_entropic_cost_terms.csv": "982d37426c2f1fa66e8d4b5f93ad1ecda385894f8565a90feb942a1a78bd7bb5",
+    "original_hard_cost_terms.csv": "8c975b6cb3a25f8411dc8aae42b7e1efd8fabc241a4341287d9dfd2066fa7493",
+    "original_hard_ot_bounds.csv": "d99642b1831951290fd8ff11a02467b667839c331787527ada0e9b2ebe7c04be",
+    "repaired_kappa_entropic_cost_terms.csv": "201d5bbee03780ee55c4e038eec829efb5daef484d384669dadb82b219e6def4",
+    "repaired_kappa_hard_cost_terms.csv": "8570d35f608258134f9880e48f5f03e5df11a4ea9caf2a0139c5cf79cb4b3d11",
+    "repaired_kappa_hard_ot_bounds.csv": "c9f1c08681387b82010795a424745f91e496a04305a9c1f49ba198a4a2dee733"
+  },
+  "max_witness_marginal_linf": 5.551115123125783e-17,
+  "figure_sha256": {
+    "original_hard_cost_terms.png": "f488e297f22b5a73be1e77cbb9f95850137834d258a8183197b9cff6aa0894e6",
+    "original_hard_ot_bounds.png": "a984940d5c4dd9925128c64f70c6295d2ea985c48459e8c0a5e9c5fc57d2f41c",
+    "original_entropic_cost_terms.png": "97c9028cd0ef0aa0081c4992d412cd6602b1011e4fed8db8058f98c514457b54",
+    "repaired_kappa_hard_cost_terms.png": "4011948dfb16eeb4cb9a24713c4cc6029951fbba31f57dc378dea0cd2f8b02ed",
+    "repaired_kappa_hard_ot_bounds.png": "8148c8c0ba009acc4660249154bc7d73b99a26fa8109ba25dc8bca7cdfc77172",
+    "repaired_kappa_entropic_cost_terms.png": "692af13da3a5b44f1bcfd45b780055aae4f92458faca729bfa7ca08aa113778a"
+  },
+  "validation": "111 tests passed, including six independent OT-bound tests; all 192 saved hard maps verified against their hashes and feasible coupling marginals.",
+  "overleaf": {
+    "project_url": "https://www.overleaf.com/project/69695773fcd59c00e6008659",
+    "verified_at": "2026-10-30T16:01:55.009639+00:00",
+    "derivation_page": 37,
+    "figure_pages": [
+      38,
+      39,
+      40,
+      41,
+      42,
+      43
+    ],
+    "compile": "success",
+    "tex_sha256": "bd92b95d2f9da3d32aa4ec1df64edcab36993444cf0ecff1f2d54a32d32ce975"
+  }
+}

@@ -61,6 +61,14 @@ The hard-map mass-error diagnostic has no debiasing step.
 [Raw-EOT provenance](metadata/raw_eot_capture.json). Overleaf includes this
 additional source and both raw-EOT images in its project root.
 
+The [EOT component plots and hard-map OT bounds](metadata/cost_terms/README.md)
+cover each run, map type, and parameter experiment. Refresh them with
+`python scripts/plot_writeup_cost_terms.py` after the two capture commands above.
+The requested bound retains common mass at zero cost and charges each excess
+by its worst squared Euclidean cost over the target support. The figures also
+show the deficit-only variant and an explicit feasible-plan cost. The included
+source is [`cost_terms_results.tex`](cost_terms_results.tex).
+
 <!-- directory-index:start -->
 
 ## Directory guide

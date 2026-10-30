@@ -1,5 +1,5 @@
 {
-  "overleaf_verified_at": "2026-10-29T22:49:43.853649+00:00",
+  "overleaf_verified_at": "2026-10-30T16:01:55.009639+00:00",
   "project_url": "https://www.overleaf.com/project/69695773fcd59c00e6008659",
   "pages": [
     31,
@@ -7,18 +7,18 @@
     33
   ],
   "local_compile": "success",
-  "overleaf_compile": "success; updated counts and figures visually verified",
-  "paired_cases": 62,
+  "overleaf_compile": "success; refreshed figures and captions verified",
+  "paired_cases": 72,
   "counts": [
-    35,
+    37,
     0,
-    27
+    35
   ],
   "artifact_hash_base": "../..",
   "artifact_sha256": {
-    "repaired_kappa_results.tex": "0a91b01b410ff092527aaf874cf73573e6fc7a4153b1fa014ce047347a40b180",
-    "images/repaired_kappa_sinkhorn_comparison.png": "defa291fcc04bebcfd2a4748ef3d3084d405963f0dcda99122c606e5a4d6212e",
-    "images/repaired_kappa_hard_mass_error.png": "148c35878a68c33e9abb8cae0d3837673050608d7b43c44b5bf665a5622b75b9"
+    "repaired_kappa_results.tex": "2ef57a30064ef5d39f53ed7bf66812c693669c1fe69ad6e6f69f3ac5b7ae5830",
+    "images/repaired_kappa_sinkhorn_comparison.png": "df82185101f1d261f32f6cf4bdac06709ee2249761f4f3e46eb9a5b4ef0f2324",
+    "images/repaired_kappa_hard_mass_error.png": "54a856cd525760c01f604e1321688cfb70b26c6e0f3f67001d8ed0b78fc2af00"
   },
   "overleaf_edit": "Appended input to existing new_developments.tex; preserved existing Overleaf edits."
 }
