@@ -219,7 +219,7 @@ hard maps; we do not apply this construction to the smooth Snell maps.
  \caption{{\large $\kappa={kappa}$ hard map: worst-cost OT upper bounds
  after retaining common mass, together with the cost of an explicit
  feasible residual coupling. All three curves bound unregularized OT.
- Pending cases are omitted.}}
+ All captured converged cases are included.}}
  \label{{fig:{run}-hard-ot-bounds}}
 \end{{figure}}
 '''
