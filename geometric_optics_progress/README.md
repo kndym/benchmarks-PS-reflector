@@ -32,7 +32,7 @@ The source and supporting images are canonical. The earlier ZIP download is
 not tracked because it predates subsequent editor revisions. Generated PDF,
 compiler intermediates, and editor state are not required to build the project.
 
-The repaired kappa=0.8 progress figures are appended through
+The completed repaired kappa=0.8 figures are appended through
 [`repaired_kappa_results.tex`](repaired_kappa_results.tex). Refresh this separate
 capture with `python scripts/update_repaired_kappa_writeup.py`; it validates and
 merges completed main and independent epsilon-worker cases, checks saved-map

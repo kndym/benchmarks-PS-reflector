@@ -76,6 +76,8 @@ Hard-map mass error is a separate diagnostic and has no debiasing step.
 '''
     text = text.replace('TOTAL', str(repaired['paired_completed'])).replace(
         'COUNTS', ', '.join(map(str, repaired['counts'])))
+    if repaired['counts'] == [40, 40, 40]:
+        text = text.replace('Pending cases are omitted.', 'All planned cases are included.')
     (DOC/'raw_eot_results.tex').write_text(text, encoding='utf-8')
     include = DOC/'new_developments.tex'
     text = include.read_text(encoding='utf-8')

@@ -1,16 +1,16 @@
 \clearpage
-\subsection{Repaired kappa run: current progress}
+\subsection{Repaired kappa run: completed results}
 \label{sec:repaired-kappa-progress}
 The following figures use the repaired solver with $\kappa=0.8$ and the
 same source and target geometry as the original $\kappa=0.6$ sweep above.
-They are a separate, partial run. Captured October 30, 2026 at 15:57 (UTC), there are
-72 paired completed cases per map out of 120: 37, 0, 35 in experiments
+They are a separate, completed run. Captured November 03, 2026 at 04:53 (UTC), there are
+120 paired completed cases per map out of 120: 40, 40, 40 in experiments
 1, 2, and 3, respectively (40 planned per experiment).
 The independent epsilon worker contributes completed experiment-3 cases;
-matching case keys are counted once. Pending cases are omitted.
+matching case keys are counted once. All planned cases are included.
 The optical marginal tolerance is $10^{-7}$. Each plotted divergence has
 three converged independent EOT terms, evaluated at $\varepsilon=1/320$.
-The target contains 1600 atoms. These partial curves do not establish a
+The target contains 1600 atoms. These finite-grid curves do not establish a
 convergence rate.
 
 \begin{figure}[p]
@@ -18,7 +18,7 @@ convergence rate.
  \includegraphics[width=\textwidth]{repaired_kappa_sinkhorn_comparison.png}
  \caption{\large Repaired $\kappa=0.8$ run: debiased Sinkhorn divergence,
  with logarithmic axes and the same three-panel layout as the original run.
- Panel titles show paired completed cases out of 40. Experiment 2 is pending.}
+ Panel titles show paired completed cases out of 40. All three experiments are complete.}
  \label{fig:repaired-kappa-divergence}
 \end{figure}
 

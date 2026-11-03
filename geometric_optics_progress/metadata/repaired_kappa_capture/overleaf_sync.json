@@ -20,5 +20,27 @@
     "images/repaired_kappa_sinkhorn_comparison.png": "df82185101f1d261f32f6cf4bdac06709ee2249761f4f3e46eb9a5b4ef0f2324",
     "images/repaired_kappa_hard_mass_error.png": "54a856cd525760c01f604e1321688cfb70b26c6e0f3f67001d8ed0b78fc2af00"
   },
-  "overleaf_edit": "Appended input to existing new_developments.tex; preserved existing Overleaf edits."
+  "overleaf_edit": "Appended input to existing new_developments.tex; preserved existing Overleaf edits.",
+  "pending_refresh": {
+    "paired_cases": 120,
+    "counts": [
+      40,
+      40,
+      40
+    ],
+    "local_compile": "success",
+    "overleaf_upload": "blocked: browser returned Restricted HTTP 403; previous browser control initialization failed",
+    "upload_archive": "geometric_optics_progress\\exports\\repaired_kappa_complete_overleaf.zip",
+    "artifact_sha256": {
+      "repaired_kappa_results.tex": "c054b877235eb324f6e4600bf113d77d3cee01de744dc8c48327b9a1a1c2e468",
+      "raw_eot_results.tex": "9d9e4229430a35ee7570980bde83552cfd9c93000310f9f2f1b5ccf9f3d52032",
+      "cost_terms_results.tex": "271809bc5ca9015f0a178fbebf79817bdeb4dc51ae6c49e97dfca0c2d0fa7f50",
+      "images\\repaired_kappa_entropic_cost_terms.png": "c2b834c80f914756e1aa21af26642739a7bd803275fca287f136cd2f35ca069a",
+      "images\\repaired_kappa_hard_cost_terms.png": "d0c578e9dea5942d90ef1107f8945e6a585f71a6837640ea4a2a5bce71273758",
+      "images\\repaired_kappa_hard_mass_error.png": "b769b37a87a0ee69f38762250c84dea85f13a72fa360d028d8b63deaeb587412",
+      "images\\repaired_kappa_hard_ot_bounds.png": "3088dbc6ceb7f293dc747561a733ee7dcf9573e6b57b7a61575e3e7b4f90231c",
+      "images\\repaired_kappa_raw_eot_comparison.png": "4d9bb22bde86eb4323d7c2c353fb61661fcea244baf26e89ea2c713e96c6336a",
+      "images\\repaired_kappa_sinkhorn_comparison.png": "5a2e5bbd5111f259428bc05f72920336c409db807779bd2517365f3d149e1e28"
+    }
+  }
 }

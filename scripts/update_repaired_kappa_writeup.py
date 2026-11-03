@@ -171,7 +171,13 @@ convergence rate.
 '''
     tex = tex.replace('CAPTUREDATE', now.strftime('%B %d, %Y at %H:%M')).replace('TOTAL', str(len(common)))
     tex = tex.replace('COUNTS', ', '.join(map(str, counts)))
-    if counts[1]:
+    if counts == [40, 40, 40]:
+        tex = tex.replace('Repaired kappa run: current progress', 'Repaired kappa run: completed results')
+        tex = tex.replace('They are a separate, partial run.', 'They are a separate, completed run.')
+        tex = tex.replace('matching case keys are counted once. Pending cases are omitted.', 'matching case keys are counted once. All planned cases are included.')
+        tex = tex.replace('These partial curves do not establish a', 'These finite-grid curves do not establish a')
+        tex = tex.replace('Experiment 2 is pending.', 'All three experiments are complete.')
+    elif counts[1]:
         tex = tex.replace('Experiment 2 is pending.', 'Unfinished cases are omitted.')
     (DOC/'repaired_kappa_results.tex').write_text(tex, encoding='utf-8')
     included = DOC/'new_developments.tex'

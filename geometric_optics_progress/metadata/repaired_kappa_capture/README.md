@@ -1,8 +1,7 @@
 # Repaired kappa write-up capture
 
-Captured October 30, 2026 at 15:57 UTC. There are 72 paired completed cases per
-map: 37 joint movement, zero fixed epsilon, and 35 fixed source-count cases.
-The planned total is 120 per map. Pending cases are omitted.
+Completed capture: 120 paired cases per map, with all 40 cases in each of the
+three experiments. The exact capture timestamp and hashes are in capture.json.
 
 [Hard divergence](hard.csv) | [Entropic divergence](entropic.csv) |
 [Hard mass error](hard_mass_error.csv) | [Settings and source hashes](capture.json)
