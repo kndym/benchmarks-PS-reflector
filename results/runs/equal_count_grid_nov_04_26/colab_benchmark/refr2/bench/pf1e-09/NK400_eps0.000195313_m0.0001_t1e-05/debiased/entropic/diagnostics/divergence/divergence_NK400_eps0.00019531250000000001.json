@@ -1,0 +1,55 @@
+{
+  "result": {
+    "experiment": 3,
+    "nk": 400,
+    "refractor_epsilon": 0.0001953125,
+    "pf_epsilon": 0.003125,
+    "eot": 0.005926027593741539,
+    "source_self": 0.005899932353358326,
+    "target_self": 0.005950929676563274,
+    "divergence": 5.965787807388906e-07,
+    "raw_divergence": 5.965787807388906e-07,
+    "converged": true,
+    "cross_iterations": 73,
+    "source_self_iterations": 73,
+    "target_self_iterations": 73
+  },
+  "diagnostics": {
+    "cross": {
+      "iterations": 73,
+      "converged": true,
+      "potential_change": 5.398995599550926e-10,
+      "transport_mass": 1.0,
+      "source_marginal_l1": 9.411595952579788e-08,
+      "target_marginal_l1": 3.907464629637758e-16,
+      "marginal_tolerance": 1e-07
+    },
+    "source_self": {
+      "iterations": 73,
+      "converged": true,
+      "potential_change": 5.169315669961705e-10,
+      "transport_mass": 1.0000000000000002,
+      "source_marginal_l1": 9.032478315339557e-08,
+      "target_marginal_l1": 5.516420653606247e-16,
+      "marginal_tolerance": 1e-07
+    },
+    "target_self": {
+      "iterations": 73,
+      "converged": true,
+      "potential_change": 5.395406274533165e-10,
+      "transport_mass": 1.0000000000000004,
+      "source_marginal_l1": 9.307758348829978e-08,
+      "target_marginal_l1": 6.205973235307027e-16,
+      "marginal_tolerance": 1e-07
+    },
+    "cross_iterations": 73,
+    "source_self_iterations": 73,
+    "target_self_iterations": 73,
+    "all_converged": true,
+    "raw_divergence": 5.965787807388906e-07
+  },
+  "cross_checkpoint": "/content/results/bench/pf1e-09/NK400_eps0.000195313_m0.0001_t1e-05/entropic/checkpoints/pushforward/pf_NK400_targetNK400_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_entropic_v1_eps0.00019531250000000001_eval0.0031250000000000002.json",
+  "cross_checkpoint_sha256": "3d48b0cc499a0088cd3e1bca3db55c80169f1e169d02b6fe6961a91d1c0d8af9",
+  "saved_map": "/content/results/bench/pf1e-09/NK400_eps0.000195313_m0.0001_t1e-05/entropic/checkpoints/solutions/solve_NK400_targetNK400_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_entropic_v1_eps0.00019531250000000001.npz",
+  "saved_map_sha256": "e89b1215ac4af53b7dfa40e03d0935ee143002c4bcfd1874dedc6669f917f155"
+}

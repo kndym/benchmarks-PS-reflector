@@ -1,0 +1,55 @@
+{
+  "result": {
+    "experiment": 3,
+    "nk": 784,
+    "refractor_epsilon": 0.0015625,
+    "pf_epsilon": 0.003125,
+    "eot": 0.006089237446003592,
+    "source_self": 0.006189948574229342,
+    "target_self": 0.0059615940724432135,
+    "divergence": 1.3466122667313979e-05,
+    "raw_divergence": 1.3466122667313979e-05,
+    "converged": true,
+    "cross_iterations": 71,
+    "source_self_iterations": 75,
+    "target_self_iterations": 73
+  },
+  "diagnostics": {
+    "cross": {
+      "iterations": 71,
+      "converged": true,
+      "potential_change": 5.120299288730035e-10,
+      "transport_mass": 0.9999999999999999,
+      "source_marginal_l1": 8.779328143204007e-08,
+      "target_marginal_l1": 4.831204880595408e-16,
+      "marginal_tolerance": 1e-07
+    },
+    "source_self": {
+      "iterations": 75,
+      "converged": true,
+      "potential_change": 5.294255814997095e-10,
+      "transport_mass": 1.0,
+      "source_marginal_l1": 8.866972548392249e-08,
+      "target_marginal_l1": 6.657001339060997e-16,
+      "marginal_tolerance": 1e-07
+    },
+    "target_self": {
+      "iterations": 73,
+      "converged": true,
+      "potential_change": 5.324051373378769e-10,
+      "transport_mass": 1.0,
+      "source_marginal_l1": 9.188471130966089e-08,
+      "target_marginal_l1": 7.88865500700453e-16,
+      "marginal_tolerance": 1e-07
+    },
+    "cross_iterations": 71,
+    "source_self_iterations": 75,
+    "target_self_iterations": 73,
+    "all_converged": true,
+    "raw_divergence": 1.3466122667313979e-05
+  },
+  "cross_checkpoint": "C:\\Users\\Kevin\\Github\\benchmarks-PS-reflector\\results\\runs\\equal_count_grid_nov_04_26\\grid\\local\\NK784_eps0.0015625_m0.001_t0.001\\hard\\checkpoints\\pushforward\\pf_NK784_targetNK784_self_untruncated_v2_iter10000_id10000_tol0.001_eps0.0015625000000000001_eval0.0031250000000000002.json",
+  "cross_checkpoint_sha256": "4ada56265dfe84f0846cc2f298df413f6c260f360d279ec5c1d3c0f9bfda5ac5",
+  "saved_map": "C:\\Users\\Kevin\\Github\\benchmarks-PS-reflector\\results\\runs\\equal_count_grid_nov_04_26\\grid\\local\\NK784_eps0.0015625_m0.001_t0.001\\hard\\checkpoints\\solutions\\solve_NK784_targetNK784_self_untruncated_v2_iter10000_id10000_tol0.001_eps0.0015625000000000001.npz",
+  "saved_map_sha256": "adc4eea1357ea8d791ca2fbee45d938dc987b6c1bd201fc61adc58875d94adcc"
+}

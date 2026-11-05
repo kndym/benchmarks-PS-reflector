@@ -1,0 +1,55 @@
+{
+  "result": {
+    "experiment": 3,
+    "nk": 1600,
+    "refractor_epsilon": 0.003125,
+    "pf_epsilon": 0.003125,
+    "eot": 0.006212323475224493,
+    "source_self": 0.006370465401709589,
+    "target_self": 0.005960076549553892,
+    "divergence": 4.705249959275227e-05,
+    "raw_divergence": 4.705249959275227e-05,
+    "converged": true,
+    "cross_iterations": 58,
+    "source_self_iterations": 77,
+    "target_self_iterations": 73
+  },
+  "diagnostics": {
+    "cross": {
+      "iterations": 58,
+      "converged": true,
+      "potential_change": 5.607677881075412e-10,
+      "transport_mass": 1.0,
+      "source_marginal_l1": 9.606160055060896e-08,
+      "target_marginal_l1": 6.882515390937982e-16,
+      "marginal_tolerance": 1e-07
+    },
+    "source_self": {
+      "iterations": 77,
+      "converged": true,
+      "potential_change": 5.28667681680417e-10,
+      "transport_mass": 1.0,
+      "source_marginal_l1": 8.752350796057459e-08,
+      "target_marginal_l1": 8.087064004569378e-16,
+      "marginal_tolerance": 1e-07
+    },
+    "target_self": {
+      "iterations": 73,
+      "converged": true,
+      "potential_change": 5.2213738888085e-10,
+      "transport_mass": 1.0,
+      "source_marginal_l1": 8.992190594664818e-08,
+      "target_marginal_l1": 3.9432433013297796e-16,
+      "marginal_tolerance": 1e-07
+    },
+    "cross_iterations": 58,
+    "source_self_iterations": 77,
+    "target_self_iterations": 73,
+    "all_converged": true,
+    "raw_divergence": 4.705249959275227e-05
+  },
+  "cross_checkpoint": "C:\\Users\\Kevin\\Github\\benchmarks-PS-reflector\\results\\runs\\equal_count_grid_nov_04_26\\grid\\local\\NK1600_eps0.003125_m0.001_t0.001\\hard\\checkpoints\\pushforward\\pf_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol0.001_eps0.0031250000000000002_eval0.0031250000000000002.json",
+  "cross_checkpoint_sha256": "96eb8f8cf2a7d60ab710d355db9d65c0f05e2fed0c568a9d3b30490d9db3dcbc",
+  "saved_map": "C:\\Users\\Kevin\\Github\\benchmarks-PS-reflector\\results\\runs\\equal_count_grid_nov_04_26\\grid\\local\\NK1600_eps0.003125_m0.001_t0.001\\hard\\checkpoints\\solutions\\solve_NK1600_targetNK1600_self_untruncated_v2_iter10000_id10000_tol0.001_eps0.0031250000000000002.npz",
+  "saved_map_sha256": "530a31d529d288c469fe5824144c36637491f27fec72f71f96177914c802d4f0"
+}

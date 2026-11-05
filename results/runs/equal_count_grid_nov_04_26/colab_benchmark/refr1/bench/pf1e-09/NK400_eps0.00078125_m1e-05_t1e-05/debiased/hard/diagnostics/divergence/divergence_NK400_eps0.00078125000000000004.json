@@ -1,0 +1,55 @@
+{
+  "result": {
+    "experiment": 3,
+    "nk": 400,
+    "refractor_epsilon": 0.00078125,
+    "pf_epsilon": 0.003125,
+    "eot": 0.006008973597406921,
+    "source_self": 0.0060608729664440785,
+    "target_self": 0.005950929676563274,
+    "divergence": 3.0722759032444924e-06,
+    "raw_divergence": 3.0722759032444924e-06,
+    "converged": true,
+    "cross_iterations": 72,
+    "source_self_iterations": 74,
+    "target_self_iterations": 73
+  },
+  "diagnostics": {
+    "cross": {
+      "iterations": 72,
+      "converged": true,
+      "potential_change": 5.543952337136449e-10,
+      "transport_mass": 1.0000000000000002,
+      "source_marginal_l1": 9.534085237527384e-08,
+      "target_marginal_l1": 4.2587461335230614e-16,
+      "marginal_tolerance": 1e-07
+    },
+    "source_self": {
+      "iterations": 74,
+      "converged": true,
+      "potential_change": 5.354846123808987e-10,
+      "transport_mass": 1.0000000000000002,
+      "source_marginal_l1": 9.112290672887158e-08,
+      "target_marginal_l1": 4.779163176316104e-16,
+      "marginal_tolerance": 1e-07
+    },
+    "target_self": {
+      "iterations": 73,
+      "converged": true,
+      "potential_change": 5.395406274533165e-10,
+      "transport_mass": 1.0000000000000004,
+      "source_marginal_l1": 9.307758348829978e-08,
+      "target_marginal_l1": 6.205973235307027e-16,
+      "marginal_tolerance": 1e-07
+    },
+    "cross_iterations": 72,
+    "source_self_iterations": 74,
+    "target_self_iterations": 73,
+    "all_converged": true,
+    "raw_divergence": 3.0722759032444924e-06
+  },
+  "cross_checkpoint": "/content/results/bench/pf1e-09/NK400_eps0.00078125_m1e-05_t1e-05/hard/checkpoints/pushforward/pf_NK400_targetNK400_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.00078125000000000004_eval0.0031250000000000002.json",
+  "cross_checkpoint_sha256": "1252223c80766606eaf8b8d2be60714fcefe67522bb6b07d9b36082d1335a990",
+  "saved_map": "/content/results/bench/pf1e-09/NK400_eps0.00078125_m1e-05_t1e-05/hard/checkpoints/solutions/solve_NK400_targetNK400_self_untruncated_v2_iter10000_id10000_tol1.0000000000000001e-05_eps0.00078125000000000004.npz",
+  "saved_map_sha256": "6520fe884509d3f939e3d3e67aaa179d0f3289228916e2d3040a5c67a6063c53"
+}

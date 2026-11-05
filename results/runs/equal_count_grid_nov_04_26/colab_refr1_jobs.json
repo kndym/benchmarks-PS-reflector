@@ -1,0 +1,62 @@
+[
+ {
+  "nk": 3249,
+  "epsilon": 0.0005530973451327434,
+  "m_n": 57,
+  "m_eps": 226,
+  "predicted_minutes": 115.03049280274645,
+  "marginal_tolerance": 0.001,
+  "refractor_tolerance": 0.001,
+  "pf_tolerance": 1e-09,
+  "host": "refr1",
+  "subdir": "grid"
+ },
+ {
+  "nk": 6400,
+  "epsilon": 0.004464285714285714,
+  "m_n": 80,
+  "m_eps": 28,
+  "predicted_minutes": 76.8,
+  "marginal_tolerance": 0.001,
+  "refractor_tolerance": 0.001,
+  "pf_tolerance": 1e-09,
+  "host": "refr1",
+  "subdir": "grid"
+ },
+ {
+  "nk": 3249,
+  "epsilon": 0.003125,
+  "m_n": 57,
+  "m_eps": 40,
+  "predicted_minutes": 26.39804711865212,
+  "marginal_tolerance": 0.001,
+  "refractor_tolerance": 0.001,
+  "pf_tolerance": 1e-09,
+  "host": "refr1",
+  "subdir": "grid"
+ },
+ {
+  "nk": 196,
+  "epsilon": 0.0001953125,
+  "m_n": 14,
+  "m_eps": 640,
+  "predicted_minutes": 1.014113361898687,
+  "marginal_tolerance": 0.001,
+  "refractor_tolerance": 0.001,
+  "pf_tolerance": 1e-09,
+  "host": "refr1",
+  "subdir": "grid"
+ },
+ {
+  "nk": 100,
+  "epsilon": 0.0021929824561403508,
+  "m_n": 10,
+  "m_eps": 57,
+  "predicted_minutes": 0.03379208677244801,
+  "marginal_tolerance": 0.001,
+  "refractor_tolerance": 0.001,
+  "pf_tolerance": 1e-09,
+  "host": "refr1",
+  "subdir": "grid"
+ }
+]

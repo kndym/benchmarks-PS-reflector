@@ -1,0 +1,55 @@
+{
+  "result": {
+    "experiment": 3,
+    "nk": 400,
+    "refractor_epsilon": 0.0125,
+    "pf_epsilon": 0.003125,
+    "eot": 0.006658436948728146,
+    "source_self": 0.0067257199209492455,
+    "target_self": 0.005950929676563274,
+    "divergence": 0.0003201121499718856,
+    "raw_divergence": 0.0003201121499718856,
+    "converged": true,
+    "cross_iterations": 87,
+    "source_self_iterations": 91,
+    "target_self_iterations": 73
+  },
+  "diagnostics": {
+    "cross": {
+      "iterations": 87,
+      "converged": true,
+      "potential_change": 5.406517386563614e-10,
+      "transport_mass": 1.0000000000000004,
+      "source_marginal_l1": 9.492854577105095e-08,
+      "target_marginal_l1": 4.0375688903360185e-16,
+      "marginal_tolerance": 1e-07
+    },
+    "source_self": {
+      "iterations": 91,
+      "converged": true,
+      "potential_change": 5.432167467581128e-10,
+      "transport_mass": 1.0000000000000002,
+      "source_marginal_l1": 9.187174628173811e-08,
+      "target_marginal_l1": 3.2569433261464553e-16,
+      "marginal_tolerance": 1e-07
+    },
+    "target_self": {
+      "iterations": 73,
+      "converged": true,
+      "potential_change": 5.395406274533165e-10,
+      "transport_mass": 1.0000000000000004,
+      "source_marginal_l1": 9.307758348829978e-08,
+      "target_marginal_l1": 6.205973235307027e-16,
+      "marginal_tolerance": 1e-07
+    },
+    "cross_iterations": 87,
+    "source_self_iterations": 91,
+    "target_self_iterations": 73,
+    "all_converged": true,
+    "raw_divergence": 0.0003201121499718856
+  },
+  "cross_checkpoint": "/content/results/bench/pf1e-09/NK400_eps0.0125_m0.0001_t0.0001/hard/checkpoints/pushforward/pf_NK400_targetNK400_self_untruncated_v2_iter10000_id10000_tol0.0001_eps0.012500000000000001_eval0.0031250000000000002.json",
+  "cross_checkpoint_sha256": "75aa2295bf89cfe9746564162a59485a606ba4907e0220d9f170fd5cb96bdfa2",
+  "saved_map": "/content/results/bench/pf1e-09/NK400_eps0.0125_m0.0001_t0.0001/hard/checkpoints/solutions/solve_NK400_targetNK400_self_untruncated_v2_iter10000_id10000_tol0.0001_eps0.012500000000000001.npz",
+  "saved_map_sha256": "10cbb656e8ec9134f5de97de39e7414c611d8944e19132361e47e2d9a598a1a6"
+}

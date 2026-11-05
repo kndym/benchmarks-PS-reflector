@@ -1,0 +1,18 @@
+{
+  "nk": 400,
+  "target_nk": 400,
+  "epsilon": 0.017857142857142856,
+  "source_marginal_l1": 6.101960772211465e-08,
+  "target_marginal_l1": 0.0005578755590093538,
+  "final_iterations": 30,
+  "final_change": 1.8803569935491433e-05,
+  "source_identity_iterations": 70,
+  "source_identity_change": 2.6486105677823802e-05,
+  "target_identity_iterations": 20,
+  "target_identity_change": 1.1725633209280772e-05,
+  "source_identity_marginal_l1": 0.0009267680913171493,
+  "target_identity_marginal_l1": 0.0003646604869100615,
+  "pushforward": "entropic",
+  "normal_dot_error": 4.440892098500626e-16,
+  "transmitted_norm_error": 3.3306690738754696e-16
+}

@@ -1,0 +1,34 @@
+[
+ {
+  "nk": 1600,
+  "epsilon": 0.00078125,
+  "marginal_tolerance": 1e-07,
+  "refractor_tolerance": 1e-05,
+  "pf_tolerance": 1e-09,
+  "output_root": "C:/Users/Kevin/Github/benchmarks-PS-reflector/results/runs/equal_count_grid_nov_04_26/tolerance_benchmark/pf1e-09"
+ },
+ {
+  "nk": 1600,
+  "epsilon": 0.00078125,
+  "marginal_tolerance": 0.001,
+  "refractor_tolerance": 0.001,
+  "pf_tolerance": 1e-09,
+  "output_root": "C:/Users/Kevin/Github/benchmarks-PS-reflector/results/runs/equal_count_grid_nov_04_26/tolerance_benchmark/pf1e-09"
+ },
+ {
+  "nk": 1600,
+  "epsilon": 0.003125,
+  "marginal_tolerance": 1e-07,
+  "refractor_tolerance": 1e-05,
+  "pf_tolerance": 1e-09,
+  "output_root": "C:/Users/Kevin/Github/benchmarks-PS-reflector/results/runs/equal_count_grid_nov_04_26/tolerance_benchmark/pf1e-09"
+ },
+ {
+  "nk": 1600,
+  "epsilon": 0.003125,
+  "marginal_tolerance": 0.001,
+  "refractor_tolerance": 0.001,
+  "pf_tolerance": 1e-09,
+  "output_root": "C:/Users/Kevin/Github/benchmarks-PS-reflector/results/runs/equal_count_grid_nov_04_26/tolerance_benchmark/pf1e-09"
+ }
+]

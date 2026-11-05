@@ -1,0 +1,55 @@
+{
+  "result": {
+    "experiment": 3,
+    "nk": 6400,
+    "refractor_epsilon": 0.017857142857142856,
+    "pf_epsilon": 0.003125,
+    "eot": 0.005682800627977339,
+    "source_self": 0.003992373739927022,
+    "target_self": 0.005962437356892634,
+    "divergence": 0.0007053950795675116,
+    "raw_divergence": 0.0007053950795675116,
+    "converged": true,
+    "cross_iterations": 66,
+    "source_self_iterations": 54,
+    "target_self_iterations": 73
+  },
+  "diagnostics": {
+    "cross": {
+      "iterations": 66,
+      "converged": true,
+      "potential_change": 4.728530145561849e-10,
+      "transport_mass": 1.0000000000000009,
+      "source_marginal_l1": 8.746525681044173e-08,
+      "target_marginal_l1": 1.2557500612270234e-15,
+      "marginal_tolerance": 1e-07
+    },
+    "source_self": {
+      "iterations": 54,
+      "converged": true,
+      "potential_change": 4.762127029517282e-10,
+      "transport_mass": 1.0000000000000009,
+      "source_marginal_l1": 9.049152054372905e-08,
+      "target_marginal_l1": 1.4947624301514528e-15,
+      "marginal_tolerance": 1e-07
+    },
+    "target_self": {
+      "iterations": 73,
+      "converged": true,
+      "potential_change": 5.202313857477492e-10,
+      "transport_mass": 1.0000000000000009,
+      "source_marginal_l1": 8.977776772676094e-08,
+      "target_marginal_l1": 1.4874982755958e-15,
+      "marginal_tolerance": 1e-07
+    },
+    "cross_iterations": 66,
+    "source_self_iterations": 54,
+    "target_self_iterations": 73,
+    "all_converged": true,
+    "raw_divergence": 0.0007053950795675116
+  },
+  "cross_checkpoint": "C:\\Users\\Kevin\\Github\\benchmarks-PS-reflector\\results\\runs\\equal_count_grid_nov_04_26\\grid\\local\\NK6400_eps0.0178571_m0.001_t0.001\\entropic\\checkpoints\\pushforward\\pf_NK6400_targetNK6400_self_untruncated_v2_iter10000_id10000_tol0.001_entropic_v1_eps0.017857142857142856_eval0.0031250000000000002.json",
+  "cross_checkpoint_sha256": "683f767a5ed548a81dbfcc45b7ed781f6829d3487b488f367a40f340ad10c403",
+  "saved_map": "C:\\Users\\Kevin\\Github\\benchmarks-PS-reflector\\results\\runs\\equal_count_grid_nov_04_26\\grid\\local\\NK6400_eps0.0178571_m0.001_t0.001\\entropic\\checkpoints\\solutions\\solve_NK6400_targetNK6400_self_untruncated_v2_iter10000_id10000_tol0.001_entropic_v1_eps0.017857142857142856.npz",
+  "saved_map_sha256": "3469c16a54739d9e0dcdfeba0bcd3a6be6192ce15fc53302d6eda7307761c012"
+}

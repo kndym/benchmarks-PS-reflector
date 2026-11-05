@@ -1,0 +1,74 @@
+[
+ {
+  "nk": 6400,
+  "epsilon": 0.003125,
+  "m_n": 80,
+  "m_eps": 40,
+  "predicted_minutes": 102.43121519029704,
+  "marginal_tolerance": 0.001,
+  "refractor_tolerance": 0.001,
+  "pf_tolerance": 1e-09,
+  "host": "refr2",
+  "subdir": "grid"
+ },
+ {
+  "nk": 6400,
+  "epsilon": 0.00625,
+  "m_n": 80,
+  "m_eps": 20,
+  "predicted_minutes": 76.8,
+  "marginal_tolerance": 0.001,
+  "refractor_tolerance": 0.001,
+  "pf_tolerance": 1e-09,
+  "host": "refr2",
+  "subdir": "grid"
+ },
+ {
+  "nk": 1600,
+  "epsilon": 0.000390625,
+  "m_n": 40,
+  "m_eps": 320,
+  "predicted_minutes": 37.49201924461054,
+  "marginal_tolerance": 0.001,
+  "refractor_tolerance": 0.001,
+  "pf_tolerance": 1e-09,
+  "host": "refr2",
+  "subdir": "grid"
+ },
+ {
+  "nk": 400,
+  "epsilon": 0.000390625,
+  "m_n": 20,
+  "m_eps": 320,
+  "predicted_minutes": 2.3432512027881587,
+  "marginal_tolerance": 0.001,
+  "refractor_tolerance": 0.001,
+  "pf_tolerance": 1e-09,
+  "host": "refr2",
+  "subdir": "grid"
+ },
+ {
+  "nk": 100,
+  "epsilon": 0.0002759381898454746,
+  "m_n": 10,
+  "m_eps": 453,
+  "predicted_minutes": 0.1967908293934081,
+  "marginal_tolerance": 0.001,
+  "refractor_tolerance": 0.001,
+  "pf_tolerance": 1e-09,
+  "host": "refr2",
+  "subdir": "grid"
+ },
+ {
+  "nk": 100,
+  "epsilon": 0.025,
+  "m_n": 10,
+  "m_eps": 5,
+  "predicted_minutes": 0.01875,
+  "marginal_tolerance": 0.001,
+  "refractor_tolerance": 0.001,
+  "pf_tolerance": 1e-09,
+  "host": "refr2",
+  "subdir": "grid"
+ }
+]

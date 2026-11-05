@@ -1,0 +1,25 @@
+{"nk": 400, "epsilon": 0.0125, "marginal_tolerance": 1e-07, "refractor_tolerance": 1e-05, "pf_tolerance": 1e-09, "subdir": "pf1e-09", "exit_code": 0}
+{"nk": 400, "epsilon": 0.0125, "marginal_tolerance": 1e-06, "refractor_tolerance": 1e-05, "pf_tolerance": 1e-09, "subdir": "pf1e-09", "exit_code": 0}
+{"nk": 400, "epsilon": 0.0125, "marginal_tolerance": 1e-05, "refractor_tolerance": 1e-05, "pf_tolerance": 1e-09, "subdir": "pf1e-09", "exit_code": 0}
+{"nk": 400, "epsilon": 0.0125, "marginal_tolerance": 0.0001, "refractor_tolerance": 1e-05, "pf_tolerance": 1e-09, "subdir": "pf1e-09", "exit_code": 0}
+{"nk": 400, "epsilon": 0.0125, "marginal_tolerance": 0.0001, "refractor_tolerance": 0.0001, "pf_tolerance": 1e-09, "subdir": "pf1e-09", "exit_code": 0}
+{"nk": 400, "epsilon": 0.0125, "marginal_tolerance": 0.001, "refractor_tolerance": 0.0001, "pf_tolerance": 1e-09, "subdir": "pf1e-09", "exit_code": 0}
+{"nk": 400, "epsilon": 0.0125, "marginal_tolerance": 0.001, "refractor_tolerance": 0.001, "pf_tolerance": 1e-09, "subdir": "pf1e-09", "exit_code": 0}
+{"nk": 400, "epsilon": 0.0125, "marginal_tolerance": 0.0001, "refractor_tolerance": 0.0001, "pf_tolerance": 1e-06, "subdir": "pf1e-06", "exit_code": 1}
+{"nk": 400, "epsilon": 0.003125, "marginal_tolerance": 1e-07, "refractor_tolerance": 1e-05, "pf_tolerance": 1e-09, "subdir": "pf1e-09", "exit_code": 0}
+{"nk": 400, "epsilon": 0.003125, "marginal_tolerance": 1e-06, "refractor_tolerance": 1e-05, "pf_tolerance": 1e-09, "subdir": "pf1e-09", "exit_code": 0}
+{"nk": 400, "epsilon": 0.003125, "marginal_tolerance": 1e-05, "refractor_tolerance": 1e-05, "pf_tolerance": 1e-09, "subdir": "pf1e-09", "exit_code": 0}
+{"nk": 400, "epsilon": 0.003125, "marginal_tolerance": 0.0001, "refractor_tolerance": 1e-05, "pf_tolerance": 1e-09, "subdir": "pf1e-09", "exit_code": 0}
+{"nk": 400, "epsilon": 0.003125, "marginal_tolerance": 0.0001, "refractor_tolerance": 0.0001, "pf_tolerance": 1e-09, "subdir": "pf1e-09", "exit_code": 0}
+{"nk": 400, "epsilon": 0.003125, "marginal_tolerance": 0.001, "refractor_tolerance": 0.0001, "pf_tolerance": 1e-09, "subdir": "pf1e-09", "exit_code": 0}
+{"nk": 400, "epsilon": 0.003125, "marginal_tolerance": 0.001, "refractor_tolerance": 0.001, "pf_tolerance": 1e-09, "subdir": "pf1e-09", "exit_code": 0}
+{"nk": 400, "epsilon": 0.003125, "marginal_tolerance": 0.0001, "refractor_tolerance": 0.0001, "pf_tolerance": 1e-06, "subdir": "pf1e-06", "exit_code": 1}
+{"nk": 400, "epsilon": 0.00078125, "marginal_tolerance": 1e-07, "refractor_tolerance": 1e-05, "pf_tolerance": 1e-09, "subdir": "pf1e-09", "exit_code": 0}
+{"nk": 400, "epsilon": 0.00078125, "marginal_tolerance": 1e-06, "refractor_tolerance": 1e-05, "pf_tolerance": 1e-09, "subdir": "pf1e-09", "exit_code": 0}
+{"nk": 400, "epsilon": 0.00078125, "marginal_tolerance": 1e-05, "refractor_tolerance": 1e-05, "pf_tolerance": 1e-09, "subdir": "pf1e-09", "exit_code": 0}
+{"nk": 400, "epsilon": 0.00078125, "marginal_tolerance": 0.0001, "refractor_tolerance": 1e-05, "pf_tolerance": 1e-09, "subdir": "pf1e-09", "exit_code": 0}
+{"nk": 400, "epsilon": 0.00078125, "marginal_tolerance": 0.0001, "refractor_tolerance": 0.0001, "pf_tolerance": 1e-09, "subdir": "pf1e-09", "exit_code": 0}
+{"nk": 400, "epsilon": 0.00078125, "marginal_tolerance": 0.001, "refractor_tolerance": 0.0001, "pf_tolerance": 1e-09, "subdir": "pf1e-09", "exit_code": 0}
+{"nk": 400, "epsilon": 0.00078125, "marginal_tolerance": 0.001, "refractor_tolerance": 0.001, "pf_tolerance": 1e-09, "subdir": "pf1e-09", "exit_code": 0}
+{"nk": 400, "epsilon": 0.00078125, "marginal_tolerance": 0.0001, "refractor_tolerance": 0.0001, "pf_tolerance": 1e-06, "subdir": "pf1e-06", "exit_code": 1}
+"done"

@@ -1,0 +1,2 @@
+experiment,nk,refractor_epsilon,pf_epsilon,eot,source_self,target_self,divergence,raw_divergence,converged,cross_iterations,source_self_iterations,target_self_iterations
+3,3249,0.000390625,0.003125,0.005918543634972306,0.005871325495787257,0.005962054747574134,1.8535132916101815e-06,1.8535132916101815e-06,True,73,73,73

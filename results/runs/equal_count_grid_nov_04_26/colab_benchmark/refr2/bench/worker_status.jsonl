@@ -1,0 +1,4 @@
+{"nk": 400, "epsilon": 0.0001953125, "marginal_tolerance": 1e-07, "refractor_tolerance": 1e-05, "pf_tolerance": 1e-09, "subdir": "pf1e-09", "exit_code": 0}
+{"nk": 400, "epsilon": 0.0001953125, "marginal_tolerance": 1e-06, "refractor_tolerance": 1e-05, "pf_tolerance": 1e-09, "subdir": "pf1e-09", "exit_code": 0}
+{"nk": 400, "epsilon": 0.0001953125, "marginal_tolerance": 1e-05, "refractor_tolerance": 1e-05, "pf_tolerance": 1e-09, "subdir": "pf1e-09", "exit_code": 0}
+{"nk": 400, "epsilon": 0.0001953125, "marginal_tolerance": 0.0001, "refractor_tolerance": 1e-05, "pf_tolerance": 1e-09, "subdir": "pf1e-09", "exit_code": 0}

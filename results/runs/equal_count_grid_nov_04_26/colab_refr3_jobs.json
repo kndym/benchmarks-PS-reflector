@@ -1,0 +1,106 @@
+[
+ {
+  "nk": 400,
+  "epsilon": 0.0125,
+  "marginal_tolerance": 0.01,
+  "refractor_tolerance": 0.001,
+  "pf_tolerance": 1e-09,
+  "subdir": "bench/pf1e-09"
+ },
+ {
+  "nk": 400,
+  "epsilon": 0.003125,
+  "marginal_tolerance": 0.01,
+  "refractor_tolerance": 0.001,
+  "pf_tolerance": 1e-09,
+  "subdir": "bench/pf1e-09"
+ },
+ {
+  "nk": 400,
+  "epsilon": 0.00078125,
+  "marginal_tolerance": 0.01,
+  "refractor_tolerance": 0.001,
+  "pf_tolerance": 1e-09,
+  "subdir": "bench/pf1e-09"
+ },
+ {
+  "nk": 400,
+  "epsilon": 0.0001953125,
+  "marginal_tolerance": 0.01,
+  "refractor_tolerance": 0.001,
+  "pf_tolerance": 1e-09,
+  "subdir": "bench/pf1e-09"
+ },
+ {
+  "nk": 1600,
+  "epsilon": 0.00013812154696132598,
+  "m_n": 40,
+  "m_eps": 905,
+  "predicted_minutes": 90.72200547159291,
+  "marginal_tolerance": 0.001,
+  "refractor_tolerance": 0.001,
+  "pf_tolerance": 1e-09,
+  "host": "refr3",
+  "subdir": "grid"
+ },
+ {
+  "nk": 6400,
+  "epsilon": 0.008928571428571428,
+  "m_n": 80,
+  "m_eps": 14,
+  "predicted_minutes": 76.8,
+  "marginal_tolerance": 0.001,
+  "refractor_tolerance": 0.001,
+  "pf_tolerance": 1e-09,
+  "host": "refr3",
+  "subdir": "grid"
+ },
+ {
+  "nk": 3249,
+  "epsilon": 0.0015625,
+  "m_n": 57,
+  "m_eps": 80,
+  "predicted_minutes": 47.58250435541544,
+  "marginal_tolerance": 0.001,
+  "refractor_tolerance": 0.001,
+  "pf_tolerance": 1e-09,
+  "host": "refr3",
+  "subdir": "grid"
+ },
+ {
+  "nk": 784,
+  "epsilon": 0.0011061946902654867,
+  "m_n": 28,
+  "m_eps": 113,
+  "predicted_minutes": 3.715952780930031,
+  "marginal_tolerance": 0.001,
+  "refractor_tolerance": 0.001,
+  "pf_tolerance": 1e-09,
+  "host": "refr3",
+  "subdir": "grid"
+ },
+ {
+  "nk": 196,
+  "epsilon": 0.0005530973451327434,
+  "m_n": 14,
+  "m_eps": 226,
+  "predicted_minutes": 0.41862552035664896,
+  "marginal_tolerance": 0.001,
+  "refractor_tolerance": 0.001,
+  "pf_tolerance": 1e-09,
+  "host": "refr3",
+  "subdir": "grid"
+ },
+ {
+  "nk": 100,
+  "epsilon": 0.0015625,
+  "m_n": 10,
+  "m_eps": 80,
+  "predicted_minutes": 0.04507625980275621,
+  "marginal_tolerance": 0.001,
+  "refractor_tolerance": 0.001,
+  "pf_tolerance": 1e-09,
+  "host": "refr3",
+  "subdir": "grid"
+ }
+]
