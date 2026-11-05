@@ -19,9 +19,7 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 IMAGES = ROOT / "geometric_optics_progress" / "images"
 SERIES = [("hard_cost", "Hard map, raw EOT", "o-", "C0"),
-          ("entropic_cost", "Entropic map, raw EOT", "s-", "C1"),
-          ("hard_debiased_divergence", "Hard map, debiased", "o--", "C0"),
-          ("entropic_debiased_divergence", "Entropic map, debiased", "s--", "C1")]
+          ("entropic_cost", "Entropic map, raw EOT", "s-", "C1")]
 
 
 def load(run):
@@ -35,7 +33,7 @@ def load(run):
 def line_panel(ax, rows, x, title, xlabel):
     for field, label, style, color in SERIES:
         ax.plot(x, [r[field] for r in rows], style, color=color, label=label, markersize=4, linewidth=1.6)
-    ax.set(xscale="log", yscale="log", title=title, xlabel=xlabel, ylabel=r"Cost at evaluation $\varepsilon=1/320$")
+    ax.set(xscale="log", title=title, xlabel=xlabel, ylabel=r"Cost at evaluation $\varepsilon=1/320$")
     ax.grid(alpha=.25, which="both")
 
 
@@ -55,21 +53,21 @@ def main(run):
         fig.savefig(IMAGES / "equal_count_joint_and_n.png", dpi=220)
         plt.close(fig)
 
-        # One line per refractor epsilon: error (debiased divergence) against N.
-        fields = [("hard_debiased_divergence", "Hard map"), ("entropic_debiased_divergence", "Entropic map")]
+        # One line per refractor epsilon: error (raw EOT cost) against N.
+        fields = [("hard_cost", "Hard map"), ("entropic_cost", "Entropic map")]
         cmap = plt.get_cmap("viridis")
         norm = LogNorm(1 / (8 * max(ms_e)), 1 / (8 * min(ms_e)))
-        fig, axes = plt.subplots(1, 2, figsize=(14, 6.5), sharey=True, layout="constrained")
+        fig, axes = plt.subplots(1, 2, figsize=(14, 6.5), layout="constrained")
         for ax, (field, title) in zip(axes, fields):
             for me in ms_e:
                 row = sorted((c for (n, m), c in cells.items() if m == me), key=lambda c: c["nk"])
                 if row:
                     ax.plot([c["nk"] for c in row], [c[field] for c in row], "o-", color=cmap(norm(1 / (8 * me))),
                             markersize=3.5, linewidth=1.4, label=f"1/{8 * me}")
-            ax.set(xscale="log", yscale="log", title=f"{title}, debiased divergence",
+            ax.set(xscale="log", title=f"{title}, raw EOT",
                    xlabel=r"$N$ (source = target)")
             ax.grid(alpha=.25, which="both")
-        axes[0].set_ylabel(r"Error: debiased divergence at evaluation $\varepsilon=1/320$")
+        axes[0].set_ylabel(r"Raw EOT cost at evaluation $\varepsilon=1/320$")
         bar = fig.colorbar(plt.cm.ScalarMappable(norm=norm, cmap=cmap), ax=axes, pad=0.01)
         bar.set_label(r"Refractor $\varepsilon$")
         ticks = [1 / (8 * m) for m in ms_e[::2]]
