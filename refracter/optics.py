@@ -3,7 +3,7 @@ import numpy as np
 from scipy.special import logsumexp
 
 
-def _unit_vectors(value, name):
+def _unit_vectors(value, name): #turns list of  vectors dim three into list of unit vectors
     value = np.asarray(value, dtype=float)
     if value.ndim != 2 or value.shape[1] != 3 or not np.isfinite(value).all():
         raise ValueError(f"{name} must be finite (N, 3) vectors")
